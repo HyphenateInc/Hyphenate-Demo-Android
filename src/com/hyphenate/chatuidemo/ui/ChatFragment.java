@@ -40,6 +40,7 @@ import android.widget.Toast;
 public class ChatFragment extends EaseChatFragment implements EaseChatFragmentListener{
 
     //避免和基类定义的常量可能发生的冲突，常量从11开始定义
+    //avoid conflicts with base class,start defining constants from 11
     private static final int ITEM_VIDEO = 11;
     private static final int ITEM_FILE = 12;
     private static final int ITEM_VOICE_CALL = 13;
@@ -77,6 +78,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentLi
         }
         super.setUpView();
         // 设置标题栏点击事件
+        // set title bar left button click listener
         titleBar.setLeftLayoutClickListener(new OnClickListener() {
 
             @Override
@@ -94,8 +96,10 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentLi
     @Override
     protected void registerExtendMenuItem() {
         //demo这里不覆盖基类已经注册的item,item点击listener沿用基类的
+        //no cover the base class has been registered item
         super.registerExtendMenuItem();
         //增加扩展item
+        //add extension item
         inputMenu.registerExtendMenuItem(R.string.attach_video, R.drawable.em_chat_video_selector, ITEM_VIDEO, extendMenuItemClickListener);
         inputMenu.registerExtendMenuItem(R.string.attach_file, R.drawable.em_chat_file_selector, ITEM_FILE, extendMenuItemClickListener);
         if(chatType == Constant.CHATTYPE_SINGLE){
@@ -109,15 +113,15 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentLi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CONTEXT_MENU) {
             switch (resultCode) {
-            case ContextMenuActivity.RESULT_CODE_COPY: // 复制消息
+            case ContextMenuActivity.RESULT_CODE_COPY: // copy message
                 clipboard.setText(((EMTextMessageBody) contextMenuMessage.getBody()).getMessage());
                 break;
-            case ContextMenuActivity.RESULT_CODE_DELETE: // 删除消息
+            case ContextMenuActivity.RESULT_CODE_DELETE: // delete message
                 conversation.removeMessage(contextMenuMessage.getMsgId());
                 messageList.refresh();
                 break;
 
-            case ContextMenuActivity.RESULT_CODE_FORWARD: // 转发消息
+            case ContextMenuActivity.RESULT_CODE_FORWARD: // forward message
                 Intent intent = new Intent(getActivity(), ForwardMessageActivity.class);
                 intent.putExtra("forward_msg_id", contextMenuMessage.getMsgId());
                 startActivity(intent);
@@ -240,7 +244,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentLi
     }
     
     /**
-     * 选择文件
+     * select file
      */
     protected void selectFileFromLocal() {
         Intent intent = null;

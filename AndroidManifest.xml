@@ -343,30 +343,6 @@
         </receiver>
         <!-- gcm end -->
         
-        <!-- mi push -->
-        <service
-            android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
-            android:enabled="true"
-            android:exported="true" />
-        <service
-            android:name="com.xiaomi.mipush.sdk.MessageHandleService"
-            android:enabled="true" />
- 
-        <receiver
-            android:name="com.hyphenate.chat.EMMipushReceiver"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.ERROR" />
-            </intent-filter>
-        </receiver>
-        <!-- mi push end -->
-        
 
         <!-- 设置环信应用的appkey -->
         <meta-data

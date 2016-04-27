@@ -150,12 +150,15 @@ public class DemoHelper {
 	 */
 	public void init(Context context) {
 	    demoModel = new DemoModel(context);
+	    //init chat options
 	    EMOptions options = initChatOptions();
 	    //options传null则使用默认的
+	    //Null is using the default options
 		if (EaseUI.getInstance().init(context, options)) {
 		    appContext = context;
 		    
 		    //设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
+		    //set debugmode to false when your app release
 		    EMClient.getInstance().setDebugMode(true);
 		    //get easeui instance
 		    easeUI = EaseUI.getInstance();
@@ -175,7 +178,7 @@ public class DemoHelper {
 
 	
 	private EMOptions initChatOptions(){
-        Log.d(TAG, "init HuanXin Options");
+        Log.d(TAG, "init Hyphenate Options");
         
         // 获取到EMChatOptions对象
         EMOptions options = new EMOptions();
@@ -186,13 +189,8 @@ public class DemoHelper {
         // 设置是否需要已送达回执
         options.setRequireDeliveryAck(false);
         
-        //使用gcm和mipush时，把里面的参数替换成自己app申请的
-        //设置google推送，需要的GCM的app可以设置此参数
+        //设置GCM Number，需要的GCM的app可以设置此参数
         options.setGCMNumber("324169311137");
-        //在小米手机上当app被kill时使用小米推送进行消息提示，同GCM一样不是必须的
-        options.setMipushConfig("2882303761517426801", "5381742660801");
-        //集成华为推送时需要设置
-//        options.setHuaweiPushAppId("10492024");
         
         options.allowChatroomOwnerLeave(getModel().isChatroomOwnerLeaveAllowed());
         options.setDeleteMessagesAsExitGroup(getModel().isDeleteMessagesAsExitGroup());
