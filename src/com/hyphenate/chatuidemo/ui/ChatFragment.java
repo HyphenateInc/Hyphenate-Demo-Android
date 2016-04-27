@@ -4,24 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Map;
 
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMGroup;
-import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMTextMessageBody;
-import com.hyphenate.chatuidemo.Constant;
-import com.hyphenate.chatuidemo.DemoHelper;
-import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.domain.EmojiconExampleGroupData;
-import com.hyphenate.chatuidemo.domain.RobotUser;
-import com.hyphenate.chatuidemo.widget.ChatRowVoiceCall;
-import com.hyphenate.easeui.ui.EaseChatFragment;
-import com.hyphenate.easeui.ui.EaseChatFragment.EaseChatFragmentListener;
-import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
-import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
-import com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenu;
-import com.hyphenate.util.EasyUtils;
-import com.hyphenate.util.PathUtil;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -37,7 +19,25 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
 
-public class ChatFragment extends EaseChatFragment implements EaseChatFragmentListener{
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMGroup;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.chatuidemo.Constant;
+import com.hyphenate.chatuidemo.DemoHelper;
+import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.domain.EmojiconExampleGroupData;
+import com.hyphenate.chatuidemo.domain.RobotUser;
+import com.hyphenate.chatuidemo.widget.ChatRowVoiceCall;
+import com.hyphenate.easeui.ui.EaseChatFragment;
+import com.hyphenate.easeui.ui.EaseChatFragment.EaseChatFragmentHelper;
+import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
+import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
+import com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenu;
+import com.hyphenate.util.EasyUtils;
+import com.hyphenate.util.PathUtil;
+
+public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHelper{
 
     //避免和基类定义的常量可能发生的冲突，常量从11开始定义
     //avoid conflicts with base class,start defining constants from 11
@@ -69,7 +69,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentLi
 
     @Override
     protected void setUpView() {
-        setChatFragmentListener(this);
+        setChatFragmentHelper(this);
         if (chatType == Constant.CHATTYPE_SINGLE) { 
             Map<String,RobotUser> robotMap = DemoHelper.getInstance().getRobotList();
             if(robotMap!=null && robotMap.containsKey(toChatUsername)){
