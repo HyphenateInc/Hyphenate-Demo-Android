@@ -56,7 +56,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     
     
     /**
-     * 是否为环信小助手
+     * if it is chatBot 
      */
     private boolean isRobot;
     
@@ -132,7 +132,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
         }
         if(resultCode == Activity.RESULT_OK){
             switch (requestCode) {
-            case REQUEST_CODE_SELECT_VIDEO: //发送选中的视频
+            case REQUEST_CODE_SELECT_VIDEO: //send the video
                 if (data != null) {
                     int duration = data.getIntExtra("dur", 0);
                     String videoPath = data.getStringExtra("path");
@@ -148,7 +148,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
                     }
                 }
                 break;
-            case REQUEST_CODE_SELECT_FILE: //发送选中的文件
+            case REQUEST_CODE_SELECT_FILE: //send the file
                 if (data != null) {
                     Uri uri = data.getData();
                     if (uri != null) {
@@ -167,14 +167,13 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     @Override
     public void onSetMessageAttributes(EMMessage message) {
         if(isRobot){
-            //设置消息扩展属性
+            //set message extension
             message.setAttribute("em_robot_message", isRobot);
         }
     }
     
     @Override
     public EaseCustomChatRowProvider onSetCustomChatRowProvider() {
-        //设置自定义listview item提供者
         return new CustomChatRowProvider();
     }
   
@@ -197,7 +196,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
 
     @Override
     public void onAvatarClick(String username) {
-        //头像点击事件
+        //handling when user click avatar
         Intent intent = new Intent(getActivity(), UserProfileActivity.class);
         intent.putExtra("username", username);
         startActivity(intent);
@@ -219,18 +218,17 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     @Override
     public boolean onExtendMenuItemClick(int itemId, View view) {
         switch (itemId) {
-        case ITEM_VIDEO: //视频
+        case ITEM_VIDEO:
             Intent intent = new Intent(getActivity(), ImageGridActivity.class);
             startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
             break;
-        case ITEM_FILE: //一般文件
-            //demo这里是通过系统api选择文件，实际app中最好是做成qq那种选择发送文件
+        case ITEM_FILE: //file
             selectFileFromLocal();
             break;
-        case ITEM_VOICE_CALL: //音频通话
+        case ITEM_VOICE_CALL:
             startVoiceCall();
             break;
-        case ITEM_VIDEO_CALL: //视频通话
+        case ITEM_VIDEO_CALL:
             startVideoCall();
             break;
 
@@ -258,7 +256,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     }
     
     /**
-     * 拨打语音电话
+     * make a voice call
      */
     protected void startVoiceCall() {
         if (!EMClient.getInstance().isConnected()) {
@@ -272,7 +270,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     }
     
     /**
-     * 拨打视频电话
+     * make a video call
      */
     protected void startVideoCall() {
         if (!EMClient.getInstance().isConnected())

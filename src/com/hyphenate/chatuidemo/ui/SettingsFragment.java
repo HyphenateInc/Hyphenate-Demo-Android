@@ -38,32 +38,32 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * 设置界面
+ * settings screen
  * 
  * 
  */
 public class SettingsFragment extends Fragment implements OnClickListener {
 
 	/**
-	 * 设置新消息通知布局
+	 * new message notification
 	 */
 	private RelativeLayout rl_switch_notification;
 	/**
-	 * 设置声音布局
+	 * sound
 	 */
 	private RelativeLayout rl_switch_sound;
 	/**
-	 * 设置震动布局
+	 * vibration
 	 */
 	private RelativeLayout rl_switch_vibrate;
 	/**
-	 * 设置扬声器布局
+	 * speaker
 	 */
 	private RelativeLayout rl_switch_speaker;
 
 
 	/**
-	 * 声音和震动中间的那条线
+	 * line between sound and vibration
 	 */
 	private TextView textview1, textview2;
 
@@ -72,7 +72,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 	private LinearLayout userProfileContainer;
 	
 	/**
-	 * 退出按钮
+	 * logout
 	 */
 	private Button logoutBtn;
 
@@ -83,11 +83,11 @@ public class SettingsFragment extends Fragment implements OnClickListener {
     private RelativeLayout rl_switch_adaptive_video_encode;
  
 	/**
-	 * 诊断
+	 * Diagnose
 	 */
 	private LinearLayout llDiagnose;
 	/**
-	 * iOS离线推送昵称
+	 * display name for APNs
 	 */
 	private LinearLayout pushNick;
 	
@@ -184,7 +184,6 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 		    vibrateSwitch.closeSwitch();
 		}
 
-		// 是否打开扬声器
 		// the speaker is switched on or not?
 		if (settingsModel.getSettingMsgSpeaker()) {
 		    speakerSwitch.openSwitch();
@@ -192,7 +191,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 		    speakerSwitch.closeSwitch();
 		}
 
-		// 是否允许聊天室owner leave
+		// if allow owner leave
 		if(settingsModel.isChatroomOwnerLeaveAllowed()){
 		    ownerLeaveSwitch.openSwitch();
 		}else{
@@ -312,7 +311,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
                 EMClient.getInstance().callManager().getVideoCallHelper().setAdaptiveVideoFlag(true);
             }
             break;
-		case R.id.btn_logout: //退出登陆
+		case R.id.btn_logout:
 			logout();
 			break;
 		case R.id.ll_black_list:
@@ -347,7 +346,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 				getActivity().runOnUiThread(new Runnable() {
 					public void run() {
 						pd.dismiss();
-						// 重新显示登陆页面
+						// show login screen
 						((MainActivity) getActivity()).finish();
 						startActivity(new Intent(getActivity(), LoginActivity.class));
 						
@@ -369,8 +368,6 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 						// TODO Auto-generated method stub
 						pd.dismiss();
 						Toast.makeText(getActivity(), "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
-						
-						
 					}
 				});
 			}

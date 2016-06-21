@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 /**
- * 聊天页面，需要fragment的使用{@link #EaseChatFragment}
+ * chat activity，EaseChatFragment was used {@link #EaseChatFragment}
  *
  */
 public class ChatActivity extends BaseActivity{

@@ -70,14 +70,22 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
+
 public class DemoHelper {
     /**
-     * 数据同步listener
+     * data sync listener
      */
     static public interface DataSyncListener {
         /**
-         * 同步完毕
-         * @param success true：成功同步到数据，false失败
+         * sync complete
+         * @param success true：data sync successful，false: failed to sync data
          */
         public void onSyncComplete(boolean success);
     }
@@ -102,15 +110,15 @@ public class DemoHelper {
 	private DemoModel demoModel = null;
 	
 	/**
-     * HuanXin sync groups status listener
+     * sync groups status listener
      */
     private List<DataSyncListener> syncGroupsListeners;
     /**
-     * HuanXin sync contacts status listener
+     * sync contacts status listener
      */
     private List<DataSyncListener> syncContactsListeners;
     /**
-     * HuanXin sync blacklist status listener
+     * sync blacklist status listener
      */
     private List<DataSyncListener> syncBlackListListeners;
 
@@ -209,7 +217,7 @@ public class DemoHelper {
     }
 
     protected void setEaseUIProviders() {
-        //需要easeui库显示用户头像和昵称设置此provider
+    	// set profile provider if you want easeUI to handle avatar and nickname
         easeUI.setUserProfileProvider(new EaseUserProfileProvider() {
             
             @Override
@@ -217,8 +225,8 @@ public class DemoHelper {
                 return getUserInfo(username);
             }
         });
-        
-        //不设置，则使用easeui默认的
+
+        //set options 
         easeUI.setSettingsProvider(new EaseSettingsProvider() {
             
             @Override
@@ -244,11 +252,9 @@ public class DemoHelper {
                 if(!demoModel.getSettingMsgNotification()){
                     return false;
                 }else{
-                    //如果允许新消息提示
-                    //屏蔽的用户和群组不提示用户
                     String chatUsename = null;
                     List<String> notNotifyIds = null;
-                    // 获取设置的不提示新消息的用户或者群组ids
+                    // get user or group id which was blocked to show message notifications
                     if (message.getChatType() == ChatType.Chat) {
                         chatUsename = message.getFrom();
                         notNotifyIds = demoModel.getDisabledIds();
@@ -265,7 +271,7 @@ public class DemoHelper {
                 }
             }
         });
-        //设置表情provider
+        //set emoji icon provider
         easeUI.setEmojiconInfoProvider(new EaseEmojiconInfoProvider() {
             
             @Override
@@ -281,29 +287,28 @@ public class DemoHelper {
 
             @Override
             public Map<String, Object> getTextEmojiconMapping() {
-                //返回文字表情emoji文本和图片(resource id或者本地路径)的映射map
                 return null;
             }
         });
         
-        //不设置，则使用easeui默认的
+        //set notification options, will use default if you don't set it
         easeUI.getNotifier().setNotificationInfoProvider(new EaseNotificationInfoProvider() {
             
             @Override
             public String getTitle(EMMessage message) {
-              //修改标题,这里使用默认
+              //you can update title here
                 return null;
             }
             
             @Override
             public int getSmallIcon(EMMessage message) {
-              //设置小图标，这里为默认
+              //you can update icon here
                 return 0;
             }
             
             @Override
             public String getDisplayedText(EMMessage message) {
-                // 设置状态栏的消息提示，可以根据message的类型做相应提示
+            	// be used on notification bar, different text according the message type.
                 String ticker = EaseCommonUtils.getMessageDigest(message, appContext);
                 if(message.getType() == Type.TXT){
                     ticker = ticker.replaceAll("\\[.{2,3}\\]", "[表情]");
@@ -324,26 +329,27 @@ public class DemoHelper {
             
             @Override
             public String getLatestText(EMMessage message, int fromUsersNum, int messageNum) {
-                return null;
-                // return fromUsersNum + "个基友，发来了" + messageNum + "条消息";
+                // here you can customize the text.
+                // return fromUsersNum + "contacts send " + messageNum + "messages to you";
+            	return null;
             }
             
             @Override
             public Intent getLaunchIntent(EMMessage message) {
-                //设置点击通知栏跳转事件
+            	// you can set what activity you want display when user click the notification
                 Intent intent = new Intent(appContext, ChatActivity.class);
-                //有电话时优先跳转到通话页面
+                // open calling activity if there is call
                 if(isVideoCalling){
                     intent = new Intent(appContext, VideoCallActivity.class);
                 }else if(isVoiceCalling){
                     intent = new Intent(appContext, VoiceCallActivity.class);
                 }else{
                     ChatType chatType = message.getChatType();
-                    if (chatType == ChatType.Chat) { // 单聊信息
+                    if (chatType == ChatType.Chat) { // single chat message
                         intent.putExtra("userId", message.getFrom());
                         intent.putExtra("chatType", Constant.CHATTYPE_SINGLE);
-                    } else { // 群聊信息
-                        // message.getTo()为群聊id
+                    } else { // group chat message
+                        // message.getTo() is the group id
                         intent.putExtra("userId", message.getTo());
                         if(chatType == ChatType.GroupChat){
                             intent.putExtra("chatType", Constant.CHATTYPE_GROUP);
@@ -359,7 +365,7 @@ public class DemoHelper {
     }
     
     /**
-     * 设置全局事件监听
+     * set global listener
      */
     protected void setGlobalListeners(){
         syncGroupsListeners = new ArrayList<DataSyncListener>();
@@ -383,7 +389,6 @@ public class DemoHelper {
 
             @Override
             public void onConnected() {
-                
                 // in case group and contact were already synced, we supposed to notify sdk we are ready to receive the events
                 if(isGroupsSyncedWithServer && isContactsSyncedWithServer){
                     new Thread(){
@@ -414,14 +419,14 @@ public class DemoHelper {
             callReceiver = new CallReceiver();
         }
 
-        //注册通话广播接收者
+        //register incoming call receiver
         appContext.registerReceiver(callReceiver, callFilter);    
-        //注册连接监听
+        //register connection listener
         EMClient.getInstance().addConnectionListener(connectionListener);       
-        //注册群组和联系人监听
+        //register group and contact event listener
         registerGroupAndContactListener();
-        //注册消息事件监听
-        registerEventListener();
+        //register message event listener
+        registerMessageListener();
         
     }
     
@@ -431,13 +436,11 @@ public class DemoHelper {
     }
     
     /**
-     * 注册群组和联系人监听，由于logout的时候会被sdk清除掉，再次登录的时候需要再注册一下
+     * register group and contact listener, you need register when login
      */
     public void registerGroupAndContactListener(){
         if(!isGroupAndContactListenerRegisted){
-            //注册群组变动监听
             EMClient.getInstance().groupManager().addGroupChangeListener(new MyGroupChangeListener());
-            //注册联系人变动监听
             EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
             isGroupAndContactListenerRegisted = true;
         }
@@ -445,7 +448,7 @@ public class DemoHelper {
     }
     
     /**
-     * 群组变动监听
+     * group change listener
      */
     class MyGroupChangeListener implements EMGroupChangeListener {
 
@@ -454,7 +457,7 @@ public class DemoHelper {
             
             new InviteMessgeDao(appContext).deleteMessage(groupId);
             
-            // 用户申请加入群聊
+            // user invite you to join group
             InviteMessage msg = new InviteMessage();
             msg.setFrom(groupId);
             msg.setTime(System.currentTimeMillis());
@@ -462,9 +465,9 @@ public class DemoHelper {
             msg.setGroupName(groupName);
             msg.setReason(reason);
             msg.setGroupInviter(inviter);
-            Log.d(TAG, "收到邀请加入群聊：" + groupName);
+            Log.d(TAG, "receive invitation to join the group：" + groupName);
             msg.setStatus(InviteMesageStatus.GROUPINVITATION);
-            notifyNewIviteMessage(msg);
+            notifyNewInviteMessage(msg);
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_GROUP_CHANAGED));
         }
 
@@ -473,7 +476,7 @@ public class DemoHelper {
             
             new InviteMessgeDao(appContext).deleteMessage(groupId);
             
-            // 对方同意加群邀请
+            //user accept your invitation
             boolean hasGroup = false;
             EMGroup _group = null;
             for (EMGroup group : EMClient.getInstance().groupManager().getAllGroups()) {
@@ -493,9 +496,9 @@ public class DemoHelper {
             msg.setGroupName(_group == null ? groupId : _group.getGroupName());
             msg.setReason(reason);
             msg.setGroupInviter(invitee);
-            Log.d(TAG, invitee + "同意加入群聊：" + _group == null ? groupId : _group.getGroupName());
+            Log.d(TAG, invitee + "Accept to join the group：" + _group == null ? groupId : _group.getGroupName());
             msg.setStatus(InviteMesageStatus.GROUPINVITATION_ACCEPTED);
-            notifyNewIviteMessage(msg);
+            notifyNewInviteMessage(msg);
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_GROUP_CHANAGED));
         }
         
@@ -504,7 +507,7 @@ public class DemoHelper {
             
             new InviteMessgeDao(appContext).deleteMessage(groupId);
             
-            // 对方同意加群邀请
+            //user declined your invitation
             boolean hasGroup = false;
             EMGroup group = null;
             for (EMGroup _group : EMClient.getInstance().groupManager().getAllGroups()) {
@@ -524,38 +527,37 @@ public class DemoHelper {
             msg.setGroupName(group == null ? groupId : group.getGroupName());
             msg.setReason(reason);
             msg.setGroupInviter(invitee);
-            Log.d(TAG, invitee + "拒绝加入群聊：" + group == null ? groupId : group.getGroupName());
+            Log.d(TAG, invitee + "Declined to join the group：" + group == null ? groupId : group.getGroupName());
             msg.setStatus(InviteMesageStatus.GROUPINVITATION_DECLINED);
-            notifyNewIviteMessage(msg);
+            notifyNewInviteMessage(msg);
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_GROUP_CHANAGED));
         }
 
         @Override
         public void onUserRemoved(String groupId, String groupName) {
-            //TODO 提示用户被T了，demo省略此步骤
+            //user is removed from group
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_GROUP_CHANAGED));
         }
 
         @Override
         public void onGroupDestroy(String groupId, String groupName) {
-            // 群被解散
-            //TODO 提示用户群被解散,demo省略
+        	// group is dismissed, 
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_GROUP_CHANAGED));
         }
 
         @Override
         public void onApplicationReceived(String groupId, String groupName, String applyer, String reason) {
             
-            // 用户申请加入群聊
+            // user apply to join group
             InviteMessage msg = new InviteMessage();
             msg.setFrom(applyer);
             msg.setTime(System.currentTimeMillis());
             msg.setGroupId(groupId);
             msg.setGroupName(groupName);
             msg.setReason(reason);
-            Log.d(TAG, applyer + " 申请加入群聊：" + groupName);
+            Log.d(TAG, applyer + " Apply to join group：" + groupName);
             msg.setStatus(InviteMesageStatus.BEAPPLYED);
-            notifyNewIviteMessage(msg);
+            notifyNewInviteMessage(msg);
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_GROUP_CHANAGED));
         }
 
@@ -563,7 +565,7 @@ public class DemoHelper {
         public void onApplicationAccept(String groupId, String groupName, String accepter) {
 
             String st4 = appContext.getString(R.string.Agreed_to_your_group_chat_application);
-            // 加群申请被同意
+            // your application was accepted
             EMMessage msg = EMMessage.createReceiveMessage(Type.TXT);
             msg.setChatType(ChatType.GroupChat);
             msg.setFrom(accepter);
@@ -571,9 +573,9 @@ public class DemoHelper {
             msg.setMsgId(UUID.randomUUID().toString());
             msg.addBody(new EMTextMessageBody(accepter + " " +st4));
             msg.setStatus(Status.SUCCESS);
-            // 保存同意消息
+            // save accept message
             EMClient.getInstance().chatManager().saveMessage(msg);
-            // 提醒新消息
+            // notify the accept message
             getNotifier().viberateAndPlayTone(msg);
 
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_GROUP_CHANAGED));
@@ -581,12 +583,12 @@ public class DemoHelper {
 
         @Override
         public void onApplicationDeclined(String groupId, String groupName, String decliner, String reason) {
-            // 加群申请被拒绝，demo未实现
+            // your application was declined, we do nothing here in demo
         }
 
         @Override
         public void onAutoAcceptInvitationFromGroup(String groupId, String inviter, String inviteMessage) {
-            // 被邀请
+            // got an invitation
             String st3 = appContext.getString(R.string.Invite_you_to_join_a_group_chat);
             EMMessage msg = EMMessage.createReceiveMessage(Type.TXT);
             msg.setChatType(ChatType.GroupChat);
@@ -595,12 +597,11 @@ public class DemoHelper {
             msg.setMsgId(UUID.randomUUID().toString());
             msg.addBody(new EMTextMessageBody(inviter + " " +st3));
             msg.setStatus(EMMessage.Status.SUCCESS);
-            // 保存邀请消息
+            // save invitation as messages
             EMClient.getInstance().chatManager().saveMessage(msg);
-            // 提醒新消息
+            // notify invitation message
             getNotifier().viberateAndPlayTone(msg);
             EMLog.d(TAG, "onAutoAcceptInvitationFromGroup groupId:" + groupId);
-            //发送local广播
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_GROUP_CHANAGED));
         }
     }
@@ -613,36 +614,32 @@ public class DemoHelper {
 
         @Override
         public void onContactAdded(String username) {
-            // 保存增加的联系人
+            // save contact
             Map<String, EaseUser> localUsers = getContactList();
             Map<String, EaseUser> toAddUsers = new HashMap<String, EaseUser>();
             EaseUser user = new EaseUser(username);
-            // 添加好友时可能会回调added方法两次
+
             if (!localUsers.containsKey(username)) {
                 userDao.saveContact(user);
             }
             toAddUsers.put(username, user);
             localUsers.putAll(toAddUsers);
 
-           //发送好友变动广播
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
 
         @Override
         public void onContactDeleted(String username) {
-            // 被删除
             Map<String, EaseUser> localUsers = DemoHelper.getInstance().getContactList();
             localUsers.remove(username);
             userDao.deleteContact(username);
             inviteMessgeDao.deleteMessage(username);
 
-            //发送好友变动广播
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
 
         @Override
         public void onContactInvited(String username, String reason) {
-            // 接到邀请的消息，如果不处理(同意或拒绝)，掉线后，服务器会自动再发过来，所以客户端不需要重复提醒
             List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
 
             for (InviteMessage inviteMessage : msgs) {
@@ -650,15 +647,15 @@ public class DemoHelper {
                     inviteMessgeDao.deleteMessage(username);
                 }
             }
-            // 自己封装的javabean
+            // save invitation as message
             InviteMessage msg = new InviteMessage();
             msg.setFrom(username);
             msg.setTime(System.currentTimeMillis());
             msg.setReason(reason);
-            Log.d(TAG, username + "请求加你为好友,reason: " + reason);
-            // 设置相应status
+            Log.d(TAG, username + "apply to be your friend,reason: " + reason);
+            // set invitation status
             msg.setStatus(InviteMesageStatus.BEINVITEED);
-            notifyNewIviteMessage(msg);
+            notifyNewInviteMessage(msg);
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
 
@@ -670,40 +667,40 @@ public class DemoHelper {
                     return;
                 }
             }
-            // 自己封装的javabean
+            // save invitation as message
             InviteMessage msg = new InviteMessage();
             msg.setFrom(username);
             msg.setTime(System.currentTimeMillis());
-            Log.d(TAG, username + "同意了你的好友请求");
+            Log.d(TAG, username + "accept your request");
             msg.setStatus(InviteMesageStatus.BEAGREED);
-            notifyNewIviteMessage(msg);
+            notifyNewInviteMessage(msg);
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
 
         @Override
         public void onContactRefused(String username) {
-            // 参考同意，被邀请实现此功能,demo未实现
-            Log.d(username, username + "拒绝了你的好友请求");
+            // your request was refused
+            Log.d(username, username + " refused to your request");
         }
     }
     
     /**
-     * 保存并提示消息的邀请消息
+     * save and notify invitation message
      * @param msg
      */
-    private void notifyNewIviteMessage(InviteMessage msg){
+    private void notifyNewInviteMessage(InviteMessage msg){
         if(inviteMessgeDao == null){
             inviteMessgeDao = new InviteMessgeDao(appContext);
         }
         inviteMessgeDao.saveMessage(msg);
-        //保存未读数，这里没有精确计算
+        //increase the unread message count
         inviteMessgeDao.saveUnreadMessageCount(1);
-        // 提示有新消息
+        // notify there is new message
         getNotifier().viberateAndPlayTone(null);
     }
     
     /**
-     * 账号在别的设备登录
+     * user has logged into another device
      */
     protected void onConnectionConflict(){
         Intent intent = new Intent(appContext, MainActivity.class);
@@ -713,7 +710,7 @@ public class DemoHelper {
     }
     
     /**
-     * 账号被移除
+     * account is removed
      */
     protected void onCurrentAccountRemoved(){
         Intent intent = new Intent(appContext, MainActivity.class);
@@ -723,9 +720,8 @@ public class DemoHelper {
     }
 	
 	private EaseUser getUserInfo(String username){
-	    //获取user信息，demo是从内存的好友列表里获取，
-        //实际开发中，可能还需要从服务器获取用户信息,
-        //从服务器获取的数据，最好缓存起来，避免频繁的网络请求
+		// To get instance of EaseUser, here we get it from the user list in memory
+		// You'd better cache it if you get it from your server
         EaseUser user = null;
         if(username.equals(EMClient.getInstance().getCurrentUser()))
             return getUserProfileManager().getCurrentUserInfo();
@@ -738,11 +734,11 @@ public class DemoHelper {
 	}
 	
 	 /**
-     * 全局事件监听
-     * 因为可能会有UI页面先处理到这个消息，所以一般如果UI页面已经处理，这里就不需要再次处理
-     * activityList.size() <= 0 意味着所有页面都已经在后台运行，或者已经离开Activity Stack
+     * Global listener
+     * If this event already handled by an activity, you don't need handle it again
+     * activityList.size() <= 0 means all activities already in background or not in Activity Stack
      */
-    protected void registerEventListener() {
+    protected void registerMessageListener() {
     	messageListener = new EMMessageListener() {
             private BroadcastReceiver broadCastReceiver = null;
 			
@@ -750,7 +746,7 @@ public class DemoHelper {
 			public void onMessageReceived(List<EMMessage> messages) {
 			    for (EMMessage message : messages) {
 			        EMLog.d(TAG, "onMessageReceived id : " + message.getMsgId());
-			        //应用在后台，不需要刷新UI,通知栏提示新消息
+			        // in background, do not refresh UI, notify it in notification bar
 			        if(!easeUI.hasForegroundActivies()){
 			            getNotifier().onNewMsg(message);
 			        }
@@ -789,7 +785,7 @@ public class DemoHelper {
     }
 
 	/**
-	 * 是否登录成功过
+	 * if ever logged in
 	 * 
 	 * @return
 	 */
@@ -798,10 +794,10 @@ public class DemoHelper {
 	}
 
 	/**
-	 * 退出登录
+	 * logout
 	 * 
 	 * @param unbindDeviceToken
-	 *            是否解绑设备token(使用GCM才有)
+	 *            whether you need unbind your device token
 	 * @param callback
 	 *            callback
 	 */
@@ -839,7 +835,7 @@ public class DemoHelper {
 	}
 	
 	/**
-	 * 获取消息通知类
+	 * get instance of EaseNotifier
 	 * @return
 	 */
 	public EaseNotifier getNotifier(){
@@ -851,7 +847,7 @@ public class DemoHelper {
     }
 	
 	/**
-	 * 设置好友user list到内存中
+	 * update contact list
 	 * 
 	 * @param contactList
 	 */
@@ -867,7 +863,7 @@ public class DemoHelper {
 	}
 	
 	/**
-     * 保存单个user 
+     * save single contact 
      */
     public void saveContact(EaseUser user){
     	contactList.put(user.getUsername(), user);
@@ -875,7 +871,7 @@ public class DemoHelper {
     }
     
     /**
-     * 获取好友list
+     * get contact list
      *
      * @return
      */
@@ -893,7 +889,7 @@ public class DemoHelper {
     }
     
     /**
-     * 设置当前用户的环信id
+     * set current username
      * @param username
      */
     public void setCurrentUserName(String username){
@@ -902,7 +898,7 @@ public class DemoHelper {
     }
     
     /**
-     * 获取当前用户的环信id
+     * get current user's id
      */
     public String getCurrentUsernName(){
     	if(username == null){
@@ -1005,10 +1001,9 @@ public class DemoHelper {
 	    }
 	
 	/**
-    * 同步操作，从服务器获取群组列表
-    * 该方法会记录更新状态，可以通过isSyncingGroupsFromServer获取是否正在更新
-    * 和isGroupsSyncedWithServer获取是否更新已经完成
-    * @throws EaseMobException
+    * Get group list from server
+    * This method will save the sync state
+    * @throws HyphenateException
     */
    public synchronized void asyncFetchGroupsFromServer(final EMCallBack callback){
        if(isSyncingGroupsWithServer){
@@ -1027,7 +1022,6 @@ public class DemoHelper {
                    if(!isLoggedIn()){
                        isGroupsSyncedWithServer = false;
                        isSyncingGroupsWithServer = false;
-                       //通知listener同步群组完毕
                        noitifyGroupSyncListeners(false);
                        return;
                    }
@@ -1037,7 +1031,7 @@ public class DemoHelper {
                    isGroupsSyncedWithServer = true;
                    isSyncingGroupsWithServer = false;
                    
-                   //通知listener同步群组完毕
+                   //notify sync group list success
                    noitifyGroupSyncListeners(true);
                    if(isContactsSyncedWithServer()){
                        notifyForRecevingEvents();
@@ -1082,7 +1076,6 @@ public class DemoHelper {
                    if(!isLoggedIn()){
                        isContactsSyncedWithServer = false;
                        isSyncingContactsWithServer = false;
-                       //通知listeners联系人同步完毕
                        notifyContactsSyncListener(false);
                        return;
                    }
@@ -1093,10 +1086,10 @@ public class DemoHelper {
                        EaseCommonUtils.setUserInitialLetter(user);
                        userlist.put(username, user);
                    }
-                   // 存入内存
+                   // save the contact list to cache
                    getContactList().clear();
                    getContactList().putAll(userlist);
-                    // 存入db
+                    // save the contact list to database
                    UserDao dao = new UserDao(appContext);
                    List<EaseUser> users = new ArrayList<EaseUser>(userlist.values());
                    dao.saveContactList(users);
@@ -1107,12 +1100,11 @@ public class DemoHelper {
                    isContactsSyncedWithServer = true;
                    isSyncingContactsWithServer = false;
                    
-                   //通知listeners联系人同步完毕
+                   //notify sync success
                    notifyContactsSyncListener(true);
                    if(isGroupsSyncedWithServer()){
                        notifyForRecevingEvents();
                    }
-                   
                    
                    getUserProfileManager().asyncFetchContactInfosFromServer(usernames,new EMValueCallBack<List<EaseUser>>() {
 
@@ -1231,8 +1223,7 @@ public class DemoHelper {
         if(alreadyNotified){
             return;
         }
-        
-        // 通知sdk，UI 已经初始化完毕，注册了相应的receiver和listener, 可以接受broadcast了
+
         alreadyNotified = true;
     }
 	
