@@ -1,9 +1,5 @@
 package com.hyphenate.chatuidemo.ui;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,7 +14,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
-
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
@@ -36,6 +31,9 @@ import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 import com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenu;
 import com.hyphenate.util.EasyUtils;
 import com.hyphenate.util.PathUtil;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Map;
 
 public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHelper{
 
@@ -58,7 +56,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     
     
     /**
-     * 是否为环信小助手
+     * if it is chatBot 
      */
     private boolean isRobot;
     
@@ -134,7 +132,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
         }
         if(resultCode == Activity.RESULT_OK){
             switch (requestCode) {
-            case REQUEST_CODE_SELECT_VIDEO: //发送选中的视频
+            case REQUEST_CODE_SELECT_VIDEO: //send the video
                 if (data != null) {
                     int duration = data.getIntExtra("dur", 0);
                     String videoPath = data.getStringExtra("path");
@@ -150,7 +148,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
                     }
                 }
                 break;
-            case REQUEST_CODE_SELECT_FILE: //发送选中的文件
+            case REQUEST_CODE_SELECT_FILE: //send the file
                 if (data != null) {
                     Uri uri = data.getData();
                     if (uri != null) {
@@ -169,14 +167,13 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     @Override
     public void onSetMessageAttributes(EMMessage message) {
         if(isRobot){
-            //设置消息扩展属性
+            //set message extension
             message.setAttribute("em_robot_message", isRobot);
         }
     }
     
     @Override
     public EaseCustomChatRowProvider onSetCustomChatRowProvider() {
-        //设置自定义listview item提供者
         return new CustomChatRowProvider();
     }
   
@@ -186,7 +183,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
         if (chatType == Constant.CHATTYPE_GROUP) {
             EMGroup group = EMClient.getInstance().groupManager().getGroup(toChatUsername);
             if (group == null) {
-                Toast.makeText(getActivity(), R.string.gorup_not_found, 0).show();
+                Toast.makeText(getActivity(), R.string.gorup_not_found, Toast.LENGTH_SHORT).show();
                 return;
             }
             startActivityForResult(
@@ -199,12 +196,17 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
 
     @Override
     public void onAvatarClick(String username) {
-        //头像点击事件
+        //handling when user click avatar
         Intent intent = new Intent(getActivity(), UserProfileActivity.class);
         intent.putExtra("username", username);
         startActivity(intent);
     }
-    
+
+    @Override
+    public void onAvatarLongClick(String username) {
+        inputAtUsername(username);
+    }
+
     @Override
     public boolean onMessageBubbleClick(EMMessage message) {
         //消息框点击事件，demo这里不做覆盖，如需覆盖，return true
@@ -221,18 +223,17 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     @Override
     public boolean onExtendMenuItemClick(int itemId, View view) {
         switch (itemId) {
-        case ITEM_VIDEO: //视频
+        case ITEM_VIDEO:
             Intent intent = new Intent(getActivity(), ImageGridActivity.class);
             startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
             break;
-        case ITEM_FILE: //一般文件
-            //demo这里是通过系统api选择文件，实际app中最好是做成qq那种选择发送文件
+        case ITEM_FILE: //file
             selectFileFromLocal();
             break;
-        case ITEM_VOICE_CALL: //音频通话
+        case ITEM_VOICE_CALL:
             startVoiceCall();
             break;
-        case ITEM_VIDEO_CALL: //视频通话
+        case ITEM_VIDEO_CALL:
             startVideoCall();
             break;
 
@@ -260,11 +261,11 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     }
     
     /**
-     * 拨打语音电话
+     * make a voice call
      */
     protected void startVoiceCall() {
         if (!EMClient.getInstance().isConnected()) {
-            Toast.makeText(getActivity(), R.string.not_connect_to_server, 0).show();
+            Toast.makeText(getActivity(), R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
         } else {
             startActivity(new Intent(getActivity(), VoiceCallActivity.class).putExtra("username", toChatUsername)
                     .putExtra("isComingCall", false));
@@ -274,11 +275,11 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     }
     
     /**
-     * 拨打视频电话
+     * make a video call
      */
     protected void startVideoCall() {
         if (!EMClient.getInstance().isConnected())
-            Toast.makeText(getActivity(), R.string.not_connect_to_server, 0).show();
+            Toast.makeText(getActivity(), R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
         else {
             startActivity(new Intent(getActivity(), VideoCallActivity.class).putExtra("username", toChatUsername)
                     .putExtra("isComingCall", false));

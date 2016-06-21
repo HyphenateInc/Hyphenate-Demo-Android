@@ -37,7 +37,7 @@ public class ConversationListFragment extends EaseConversationListFragment{
     @Override
     protected void setUpView() {
         super.setUpView();
-        // 注册上下文菜单
+        // register context menu
         registerForContextMenu(conversationListView);
         conversationListView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -48,7 +48,7 @@ public class ConversationListFragment extends EaseConversationListFragment{
                 if (username.equals(EMClient.getInstance().getCurrentUser()))
                     Toast.makeText(getActivity(), R.string.Cant_chat_with_yourself, 0).show();
                 else {
-                    // 进入聊天页面
+                    // start chat acitivity
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     if(conversation.isGroup()){
                         if(conversation.getType() == EMConversationType.ChatRoom){
@@ -96,7 +96,7 @@ public class ConversationListFragment extends EaseConversationListFragment{
     	    return true;
     	}
         try {
-            // 删除此会话
+            // delete conversation
             EMClient.getInstance().chatManager().deleteConversation(tobeDeleteCons.getUserName(), deleteMessage);
             InviteMessgeDao inviteMessgeDao = new InviteMessgeDao(getActivity());
             inviteMessgeDao.deleteMessage(tobeDeleteCons.getUserName());
@@ -105,7 +105,7 @@ public class ConversationListFragment extends EaseConversationListFragment{
         }
         refresh();
 
-        // 更新消息未读数
+        // update unread count
         ((MainActivity) getActivity()).updateUnreadLabel();
         return true;
     }

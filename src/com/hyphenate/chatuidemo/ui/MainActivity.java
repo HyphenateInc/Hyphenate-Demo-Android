@@ -13,14 +13,18 @@
  */
 package com.hyphenate.chatuidemo.ui;
 
-import java.util.List;
-
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
@@ -43,36 +47,36 @@ import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.db.InviteMessgeDao;
-import com.hyphenate.chatuidemo.db.UserDao;
-import com.hyphenate.chatuidemo.domain.InviteMessage;
+import com.hyphenate.chatuidemo.runtimepermissions.PermissionsManager;
+import com.hyphenate.chatuidemo.runtimepermissions.PermissionsResultAction;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.util.EMLog;
 
+import java.util.List;
+
+@SuppressLint("NewApi")
 public class MainActivity extends BaseActivity {
 
 	protected static final String TAG = "MainActivity";
-	// 未读消息textview
+	// textview for unread message count
 	private TextView unreadLabel;
-	// 未读通讯录textview
+	// textview for unread event message
 	private TextView unreadAddressLable;
 
 	private Button[] mTabs;
 	private ContactListFragment contactListFragment;
-	// private conversationListFragment conversationListFragment;
-//	private ChatAllHistoryFragment conversationListFragment;
 	private SettingsFragment settingFragment;
 	private Fragment[] fragments;
 	private int index;
-	// 当前fragment的index
 	private int currentTabIndex;
-	// 账号在别处登录
+	// user logged into another device
 	public boolean isConflict = false;
-	// 账号被移除
+	// user account was removed
 	private boolean isCurrentAccountRemoved = false;
 	
 
 	/**
-	 * 检查当前用户是否被删除
+	 * check if current user account was remove
 	 */
 	public boolean getCurrentAccountRemoved() {
 		return isCurrentAccountRemoved;
@@ -82,21 +86,32 @@ public class MainActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+		    String packageName = getPackageName();
+		    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		    if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+		        Intent intent = new Intent();
+		        intent.setAction(android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+		        intent.setData(Uri.parse("package:" + packageName));
+		        startActivity(intent);
+		    }
+		}
+		
+		//make sure activity will not in background if user is logged into another device or removed
 		if (savedInstanceState != null && savedInstanceState.getBoolean(Constant.ACCOUNT_REMOVED, false)) {
-			// 防止被移除后，没点确定按钮然后按了home键，长期在后台又进app导致的crash
-			// 三个fragment里加的判断同理
 		    DemoHelper.getInstance().logout(false,null);
 			finish();
 			startActivity(new Intent(this, LoginActivity.class));
 			return;
 		} else if (savedInstanceState != null && savedInstanceState.getBoolean("isConflict", false)) {
-			// 防止被T后，没点确定按钮然后按了home键，长期在后台又进app导致的crash
-			// 三个fragment里加的判断同理
 			finish();
 			startActivity(new Intent(this, LoginActivity.class));
 			return;
 		}
 		setContentView(R.layout.em_activity_main);
+		// runtime permission for android 6.0, just require all permissions here for simple
+		requestPermissions();
+
 		initView();
 
 
@@ -111,24 +126,38 @@ public class MainActivity extends BaseActivity {
 		contactListFragment = new ContactListFragment();
 		settingFragment = new SettingsFragment();
 		fragments = new Fragment[] { conversationListFragment, contactListFragment, settingFragment };
-		// 添加显示第一个fragment
+
 		getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, conversationListFragment)
 				.add(R.id.fragment_container, contactListFragment).hide(contactListFragment).show(conversationListFragment)
 				.commit();
-		
-		//注册local广播接收者，用于接收demohelper中发出的群组联系人的变动通知
+
+		//register broadcast receiver to receive the change of group from DemoHelper
 		registerBroadcastReceiver();
 		
 		
 		EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
-		//内部测试方法，请忽略
+		//debug purpose only
         registerInternalDebugReceiver();
         
 	}
 
-	
+	@TargetApi(23)
+	private void requestPermissions() {
+		PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this, new PermissionsResultAction() {
+			@Override
+			public void onGranted() {
+//              Toast.makeText(MainActivity.this, "All permissions have been granted", Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void onDenied(String permission) {
+				//Toast.makeText(MainActivity.this, "Permission " + permission + " has been denied", Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
 	/**
-	 * 初始化组件
+	 * init views
 	 */
 	private void initView() {
 		unreadLabel = (TextView) findViewById(R.id.unread_msg_number);
@@ -137,12 +166,12 @@ public class MainActivity extends BaseActivity {
 		mTabs[0] = (Button) findViewById(R.id.btn_conversation);
 		mTabs[1] = (Button) findViewById(R.id.btn_address_list);
 		mTabs[2] = (Button) findViewById(R.id.btn_setting);
-		// 把第一个tab设为选中状态
+		// select first tab
 		mTabs[0].setSelected(true);
 	}
 
 	/**
-	 * button点击事件
+	 * on tab clicked
 	 * 
 	 * @param view
 	 */
@@ -167,7 +196,7 @@ public class MainActivity extends BaseActivity {
 			trx.show(fragments[index]).commit();
 		}
 		mTabs[currentTabIndex].setSelected(false);
-		// 把当前tab设为选中状态
+		// set current tab selected
 		mTabs[index].setSelected(true);
 		currentTabIndex = index;
 	}
@@ -176,7 +205,7 @@ public class MainActivity extends BaseActivity {
 		
 		@Override
 		public void onMessageReceived(List<EMMessage> messages) {
-			// 提示新消息
+			// notify new message
 		    for (EMMessage message : messages) {
 		        DemoHelper.getInstance().getNotifier().onNewMsg(message);
 		    }
@@ -202,10 +231,10 @@ public class MainActivity extends BaseActivity {
 	private void refreshUIWithMessage() {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				// 刷新bottom bar消息未读数
+				// refresh unread count
 				updateUnreadLabel();
 				if (currentTabIndex == 0) {
-					// 当前页面如果为聊天历史页面，刷新此页面
+					// refresh conversation list
 					if (conversationListFragment != null) {
 						conversationListFragment.refresh();
 					}
@@ -231,7 +260,7 @@ public class MainActivity extends BaseActivity {
                 updateUnreadLabel();
                 updateUnreadAddressLable();
                 if (currentTabIndex == 0) {
-                    // 当前页面如果为聊天历史页面，刷新此页面
+                    // refresh conversation list
                     if (conversationListFragment != null) {
                         conversationListFragment.refresh();
                     }
@@ -261,7 +290,7 @@ public class MainActivity extends BaseActivity {
 					if (ChatActivity.activityInstance != null && ChatActivity.activityInstance.toChatUsername != null &&
 							username.equals(ChatActivity.activityInstance.toChatUsername)) {
 					    String st10 = getResources().getString(R.string.have_you_removed);
-					    Toast.makeText(MainActivity.this, ChatActivity.activityInstance.getToChatUsername() + st10, 1)
+					    Toast.makeText(MainActivity.this, ChatActivity.activityInstance.getToChatUsername() + st10, Toast.LENGTH_LONG)
 					    .show();
 					    ChatActivity.activityInstance.finish();
 					}
@@ -298,7 +327,7 @@ public class MainActivity extends BaseActivity {
 	}
 
 	/**
-	 * 刷新未读消息数
+	 * update unread message count
 	 */
 	public void updateUnreadLabel() {
 		int count = getUnreadMsgCountTotal();
@@ -311,14 +340,13 @@ public class MainActivity extends BaseActivity {
 	}
 
 	/**
-	 * 刷新申请与通知消息数
+	 * update the total unread count 
 	 */
 	public void updateUnreadAddressLable() {
 		runOnUiThread(new Runnable() {
 			public void run() {
 				int count = getUnreadAddressCountTotal();
 				if (count > 0) {
-//					unreadAddressLable.setText(String.valueOf(count));
 					unreadAddressLable.setVisibility(View.VISIBLE);
 				} else {
 					unreadAddressLable.setVisibility(View.INVISIBLE);
@@ -329,7 +357,7 @@ public class MainActivity extends BaseActivity {
 	}
 
 	/**
-	 * 获取未读申请与通知消息
+	 * get unread event notification count, including application, accepted, etc
 	 * 
 	 * @return
 	 */
@@ -340,7 +368,7 @@ public class MainActivity extends BaseActivity {
 	}
 
 	/**
-	 * 获取未读消息数
+	 * get unread message count
 	 * 
 	 * @return
 	 */
@@ -412,7 +440,7 @@ public class MainActivity extends BaseActivity {
     private LocalBroadcastManager broadcastManager;
 
 	/**
-	 * 显示帐号在别处登录dialog
+	 * show the dialog when user logged into another device
 	 */
 	private void showConflictDialog() {
 		isConflictDialogShow = true;
@@ -449,7 +477,7 @@ public class MainActivity extends BaseActivity {
 	}
 
 	/**
-	 * 帐号被移除的dialog
+	 * show the dialog if user account is removed
 	 */
 	private void showAccountRemovedDialog() {
 		isAccountRemovedDialogShow = true;
@@ -494,7 +522,7 @@ public class MainActivity extends BaseActivity {
 	}
 	
 	/**
-	 * 内部测试代码，开发者请忽略
+	 * debug purpose only, you can ignore this
 	 */
 	private void registerInternalDebugReceiver() {
 	    internalDebugReceiver = new BroadcastReceiver() {
@@ -507,7 +535,6 @@ public class MainActivity extends BaseActivity {
                     public void onSuccess() {
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                // 重新显示登陆页面
                                 finish();
                                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                                 
@@ -532,5 +559,10 @@ public class MainActivity extends BaseActivity {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		//getMenuInflater().inflate(R.menu.context_tab_contact, menu);
 	}
-	
+
+	@Override 
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+			@NonNull int[] grantResults) {
+		PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
+	}
 }

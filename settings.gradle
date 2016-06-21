@@ -1,5 +1,5 @@
 include ':EaseUI'
-project(':EaseUI').projectDir = new File('../easeui')
+project(':EaseUI').projectDir = new File('../easeui_android')
 
 //release时需要把下面的include相关的两行注释掉
 //include ':hyphenatechatsdk'

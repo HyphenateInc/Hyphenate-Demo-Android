@@ -1,15 +1,17 @@
 package com.hyphenate.chatuidemo.ui;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.runtimepermissions.PermissionsManager;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.ui.EaseChatFragment;
 import com.hyphenate.util.EasyUtils;
 
-import android.content.Intent;
-import android.os.Bundle;
-
 /**
- * 聊天页面，需要fragment的使用{@link #EaseChatFragment}
+ * chat activity，EaseChatFragment was used {@link #EaseChatFragment}
  *
  */
 public class ChatActivity extends BaseActivity{
@@ -66,5 +68,10 @@ public class ChatActivity extends BaseActivity{
     
     public String getToChatUsername(){
         return toChatUsername;
+    }
+
+    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+        @NonNull int[] grantResults) {
+        PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
     }
 }

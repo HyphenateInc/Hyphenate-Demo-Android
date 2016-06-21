@@ -15,7 +15,6 @@
 package com.hyphenate.chatuidemo.ui;
 
 import android.os.Bundle;
-
 import com.hyphenate.easeui.ui.EaseBaseActivity;
 
 public class BaseActivity extends EaseBaseActivity {
@@ -34,6 +33,5 @@ public class BaseActivity extends EaseBaseActivity {
     protected void onStart() {
         super.onStart();
     }
-
 
 }
