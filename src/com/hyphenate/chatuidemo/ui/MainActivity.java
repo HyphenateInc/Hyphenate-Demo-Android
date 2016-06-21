@@ -82,6 +82,18 @@ public class MainActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+		    String packageName = getPackageName();
+		    PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+		    if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+		        Intent intent = new Intent();
+		        intent.setAction(android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+		        //intent.setAction(android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+		        intent.setData(Uri.parse("package:" + packageName));
+		        startActivity(intent);
+		    }
+		}
+		
 		if (savedInstanceState != null && savedInstanceState.getBoolean(Constant.ACCOUNT_REMOVED, false)) {
 			// 防止被移除后，没点确定按钮然后按了home键，长期在后台又进app导致的crash
 			// 三个fragment里加的判断同理
