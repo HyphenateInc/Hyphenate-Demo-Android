@@ -1,9 +1,5 @@
 package com.hyphenate.chatuidemo.ui;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.Map;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,7 +14,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
-
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
@@ -36,6 +31,9 @@ import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 import com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenu;
 import com.hyphenate.util.EasyUtils;
 import com.hyphenate.util.PathUtil;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Map;
 
 public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHelper{
 

@@ -67,4 +67,9 @@ public class ChatActivity extends BaseActivity{
     public String getToChatUsername(){
         return toChatUsername;
     }
+
+    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+        @NonNull int[] grantResults) {
+        PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
+    }
 }

@@ -97,6 +97,9 @@ public class MainActivity extends BaseActivity {
 			return;
 		}
 		setContentView(R.layout.em_activity_main);
+		//6.0运行时权限处理，target api设成23时，demo这里做的比较简单，直接请求所有需要的运行时权限
+		requestPermissions();
+
 		initView();
 
 
@@ -261,7 +264,7 @@ public class MainActivity extends BaseActivity {
 					if (ChatActivity.activityInstance != null && ChatActivity.activityInstance.toChatUsername != null &&
 							username.equals(ChatActivity.activityInstance.toChatUsername)) {
 					    String st10 = getResources().getString(R.string.have_you_removed);
-					    Toast.makeText(MainActivity.this, ChatActivity.activityInstance.getToChatUsername() + st10, 1)
+					    Toast.makeText(MainActivity.this, ChatActivity.activityInstance.getToChatUsername() + st10, Toast.LENGTH_LONG)
 					    .show();
 					    ChatActivity.activityInstance.finish();
 					}
@@ -532,5 +535,9 @@ public class MainActivity extends BaseActivity {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		//getMenuInflater().inflate(R.menu.context_tab_contact, menu);
 	}
-	
+
+	@Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+			@NonNull int[] grantResults) {
+		PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
+	}
 }
