@@ -330,4 +330,6 @@
     
     <string name="network_unstable">网络不稳定</string>
     <string name="no_call_data">没有通话数据</string>
+    <string name="tb_munion_tip_download_prefix">正在下载:</string>
+
 </resources>
