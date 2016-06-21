@@ -129,4 +129,8 @@ public class BlacklistActivity extends Activity {
 		}
 
 	}
+
+	public void back(View v) {
+		finish();
+	}
 }
