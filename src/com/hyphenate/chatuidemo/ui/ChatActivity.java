@@ -1,12 +1,14 @@
 package com.hyphenate.chatuidemo.ui;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.runtimepermissions.PermissionsManager;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.ui.EaseChatFragment;
 import com.hyphenate.util.EasyUtils;
-
-import android.content.Intent;
-import android.os.Bundle;
 
 /**
  * chat activity，EaseChatFragment was used {@link #EaseChatFragment}
