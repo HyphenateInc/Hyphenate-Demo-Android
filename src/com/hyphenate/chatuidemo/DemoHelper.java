@@ -210,7 +210,6 @@ public class DemoHelper {
         //设置GCM Number，需要的GCM的app可以设置此参数
         options.setGCMNumber("998166487724");
         
-        options.allowChatroomOwnerLeave(getModel().isChatroomOwnerLeaveAllowed());
         options.setDeleteMessagesAsExitGroup(getModel().isDeleteMessagesAsExitGroup());
         options.setAutoAcceptGroupInvitation(getModel().isAutoAcceptGroupInvitation());
         

@@ -69,7 +69,7 @@ public class GroupPickContactsActivity extends BaseActivity {
 		// get contact list
 		final List<EaseUser> alluserList = new ArrayList<EaseUser>();
 		for (EaseUser user : DemoHelper.getInstance().getContactList().values()) {
-			if (!user.getUsername().equals(Constant.NEW_FRIENDS_USERNAME) & !user.getUsername().equals(Constant.GROUP_USERNAME) & !user.getUsername().equals(Constant.CHAT_ROOM) & !user.getUsername().equals(Constant.CHAT_ROBOT))
+			if (!user.getUsername().equals(Constant.NEW_FRIENDS_USERNAME) & !user.getUsername().equals(Constant.GROUP_USERNAME)  & !user.getUsername().equals(Constant.CHAT_ROBOT))
 				alluserList.add(user);
 		}
 		// sort the list
