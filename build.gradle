@@ -5,6 +5,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.google.gms:google-services:3.0.0'
     }
 }
 
@@ -15,6 +16,7 @@ allprojects {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 23
@@ -63,8 +65,4 @@ android {
 dependencies {
     compile project(':EaseUI')
 	  compile fileTree(dir: 'libs', include: '*.jar', exclude: 'android-support-multidex.jar')
-    //考虑到在eclipse中,直接使用源码
-//    compile ('com.anthonycr.grant:permissions:1.0'){
-//        exclude module: 'support-v4'
-//    }
 }
