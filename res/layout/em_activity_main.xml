@@ -8,9 +8,9 @@
     <LinearLayout
         android:id="@+id/main_bottom"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="54dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/bottom_bar_normal_bg"
+        android:background="#fff"
         android:gravity="center_vertical"
         android:orientation="horizontal" >
 
@@ -19,7 +19,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" >
-
             <Button
                 android:id="@+id/btn_conversation"
                 android:layout_width="match_parent"
@@ -100,11 +99,17 @@
                 android:textSize="12sp" />
         </RelativeLayout>
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/list_divider"
+        android:layout_above="@id/main_bottom"
+        />
     <RelativeLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/main_bottom" />
+        android:layout_above="@id/divider" />
 
 </RelativeLayout>

@@ -4,13 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/list_divider"
+        />
     <com.hyphenate.chatuidemo.widget.ContactItemView
         android:id="@+id/application_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:contactItemImage="@drawable/em_new_friends_icon"
         app:contactItemName="@string/Application_and_notify" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/list_divider"
+        />
 
     <com.hyphenate.chatuidemo.widget.ContactItemView
         android:id="@+id/group_item"
@@ -18,7 +27,11 @@
         android:layout_height="wrap_content"
         app:contactItemImage="@drawable/em_groups_icon"
         app:contactItemName="@string/group_chat" />
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/list_divider"
+        />
     <com.hyphenate.chatuidemo.widget.ContactItemView
         android:id="@+id/robot_item"
         android:layout_width="match_parent"

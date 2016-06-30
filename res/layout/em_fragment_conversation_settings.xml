@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_bg"
+    android:background="#fafafa"
     android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.hyphenate.easeui.widget.EaseTitleBar
@@ -189,9 +189,9 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dip"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/btn_gray_normal" />
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginRight="10dip"
+                    android:background="#E6E6E6" />
 
                 <LinearLayout
                     android:id="@+id/ll_black_list"
@@ -213,9 +213,9 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dip"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/btn_gray_normal" />
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginRight="10dip"
+                    android:background="#E6E6E6" />
 
                 <LinearLayout
                     android:id="@+id/ll_user_profile"
@@ -237,9 +237,9 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dip"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/btn_gray_normal" />
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginRight="10dip"
+                    android:background="#E6E6E6" />
 
                 <LinearLayout
                     android:id="@+id/ll_diagnose"
@@ -261,9 +261,9 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dip"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/btn_gray_normal" />
+                    android:layout_marginLeft="10dip"
+                    android:layout_marginRight="10dip"
+                    android:background="#E6E6E6" />
 
                 <LinearLayout
                     android:id="@+id/ll_set_push_nick"
@@ -283,8 +283,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/textview4"
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="1dip"
                 android:layout_marginLeft="10dip"
@@ -315,7 +314,12 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true" />
             </RelativeLayout>
-            
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:background="#E6E6E6" />
             <RelativeLayout
                 android:id="@+id/rl_switch_auto_accept_group_invitation"
                 android:layout_width="match_parent"
@@ -340,7 +344,12 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true" />
             </RelativeLayout>
-            
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:background="#E6E6E6" />
             <RelativeLayout
                 android:id="@+id/rl_switch_adaptive_video_encode"
                 android:layout_width="match_parent"
@@ -365,27 +374,23 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true" />
             </RelativeLayout>
-            
-            <LinearLayout
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dip"
-                android:background="#ffffff"
-                android:orientation="vertical" >
+                android:layout_height="1dip"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:background="#E6E6E6" />
 
                 <Button
                     android:id="@+id/btn_logout"
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
                     android:layout_marginBottom="12dp"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
                     android:layout_marginTop="12dp"
-                    android:background="@drawable/em_btn_style_alert_dialog_special"
+                    android:background="@drawable/em_common_white_btn_bg"
                     android:text="@string/button_logout"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/holo_red_light"
                     android:textSize="18sp" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
