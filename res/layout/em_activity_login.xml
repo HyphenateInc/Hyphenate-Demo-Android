@@ -21,7 +21,9 @@
             android:textSize="20sp" />
 
         <Button
-            android:layout_width="60dp"
+            android:paddingRight="@dimen/title_right_btn_padding"
+            android:paddingLeft="@dimen/title_right_btn_padding"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
