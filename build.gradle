@@ -36,6 +36,10 @@ android {
         multiDexEnabled true
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
 	sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -71,7 +75,7 @@ android {
 
 dependencies {
     compile project(':EaseUI')
-	  compile fileTree(dir: 'libs', include: '*.jar', exclude: 'android-support-multidex.jar')
+    compile fileTree(dir: 'libs', include: '*.jar', exclude: 'android-support-multidex.jar')
 //    compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
 //        transitive = true;
 //    }

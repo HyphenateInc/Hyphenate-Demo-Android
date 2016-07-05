@@ -323,7 +323,7 @@ public class VoiceCallActivity extends CallActivity implements OnClickListener {
 		case R.id.btn_answer_call:
 		    answerBtn.setEnabled(false);
 		    closeSpeakerOn();
-            callStateTextView.setText("正在接听...");
+            callStateTextView.setText(getResources().getString(R.string.answer));
 			comingBtnContainer.setVisibility(View.INVISIBLE);
             hangupBtn.setVisibility(View.VISIBLE);
             voiceContronlLayout.setVisibility(View.VISIBLE);

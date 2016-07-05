@@ -74,7 +74,7 @@
             android:layout_marginTop="10dp"
               android:textColor="@android:color/white"
               android:textSize="20sp"
-              android:text="张三"
+              android:text="John"
              />
         <TextView
             android:id="@+id/tv_network_status"

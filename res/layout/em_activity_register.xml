@@ -101,6 +101,7 @@
         android:background="#f2f2f2" />
 
     <LinearLayout
+        android:id="@+id/ll_password"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@id/rl_username"
@@ -140,6 +141,5 @@
         android:text="@string/register"
         android:textColor="@android:color/white"
         android:textSize="18sp" />
-
 
 </LinearLayout>
