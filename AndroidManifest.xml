@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hyphenate.chatuidemo"
     android:versionName="3.1.3"
-    android:versionCode="36" >
+    android:versionCode="37" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -56,7 +56,6 @@
             android:windowSoftInputMode="adjustPan" >
         </activity>
 
-        <!-- 开屏页 -->
         <activity
             android:name="com.hyphenate.chatuidemo.ui.SplashActivity"
             android:screenOrientation="portrait"
@@ -68,7 +67,6 @@
             </intent-filter>
         </activity>
 
-        <!-- 登陆 -->
         <activity
             android:name="com.hyphenate.chatuidemo.ui.LoginActivity"
             android:screenOrientation="portrait"
@@ -76,14 +74,13 @@
             android:windowSoftInputMode="adjustResize|stateVisible">
         </activity>
 
-        <!-- 注册 -->
         <activity
             android:name="com.hyphenate.chatuidemo.ui.RegisterActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" 
             android:windowSoftInputMode="adjustResize|stateVisible">
         </activity>
-        <!-- 聊天页面 -->
+
         <activity
             android:name="com.hyphenate.chatuidemo.ui.ChatActivity"
             android:launchMode="singleTask"
@@ -91,20 +88,20 @@
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustResize" >
         </activity>
-        <!-- 添加好友 -->
+
         <activity
             android:name="com.hyphenate.chatuidemo.ui.AddContactActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible"
             android:theme="@style/horizontal_slide" >
         </activity>
-        <!-- 群组详情 -->
+
         <activity
             android:name="com.hyphenate.chatuidemo.ui.GroupDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" >
         </activity>
-        <!-- 群组列表 -->
+
         <activity
             android:name="com.hyphenate.chatuidemo.ui.GroupsActivity"
             android:screenOrientation="portrait"
@@ -112,79 +109,75 @@
             android:windowSoftInputMode="adjustPan" >
         </activity>
 
-        <!-- 聊天室详情 -->
         <activity
             android:name="com.hyphenate.chatuidemo.ui.ChatRoomDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" >
         </activity>
-        
-        <!-- 新建群组 -->
+
         <activity
             android:name="com.hyphenate.chatuidemo.ui.NewGroupActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustPan" >
         </activity>
-        <!-- 退出群组提示框 -->
+
         <activity
             android:name="com.hyphenate.chatuidemo.ui.ExitGroupDialog"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyleBottom" >
         </activity>
-        <!-- 群组选人 -->
+
         <activity
             android:name="com.hyphenate.chatuidemo.ui.GroupPickContactsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustPan" >
         </activity>
-        <!-- 地图 -->
+
         <activity
             android:name="com.hyphenate.easeui.ui.EaseBaiduMapActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" >
         </activity>
 
-        <!-- 新的朋友邀请消息页面 -->
         <activity
             android:name="com.hyphenate.chatuidemo.ui.NewFriendsMsgActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" >
         </activity>
-        <!-- 转发消息用户列表页面 -->
+
         <activity
             android:name="com.hyphenate.chatuidemo.ui.ForwardMessageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustPan" >
         </activity>
-        <!-- 自定义的contextmenu -->
+
         <activity
             android:name="com.hyphenate.chatuidemo.ui.ContextMenuActivity"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle" >
         </activity>
-        <!-- 显示下载大图页面 -->
+
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowBigImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" >
         </activity>
-        <!-- 下载文件 -->
+
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" >
         </activity>
-        <!-- 黑名单 -->
+
         <activity
             android:name="com.hyphenate.chatuidemo.ui.BlacklistActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" >
         </activity>
 
-        <!-- 公开的群聊列表 -->
         <activity
             android:name="com.hyphenate.chatuidemo.ui.PublicGroupsActivity"
             android:screenOrientation="portrait"
@@ -192,14 +185,13 @@
             android:windowSoftInputMode="adjustPan" >
         </activity>
 
-        <!-- 语音通话 -->
         <activity
             android:name="com.hyphenate.chatuidemo.ui.VoiceCallActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/nornal_style" >
         </activity>
-        <!-- 视频通话 -->
+
         <activity
             android:name="com.hyphenate.chatuidemo.ui.VideoCallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -207,13 +199,13 @@
             android:launchMode="singleTask"
             android:theme="@style/horizontal_slide" >
         </activity>
-        <!-- 群聊简单信息 -->
+
         <activity
             android:name="com.hyphenate.chatuidemo.ui.GroupSimpleDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide" >
         </activity>
-        <!-- 群组黑名单用户列表 -->
+
         <activity
             android:name="com.hyphenate.chatuidemo.ui.GroupBlacklistActivity"
             android:screenOrientation="portrait"
@@ -285,7 +277,6 @@
 		    android:theme="@style/horizontal_slide"
 		    ></activity>
 
-        <!-- 开机自启动服务 -->
         <receiver android:name="com.hyphenate.chatuidemo.receiver.StartServiceReceiver" >
             <intent-filter android:priority="1000" >
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -321,28 +312,28 @@
         <!-- gcm end -->
         
 
-        <!-- 设置环信应用的appkey -->
+        <!-- set your appkey -->
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="hyphenatedemo#hyphenatedemo" />
-        <!-- 声明sdk所需的service -->
+        <!-- SDK service -->
         <service android:name="com.hyphenate.chat.EMChatService"
             android:exported="true"
             />
-        <!-- 声明sdk所需的receiver -->
+        <!-- SDK receiver -->
         <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED"/>
                 <data android:scheme="package"/>
             </intent-filter>
-            <!-- 可选filter -->
+            <!-- optional filter -->
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
 
-        <!-- 百度地图所需的service -->
+        <!-- baidu map service -->
         <service
             android:name="com.baidu.location.f" 
             android:enabled="true"

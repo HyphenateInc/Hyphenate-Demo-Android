@@ -56,12 +56,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="张三"
+                android:text="John"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
         </LinearLayout>
 
-           <!-- 演示视频录制功能 -->
         <Button 
             android:id="@+id/btn_record_video"
             android:layout_width="wrap_content"
@@ -86,14 +85,6 @@
             android:max="200"
             android:progress="100"
             />
-        <!--     <Button 
-            android:layout_marginTop="3dp"
-            android:id="@+id/btn_toggle_video_stream"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="暂停视频"
-            android:layout_below="@id/btn_record_video"
-            /> -->
         
         <TextView 
             android:id="@+id/tv_call_monitor"

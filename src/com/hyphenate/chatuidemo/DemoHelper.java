@@ -311,7 +311,7 @@ public class DemoHelper {
             	// be used on notification bar, different text according the message type.
                 String ticker = EaseCommonUtils.getMessageDigest(message, appContext);
                 if(message.getType() == Type.TXT){
-                    ticker = ticker.replaceAll("\\[.{2,3}\\]", "[表情]");
+                    ticker = ticker.replaceAll("\\[.{2,3}\\]", "[Emoticon]");
                 }
                 EaseUser user = getUserInfo(message.getFrom());
                 if(user != null){
@@ -756,14 +756,14 @@ public class DemoHelper {
 			@Override
 			public void onCmdMessageReceived(List<EMMessage> messages) {
 			    for (EMMessage message : messages) {
-                    EMLog.d(TAG, "收到透传消息");
-                    //获取消息body
+                    EMLog.d(TAG, "onCmdMessageReceived");
+                    //get message body
                     EMCmdMessageBody cmdMsgBody = (EMCmdMessageBody) message.getBody();
                     final String action = cmdMsgBody.action();//获取自定义action
 
-                    //获取扩展属性 此处省略
+                    //get extension attribute if you need
                     //message.getStringAttribute("");
-                    EMLog.d(TAG, String.format("透传消息：action:%s,message:%s", action,message.toString()));
+                    EMLog.d(TAG, String.format("CmdMessage：action:%s,message:%s", action,message.toString()));
                 }
 			}
 
