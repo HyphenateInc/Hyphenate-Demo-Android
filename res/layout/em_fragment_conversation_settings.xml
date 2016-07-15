@@ -34,8 +34,7 @@
                     android:layout_height="30dip"
                     android:gravity="bottom|left"
                     android:paddingLeft="10dip"
-                    android:text="@string/notify"
-                    android:textColor="@color/btn_gray_pressed" />
+                    android:text="@string/notify" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -61,9 +60,7 @@
                         android:layout_centerVertical="true"
                         android:paddingLeft="10dip"
                         android:text="@string/newnotify"
-                        android:textColor="@android:color/black"
-                        android:textSize="14sp"
-                        android:typeface="serif" />
+                        android:textSize="14sp" />
 
                     <com.hyphenate.easeui.widget.EaseSwitchButton
                         android:layout_width="wrap_content"
@@ -94,7 +91,6 @@
                         android:layout_centerVertical="true"
                         android:paddingLeft="10dip"
                         android:text="@string/voice"
-                        android:textColor="@android:color/black"
                         android:textSize="14sp"
                         android:typeface="serif" />
 
@@ -127,9 +123,7 @@
                         android:layout_centerVertical="true"
                         android:paddingLeft="10dip"
                         android:text="@string/shake"
-                        android:textColor="@android:color/black"
-                        android:textSize="14sp"
-                        android:typeface="serif" />
+                        android:textSize="14sp" />
 
                     <com.hyphenate.easeui.widget.EaseSwitchButton
                         android:layout_width="wrap_content"
@@ -152,8 +146,7 @@
                         android:layout_height="30dip"
                         android:gravity="bottom|left"
                         android:paddingLeft="10dip"
-                        android:text="@string/chatset"
-                        android:textColor="@color/btn_gray_pressed" />
+                        android:text="@string/chatset" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -174,7 +167,6 @@
                         android:layout_centerVertical="true"
                         android:paddingLeft="10dip"
                         android:text="@string/yangshengqi"
-                        android:textColor="@android:color/black"
                         android:textSize="14sp"
                         android:typeface="serif" />
 
@@ -206,7 +198,6 @@
                         android:layout_gravity="center_vertical"
                         android:paddingLeft="10dip"
                         android:text="@string/book_black"
-                        android:textColor="@android:color/black"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -230,7 +221,6 @@
                         android:layout_gravity="center_vertical"
                         android:paddingLeft="10dip"
                         android:text="@string/title_user_profile"
-                        android:textColor="@android:color/black"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -254,7 +244,6 @@
                         android:layout_gravity="center_vertical"
                         android:paddingLeft="10dip"
                         android:text="@string/diagnose"
-                        android:textColor="@android:color/black"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -278,7 +267,6 @@
                         android:layout_gravity="center_vertical"
                         android:paddingLeft="10dip"
                         android:text="@string/push_nick"
-                        android:textColor="@android:color/black"
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -303,9 +291,7 @@
                     android:layout_centerVertical="true"
                     android:paddingLeft="10dip"
                     android:text="@string/delete_msg_when_exit_group"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"
-                    android:typeface="serif" />
+                    android:textSize="14sp" />
 
                 <com.hyphenate.easeui.widget.EaseSwitchButton
                     android:layout_width="wrap_content"
@@ -333,7 +319,6 @@
                     android:layout_centerVertical="true"
                     android:paddingLeft="10dip"
                     android:text="@string/auto_accept_group_invitation"
-                    android:textColor="@android:color/black"
                     android:textSize="14sp"
                     android:typeface="serif" />
 
@@ -363,9 +348,7 @@
                     android:layout_centerVertical="true"
                     android:paddingLeft="10dip"
                     android:text="@string/adaptive_video_encode"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"
-                    android:typeface="serif" />
+                    android:textSize="14sp" />
 
                 <com.hyphenate.easeui.widget.EaseSwitchButton
                     android:layout_width="wrap_content"
