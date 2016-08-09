@@ -1,10 +1,9 @@
 package com.hyphenate.chatuidemo.db;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.DemoApplication;
@@ -15,10 +14,10 @@ import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.util.HanziToPinyin;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 public class DemoDBManager {
     static private DemoDBManager dbMgr = new DemoDBManager();
@@ -47,8 +46,8 @@ public class DemoDBManager {
             for (EaseUser user : contactList) {
                 ContentValues values = new ContentValues();
                 values.put(UserDao.COLUMN_NAME_ID, user.getUsername());
-                if(user.getNick() != null)
-                    values.put(UserDao.COLUMN_NAME_NICK, user.getNick());
+                if(user.getNickname() != null)
+                    values.put(UserDao.COLUMN_NAME_NICK, user.getNickname());
                 if(user.getAvatar() != null)
                     values.put(UserDao.COLUMN_NAME_AVATAR, user.getAvatar());
                 db.replace(UserDao.TABLE_NAME, null, values);
@@ -71,7 +70,7 @@ public class DemoDBManager {
                 String nick = cursor.getString(cursor.getColumnIndex(UserDao.COLUMN_NAME_NICK));
                 String avatar = cursor.getString(cursor.getColumnIndex(UserDao.COLUMN_NAME_AVATAR));
                 EaseUser user = new EaseUser(username);
-                user.setNick(nick);
+                user.setNickname(nick);
                 user.setAvatar(avatar);
                 if (username.equals(Constant.NEW_FRIENDS_USERNAME) || username.equals(Constant.GROUP_USERNAME)
                         || username.equals(Constant.CHAT_ROBOT)) {
@@ -105,8 +104,8 @@ public class DemoDBManager {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(UserDao.COLUMN_NAME_ID, user.getUsername());
-        if(user.getNick() != null)
-            values.put(UserDao.COLUMN_NAME_NICK, user.getNick());
+        if(user.getNickname() != null)
+            values.put(UserDao.COLUMN_NAME_NICK, user.getNickname());
         if(user.getAvatar() != null)
             values.put(UserDao.COLUMN_NAME_AVATAR, user.getAvatar());
         if(db.isOpen()){
@@ -322,8 +321,8 @@ public class DemoDBManager {
 			for (RobotUser item : robotList) {
 				ContentValues values = new ContentValues();
 				values.put(UserDao.ROBOT_COLUMN_NAME_ID, item.getUsername());
-				if (item.getNick() != null)
-					values.put(UserDao.ROBOT_COLUMN_NAME_NICK, item.getNick());
+				if (item.getNickname() != null)
+					values.put(UserDao.ROBOT_COLUMN_NAME_NICK, item.getNickname());
 				if (item.getAvatar() != null)
 					values.put(UserDao.ROBOT_COLUMN_NAME_AVATAR, item.getAvatar());
 				db.replace(UserDao.ROBOT_TABLE_NAME, null, values);
@@ -347,11 +346,11 @@ public class DemoDBManager {
 				String nick = cursor.getString(cursor.getColumnIndex(UserDao.ROBOT_COLUMN_NAME_NICK));
 				String avatar = cursor.getString(cursor.getColumnIndex(UserDao.ROBOT_COLUMN_NAME_AVATAR));
 				RobotUser user = new RobotUser(username);
-				user.setNick(nick);
+				user.setNickname(nick);
 				user.setAvatar(avatar);
 				String headerName = null;
-				if (!TextUtils.isEmpty(user.getNick())) {
-					headerName = user.getNick();
+				if (!TextUtils.isEmpty(user.getNickname())) {
+					headerName = user.getNickname();
 				} else {
 					headerName = user.getUsername();
 				}

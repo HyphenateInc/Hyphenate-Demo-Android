@@ -13,20 +13,6 @@
  */
 package com.hyphenate.chatuidemo.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.hyphenate.EMValueCallBack;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMContact;
-import com.hyphenate.chatuidemo.DemoHelper;
-import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.db.UserDao;
-import com.hyphenate.chatuidemo.domain.RobotUser;
-import com.hyphenate.exceptions.HyphenateException;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,6 +30,18 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.hyphenate.EMValueCallBack;
+import com.hyphenate.chat.EMContact;
+import com.hyphenate.chatuidemo.DemoHelper;
+import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.db.UserDao;
+import com.hyphenate.chatuidemo.domain.RobotUser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RobotsActivity extends BaseActivity {
 
@@ -121,7 +119,7 @@ public class RobotsActivity extends BaseActivity {
 						Map<String, RobotUser> mMap = new HashMap<String, RobotUser>();
 						for (EMContact item : value) {
 							RobotUser user = new RobotUser(item.getUsername());
-							user.setNick(item.getNick());
+							user.setNickname(item.getNickname());
 							user.setInitialLetter("#");
 							mMap.put(item.getUsername(), user);
 						}
@@ -150,18 +148,19 @@ public class RobotsActivity extends BaseActivity {
 		});
 	}
 
+	// TODO: remove this method
 	private void asyncGetRobotNamesFromServer(final EMValueCallBack<List<EMContact>> callback) {
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				try {
-					List<EMContact> mList = EMClient.getInstance().getRobotsFromServer();
-					callback.onSuccess(mList);
-				} catch (HyphenateException e) {
-					e.printStackTrace();
-					callback.onError(e.getErrorCode(), e.toString());
-				}
+//				try {
+//					List<EMContact> mList = EMClient.getInstance().getRobotsFromServer();
+//					callback.onSuccess(mList);
+//				} catch (HyphenateException e) {
+//					e.printStackTrace();
+//					callback.onError(e.getErrorCode(), e.toString());
+//				}
 			}
 		}).start();
 	}
@@ -181,7 +180,7 @@ public class RobotsActivity extends BaseActivity {
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.em_row_robots, null);
 			}
-			((TextView) convertView.findViewById(R.id.name)).setText(getItem(position).getNick());
+			((TextView) convertView.findViewById(R.id.name)).setText(getItem(position).getNickname());
 			return convertView;
 		}
 

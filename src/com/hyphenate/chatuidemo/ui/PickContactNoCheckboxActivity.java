@@ -13,14 +13,6 @@
  */
 package com.hyphenate.chatuidemo.ui;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -34,6 +26,14 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.adapter.EaseContactAdapter;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.widget.EaseSidebar;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class PickContactNoCheckboxActivity extends BaseActivity {
 
@@ -90,7 +90,7 @@ public class PickContactNoCheckboxActivity extends BaseActivity {
             @Override
             public int compare(EaseUser lhs, EaseUser rhs) {
                 if(lhs.getInitialLetter().equals(rhs.getInitialLetter())){
-                    return lhs.getNick().compareTo(rhs.getNick());
+                    return lhs.getNickname().compareTo(rhs.getNickname());
                 }else{
                     if("#".equals(lhs.getInitialLetter())){
                         return 1;
