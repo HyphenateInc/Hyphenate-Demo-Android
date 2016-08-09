@@ -1,17 +1,16 @@
 package com.hyphenate.chatuidemo.parse;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
 
 import com.hyphenate.EMValueCallBack;
-import com.hyphenate.chat.EMChatManager;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.DemoHelper.DataSyncListener;
 import com.hyphenate.chatuidemo.utils.PreferenceManager;
 import com.hyphenate.easeui.domain.EaseUser;
 
-import android.content.Context;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserProfileManager {
 
@@ -119,7 +118,7 @@ public class UserProfileManager {
 			String username = EMClient.getInstance().getCurrentUser();
 			currentUser = new EaseUser(username);
 			String nick = getCurrentUserNick();
-			currentUser.setNick((nick != null) ? nick : username);
+			currentUser.setNickname((nick != null) ? nick : username);
 			currentUser.setAvatar(getCurrentUserAvatar());
 		}
 		return currentUser;
@@ -147,7 +146,7 @@ public class UserProfileManager {
 			@Override
 			public void onSuccess(EaseUser value) {
 			    if(value != null){
-    				setCurrentUserNick(value.getNick());
+    				setCurrentUserNick(value.getNickname());
     				setCurrentUserAvatar(value.getAvatar());
 			    }
 			}
@@ -163,7 +162,7 @@ public class UserProfileManager {
 		ParseManager.getInstance().asyncGetUserInfo(username, callback);
 	}
 	private void setCurrentUserNick(String nickname) {
-		getCurrentUserInfo().setNick(nickname);
+		getCurrentUserInfo().setNickname(nickname);
 		PreferenceManager.getInstance().setCurrentUserNick(nickname);
 	}
 

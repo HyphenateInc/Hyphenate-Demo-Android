@@ -316,9 +316,9 @@ public class DemoHelper {
                 EaseUser user = getUserInfo(message.getFrom());
                 if(user != null){
                     if(EaseAtMessageHelper.get().isAtMeMsg(message)){
-                        return String.format(appContext.getString(R.string.at_your_in_group), user.getNick());
+                        return String.format(appContext.getString(R.string.at_your_in_group), user.getNickname());
                     }
-                    return user.getNick() + ": " + ticker;
+                    return user.getNickname() + ": " + ticker;
                 }else{
                     if(EaseAtMessageHelper.get().isAtMeMsg(message)){
                         return String.format(appContext.getString(R.string.at_your_in_group), message.getFrom());
@@ -472,7 +472,7 @@ public class DemoHelper {
         }
 
         @Override
-        public void onInvitationAccpted(String groupId, String invitee, String reason) {
+        public void onInvitationAccepted(String groupId, String invitee, String reason) {
             
             new InviteMessgeDao(appContext).deleteMessage(groupId);
             
@@ -540,13 +540,13 @@ public class DemoHelper {
         }
 
         @Override
-        public void onGroupDestroy(String groupId, String groupName) {
+        public void onGroupDestroyed(String groupId, String groupName) {
         	// group is dismissed, 
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_GROUP_CHANAGED));
         }
 
         @Override
-        public void onApplicationReceived(String groupId, String groupName, String applyer, String reason) {
+        public void onRequestToJoinReceived(String groupId, String groupName, String applyer, String reason) {
             
             // user apply to join group
             InviteMessage msg = new InviteMessage();
@@ -562,7 +562,7 @@ public class DemoHelper {
         }
 
         @Override
-        public void onApplicationAccept(String groupId, String groupName, String accepter) {
+        public void onRequestToJoinAccepted(String groupId, String groupName, String accepter) {
 
             String st4 = appContext.getString(R.string.Agreed_to_your_group_chat_application);
             // your application was accepted
@@ -582,7 +582,7 @@ public class DemoHelper {
         }
 
         @Override
-        public void onApplicationDeclined(String groupId, String groupName, String decliner, String reason) {
+        public void onRequestToJoinDeclined(String groupId, String groupName, String decliner, String reason) {
             // your application was declined, we do nothing here in demo
         }
 
@@ -660,7 +660,7 @@ public class DemoHelper {
         }
 
         @Override
-        public void onContactAgreed(String username) {
+        public void onFriendRequestAccepted(String username) {
             List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
             for (InviteMessage inviteMessage : msgs) {
                 if (inviteMessage.getFrom().equals(username)) {
@@ -678,7 +678,7 @@ public class DemoHelper {
         }
 
         @Override
-        public void onContactRefused(String username) {
+        public void onFriendRequestDeclined(String username) {
             // your request was refused
             Log.d(username, username + " refused to your request");
         }
@@ -768,11 +768,11 @@ public class DemoHelper {
 			}
 
 			@Override
-			public void onMessageReadAckReceived(List<EMMessage> messages) {
+			public void onMessageRead(List<EMMessage> messages) {
 			}
 			
 			@Override
-			public void onMessageDeliveryAckReceived(List<EMMessage> message) {
+			public void onMessageDelivered(List<EMMessage> message) {
 			}
 			
 			@Override
@@ -920,7 +920,7 @@ public class DemoHelper {
 	 /**
      * update user list to cach And db
      *
-     * @param contactList
+     * @param contactInfoList
      */
     public void updateContactList(List<EaseUser> contactInfoList) {
          for (EaseUser u : contactInfoList) {

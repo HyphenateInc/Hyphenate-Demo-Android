@@ -134,7 +134,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		groupChangeListener = new GroupChangeListener();
 		EMClient.getInstance().groupManager().addGroupChangeListener(groupChangeListener);
 		
-		((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "(" + group.getAffiliationsCount() + st);
+		((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "(" + group.getMemberCount() + st);
 		
 		List<String> members = new ArrayList<String>();
 		members.addAll(group.getMembers());
@@ -219,7 +219,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 								EMClient.getInstance().groupManager().changeGroupName(groupId, returnData);
 								runOnUiThread(new Runnable() {
 									public void run() {
-										((TextView) findViewById(R.id.group_name)).setText(returnData + "(" + group.getAffiliationsCount()
+										((TextView) findViewById(R.id.group_name)).setText(returnData + "(" + group.getMemberCount()
 												+ st);
 										progressDialog.dismiss();
 										Toast.makeText(getApplicationContext(), st6, 0).show();
@@ -400,7 +400,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 					runOnUiThread(new Runnable() {
 						public void run() {
 						    refreshMembers();
-							((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "(" + group.getAffiliationsCount()
+							((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "(" + group.getMemberCount()
 									+ st);
 							progressDialog.dismiss();
 						}
@@ -589,7 +589,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 			    holder.imageView.setImageResource(R.drawable.em_smiley_add_btn);
 //				button.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.smiley_add_btn, 0, 0);
 				// 如果不是创建者或者没有相应权限
-				if (!group.isAllowInvites() && !group.getOwner().equals(EMClient.getInstance().getCurrentUser())) {
+				if (!group.isMemberAllowToInvite() && !group.getOwner().equals(EMClient.getInstance().getCurrentUser())) {
 					// if current user is not group admin, hide add/remove btn
 					convertView.setVisibility(View.INVISIBLE);
 				} else {
@@ -681,7 +681,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 											deleteDialog.dismiss();
 											refreshMembers();
 											((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "("
-													+ group.getAffiliationsCount() + st);
+													+ group.getMemberCount() + st);
 										}
 									});
 								} catch (final Exception e) {
@@ -737,7 +737,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 					
 					runOnUiThread(new Runnable() {
 						public void run() {
-							((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "(" + group.getAffiliationsCount()
+							((TextView) findViewById(R.id.group_name)).setText(group.getGroupName() + "(" + group.getMemberCount()
 									+ ")");
 							loadingPB.setVisibility(View.INVISIBLE);
 							refreshMembers();
@@ -805,27 +805,27 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		}
 
 		@Override
-		public void onApplicationReceived(String groupId, String groupName,
+		public void onRequestToJoinReceived(String groupId, String groupName,
 				String applyer, String reason) {
 			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
-		public void onApplicationAccept(String groupId, String groupName,
+		public void onRequestToJoinAccepted(String groupId, String groupName,
 				String accepter) {
 			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
-		public void onApplicationDeclined(String groupId, String groupName,
+		public void onRequestToJoinDeclined(String groupId, String groupName,
 				String decliner, String reason) {
 			
 		}
 
 		@Override
-		public void onInvitationAccpted(String groupId, String inviter,
+		public void onInvitationAccepted(String groupId, String inviter,
 				String reason) {
 			runOnUiThread(new Runnable(){
 
@@ -833,7 +833,6 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 				public void run() {
 					refreshMembers();
 				}
-        		
         	});
 			
 		}
@@ -852,7 +851,7 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 		}
 
 		@Override
-		public void onGroupDestroy(String groupId, String groupName) {
+		public void onGroupDestroyed(String groupId, String groupName) {
 			finish();
 			
 		}

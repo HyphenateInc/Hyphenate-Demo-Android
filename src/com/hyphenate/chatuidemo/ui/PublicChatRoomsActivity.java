@@ -156,7 +156,7 @@ public class PublicChatRoomsActivity extends BaseActivity {
             }
 
             @Override
-            public void onMemberKicked(String roomId, String roomName,
+            public void onRemovedFromChatRoom(String roomId, String roomName,
                     String participant) {
             }
             

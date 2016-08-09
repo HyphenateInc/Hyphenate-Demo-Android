@@ -367,7 +367,7 @@ public class VideoCallActivity extends CallActivity implements OnClickListener {
                                 callStateTextView.setText(s1);
                             } else if (fError == CallError.ERROR_TRANSPORT) {
                                 callStateTextView.setText(s2);
-                            } else if (fError == CallError.ERROR_INAVAILABLE) {
+                            } else if (fError == CallError.ERROR_UNAVAILABLE) {
                                 callingState = CallingState.OFFLINE;
                                 callStateTextView.setText(s3);
                             } else if (fError == CallError.ERROR_BUSY) {
@@ -376,7 +376,7 @@ public class VideoCallActivity extends CallActivity implements OnClickListener {
                             } else if (fError == CallError.ERROR_NORESPONSE) {
                                 callingState = CallingState.NORESPONSE;
                                 callStateTextView.setText(s5);
-                            }else if (fError == CallError.ERROR_LOCAL_VERSION_SMALLER || fError == CallError.ERROR_PEER_VERSION_SMALLER){
+                            }else if (fError == CallError.ERROR_LOCAL_SDK_VERSION_OUTDATED || fError == CallError.ERROR_REMOTE_SDK_VERSION_OUTDATED){
                                 callingState = CallingState.VERSION_NOT_SAME;
                                 callStateTextView.setText(R.string.call_version_inconsistent);
                             }  else {
@@ -540,9 +540,9 @@ public class VideoCallActivity extends CallActivity implements OnClickListener {
                     runOnUiThread(new Runnable() {
                         public void run() {
                             monitorTextView.setText("WidthxHeight："+callHelper.getVideoWidth()+"x"+callHelper.getVideoHeight()
-                                    + "\nDelay：" + callHelper.getVideoTimedelay()
-                                    + "\nFramerate：" + callHelper.getVideoFramerate()
-                                    + "\nLost：" + callHelper.getVideoLostcnt()
+                                    + "\nDelay：" + callHelper.getVideoLatency()
+                                    + "\nFramerate：" + callHelper.getVideoFrameRate()
+                                    + "\nLost：" + callHelper.getVideoLostRate()
                                     + "\nLocalBitrate：" + callHelper.getLocalBitrate()
                                     + "\nRemoteBitrate：" + callHelper.getRemoteBitrate());
                             
@@ -565,7 +565,7 @@ public class VideoCallActivity extends CallActivity implements OnClickListener {
     protected void onUserLeaveHint() {
         super.onUserLeaveHint();
         if(isInCalling){
-            EMClient.getInstance().callManager().pauseVideoTransfer();
+            EMClient.getInstance().callManager().pauseVideoStreaming();
         }
     }
     
@@ -573,7 +573,7 @@ public class VideoCallActivity extends CallActivity implements OnClickListener {
     protected void onResume() {
         super.onResume();
         if(isInCalling){
-            EMClient.getInstance().callManager().resumeVideoTransfer();
+            EMClient.getInstance().callManager().resumeVideoStreaming();
         }
     }
 
