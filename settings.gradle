@@ -4,4 +4,3 @@ project(':EaseUI').projectDir = new File('../Hyphenate-EaseUI-Android')
 //comment out the following lines for release version
 //include ':hyphenatechatsdk'
 //project(':hyphenatechatsdk').projectDir = new File('../emclient-android/hyphenatechatsdk')
-include ':aMapChannelLocationDemo'
