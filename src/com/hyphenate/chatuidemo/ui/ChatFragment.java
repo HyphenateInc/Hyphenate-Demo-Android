@@ -56,10 +56,10 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     
     
     /**
-     * if it is chatBot 
+     * if it is chatBot
      */
     private boolean isRobot;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -68,7 +68,7 @@ public class ChatFragment extends EaseChatFragment implements EaseChatFragmentHe
     @Override
     protected void setUpView() {
         setChatFragmentHelper(this);
-        if (chatType == Constant.CHATTYPE_SINGLE) { 
+        if (chatType == Constant.CHATTYPE_SINGLE) {
             Map<String,RobotUser> robotMap = DemoHelper.getInstance().getRobotList();
             if(robotMap!=null && robotMap.containsKey(toChatUsername)){
                 isRobot = true;

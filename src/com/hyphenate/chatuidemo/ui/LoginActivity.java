@@ -140,9 +140,6 @@ public class LoginActivity extends BaseActivity {
 			public void onSuccess() {
 				Log.d(TAG, "login: onSuccess");
 
-				if (!LoginActivity.this.isFinishing() && pd.isShowing()) {
-					pd.dismiss();
-				}
 
 				// ** manually load all local groups and conversation
 			    EMClient.getInstance().groupManager().loadAllGroups();
@@ -157,6 +154,10 @@ public class LoginActivity extends BaseActivity {
 
 				// get user's info (this should be get from App's server or 3rd party service)
 				DemoHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
+
+				if (!LoginActivity.this.isFinishing() && pd.isShowing()) {
+					pd.dismiss();
+				}
 
 				// 进入主页面
 				Intent intent = new Intent(LoginActivity.this,
