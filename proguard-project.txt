@@ -53,26 +53,18 @@
 }
 
 -keep class android.support.v4.** {*;}
-
 -keep class org.xmlpull.** {*;}
--keep class com.baidu.** {*;}
--keep public class * extends com.umeng.**
--keep class com.umeng.** { *; }
--keep class com.squareup.picasso.* {*;}
 
--keep class com.hyphenate.* {*;}
--keep class com.hyphenate.chat.** {*;}
--keep class org.jivesoftware.** {*;}
--keep class org.apache.** {*;}
+-keep class com.hyphenate.** {*;}
+-dontwarn  com.hyphenate.**
 
-# Reflection is used when sending emoji, so need keep SmileUtils.
--keep class com.hyphenate.chatuidemo.utils.SmileUtils {*;}
 
-# audio call feature added after version 2.0.0, you need keep below classes if you use it.
--keep class net.java.sip.** {*;}
--keep class org.webrtc.voiceengine.** {*;}
--keep class org.bitlet.** {*;}
--keep class org.slf4j.** {*;}
--keep class ch.imvs.** {*;}
+#for glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
 
