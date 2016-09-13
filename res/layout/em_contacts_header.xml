@@ -32,11 +32,11 @@
         android:layout_height="1dp"
         android:background="@color/list_divider"
         />
-    <com.hyphenate.chatuidemo.widget.ContactItemView
+<!--    <com.hyphenate.chatuidemo.widget.ContactItemView
         android:id="@+id/robot_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:contactItemImage="@drawable/em_groups_icon"
-        app:contactItemName="@string/robot_chat" />
+        app:contactItemName="@string/robot_chat" />-->
 
 </LinearLayout>
