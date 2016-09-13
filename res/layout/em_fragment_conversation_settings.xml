@@ -60,7 +60,7 @@
                         android:layout_centerVertical="true"
                         android:paddingLeft="10dip"
                         android:text="@string/newnotify"
-                        android:textSize="14sp" />
+                        android:textSize="15sp" />
 
                     <com.hyphenate.easeui.widget.EaseSwitchButton
                         android:layout_width="wrap_content"
@@ -91,8 +91,7 @@
                         android:layout_centerVertical="true"
                         android:paddingLeft="10dip"
                         android:text="@string/voice"
-                        android:textSize="14sp"
-                        android:typeface="serif" />
+                        android:textSize="15sp" />
 
                     <com.hyphenate.easeui.widget.EaseSwitchButton
                         android:layout_width="wrap_content"
@@ -123,7 +122,7 @@
                         android:layout_centerVertical="true"
                         android:paddingLeft="10dip"
                         android:text="@string/shake"
-                        android:textSize="14sp" />
+                        android:textSize="15sp" />
 
                     <com.hyphenate.easeui.widget.EaseSwitchButton
                         android:layout_width="wrap_content"
@@ -166,9 +165,8 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:paddingLeft="10dip"
-                        android:text="@string/yangshengqi"
-                        android:textSize="14sp"
-                        android:typeface="serif" />
+                        android:text="@string/use_speaker"
+                        android:textSize="15sp" />
 
                     <com.hyphenate.easeui.widget.EaseSwitchButton
                         android:layout_width="wrap_content"
@@ -198,7 +196,7 @@
                         android:layout_gravity="center_vertical"
                         android:paddingLeft="10dip"
                         android:text="@string/book_black"
-                        android:textSize="14sp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
 
                 <View
@@ -221,7 +219,7 @@
                         android:layout_gravity="center_vertical"
                         android:paddingLeft="10dip"
                         android:text="@string/title_user_profile"
-                        android:textSize="14sp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
 
                 <View
@@ -244,7 +242,7 @@
                         android:layout_gravity="center_vertical"
                         android:paddingLeft="10dip"
                         android:text="@string/diagnose"
-                        android:textSize="14sp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
 
                 <View
@@ -267,7 +265,7 @@
                         android:layout_gravity="center_vertical"
                         android:paddingLeft="10dip"
                         android:text="@string/push_nick"
-                        android:textSize="14sp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -291,7 +289,7 @@
                     android:layout_centerVertical="true"
                     android:paddingLeft="10dip"
                     android:text="@string/delete_msg_when_exit_group"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
                 <com.hyphenate.easeui.widget.EaseSwitchButton
                     android:layout_width="wrap_content"
@@ -319,8 +317,7 @@
                     android:layout_centerVertical="true"
                     android:paddingLeft="10dip"
                     android:text="@string/auto_accept_group_invitation"
-                    android:textSize="14sp"
-                    android:typeface="serif" />
+                    android:textSize="15sp" />
 
                 <com.hyphenate.easeui.widget.EaseSwitchButton
                     android:layout_width="wrap_content"
@@ -348,7 +345,7 @@
                     android:layout_centerVertical="true"
                     android:paddingLeft="10dip"
                     android:text="@string/adaptive_video_encode"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
                 <com.hyphenate.easeui.widget.EaseSwitchButton
                     android:layout_width="wrap_content"
