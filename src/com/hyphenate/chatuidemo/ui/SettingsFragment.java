@@ -13,15 +13,6 @@
  */
 package com.hyphenate.chatuidemo.ui;
 
-import com.hyphenate.EMCallBack;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMOptions;
-import com.hyphenate.chatuidemo.Constant;
-import com.hyphenate.chatuidemo.DemoHelper;
-import com.hyphenate.chatuidemo.DemoModel;
-import com.hyphenate.chatuidemo.R;
-import com.hyphenate.easeui.widget.EaseSwitchButton;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,17 +23,27 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
+import com.hyphenate.chatuidemo.Constant;
+import com.hyphenate.chatuidemo.DemoHelper;
+import com.hyphenate.chatuidemo.DemoModel;
+import com.hyphenate.chatuidemo.R;
 
 /**
  * settings screen
  * 
  * 
  */
-public class SettingsFragment extends Fragment implements OnClickListener {
+public class SettingsFragment extends Fragment implements OnClickListener, CompoundButton.OnCheckedChangeListener {
 
 	/**
 	 * new message notification
@@ -88,14 +89,14 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 	 */
 	private LinearLayout pushNick;
 	
-    private EaseSwitchButton notifiSwitch;
-    private EaseSwitchButton soundSwitch;
-    private EaseSwitchButton vibrateSwitch;
-    private EaseSwitchButton speakerSwitch;
-    private EaseSwitchButton ownerLeaveSwitch;
-    private EaseSwitchButton switch_delete_msg_when_exit_group;
-    private EaseSwitchButton switch_auto_accept_group_invitation;
-    private EaseSwitchButton switch_adaptive_video_encode;
+    private Switch notifiSwitch;
+    private Switch soundSwitch;
+    private Switch vibrateSwitch;
+    private Switch speakerSwitch;
+    private Switch ownerLeaveSwitch;
+    private Switch switch_delete_msg_when_exit_group;
+    private Switch switch_auto_accept_group_invitation;
+    private Switch switch_adaptive_video_encode;
     private DemoModel settingsModel;
     private EMOptions chatOptions;
 	
@@ -117,14 +118,22 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 		rl_switch_auto_accept_group_invitation = (RelativeLayout) getView().findViewById(R.id.rl_switch_auto_accept_group_invitation);
 		rl_switch_adaptive_video_encode = (RelativeLayout) getView().findViewById(R.id.rl_switch_adaptive_video_encode);
 		
-		notifiSwitch = (EaseSwitchButton) getView().findViewById(R.id.switch_notification);
-		soundSwitch = (EaseSwitchButton) getView().findViewById(R.id.switch_sound);
-		vibrateSwitch = (EaseSwitchButton) getView().findViewById(R.id.switch_vibrate);
-		speakerSwitch = (EaseSwitchButton) getView().findViewById(R.id.switch_speaker);
-		switch_delete_msg_when_exit_group = (EaseSwitchButton) getView().findViewById(R.id.switch_delete_msg_when_exit_group);
-		switch_auto_accept_group_invitation = (EaseSwitchButton) getView().findViewById(R.id.switch_auto_accept_group_invitation);
-		switch_adaptive_video_encode = (EaseSwitchButton) getView().findViewById(R.id.switch_adaptive_video_encode);
-		
+		notifiSwitch = (Switch) getView().findViewById(R.id.switch_notification);
+		soundSwitch = (Switch) getView().findViewById(R.id.switch_sound);
+		vibrateSwitch = (Switch) getView().findViewById(R.id.switch_vibrate);
+		speakerSwitch = (Switch) getView().findViewById(R.id.switch_speaker);
+		switch_delete_msg_when_exit_group = (Switch) getView().findViewById(R.id.switch_delete_msg_when_exit_group);
+		switch_auto_accept_group_invitation = (Switch) getView().findViewById(R.id.switch_auto_accept_group_invitation);
+		switch_adaptive_video_encode = (Switch) getView().findViewById(R.id.switch_adaptive_video_encode);
+
+		notifiSwitch.setOnCheckedChangeListener(this);
+		soundSwitch.setOnCheckedChangeListener(this);
+		vibrateSwitch.setOnCheckedChangeListener(this);
+		speakerSwitch.setOnCheckedChangeListener(this);
+		switch_delete_msg_when_exit_group.setOnCheckedChangeListener(this);
+		switch_auto_accept_group_invitation.setOnCheckedChangeListener(this);
+		switch_adaptive_video_encode.setOnCheckedChangeListener(this);
+
 		logoutBtn = (Button) getView().findViewById(R.id.btn_logout);
 		if(!TextUtils.isEmpty(EMClient.getInstance().getCurrentUser())){
 			logoutBtn.setText(getString(R.string.button_logout) + "(" + EMClient.getInstance().getCurrentUser() + ")");
@@ -143,65 +152,58 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 		
 		blacklistContainer.setOnClickListener(this);
 		userProfileContainer.setOnClickListener(this);
-		rl_switch_notification.setOnClickListener(this);
-		rl_switch_sound.setOnClickListener(this);
-		rl_switch_vibrate.setOnClickListener(this);
-		rl_switch_speaker.setOnClickListener(this);
 		logoutBtn.setOnClickListener(this);
 		llDiagnose.setOnClickListener(this);
 		pushNick.setOnClickListener(this);
-		rl_switch_delete_msg_when_exit_group.setOnClickListener(this);
-		rl_switch_auto_accept_group_invitation.setOnClickListener(this);
-		rl_switch_adaptive_video_encode.setOnClickListener(this);
-		
+
 		// 震动和声音总开关，来消息时，是否允许此开关打开
 		// the vibrate and sound notification are allowed or not?
 		if (settingsModel.getSettingMsgNotification()) {
-			notifiSwitch.openSwitch();
+			notifiSwitch.setChecked(true);
 		} else {
-		    notifiSwitch.closeSwitch();
+		    notifiSwitch.setChecked(false);
 		}
 		
 		// 是否打开声音
 		// sound notification is switched on or not?
 		if (settingsModel.getSettingMsgSound()) {
-		    soundSwitch.openSwitch();
+		    soundSwitch.setChecked(true);
 		} else {
-		    soundSwitch.closeSwitch();
+		    soundSwitch.setChecked(false);
 		}
 		
 		// 是否打开震动
 		// vibrate notification is switched on or not?
 		if (settingsModel.getSettingMsgVibrate()) {
-		    vibrateSwitch.openSwitch();
+		    vibrateSwitch.setChecked(true);
 		} else {
-		    vibrateSwitch.closeSwitch();
+		    vibrateSwitch.setChecked(false);
 		}
 
 		// the speaker is switched on or not?
 		if (settingsModel.getSettingMsgSpeaker()) {
-		    speakerSwitch.openSwitch();
+		    speakerSwitch.setChecked(true);
 		} else {
-		    speakerSwitch.closeSwitch();
+		    speakerSwitch.setChecked(false);
 		}
 
 		// delete messages when exit group?
 		if(settingsModel.isDeleteMessagesAsExitGroup()){
-		    switch_delete_msg_when_exit_group.openSwitch();
+		    switch_delete_msg_when_exit_group.setChecked(true);
 		} else {
-		    switch_delete_msg_when_exit_group.closeSwitch();
+		    switch_delete_msg_when_exit_group.setChecked(false);
 		}
 		
 		if (settingsModel.isAutoAcceptGroupInvitation()) {
-		    switch_auto_accept_group_invitation.openSwitch();
+		    switch_auto_accept_group_invitation.setChecked(true);
 		} else {
-		    switch_auto_accept_group_invitation.closeSwitch();
+		    switch_auto_accept_group_invitation.setChecked(false);
 		}
 		
 		if (settingsModel.isAdaptiveVideoEncode()) {
-            switch_adaptive_video_encode.openSwitch();
+            switch_adaptive_video_encode.setChecked(true);
         } else {
-            switch_adaptive_video_encode.closeSwitch();
+            switch_adaptive_video_encode.setChecked(false);
         }
 	}
 
@@ -209,84 +211,6 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.rl_switch_notification:
-			if (notifiSwitch.isSwitchOpen()) {
-			    notifiSwitch.closeSwitch();
-				rl_switch_sound.setVisibility(View.GONE);
-				rl_switch_vibrate.setVisibility(View.GONE);
-				textview1.setVisibility(View.GONE);
-				textview2.setVisibility(View.GONE);
-
-				settingsModel.setSettingMsgNotification(false);
-			} else {
-			    notifiSwitch.openSwitch();
-				rl_switch_sound.setVisibility(View.VISIBLE);
-				rl_switch_vibrate.setVisibility(View.VISIBLE);
-				textview1.setVisibility(View.VISIBLE);
-				textview2.setVisibility(View.VISIBLE);
-				settingsModel.setSettingMsgNotification(true);
-			}
-			break;
-		case R.id.rl_switch_sound:
-			if (soundSwitch.isSwitchOpen()) {
-			    soundSwitch.closeSwitch();
-			    settingsModel.setSettingMsgSound(false);
-			} else {
-			    soundSwitch.openSwitch();
-			    settingsModel.setSettingMsgSound(true);
-			}
-			break;
-		case R.id.rl_switch_vibrate:
-			if (vibrateSwitch.isSwitchOpen()) {
-			    vibrateSwitch.closeSwitch();
-			    settingsModel.setSettingMsgVibrate(false);
-			} else {
-			    vibrateSwitch.openSwitch();
-			    settingsModel.setSettingMsgVibrate(true);
-			}
-			break;
-		case R.id.rl_switch_speaker:
-			if (speakerSwitch.isSwitchOpen()) {
-			    speakerSwitch.closeSwitch();
-			    settingsModel.setSettingMsgSpeaker(false);
-			} else {
-			    speakerSwitch.openSwitch();
-			    settingsModel.setSettingMsgVibrate(true);
-			}
-			break;
-		case R.id.rl_switch_delete_msg_when_exit_group:
-            if(switch_delete_msg_when_exit_group.isSwitchOpen()){
-                switch_delete_msg_when_exit_group.closeSwitch();
-                settingsModel.setDeleteMessagesAsExitGroup(false);
-                chatOptions.setDeleteMessagesAsExitGroup(false);
-            }else{
-                switch_delete_msg_when_exit_group.openSwitch();
-                settingsModel.setDeleteMessagesAsExitGroup(true);
-                chatOptions.setDeleteMessagesAsExitGroup(true);
-            }
-		    break;
-        case R.id.rl_switch_auto_accept_group_invitation:
-            if(switch_auto_accept_group_invitation.isSwitchOpen()){
-                switch_auto_accept_group_invitation.closeSwitch();
-                settingsModel.setAutoAcceptGroupInvitation(false);
-                chatOptions.setAutoAcceptGroupInvitation(false);
-            }else{
-                switch_auto_accept_group_invitation.openSwitch();
-                settingsModel.setAutoAcceptGroupInvitation(true);
-                chatOptions.setAutoAcceptGroupInvitation(true);
-            }
-            break;
-        case R.id.rl_switch_adaptive_video_encode:
-            if (switch_adaptive_video_encode.isSwitchOpen()){
-                switch_adaptive_video_encode.closeSwitch();
-                settingsModel.setAdaptiveVideoEncode(false);
-                EMClient.getInstance().callManager().getVideoCallHelper().setAdaptiveVideoFlag(false);
-            }else{
-                switch_adaptive_video_encode.openSwitch();
-                settingsModel.setAdaptiveVideoEncode(true);
-                EMClient.getInstance().callManager().getVideoCallHelper().setAdaptiveVideoFlag(true);
-            }
-            break;
 		case R.id.btn_logout:
 			logout();
 			break;
@@ -303,11 +227,85 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 			startActivity(new Intent(getActivity(), UserProfileActivity.class).putExtra("setting", true)
 			        .putExtra("username", EMClient.getInstance().getCurrentUser()));
 			break;
-		default:
-			break;
 		}
 		
 	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		switch (buttonView.getId()){
+			case R.id.switch_notification:
+				if (isChecked) {
+					rl_switch_sound.setVisibility(View.VISIBLE);
+					rl_switch_vibrate.setVisibility(View.VISIBLE);
+					textview1.setVisibility(View.VISIBLE);
+					textview2.setVisibility(View.VISIBLE);
+					settingsModel.setSettingMsgNotification(true);
+
+				} else {
+					rl_switch_sound.setVisibility(View.GONE);
+					rl_switch_vibrate.setVisibility(View.GONE);
+					textview1.setVisibility(View.GONE);
+					textview2.setVisibility(View.GONE);
+
+					settingsModel.setSettingMsgNotification(false);
+				}
+				break;
+			case R.id.switch_sound :
+				if (isChecked) {
+					settingsModel.setSettingMsgSound(true);
+				} else {
+					settingsModel.setSettingMsgSound(false);
+				}
+				break;
+			case R.id.switch_vibrate :
+				if (isChecked) {
+					settingsModel.setSettingMsgVibrate(true);
+				} else {
+					settingsModel.setSettingMsgVibrate(false);
+				}
+				break;
+			case R.id.switch_speaker :
+				if (isChecked) {
+					settingsModel.setSettingMsgVibrate(true);
+				} else {
+					settingsModel.setSettingMsgSpeaker(false);
+				}
+				break;
+			case R.id.switch_delete_msg_when_exit_group :
+				if(isChecked){
+					settingsModel.setDeleteMessagesAsExitGroup(true);
+					chatOptions.setDeleteMessagesAsExitGroup(true);
+				}else{
+					settingsModel.setDeleteMessagesAsExitGroup(false);
+					chatOptions.setDeleteMessagesAsExitGroup(false);
+				}
+				break;
+			case R.id.switch_auto_accept_group_invitation :
+				if(isChecked){
+					settingsModel.setAutoAcceptGroupInvitation(true);
+					chatOptions.setAutoAcceptGroupInvitation(true);
+				}else{
+					settingsModel.setAutoAcceptGroupInvitation(false);
+					chatOptions.setAutoAcceptGroupInvitation(false);
+				}
+				break;
+			case R.id.switch_adaptive_video_encode :
+				if (isChecked){
+					settingsModel.setAdaptiveVideoEncode(true);
+					EMClient.getInstance().callManager().getVideoCallHelper().setAdaptiveVideoFlag(true);
+				}else{
+					settingsModel.setAdaptiveVideoEncode(false);
+					EMClient.getInstance().callManager().getVideoCallHelper().setAdaptiveVideoFlag(false);
+				}
+				break;
+			default:
+				break;
+		}
+	}
+
+
+
 
 	void logout() {
 		final ProgressDialog pd = new ProgressDialog(getActivity());
@@ -360,4 +358,5 @@ public class SettingsFragment extends Fragment implements OnClickListener {
         	outState.putBoolean(Constant.ACCOUNT_REMOVED, true);
         }
     }
+
 }

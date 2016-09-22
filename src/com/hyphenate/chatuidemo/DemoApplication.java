@@ -15,11 +15,12 @@ package com.hyphenate.chatuidemo;
 
 import android.app.Application;
 import android.content.Context;
-
 import android.support.multidex.MultiDex;
-//import com.crashlytics.android.Crashlytics;
+
+import com.crashlytics.android.Crashlytics;
 //import com.crashlytics.android.ndk.CrashlyticsNdk;
-//import io.fabric.sdk.android.Fabric;
+
+import io.fabric.sdk.android.Fabric;
 
 public class DemoApplication extends Application {
 
@@ -35,7 +36,7 @@ public class DemoApplication extends Application {
 	public void onCreate() {
 		MultiDex.install(this);
 		super.onCreate();
-//		Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
+		Fabric.with(this, new Crashlytics());
         applicationContext = this;
         instance = this;
         

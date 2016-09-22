@@ -62,10 +62,11 @@
                         android:text="@string/newnotify"
                         android:textSize="15sp" />
 
-                    <com.hyphenate.easeui.widget.EaseSwitchButton
+                    <Switch
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/switch_notification"
+                        android:checked="true"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true" />
                 </RelativeLayout>
@@ -93,7 +94,8 @@
                         android:text="@string/voice"
                         android:textSize="15sp" />
 
-                    <com.hyphenate.easeui.widget.EaseSwitchButton
+                    <Switch
+                        android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/switch_sound"
@@ -124,7 +126,8 @@
                         android:text="@string/shake"
                         android:textSize="15sp" />
 
-                    <com.hyphenate.easeui.widget.EaseSwitchButton
+                    <Switch
+                        android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/switch_vibrate"
@@ -168,7 +171,8 @@
                         android:text="@string/use_speaker"
                         android:textSize="15sp" />
 
-                    <com.hyphenate.easeui.widget.EaseSwitchButton
+                    <Switch
+                        android:checked="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/switch_speaker"
@@ -291,7 +295,8 @@
                     android:text="@string/delete_msg_when_exit_group"
                     android:textSize="15sp" />
 
-                <com.hyphenate.easeui.widget.EaseSwitchButton
+                <Switch
+                    android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/switch_delete_msg_when_exit_group"
@@ -319,7 +324,7 @@
                     android:text="@string/auto_accept_group_invitation"
                     android:textSize="15sp" />
 
-                <com.hyphenate.easeui.widget.EaseSwitchButton
+                <Switch
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/switch_auto_accept_group_invitation"
@@ -347,7 +352,8 @@
                     android:text="@string/adaptive_video_encode"
                     android:textSize="15sp" />
 
-                <com.hyphenate.easeui.widget.EaseSwitchButton
+                <Switch
+                    android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/switch_adaptive_video_encode"
