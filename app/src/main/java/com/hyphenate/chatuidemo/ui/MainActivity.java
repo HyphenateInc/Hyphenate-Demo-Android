@@ -42,11 +42,21 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupViewPager(){
-        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ConversationListFragment(), "Contacts");
-        adapter.addFragment(new ConversationListFragment(), "Chats");
-        adapter.addFragment(new ConversationListFragment(), "Settings");
+        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(ConversationListFragment.newInstance(), "Contacts");
+        adapter.addFragment(ConversationListFragment.newInstance(), "Chats");
+        adapter.addFragment(ConversationListFragment.newInstance(), "Settings");
         mViewPager.setAdapter(adapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                getActionBarToolbar().setTitle(adapter.getPageTitle(position));
+            }
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            @Override
+            public void onPageScrollStateChanged(int state) {}
+        });
     }
 
     private void setupTabLayout(){
