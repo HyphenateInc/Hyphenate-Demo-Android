@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="59dp"
+    android:id="@+id/list_itease_layout"
+    android:gravity="center_vertical">
+
+    <RelativeLayout
+        android:id="@+id/layout_avatar_container"
+        android:layout_width="59dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true" >
+
+        <com.hyphenate.easeui.widget.EaseImageView
+            android:id="@+id/img_avatar"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:scaleType="fitXY"
+             />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txt_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="6dp"
+        android:layout_toRightOf="@id/layout_avatar_container"
+        android:textColor="@color/list_item_primary_text"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/txt_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="7dp"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/ease_gray"
+        android:textSize="13sp" />
+
+    <ImageView
+        android:id="@+id/img_msg_state"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="7dp"
+        android:layout_toRightOf="@id/layout_avatar_container"
+        android:visibility="gone" />
+
+
+    <TextView
+        android:id="@+id/txt_message"
+        android:layout_toLeftOf="@id/txt_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:padding="7dp"
+        android:textColor="@color/list_item_secondary_text"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/txt_unread_msg_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="5dp"
+        android:gravity="center"
+        android:layout_alignBaseline="@id/txt_message"
+        android:text="7"
+        android:textColor="@android:color/white"
+        android:textSize="12sp" />
+
+</RelativeLayout>
