@@ -14,8 +14,13 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.ui.chat.ContactListFragment;
 import com.hyphenate.chatuidemo.ui.chat.ConversationListFragment;
+<<<<<<< HEAD
 import com.hyphenate.chatuidemo.ui.contact.ContactListFragment;
+=======
+import com.hyphenate.chatuidemo.ui.chat.SettingsFragment;
+>>>>>>> 53ede5c500d1ec5124ef92eed6777c99f7721769
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +36,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.tab_layout) TabLayout mTabLayout;
     @BindView(R.id.view_pager) ViewPager mViewPager;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_main);
         ButterKnife.bind(this);
@@ -42,46 +46,65 @@ public class MainActivity extends BaseActivity {
         setupTabLayout();
     }
 
-    private void setupViewPager(){
+    private void setupViewPager() {
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
+<<<<<<< HEAD
+=======
+        //add fragments to adapter
+>>>>>>> 53ede5c500d1ec5124ef92eed6777c99f7721769
         adapter.addFragment(ContactListFragment.newInstance(), "Contacts");
         adapter.addFragment(ConversationListFragment.newInstance(), "Chats");
-        adapter.addFragment(ConversationListFragment.newInstance(), "Settings");
+        adapter.addFragment(SettingsFragment.newInstance(), "Settings");
         mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                getActionBarToolbar().setTitle(adapter.getPageTitle(position));
+            @Override public void onPageSelected(int position) {
+                Toolbar toolbar = getActionBarToolbar();
+                toolbar.setTitle(adapter.getPageTitle(position));
+                toolbar.getMenu().clear();
+                if (position == 0) {
+                    getActionBarToolbar().inflateMenu(R.menu.em_contacts_menu);
+                } else if (position == 1) getActionBarToolbar().inflateMenu(R.menu.em_chats_menu);
             }
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-            @Override
-            public void onPageScrollStateChanged(int state) {}
+
+            @Override public void onPageScrolled(int position, float positionOffset,
+                    int positionOffsetPixels) {
+            }
+
+            @Override public void onPageScrollStateChanged(int state) {
+            }
         });
     }
 
-    private void setupTabLayout(){
+    private void setupTabLayout() {
         mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.tab_indicator));
         mTabLayout.setupWithViewPager(mViewPager);
-//        mTabLayout.setSelectedTabIndicatorHeight(R.dimen.tab_indicator_height);
-        for(int i = 0; i < 3; i++){
+        //        mTabLayout.setSelectedTabIndicatorHeight(R.dimen.tab_indicator_height);
+        for (int i = 0; i < 3; i++) {
             View customTab = LayoutInflater.from(this).inflate(R.layout.em_tab_layout_item, null);
             ImageView imageView = (ImageView) customTab.findViewById(R.id.img_tab_item);
-            imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_contacts_selector));
+            if (i == 0) {
+                imageView.setImageDrawable(
+                        getResources().getDrawable(R.drawable.em_tab_contacts_selector));
+            } else if (i == 1) {
+                imageView.setImageDrawable(
+                        getResources().getDrawable(R.drawable.em_tab_chats_selector));
+            } else {
+                imageView.setImageDrawable(
+                        getResources().getDrawable(R.drawable.em_tab_settings_selector));
+            }
             //set the custom tabview
             mTabLayout.getTabAt(i).setCustomView(customTab);
         }
     }
 
-//    @OnClick(R.id.btn_test) void test(){
-//        Toolbar toolbar = getActionBarToolbar();
-//        toolbar.getMenu().clear();
-//        toolbar.inflateMenu(R.menu.test_menu);
-//        toolbar.setOnMenuItemClickListener(new ToolBarMenuItemClickListener());
-//    }
+    //    @OnClick(R.id.btn_test) void test(){
+    //        Toolbar toolbar = getActionBarToolbar();
+    //        toolbar.getMenu().clear();
+    //        toolbar.inflateMenu(R.menu.test_menu);
+    //        toolbar.setOnMenuItemClickListener(new ToolBarMenuItemClickListener());
+    //    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
         //add the action buttons to toolbar
@@ -94,11 +117,10 @@ public class MainActivity extends BaseActivity {
     /**
      * Toolbar menu item onclick listener
      */
-    private class ToolBarMenuItemClickListener implements Toolbar.OnMenuItemClickListener{
+    private class ToolBarMenuItemClickListener implements Toolbar.OnMenuItemClickListener {
 
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            switch (item.getItemId()){
+        @Override public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
 
             }
 
@@ -122,18 +144,15 @@ public class MainActivity extends BaseActivity {
             mFragmentTitles.add(title);
         }
 
-        @Override
-        public Fragment getItem(int position) {
+        @Override public Fragment getItem(int position) {
             return mFragments.get(position);
         }
 
-        @Override
-        public int getCount() {
+        @Override public int getCount() {
             return mFragments.size();
         }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
+        @Override public CharSequence getPageTitle(int position) {
             return mFragmentTitles.get(position);
         }
     }
