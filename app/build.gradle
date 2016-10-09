@@ -8,7 +8,7 @@ android {
   useLibrary 'org.apache.http.legacy'
 
   defaultConfig {
-    applicationId "com.hyphenate.chatuidemo"
+    applicationId "com.hyphenate.chatuidemo1"
     minSdkVersion 15
     targetSdkVersion 22
     multiDexEnabled true
