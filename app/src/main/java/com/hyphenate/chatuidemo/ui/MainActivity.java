@@ -14,9 +14,9 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.ui.chat.ContactListFragment;
+import com.hyphenate.chatuidemo.ui.user.ContactListFragment;
 import com.hyphenate.chatuidemo.ui.chat.ConversationListFragment;
-import com.hyphenate.chatuidemo.ui.chat.SettingsFragment;
+import com.hyphenate.chatuidemo.ui.settings.SettingsFragment;
 
 import java.util.ArrayList;
 import java.util.List;

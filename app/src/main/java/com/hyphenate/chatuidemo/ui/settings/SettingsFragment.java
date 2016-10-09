@@ -1,4 +1,4 @@
-package com.hyphenate.chatuidemo.ui.chat;
+package com.hyphenate.chatuidemo.ui.settings;
 
 
 import android.os.Bundle;
