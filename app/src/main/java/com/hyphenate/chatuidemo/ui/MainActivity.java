@@ -14,13 +14,9 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.ui.chat.ContactListFragment;
+import com.hyphenate.chatuidemo.ui.user.ContactListFragment;
 import com.hyphenate.chatuidemo.ui.chat.ConversationListFragment;
-<<<<<<< HEAD
-import com.hyphenate.chatuidemo.ui.contact.ContactListFragment;
-=======
-import com.hyphenate.chatuidemo.ui.chat.SettingsFragment;
->>>>>>> 53ede5c500d1ec5124ef92eed6777c99f7721769
+import com.hyphenate.chatuidemo.ui.settings.SettingsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +44,7 @@ public class MainActivity extends BaseActivity {
 
     private void setupViewPager() {
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
-<<<<<<< HEAD
-=======
         //add fragments to adapter
->>>>>>> 53ede5c500d1ec5124ef92eed6777c99f7721769
         adapter.addFragment(ContactListFragment.newInstance(), "Contacts");
         adapter.addFragment(ConversationListFragment.newInstance(), "Chats");
         adapter.addFragment(SettingsFragment.newInstance(), "Settings");

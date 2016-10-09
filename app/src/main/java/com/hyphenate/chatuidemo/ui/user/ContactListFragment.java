@@ -1,4 +1,4 @@
-package com.hyphenate.chatuidemo.ui.contact;
+package com.hyphenate.chatuidemo.ui.user;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

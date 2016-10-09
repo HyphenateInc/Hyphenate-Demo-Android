@@ -1,4 +1,4 @@
-package com.hyphenate.chatuidemo.ui.contact;
+package com.hyphenate.chatuidemo.ui.user;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
