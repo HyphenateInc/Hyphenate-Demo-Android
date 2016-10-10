@@ -4,19 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/contact_item_height"
     android:background="?android:attr/selectableItemBackground"
-    android:orientation="horizontal">
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="16dp"
+    >
 
-    <TextView
-        android:id="@+id/tv_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/header_size"/>
+  <TextView
+      android:id="@+id/txt_header"
+      android:layout_width="14dp"
+      android:layout_height="wrap_content"
+      android:textColor="@android:color/darker_gray"
+      android:textSize="@dimen/header_size"
+      />
 
-    <TextView
-        android:id="@+id/tv_contact_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/place_autocomplete_button_padding"
-        android:textSize="@dimen/contact_name_size" />
+  <ImageView
+      android:id="@+id/img_contact_avatar"
+      android:layout_width="@dimen/contact_avatar_size"
+      android:layout_height="@dimen/contact_avatar_size"
+      android:layout_marginLeft="@dimen/contact_avatar_margin_left"
+      android:src="@mipmap/ic_launcher"
+      />
+
+  <TextView
+      android:id="@+id/txt_contact_name"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="@dimen/contact_name_margin_left"
+      android:textSize="@dimen/contact_name_size"
+      />
 
 </LinearLayout>

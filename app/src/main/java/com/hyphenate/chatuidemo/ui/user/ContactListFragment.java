@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import com.hyphenate.chatuidemo.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -53,12 +55,37 @@ public class ContactListFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        List<String> list = new ArrayList<>();
-        list.add("a");
-        list.add("b");
-        list.add("c");
-        list.add("d");
-        list.add("e");
+        List<UserEntity> list = new ArrayList<>();
+        UserEntity userEntity = new UserEntity();
+        userEntity.setHeader("B");
+        userEntity.setUserId("ben");
+        list.add(userEntity);
+
+        UserEntity userEntity1 = new UserEntity();
+        userEntity1.setHeader("D");
+        userEntity1.setUserId("d1");
+        list.add(userEntity1);
+
+        UserEntity userEntity2 = new UserEntity();
+        userEntity2.setHeader("F");
+        userEntity2.setUserId("fa");
+        list.add(userEntity2);
+
+        UserEntity userEntity3 = new UserEntity();
+        userEntity3.setHeader("D");
+        userEntity3.setUserId("d2");
+        list.add(userEntity3);
+
+        UserEntity userEntity4 = new UserEntity();
+        userEntity4.setHeader("D");
+        userEntity4.setUserId("说法叫老师");
+        list.add(userEntity4);
+
+        Collections.sort(list, new Comparator<UserEntity>() {
+            @Override public int compare(UserEntity o1, UserEntity o2) {
+                return o1.getUserId().compareTo(o2.getUserId());
+            }
+        });
 
         adapter = new ContactListAdapter(getActivity(),list);
         recyclerView.setAdapter(adapter);
