@@ -33,8 +33,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.view_pager) ViewPager mViewPager;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.em_activity_main);
+        super.onCreate(savedInstanceState);        setContentView(R.layout.em_activity_main);
         ButterKnife.bind(this);
         //setup viewpager
         setupViewPager();
