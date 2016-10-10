@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Pair;
@@ -11,6 +12,7 @@ import android.util.Pair;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 
+import com.hyphenate.easeui.adapter.EaseConversationListAdapter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -72,6 +74,16 @@ public class EaseConversationListView extends RecyclerView {
         } else {
             mConversationList = conversationList;
         }
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        setLayoutManager(layoutManager);
+
+        EaseConversationListAdapter mAdapter = new EaseConversationListAdapter(getContext(), new Comparator<EMConversation>() {
+            @Override public int compare(EMConversation o1, EMConversation o2) {
+                return Long.valueOf(o2.getLastMessage().getMsgTime()).compareTo(o1.getLastMessage().getMsgTime());
+            }
+        });
+        //setAdapter();
+
     }
 
     /**

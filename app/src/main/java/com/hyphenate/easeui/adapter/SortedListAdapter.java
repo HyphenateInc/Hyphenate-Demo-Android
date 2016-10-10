@@ -234,6 +234,10 @@ public abstract class SortedListAdapter<T> extends RecyclerView.Adapter<SortedLi
             performBind(item);
         }
 
+        /**
+         * bind view holder
+         * @param item
+         */
         protected abstract void performBind(T item);
 
         public final T getCurrentItem() {
