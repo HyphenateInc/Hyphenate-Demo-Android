@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class DemoHelper {
 
-    private final String TAG = "DemoHelper";
+    protected static final String TAG = DemoHelper.class.getSimpleName();
     // context
     private Context mContext;
 

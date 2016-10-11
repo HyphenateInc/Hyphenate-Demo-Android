@@ -24,7 +24,8 @@ public class SignupActivity extends BaseActivity {
 
     private BaseActivity mActivity;
 
-    private final String TAG = "SignupAcitivity";
+    protected static final String TAG = SignupActivity.class.getSimpleName();
+
 
     // Loading dialog
     private ProgressDialog mDialog;
