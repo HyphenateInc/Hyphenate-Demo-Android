@@ -112,16 +112,16 @@ public class DemoHelper {
     }
 
     /**
-     * 设置通话广播监听
+     * Set call broadcast listener
      */
     private void setCallReceiverListener() {
-        // 设置通话广播监听器过滤内容
+        // Set the call broadcast listener to filter the action
         IntentFilter callFilter = new IntentFilter(
                 EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
         if (mCallReceiver == null) {
             mCallReceiver = new CallReceiver();
         }
-        //注册通话广播接收者
+        // Register the call receiver
         mContext.registerReceiver(mCallReceiver, callFilter);
     }
 
@@ -132,16 +132,16 @@ public class DemoHelper {
         mConnectionListener = new EMConnectionListener() {
 
             /**
-             * 链接聊天服务器成功
+             * The connection to the server is successful
              */
             @Override public void onConnected() {
                 EMLog.d(TAG, "onConnected");
             }
 
             /**
-             * 链接聊天服务器失败
+             * Disconnected from the server
              *
-             * @param errorCode 连接失败错误码
+             * @param errorCode Disconnected error code
              */
             @Override public void onDisconnected(final int errorCode) {
                 EMLog.d(TAG, "onDisconnected: " + errorCode);
