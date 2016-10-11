@@ -58,25 +58,11 @@ public class DemoHelper {
         EMLog.d(TAG, "------- init easemob start --------------");
 
         mContext = context;
-        // get process ID
-        int pid = android.os.Process.myPid();
-        String processAppName = getAppName(pid);
-        /**
-         * 如果app启用了远程的service，此application:onCreate会被调用2次
-         * 为了防止环信SDK被初始化2次，加此判断会保证SDK被初始化1次
-         * 默认的app会在以包名为默认的process name下运行，如果查到的process name不是app的process name就立即返回
-         */
-        if (processAppName == null || !processAppName.equalsIgnoreCase(context.getPackageName())) {
-            // 则此application的onCreate 是被service 调用的，直接返回
-            return true;
-        }
-        if (isInit) {
-            return isInit;
-        }
-        mContext = context;
 
-        // init sdk
-        EMClient.getInstance().init(mContext, initOptions());
+        if(isMainProcess()) {
+            //init hyphenate sdk with options
+            EMClient.getInstance().init(context, initOptions());
+        }
 
         // set debug mode open:true, close:false
         EMClient.getInstance().setDebugMode(true);
