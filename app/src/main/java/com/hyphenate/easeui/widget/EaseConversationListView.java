@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Pair;
@@ -11,6 +12,7 @@ import android.util.Pair;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 
+import com.hyphenate.easeui.adapter.EaseConversationListAdapter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,7 +22,7 @@ import java.util.Map;
 /**
  * Created by wei on 2016/9/28.
  */
-public class EaseConversationListView extends RecyclerView{
+public class EaseConversationListView extends RecyclerView {
     protected final int MSG_REFRESH_ADAPTER_DATA = 0;
 
     private Context mContext;
@@ -63,21 +65,32 @@ public class EaseConversationListView extends RecyclerView{
 
     /**
      * Init list view with the passed conversationList
+     *
      * @param conversationList
      */
-    public void init(List<EMConversation> conversationList){
-        if(conversationList == null){
+    public void init(List<EMConversation> conversationList) {
+        if (conversationList == null) {
             mConversationList = loadConversationList();
-        }else {
+        } else {
             mConversationList = conversationList;
         }
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        setLayoutManager(layoutManager);
+
+        EaseConversationListAdapter mAdapter = new EaseConversationListAdapter(getContext(), new Comparator<EMConversation>() {
+            @Override public int compare(EMConversation o1, EMConversation o2) {
+                return Long.valueOf(o2.getLastMessage().getMsgTime()).compareTo(o1.getLastMessage().getMsgTime());
+            }
+        });
+        //setAdapter();
+
     }
 
     /**
      * Refresh list view
      */
     public void refresh() {
-        if(!handler.hasMessages(MSG_REFRESH_ADAPTER_DATA)){
+        if (!handler.hasMessages(MSG_REFRESH_ADAPTER_DATA)) {
             handler.sendEmptyMessage(MSG_REFRESH_ADAPTER_DATA);
         }
     }
@@ -100,9 +113,9 @@ public class EaseConversationListView extends RecyclerView{
     /**
      * load conversation list
      *
-     * @return
-    +    */
-    protected List<EMConversation> loadConversationList(){
+     * @return +
+     */
+    protected List<EMConversation> loadConversationList() {
         // get all conversations
         Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
         List<Pair<Long, EMConversation>> sortList = new ArrayList<Pair<Long, EMConversation>>();
@@ -139,14 +152,7 @@ public class EaseConversationListView extends RecyclerView{
         Collections.sort(conversationList, new Comparator<Pair<Long, EMConversation>>() {
             @Override
             public int compare(final Pair<Long, EMConversation> con1, final Pair<Long, EMConversation> con2) {
-
-                if (con1.first == con2.first) {
-                    return 0;
-                } else if (con2.first > con1.first) {
-                    return 1;
-                } else {
-                    return -1;
-                }
+                return con2.first.compareTo(con1.first);
             }
 
         });

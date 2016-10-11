@@ -36,7 +36,6 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.view_pager) ViewPager mViewPager;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
-
         // Check that you are logged in
         if (EMClient.getInstance().isLoggedInBefore()) {
             // Load the group into memory
