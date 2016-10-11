@@ -71,7 +71,9 @@ public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<Ease
                 return EaseSortedListAdapter.this.areItemsTheSame(item1, item2);
             }
         });
+
     }
+
 
     @Override
     public final ViewHolder<? extends T> onCreateViewHolder(ViewGroup parent, int viewType) {

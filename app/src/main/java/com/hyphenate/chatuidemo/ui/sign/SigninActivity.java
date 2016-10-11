@@ -144,7 +144,7 @@ public class SigninActivity extends BaseActivity {
                 // 关闭登录进度弹出框
                 mDialog.dismiss();
 
-                Toast.makeText(mActivity, "Sign in success!", Toast.LENGTH_LONG).show();
+                //Toast.makeText(mActivity, "Sign in success!", Toast.LENGTH_LONG).show();
                 // Sign in success jump MainActivity
                 Intent intent = new Intent(mActivity, MainActivity.class);
                 startActivity(intent);
