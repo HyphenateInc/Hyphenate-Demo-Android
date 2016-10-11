@@ -7,26 +7,28 @@ import android.support.multidex.MultiDex;
 /**
  * Created by wei on 2016/9/27.
  */
-public class DemoApplication extends Application{
+public class DemoApplication extends Application {
+
     private static DemoApplication instance;
 
-    @Override
-    public void onCreate() {
+    private Context applicationContext;
+
+    @Override public void onCreate() {
         MultiDex.install(this);
         super.onCreate();
-//		Fabric.with(this, new Crashlytics());
+        //		Fabric.with(this, new Crashlytics());
         instance = this;
+        applicationContext = this;
 
         //init demo helper
-//        DemoHelper.getInstance().init(applicationContext);
+        //DemoHelper.getInstance().init(applicationContext);
     }
 
     public static DemoApplication getInstance() {
         return instance;
     }
 
-    @Override
-    protected void attachBaseContext(Context base) {
+    @Override protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
