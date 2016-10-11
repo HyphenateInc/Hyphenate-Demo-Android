@@ -6,10 +6,15 @@ package com.hyphenate.chatuidemo.ui.user;
 
 public class UserEntity {
 
-    public String header;
-    public String userId;
+    private String header;
+    private String userId;
 
-    public String getHeader() {
+    private String nick;
+    private String avatar;
+
+
+
+    String getHeader() {
         return header;
     }
 
@@ -17,11 +22,27 @@ public class UserEntity {
         this.header = header;
     }
 
-    public String getUserId() {
+    String getUserId() {
         return userId;
     }
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    String getNick() {
+        return nick;
+    }
+
+    void setNick(String nick) {
+        this.nick = nick;
+    }
+
+    String getAvatar() {
+        return avatar;
+    }
+
+    void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
