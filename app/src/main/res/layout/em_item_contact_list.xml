@@ -1,36 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_contact_item"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/contact_item_height"
-    android:background="?android:attr/selectableItemBackground"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingLeft="16dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     >
 
-  <TextView
-      android:id="@+id/txt_header"
-      android:layout_width="14dp"
-      android:layout_height="wrap_content"
-      android:textColor="@android:color/darker_gray"
-      android:textSize="@dimen/header_size"
-      />
+  <LinearLayout
+      android:id="@+id/layout_contact_item"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/contact_item_height"
+      android:background="?android:attr/selectableItemBackground"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      android:paddingLeft="16dp"
+      >
+    <TextView
+        android:id="@+id/txt_header"
+        android:layout_width="14dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/header_text_color"
+        android:textSize="@dimen/header_size"
+        />
 
-  <ImageView
-      android:id="@+id/img_contact_avatar"
-      android:layout_width="@dimen/contact_avatar_size"
-      android:layout_height="@dimen/contact_avatar_size"
-      android:layout_marginLeft="@dimen/contact_avatar_margin_left"
-      android:src="@mipmap/ic_launcher"
-      />
+    <com.hyphenate.easeui.widget.EaseImageView
+        android:id="@+id/img_contact_avatar"
+        android:layout_width="@dimen/contact_avatar_size"
+        android:layout_height="@dimen/contact_avatar_size"
+        android:layout_marginLeft="@dimen/contact_avatar_margin_left"
+        android:scaleType="centerInside"
+        android:src="@mipmap/ic_launcher"
+        app:imgShapeType="round"
+        />
+
+    <TextView
+        android:id="@+id/txt_contact_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/contact_name_margin_left"
+        android:textColor="@color/contact_name_color"
+        android:textSize="@dimen/contact_name_size"
+        />
+  </LinearLayout>
 
   <TextView
-      android:id="@+id/txt_contact_name"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginLeft="@dimen/contact_name_margin_left"
-      android:textSize="@dimen/contact_name_size"
+      android:id="@+id/txt_base_line"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/base_line_height"
+      android:layout_marginLeft="@dimen/base_line_margin_left"
+      android:background="@color/base_line_color"
       />
 
 </LinearLayout>

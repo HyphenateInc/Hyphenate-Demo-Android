@@ -18,12 +18,12 @@ public class EaseUser extends EMContact {
      */
     protected String avatar;
 
-    public EaseUser(String username){
+    public EaseUser(String username) {
         this.username = username;
     }
 
     public String getInitialLetter() {
-        if(initialLetter == null){
+        if (initialLetter == null) {
             EaseCommonUtils.setUserInitialLetter(this);
         }
         return initialLetter;
@@ -33,7 +33,6 @@ public class EaseUser extends EMContact {
         this.initialLetter = initialLetter;
     }
 
-
     public String getAvatar() {
         return avatar;
     }
@@ -42,21 +41,18 @@ public class EaseUser extends EMContact {
         this.avatar = avatar;
     }
 
-    @Override
-    public int hashCode() {
+    @Override public int hashCode() {
         return 17 * getUsername().hashCode();
     }
 
-    @Override
-    public boolean equals(Object o) {
+    @Override public boolean equals(Object o) {
         if (o == null || !(o instanceof EaseUser)) {
             return false;
         }
         return getUsername().equals(((EaseUser) o).getUsername());
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return nick == null ? username : nick;
     }
 }

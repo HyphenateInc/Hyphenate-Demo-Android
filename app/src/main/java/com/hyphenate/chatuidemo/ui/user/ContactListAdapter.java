@@ -49,23 +49,25 @@ class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ViewHol
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
 
         UserEntity user = userEntities.get(position);
-        holder.contactName.setText(user.getUserId());
-        holder.header.setVisibility(View.VISIBLE);
+        holder.contactNameView.setText(user.getUserId());
 
         if (position == 0 || user.getHeader() != null && !user.getHeader()
                 .equals(userEntities.get(position - 1).getHeader())) {
             if (TextUtils.isEmpty(user.getHeader())) {
-                holder.header.setVisibility(View.INVISIBLE);
+                holder.headerView.setVisibility(View.INVISIBLE);
+                holder.baseLineView.setVisibility(View.INVISIBLE);
             } else {
-                holder.header.setVisibility(View.VISIBLE);
-                holder.header.setText(user.getHeader());
+                holder.headerView.setVisibility(View.VISIBLE);
+                holder.baseLineView.setVisibility(View.VISIBLE);
+                holder.headerView.setText(user.getHeader());
             }
         } else {
-            holder.header.setVisibility(View.INVISIBLE);
+            holder.headerView.setVisibility(View.INVISIBLE);
+            holder.baseLineView.setVisibility(View.INVISIBLE);
         }
 
         if (listener != null) {
-            holder.contactItem.setOnClickListener(new View.OnClickListener() {
+            holder.contactItemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     listener.ItemClickListener();
                 }
@@ -79,9 +81,10 @@ class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ViewHol
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.txt_contact_name) TextView contactName;
-        @BindView(R.id.layout_contact_item) LinearLayout contactItem;
-        @BindView(R.id.txt_header) TextView header;
+        @BindView(R.id.txt_contact_name) TextView contactNameView;
+        @BindView(R.id.layout_contact_item) LinearLayout contactItemLayout;
+        @BindView(R.id.txt_header) TextView headerView;
+        @BindView(R.id.txt_base_line) TextView baseLineView;
 
         ViewHolder(View itemView) {
             super(itemView);
