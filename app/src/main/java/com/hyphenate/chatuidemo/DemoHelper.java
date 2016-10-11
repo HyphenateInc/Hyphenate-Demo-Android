@@ -3,6 +3,8 @@ package com.hyphenate.chatuidemo;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.util.Log;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.chat.EMClient;
@@ -13,8 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by lzan13 on 2016/10/11.
- * The initialization class does some initialization of Hyphenate sdk
+ * Created by wei on 2016/10/11.
+ * Demo app helper class
  */
 public class DemoHelper {
 
@@ -37,12 +39,10 @@ public class DemoHelper {
     // if unbuild token
     private boolean isUnbuildToken = true;
 
-    /**
-     * 单例类，用来初始化环信的sdk
-     *
-     * @return 返回当前类的实例
-     */
-    public static DemoHelper getInstance() {
+    private DemoHelper() {
+    }
+
+    public synchronized static DemoHelper getInstance() {
         if (instance == null) {
             instance = new DemoHelper();
         }
@@ -50,16 +50,9 @@ public class DemoHelper {
     }
 
     /**
-     * 私有的构造方法
-     */
-    private DemoHelper() {
-    }
-
-    /**
-     * 初始化环信的SDK
+     * init helper
      *
-     * @param context 上下文菜单
-     * @return 返回初始化状态是否成功
+     * @param context application context
      */
     public synchronized boolean init(Context context) {
         EMLog.d(TAG, "------- init easemob start --------------");
@@ -106,31 +99,15 @@ public class DemoHelper {
          * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1chat_1_1_e_m_options.html
          */
         EMOptions options = new EMOptions();
-        // 启动私有化配置
-        options.enableDNSConfig(true);
-        // 设置Appkey，如果配置文件已经配置，这里可以不用设置
-        //        options.setAppKey("lzan13#hxsdkdemo");
-        // 设置自动登录
-        options.setAutoLogin(true);
-        // 设置是否按照服务器时间排序，false按照本地时间排序
-        options.setSortMessageByServerTime(false);
-        // 设置是否需要发送已读回执
-        options.setRequireAck(true);
-        // 设置是否需要发送回执
-        options.setRequireDeliveryAck(true);
-        // 设置是否需要服务器收到消息确认
-        options.setRequireServerAck(true);
-        // 收到好友申请是否自动同意，如果是自动同意就不会收到好友请求的回调，因为sdk会自动处理，默认为true
+        // change to need confirm contact invitation
         options.setAcceptInvitationAlways(false);
-        // 设置是否自动接收加群邀请，如果设置了当收到群邀请会自动同意加入
-        options.setAutoAcceptGroupInvitation(false);
-        // 设置（主动或被动）退出群组时，是否删除群聊聊天记录
-        options.setDeleteMessagesAsExitGroup(false);
-        // 设置是否允许聊天室的Owner 离开并删除聊天室的会话
-        options.allowChatroomOwnerLeave(true);
+        // set if need read ack
+        options.setRequireAck(true);
+        // set if need delivery ack
+        options.setRequireDeliveryAck(false);
 
-        // set google GCM id
-        // options.setGCMNumber(MLConstants.ML_GCM_NUMBER);
+        //set gcm project number
+        options.setGCMNumber("998166487724");
 
         return options;
     }
@@ -163,7 +140,7 @@ public class DemoHelper {
     }
 
     /**
-     * ------------------------------- Connection Listener --------------------- 链接监听，监听与服务器连接状况
+     * Set Connection Listener
      */
     private void setConnectionListener() {
         mConnectionListener = new EMConnectionListener() {
@@ -241,30 +218,55 @@ public class DemoHelper {
     }
 
     /**
+     * check the application process name if process name is not qualified, then we think it is a
+     * service process and we will not init SDK
+     */
+    private boolean isMainProcess() {
+        int pid = android.os.Process.myPid();
+        String processAppName = getAppName(pid);
+
+        Log.d(TAG, "process app name : " + processAppName);
+
+        // if there is application has remote service, application:onCreate() maybe called twice
+        // this check is to make sure SDK will initialized only once
+        // return if process name is not application's name since the package name is the default process name
+        if (processAppName == null || !processAppName.equalsIgnoreCase(mContext.getPackageName())) {
+            Log.e(TAG, "enter the service process!");
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * According to Pid to obtain the name of the current process, the general is the current app
      * package name,
      *
-     * @param pid Process ID
+     * @param pID Process ID
      * @return Process name
      */
-    private String getAppName(int pid) {
+    private String getAppName(int pID) {
         String processName = null;
-        ActivityManager activityManager =
-                (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        List list = activityManager.getRunningAppProcesses();
-        Iterator i = list.iterator();
+        ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        List l = am.getRunningAppProcesses();
+        Iterator i = l.iterator();
+        PackageManager pm = mContext.getPackageManager();
         while (i.hasNext()) {
             ActivityManager.RunningAppProcessInfo info =
                     (ActivityManager.RunningAppProcessInfo) (i.next());
             try {
-                if (info.pid == pid) {
+                if (info.pid == pID) {
+                    CharSequence c = pm.getApplicationLabel(
+                            pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
+                    // Log.d("Process", "Id: "+ info.pid +" ProcessName: "+
+                    // info.processName +"  Label: "+c.toString());
+                    // processName = c.toString();
                     processName = info.processName;
                     return processName;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                // Log.d("Process", "Error>> :"+ e.toString());
             }
         }
-        return null;
+        return processName;
     }
 }

@@ -66,7 +66,7 @@ public class SigninActivity extends BaseActivity {
     }
 
     /**
-     * 界面UI初始化方法，一般是为了先通过 findViewById 实例化控件
+     * Init layout view
      */
     private void initView() {
         mActivity = this;
@@ -133,15 +133,14 @@ public class SigninActivity extends BaseActivity {
              */
             @Override public void onSuccess() {
 
-                // 登录成功，把用户名保存在本地（可以不保存，根据自己的需求）
+                // Sign in success save account to shared
                 //MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mAccount);
 
-                // 加载所有会话到内存
+                // Load conversation to memory
                 EMClient.getInstance().chatManager().loadAllConversations();
-                // 加载所有群组到内存
+                // Load group to memory
                 EMClient.getInstance().groupManager().loadAllGroups();
 
-                // 关闭登录进度弹出框
                 mDialog.dismiss();
                 runOnUiThread(new Runnable() {
                     @Override public void run() {
@@ -171,31 +170,24 @@ public class SigninActivity extends BaseActivity {
                          */
                         String error = "";
                         switch (i) {
-                            // 网络异常 2
                             case EMError.NETWORK_ERROR:
                                 error = networkError;
                                 break;
-                            // 无效的用户名 101
                             case EMError.INVALID_USER_NAME:
                                 error = invalidUsername;
                                 break;
-                            // 无效的密码 102
                             case EMError.INVALID_PASSWORD:
                                 error = invalidPassword;
                                 break;
-                            // 用户认证失败，用户名或密码错误 202
                             case EMError.USER_AUTHENTICATION_FAILED:
                                 error = userAuthenticationFailed;
                                 break;
-                            // 用户不存在 204
                             case EMError.USER_NOT_FOUND:
                                 error = userNotFound;
                                 break;
-                            // 等待服务器响应超时 301
                             case EMError.SERVER_TIMEOUT:
                                 error = serverTimeout;
                                 break;
-                            // 服务器繁忙 302
                             case EMError.SERVER_BUSY:
                                 error = serverBusy;
                                 break;

@@ -18,13 +18,15 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.util.DateUtils;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by wei on 2016/10/9.
  */
-public class EaseConversationListAdapter extends SortedListAdapter<EMConversation> {
+public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConversation> {
 
     private Context mContext;
 
@@ -47,11 +49,23 @@ public class EaseConversationListAdapter extends SortedListAdapter<EMConversatio
         return false;
     }
 
+    private void filter(String query) {
+        //final String lowerCaseQuery = query.toLowerCase();
+        //
+        //final List<EMConversation> filteredModelList = new ArrayList<>();
+        //for (ExampleModel model : models) {
+        //    final String text = model.getText().toLowerCase();
+        //    if (text.contains(lowerCaseQuery)) {
+        //        filteredModelList.add(model);
+        //    }
+        //}
+    }
+
 
     /**
      * view holder class
      */
-    static class CvsListHolder extends SortedListAdapter.ViewHolder<EMConversation>{
+    static class CvsListHolder extends EaseSortedListAdapter.ViewHolder<EMConversation>{
         @BindView(R.id.img_avatar) ImageView mAvatarView;
         @BindView(R.id.txt_name) TextView mNameView;
         @BindView(R.id.img_msg_state) ImageView mMsgStateView;

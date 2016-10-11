@@ -8,10 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Pair;
-
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
-
 import com.hyphenate.easeui.adapter.EaseConversationListAdapter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,12 +19,14 @@ import java.util.Map;
 
 /**
  * Created by wei on 2016/9/28.
+ * Conversation list view, which extends RecyclerView
  */
 public class EaseConversationListView extends RecyclerView {
     protected final int MSG_REFRESH_ADAPTER_DATA = 0;
 
-    private Context mContext;
+    protected Context mContext;
     protected List<EMConversation> mConversationList = new ArrayList<EMConversation>();
+    protected EaseConversationListAdapter mAdapter;
 
     public EaseConversationListView(Context context) {
         this(context, null);
@@ -64,26 +64,33 @@ public class EaseConversationListView extends RecyclerView {
     }
 
     /**
-     * Init list view with the passed conversationList
+     * Init list view with the passed Comparator
      *
-     * @param conversationList
+     * @param comparator
      */
-    public void init(List<EMConversation> conversationList) {
-        if (conversationList == null) {
-            mConversationList = loadConversationList();
-        } else {
-            mConversationList = conversationList;
-        }
+    public void init(Comparator<EMConversation> comparator) {
+        mConversationList = loadConversationList();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         setLayoutManager(layoutManager);
 
-        EaseConversationListAdapter mAdapter = new EaseConversationListAdapter(getContext(), new Comparator<EMConversation>() {
-            @Override public int compare(EMConversation o1, EMConversation o2) {
-                return Long.valueOf(o2.getLastMessage().getMsgTime()).compareTo(o1.getLastMessage().getMsgTime());
-            }
-        });
-        //setAdapter();
+        if(comparator == null){
+            comparator = new Comparator<EMConversation>() {
+                @Override public int compare(EMConversation o1, EMConversation o2) {
+                    return Long.valueOf(o2.getLastMessage().getMsgTime()).compareTo(o1.getLastMessage().getMsgTime());
+                }
+            };
+        }
 
+        EaseConversationListAdapter mAdapter = new EaseConversationListAdapter(getContext(), comparator);
+        setAdapter(mAdapter);
+    }
+
+    /**
+     * filter conversation list with passed string
+     * @param str
+     */
+    public void filter(CharSequence str) {
+        //mAdapter.getFilter().filter(str);
     }
 
     /**
@@ -118,45 +125,10 @@ public class EaseConversationListView extends RecyclerView {
     protected List<EMConversation> loadConversationList() {
         // get all conversations
         Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
-        List<Pair<Long, EMConversation>> sortList = new ArrayList<Pair<Long, EMConversation>>();
-        /**
-         * lastMsgTime will change if there is new message during sorting
-         * so use synchronized to make sure timestamp of last message won't change.
-         */
-        synchronized (conversations) {
-            for (EMConversation conversation : conversations.values()) {
-                if (conversation.getAllMessages().size() != 0) {
-                    sortList.add(new Pair<Long, EMConversation>(conversation.getLastMessage().getMsgTime(), conversation));
-                }
-            }
-        }
-        try {
-            // Internal is TimSort algorithm, has bug
-            sortConversationByLastChatTime(sortList);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        List<EMConversation> list = new ArrayList<EMConversation>();
-        for (Pair<Long, EMConversation> sortItem : sortList) {
-            list.add(sortItem.second);
-        }
-        return list;
+        List<EMConversation> conversationList = new ArrayList<>(conversations.values());
+        return conversationList;
     }
 
-    /**
-     * sort conversations according time stamp of last message
-     *
-     * @param conversationList
-     */
-    private void sortConversationByLastChatTime(List<Pair<Long, EMConversation>> conversationList) {
-        Collections.sort(conversationList, new Comparator<Pair<Long, EMConversation>>() {
-            @Override
-            public int compare(final Pair<Long, EMConversation> con1, final Pair<Long, EMConversation> con2) {
-                return con2.first.compareTo(con1.first);
-            }
-
-        });
-    }
 
 
 }

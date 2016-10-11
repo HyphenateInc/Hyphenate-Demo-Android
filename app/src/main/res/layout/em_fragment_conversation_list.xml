@@ -6,12 +6,10 @@
     tools:context="com.hyphenate.chatuidemo.ui.chat.ConversationListFragment">
 
 
-  <Button
-      android:layout_marginTop="10dp"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="test"
-      android:id="@+id/btn_test"
+  <com.hyphenate.easeui.widget.EaseConversationListView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:id="@+id/list_view"
       />
 
 </LinearLayout>
