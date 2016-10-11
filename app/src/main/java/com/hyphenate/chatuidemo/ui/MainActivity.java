@@ -1,5 +1,6 @@
 package com.hyphenate.chatuidemo.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,7 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.ui.sign.SigninActivity;
 import com.hyphenate.chatuidemo.ui.user.ContactListFragment;
 import com.hyphenate.chatuidemo.ui.chat.ConversationListFragment;
 import com.hyphenate.chatuidemo.ui.settings.SettingsFragment;
@@ -33,7 +36,21 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.view_pager) ViewPager mViewPager;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);        setContentView(R.layout.em_activity_main);
+        // Check that you are logged in
+        if (EMClient.getInstance().isLoggedInBefore()) {
+            // Load the group into memory
+            EMClient.getInstance().groupManager().loadAllGroups();
+            // Load all conversation into memory
+            EMClient.getInstance().chatManager().loadAllConversations();
+        } else {
+            // Go sign in
+            Intent intent = new Intent(this, SigninActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.em_activity_main);
         ButterKnife.bind(this);
         //setup viewpager
         setupViewPager();
