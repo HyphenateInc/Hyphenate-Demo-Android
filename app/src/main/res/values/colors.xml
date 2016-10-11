@@ -5,4 +5,19 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorTextPrimary">#ffffff</color>
     <color name="tab_indicator">#ffffff</color>
+
+    <!--layout_background-->
+    <color name="text_black">#ff212121</color>
+
+    <!--sign background color-->
+    <color name="sign_background">#243e55</color>
+    <color name="sign_text_white">#ddffffff</color>
+    <color name="sign_text_hint">#61ffffff</color>
+
+    <!--green color-->
+    <color name="em_green_100">#ff039e00</color>
+    <color name="em_green_87">#dd039e00</color>
+    <color name="em_green_54">#89039e00</color>
+    <color name="em_green_38">#61039e00</color>
+    <color name="em_green_12">#1e039e00</color>
 </resources>

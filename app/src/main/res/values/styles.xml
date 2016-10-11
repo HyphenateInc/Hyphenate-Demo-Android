@@ -8,10 +8,48 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Define application base theme -->
+    <style name="EMTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <!-- The default main color, usually Toolbar color -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!-- Deep some of the main colors, the status bar is generally the color -->
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!--The color when the control is activated, or example: CheckBox、EditText、Switch、Spinner、RadioButton...-->
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!--Set theme not title-->
+        <item name="windowNoTitle">true</item>
+
+        <!--Set the 'ActionMode' effect to prevent 'ActionMode' from squeezing the 'Toolbar'-->
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
+
+    </style>
+
+    <!--Custom default AppBar style, here in order to make the text displayed as white,
+    inherited the black-style ActionBar-->
+    <style name="AppBarNormalTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <!--Appbar control color-->
+        <item name="colorControlNormal">@color/colorTextPrimary</item>
+        <!--Appbar title color-->
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <!--Appbar title text style-->
+        <item name="android:textStyle">normal</item>
+    </style>
+
     <style name="ToolbarNormalTheme">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">?attr/actionBarSize</item>
         <item name="android:background">?attr/colorPrimary</item>
+    </style>
+
+    <!--Custom Toolbar pop-up PopupMenu style, in order for this setting to take effect,
+    the layout file must be custom namespace xmlns: app-->
+    <style name="PopupOverlay" parent="@style/ThemeOverlay.AppCompat.Light">
+        <!--pop-up PopupMenu text color and size-->
+        <item name="android:textColor">#ff212121</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>

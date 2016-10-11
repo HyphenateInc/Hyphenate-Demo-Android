@@ -3,4 +3,5 @@
     <dimen name="header_size">20.5sp</dimen>
     <dimen name="contact_name_size">16sp</dimen>
     <dimen name="contact_item_height">60dp</dimen>
+
 </resources>
