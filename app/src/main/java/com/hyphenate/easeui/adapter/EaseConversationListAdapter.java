@@ -24,7 +24,7 @@ import java.util.Date;
 /**
  * Created by wei on 2016/10/9.
  */
-public class EaseConversationListAdapter extends SortedListAdapter<EMConversation> {
+public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConversation> {
 
     private Context mContext;
 
@@ -51,7 +51,7 @@ public class EaseConversationListAdapter extends SortedListAdapter<EMConversatio
     /**
      * view holder class
      */
-    static class CvsListHolder extends SortedListAdapter.ViewHolder<EMConversation>{
+    static class CvsListHolder extends EaseSortedListAdapter.ViewHolder<EMConversation>{
         @BindView(R.id.img_avatar) ImageView mAvatarView;
         @BindView(R.id.txt_name) TextView mNameView;
         @BindView(R.id.img_msg_state) ImageView mMsgStateView;

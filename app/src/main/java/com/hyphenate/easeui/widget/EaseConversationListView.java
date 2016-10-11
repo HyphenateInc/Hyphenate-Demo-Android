@@ -21,12 +21,14 @@ import java.util.Map;
 
 /**
  * Created by wei on 2016/9/28.
+ * Conversation list view, which extends RecyclerView
  */
 public class EaseConversationListView extends RecyclerView {
     protected final int MSG_REFRESH_ADAPTER_DATA = 0;
 
-    private Context mContext;
+    protected Context mContext;
     protected List<EMConversation> mConversationList = new ArrayList<EMConversation>();
+    protected EaseConversationListAdapter mAdapter;
 
     public EaseConversationListView(Context context) {
         this(context, null);
@@ -82,7 +84,7 @@ public class EaseConversationListView extends RecyclerView {
                 return Long.valueOf(o2.getLastMessage().getMsgTime()).compareTo(o1.getLastMessage().getMsgTime());
             }
         });
-        //setAdapter();
+        setAdapter(mAdapter);
 
     }
 
