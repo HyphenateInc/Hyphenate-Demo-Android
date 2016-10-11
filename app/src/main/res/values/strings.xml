@@ -1,7 +1,54 @@
 <resources>
     <string name="app_name">Hyphenate Demo</string>
 
+    <!--hint string-->
+    <string name="em_hint_account">Account</string>
+    <string name="em_hint_dont_have_account">Don\'t have an account?</string>
+    <string name="em_hint_already_have_account">Already have an account!</string>
+    <string name="em_hint_input_not_null">The input must not be empty</string>
+    <string name="em_hint_loading">Loading……</string>
+    <string name="em_hint_password">Password</string>
+    <string name="em_hint_sign_in">Input your account sign in, Account can not contain \'\@\'!</string>
+    <string name="em_hint_sign_up">Enter the account you want to register, the account can make the phone number,
+        or any length of the string should be all lowercase letters or numbers,
+        in addition to (.) (_) (-) can not contain other special characters,
+        can not be e-mail Account</string>
+
+    <!--sign-->
+    <string name="em_sign_in">Sign in</string>
+    <string name="em_sign_up">Sign up</string>
+    <string name="em_sign_up_begin">Account is begin sign up</string>
+    <string name="em_sign_in_begin">Account is begin sign in</string>
+
+    <string name="em_error_invalid_password">Invalid password</string>
+    <string name="em_error_invalid_username">Invalid username</string>
+    <string name="em_error_network_error">Network error</string>
+    <string name="em_error_illegal_argument">Illegal argument</string>
+    <string name="em_error_server_busy">Server busy</string>
+    <string name="em_error_server_timeout">Server timeout</string>
+    <string name="em_error_sign_in_failed">Sign in failed</string>
+    <string name="em_error_sign_up_failed">Sign up failed</string>
+    <string name="em_error_unknown_error">Unknown error</string>
+    <string name="em_error_user_already_exit">User already exit</string>
+    <string name="em_error_user_authentication_failed">User authentication failed</string>
+    <string name="em_error_user_not_found">User not found</string>
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="groups">Groups</string>
+
+
+    <string name="location_recv">[%1$s location]</string>
+    <string name="location_message">The location information</string>
+    <string name="recording_video">Record video</string>
+    <string name="location_prefix">[my location]</string>
+    <string name="voice">Voice</string>
+    <string name="picture">[Picture]</string>
+    <string name="video">[Video]</string>
+    <string name="file">[file]</string>
+    <string name="dynamic_expression">[Dynamic expression]</string>
+    <string name="voice_prefix">[Voice]</string>
+    <string name="voice_call">[Voice call]</string>
+    <string name="video_call">[Video call]</string>
 </resources>

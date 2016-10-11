@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ml_layout_coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sign_background"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.sign.SigninActivity"
+    >
+
+    <!--Include communal Toolbar-->
+    <include layout="@layout/em_widget_toolbar_communal"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            >
+
+            <LinearLayout
+                android:id="@+id/layout_signin_form"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/em_hint_sign_up"
+                    android:textColor="@color/sign_text_white"
+                    android:textSize="16sp"
+                    />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/sign_text_white"
+                    android:textColorHint="@color/sign_text_hint"
+                    >
+
+                    <EditText
+                        android:id="@+id/edt_account"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/em_hint_account"
+                        android:inputType="textCapCharacters"
+                        android:maxLines="1"
+                        android:textSize="16sp"
+                        />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/sign_text_white"
+                    android:textColorHint="@color/sign_text_hint"
+                    >
+
+                    <EditText
+                        android:id="@+id/edt_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/em_hint_password"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:textColor="@color/sign_text_white"
+                        android:textColorHint="@color/sign_text_hint"
+                        android:textSize="16sp"
+                        />
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btn_sign_up"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/em_btn_rectangle_green"
+                    android:text="@string/em_sign_up"
+                    android:textColor="@color/sign_text_white"
+                    android:textSize="14sp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/em_hint_dont_have_account"
+                        android:textColor="@color/sign_text_hint"
+                        android:textSize="14sp"
+                        />
+
+                    <Button
+                        android:id="@+id/btn_sign_in"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:text="@string/em_sign_in"
+                        android:textColor="@color/sign_text_white"
+                        android:textSize="14sp"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

@@ -9,4 +9,18 @@
     <color name="contact_name_color">#1b1d1d</color>
     <color name="header_text_color">#adb9c1</color>
     <color name="base_line_color">#e0e0e0</color>
+    <!--layout_background-->
+    <color name="text_black">#ff212121</color>
+
+    <!--sign background color-->
+    <color name="sign_background">#243e55</color>
+    <color name="sign_text_white">#ddffffff</color>
+    <color name="sign_text_hint">#61ffffff</color>
+
+    <!--green color-->
+    <color name="em_green_100">#ff039e00</color>
+    <color name="em_green_87">#dd039e00</color>
+    <color name="em_green_54">#89039e00</color>
+    <color name="em_green_38">#61039e00</color>
+    <color name="em_green_12">#1e039e00</color>
 </resources>

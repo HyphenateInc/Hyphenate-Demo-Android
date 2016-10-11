@@ -14,7 +14,7 @@ public class EaseUser extends EMContact {
      */
     protected String initialLetter;
     /**
-     * avatar of the user
+     * avatar url of the user
      */
     protected String avatar;
 

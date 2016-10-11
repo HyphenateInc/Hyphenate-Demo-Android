@@ -47,8 +47,9 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-
     <activity android:name=".ui.user.GroupListActivity"/>
+    <activity android:name=".ui.sign.SigninActivity"/>
+    <activity android:name=".ui.sign.SignupActivity"/>
 
 
     <!-- gcm start -->

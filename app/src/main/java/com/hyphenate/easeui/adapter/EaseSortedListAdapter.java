@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class SortedListAdapter<T> extends RecyclerView.Adapter<SortedListAdapter.ViewHolder<? extends T>> {
+public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<EaseSortedListAdapter.ViewHolder<? extends T>> {
 
     public interface Editor<T> {
         Editor<T> add(T item);
@@ -31,7 +31,7 @@ public abstract class SortedListAdapter<T> extends RecyclerView.Adapter<SortedLi
     private final SortedList<T> mSortedList;
     private final Comparator<T> mComparator;
 
-    public SortedListAdapter(Context context, Class<T> itemClass, Comparator<T> comparator) {
+    public EaseSortedListAdapter(Context context, Class<T> itemClass, Comparator<T> comparator) {
         mInflater = LayoutInflater.from(context);
         mComparator = comparator;
 
@@ -63,15 +63,17 @@ public abstract class SortedListAdapter<T> extends RecyclerView.Adapter<SortedLi
 
             @Override
             public boolean areContentsTheSame(T oldItem, T newItem) {
-                return SortedListAdapter.this.areItemContentsTheSame(oldItem, newItem);
+                return EaseSortedListAdapter.this.areItemContentsTheSame(oldItem, newItem);
             }
 
             @Override
             public boolean areItemsTheSame(T item1, T item2) {
-                return SortedListAdapter.this.areItemsTheSame(item1, item2);
+                return EaseSortedListAdapter.this.areItemsTheSame(item1, item2);
             }
         });
+
     }
+
 
     @Override
     public final ViewHolder<? extends T> onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -234,6 +236,10 @@ public abstract class SortedListAdapter<T> extends RecyclerView.Adapter<SortedLi
             performBind(item);
         }
 
+        /**
+         * bind view holder
+         * @param item
+         */
         protected abstract void performBind(T item);
 
         public final T getCurrentItem() {

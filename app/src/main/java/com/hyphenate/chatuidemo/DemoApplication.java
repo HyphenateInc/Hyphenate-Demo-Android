@@ -21,7 +21,7 @@ public class DemoApplication extends Application {
         applicationContext = this;
 
         //init demo helper
-        //DemoHelper.getInstance().init(applicationContext);
+        DemoHelper.getInstance().init(applicationContext);
     }
 
     public static DemoApplication getInstance() {
