@@ -59,13 +59,13 @@ public class DemoHelper {
 
         mContext = context;
 
-        if(isMainProcess()) {
+        if (isMainProcess()) {
             //init hyphenate sdk with options
             EMClient.getInstance().init(context, initOptions());
-        }
 
-        // set debug mode open:true, close:false
-        EMClient.getInstance().setDebugMode(true);
+            // set debug mode open:true, close:false
+            EMClient.getInstance().setDebugMode(true);
+        }
 
         //
         initGlobalListener();
@@ -155,7 +155,7 @@ public class DemoHelper {
      *
      * @param callback to receive the result of the logout
      */
-    public void signout(final EMCallBack callback) {
+    public void signOut(final EMCallBack callback) {
         /**
          * Call sdk sign out, this method requires two parameters
          *
