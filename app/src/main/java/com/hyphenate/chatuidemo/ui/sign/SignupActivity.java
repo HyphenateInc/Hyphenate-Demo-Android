@@ -20,11 +20,11 @@ import com.hyphenate.util.EMLog;
 /**
  * Created by lzan13 on 2016/10/10.
  */
-public class SignupActivity extends BaseActivity {
+public class SignUpActivity extends BaseActivity {
 
     private BaseActivity mActivity;
 
-    protected static final String TAG = SignupActivity.class.getSimpleName();
+    protected static final String TAG = SignUpActivity.class.getSimpleName();
 
     // Alert dialog
     private ProgressDialog mDialog;
@@ -32,8 +32,6 @@ public class SignupActivity extends BaseActivity {
     // Use ButterKnife to get the control
     @BindView(R.id.edt_account) EditText mAccountView;
     @BindView(R.id.edt_password) EditText mPasswordView;
-    @BindView(R.id.btn_sign_in) View mSigninBtn;
-    @BindView(R.id.btn_sign_up) View mSignupBtn;
 
     private String mPassword;
     private String mAccount;
@@ -56,14 +54,14 @@ public class SignupActivity extends BaseActivity {
     /**
      * Don't have an account? Go sign up
      */
-    @OnClick(R.id.btn_sign_in) void signin() {
+    @OnClick(R.id.btn_sign_in) void signIn() {
         finish();
     }
 
     /**
      * Verify the input information, Call sign up
      */
-    @OnClick(R.id.btn_sign_up) void attemptSignup() {
+    @OnClick(R.id.btn_sign_up) void attemptSignUp() {
 
         // reset error
         mAccountView.setError(null);
@@ -91,14 +89,15 @@ public class SignupActivity extends BaseActivity {
             // Let the input box get focus
             focusView.requestFocus();
         } else {
-            signup();
+            // Call sign up account
+            signUp();
         }
     }
 
     /**
      * Sign up account
      */
-    private void signup() {
+    private void signUp() {
         final Resources res = mActivity.getResources();
         mDialog = new ProgressDialog(mActivity);
         mDialog.setMessage(res.getString(R.string.em_sign_up_begin));

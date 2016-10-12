@@ -13,7 +13,7 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.MainActivity;
-import com.hyphenate.chatuidemo.ui.sign.SigninActivity;
+import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
 
 /**
  * Created by lzan13 on 2016/10/11.
@@ -42,7 +42,7 @@ public class SettingsFragment extends Fragment {
     @OnClick(R.id.btn_sign_out) void singOut() {
         DemoHelper.getInstance().signOut(new EMCallBack() {
             @Override public void onSuccess() {
-                startActivity(new Intent(getActivity(), SigninActivity.class));
+                startActivity(new Intent(getActivity(), SignInActivity.class));
                 ((MainActivity) getActivity()).finish();
             }
 

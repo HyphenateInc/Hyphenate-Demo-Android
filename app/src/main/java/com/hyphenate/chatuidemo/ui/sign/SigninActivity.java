@@ -4,12 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -24,11 +22,11 @@ import com.hyphenate.util.EMLog;
 /**
  * Created by lzan13 on 2016/10/10.
  */
-public class SigninActivity extends BaseActivity {
+public class SignInActivity extends BaseActivity {
 
     private BaseActivity mActivity;
 
-    protected static final String TAG = SigninActivity.class.getSimpleName();
+    protected static final String TAG = SignInActivity.class.getSimpleName();
 
     // Loading dialog
     private ProgressDialog mDialog;
@@ -36,8 +34,6 @@ public class SigninActivity extends BaseActivity {
     // Use ButterKnife to get the control
     @BindView(R.id.edt_account) EditText mAccountView;
     @BindView(R.id.edt_password) EditText mPasswordView;
-    @BindView(R.id.btn_sign_in) View mSigninBtn;
-    @BindView(R.id.btn_sign_up) View mSignupBtn;
 
     private String mPassword;
     private String mAccount;
@@ -67,15 +63,15 @@ public class SigninActivity extends BaseActivity {
     /**
      * Already have an account! Go sign in
      */
-    @OnClick(R.id.btn_sign_up) void signup() {
-        Intent intent = new Intent(mActivity, SignupActivity.class);
+    @OnClick(R.id.btn_sign_up) void signUp() {
+        Intent intent = new Intent(mActivity, SignUpActivity.class);
         startActivity(intent);
     }
 
     /**
      * Verify the input information, Call sign in
      */
-    @OnClick(R.id.btn_sign_in) void attemptSignin() {
+    @OnClick(R.id.btn_sign_in) void attemptSignIn() {
 
         // reset error
         mAccountView.setError(null);
@@ -103,14 +99,15 @@ public class SigninActivity extends BaseActivity {
             // Let the input box get focus
             focusView.requestFocus();
         } else {
-            signin();
+            // Call sign in account
+            signIn();
         }
     }
 
     /**
      * Sign in account
      */
-    private void signin() {
+    private void signIn() {
         final Resources res = mActivity.getResources();
         mDialog = new ProgressDialog(mActivity);
         mDialog.setMessage(res.getString(R.string.em_sign_in_begin));
