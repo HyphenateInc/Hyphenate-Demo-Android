@@ -150,10 +150,6 @@ public class SignInActivity extends BaseActivity {
                     @Override public void run() {
                         mDialog.dismiss();
                         EMLog.d(TAG, "Sign in error code: " + i + ", msg: " + s);
-                        /**
-                         * More error code
-                         * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1_e_m_error.html
-                         */
                         String error = "";
                         switch (i) {
                             case EMError.NETWORK_ERROR:

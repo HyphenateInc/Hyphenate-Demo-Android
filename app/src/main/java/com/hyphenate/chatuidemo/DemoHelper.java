@@ -55,8 +55,6 @@ public class DemoHelper {
      * @param context application context
      */
     public synchronized boolean init(Context context) {
-        EMLog.d(TAG, "------- init easemob start --------------");
-
         mContext = context;
 
         if (isMainProcess()) {
@@ -72,7 +70,6 @@ public class DemoHelper {
 
         // init success
         isInit = true;
-        EMLog.d(TAG, "------- init easemob end --------------");
         return isInit;
     }
 
@@ -80,10 +77,7 @@ public class DemoHelper {
      * init sdk options
      */
     private EMOptions initOptions() {
-        /**
-         * init sdk options more
-         * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1chat_1_1_e_m_options.html
-         */
+        // set init sdk options
         EMOptions options = new EMOptions();
         // change to need confirm contact invitation
         options.setAcceptInvitationAlways(false);
@@ -185,22 +179,6 @@ public class DemoHelper {
                 }
             }
         });
-    }
-
-    /**
-     * Check whether the login has been successful
-     */
-    public boolean isLoginedInBefore() {
-        return EMClient.getInstance().isLoggedInBefore();
-    }
-
-    /**
-     * Determines whether the current app is connected to the chat server
-     *
-     * @return connection state
-     */
-    public boolean isConnection() {
-        return EMClient.getInstance().isConnected();
     }
 
     /**
