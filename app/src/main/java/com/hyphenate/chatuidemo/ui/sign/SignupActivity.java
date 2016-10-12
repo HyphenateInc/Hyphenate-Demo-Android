@@ -1,12 +1,12 @@
 package com.hyphenate.chatuidemo.ui.sign;
 
 import android.app.ProgressDialog;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -26,8 +26,7 @@ public class SignupActivity extends BaseActivity {
 
     protected static final String TAG = SignupActivity.class.getSimpleName();
 
-
-    // Loading dialog
+    // Alert dialog
     private ProgressDialog mDialog;
 
     // Use ButterKnife to get the control
@@ -38,14 +37,6 @@ public class SignupActivity extends BaseActivity {
 
     private String mPassword;
     private String mAccount;
-
-    // Use ButterKnife to get the string res
-    @BindString(R.string.em_sign_up_begin) String signupBegin;
-    @BindString(R.string.em_error_network_error) String networkError;
-    @BindString(R.string.em_error_user_already_exit) String userAlreadyExist;
-    @BindString(R.string.em_error_illegal_argument) String illegalArgument;
-    @BindString(R.string.em_error_unknown_error) String unknownError;
-    @BindString(R.string.em_error_sign_up_failed) String signupFailed;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,8 +99,9 @@ public class SignupActivity extends BaseActivity {
      * Sign up account
      */
     private void signup() {
+        final Resources res = mActivity.getResources();
         mDialog = new ProgressDialog(mActivity);
-        mDialog.setMessage(signupBegin);
+        mDialog.setMessage(res.getString(R.string.em_sign_up_begin));
         mDialog.show();
         new Thread(new Runnable() {
             @Override public void run() {
@@ -144,22 +136,22 @@ public class SignupActivity extends BaseActivity {
                             String error = "";
                             switch (errorCode) {
                                 case EMError.NETWORK_ERROR:
-                                    error = networkError;
+                                    error = res.getString(R.string.em_error_network_error);
                                     break;
                                 case EMError.USER_ALREADY_EXIST:
-                                    error = userAlreadyExist;
+                                    error = res.getString(R.string.em_error_user_already_exit);
                                     break;
                                 case EMError.USER_ILLEGAL_ARGUMENT:
-                                    error = illegalArgument;
+                                    error = res.getString(R.string.em_error_illegal_argument);
                                     break;
                                 case EMError.SERVER_UNKNOWN_ERROR:
-                                    error = unknownError;
+                                    error = res.getString(R.string.em_error_unknown_error);
                                     break;
                                 case EMError.USER_REG_FAILED:
-                                    error = signupFailed;
+                                    error = res.getString(R.string.em_error_sign_up_failed);
                                     break;
                                 default:
-                                    error = signupFailed;
+                                    error = res.getString(R.string.em_error_sign_up_failed);
                                     break;
                             }
                             Toast.makeText(mActivity,

@@ -42,18 +42,6 @@ public class SigninActivity extends BaseActivity {
     private String mPassword;
     private String mAccount;
 
-    // Use ButterKnife to get the string res
-    @BindString(R.string.em_sign_in_begin) String signinBegin;
-    @BindString(R.string.em_error_invalid_password) String invalidPassword;
-    @BindString(R.string.em_error_invalid_username) String invalidUsername;
-    @BindString(R.string.em_error_network_error) String networkError;
-    @BindString(R.string.em_error_server_busy) String serverBusy;
-    @BindString(R.string.em_error_server_timeout) String serverTimeout;
-    @BindString(R.string.em_error_user_not_found) String userNotFound;
-    @BindString(R.string.em_error_user_authentication_failed) String userAuthenticationFailed;
-    @BindString(R.string.em_error_unknown_error) String unknownError;
-    @BindString(R.string.em_error_sign_in_failed) String signinFailed;
-
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_sign_in);
@@ -123,8 +111,9 @@ public class SigninActivity extends BaseActivity {
      * Sign in account
      */
     private void signin() {
+        final Resources res = mActivity.getResources();
         mDialog = new ProgressDialog(mActivity);
-        mDialog.setMessage(signinBegin);
+        mDialog.setMessage(res.getString(R.string.em_sign_in_begin));
         mDialog.show();
 
         EMClient.getInstance().login(mAccount, mPassword, new EMCallBack() {
@@ -171,31 +160,31 @@ public class SigninActivity extends BaseActivity {
                         String error = "";
                         switch (i) {
                             case EMError.NETWORK_ERROR:
-                                error = networkError;
+                                error = res.getString(R.string.em_error_network_error);
                                 break;
                             case EMError.INVALID_USER_NAME:
-                                error = invalidUsername;
+                                error = res.getString(R.string.em_error_invalid_username);
                                 break;
                             case EMError.INVALID_PASSWORD:
-                                error = invalidPassword;
+                                error = res.getString(R.string.em_error_invalid_password);
                                 break;
                             case EMError.USER_AUTHENTICATION_FAILED:
-                                error = userAuthenticationFailed;
+                                error = res.getString(R.string.em_error_user_authentication_failed);
                                 break;
                             case EMError.USER_NOT_FOUND:
-                                error = userNotFound;
+                                error = res.getString(R.string.em_error_user_not_found);
                                 break;
                             case EMError.SERVER_TIMEOUT:
-                                error = serverTimeout;
+                                error = res.getString(R.string.em_error_server_timeout);
                                 break;
                             case EMError.SERVER_BUSY:
-                                error = serverBusy;
+                                error = res.getString(R.string.em_error_server_busy);
                                 break;
                             case EMError.SERVER_UNKNOWN_ERROR:
-                                error = unknownError;
+                                error = res.getString(R.string.em_error_unknown_error);
                                 break;
                             default:
-                                error = signinFailed;
+                                error = res.getString(R.string.em_error_sign_in_failed);
                                 break;
                         }
                         Toast.makeText(mActivity, error + "-" + i + "-" + s, Toast.LENGTH_LONG)

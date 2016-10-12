@@ -15,6 +15,9 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.MainActivity;
 import com.hyphenate.chatuidemo.ui.sign.SigninActivity;
 
+/**
+ * Created by lzan13 on 2016/10/11.
+ */
 public class SettingsFragment extends Fragment {
 
     public SettingsFragment() {
@@ -33,6 +36,9 @@ public class SettingsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Call sign out
+     */
     @OnClick(R.id.btn_sign_out) void singout() {
         DemoHelper.getInstance().signout(new EMCallBack() {
             @Override public void onSuccess() {
