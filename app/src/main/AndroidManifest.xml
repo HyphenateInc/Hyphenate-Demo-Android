@@ -48,8 +48,16 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.sign.SigninActivity"/>
-        <activity android:name=".ui.sign.SignupActivity"/>
+        <activity
+            android:name=".ui.sign.SignInActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <activity
+            android:name=".ui.sign.SignUpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
 
 
         <!-- gcm start -->

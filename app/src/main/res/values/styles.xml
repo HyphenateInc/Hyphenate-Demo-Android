@@ -6,17 +6,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <!-- Define application base theme -->
-    <style name="EMTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <!-- The default main color, usually Toolbar color -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <!-- Deep some of the main colors, the status bar is generally the color -->
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <!--The color when the control is activated, or example: CheckBox、EditText、Switch、Spinner、RadioButton...-->
-        <item name="colorAccent">@color/colorAccent</item>
 
         <!--Set theme not title-->
         <item name="windowNoTitle">true</item>
@@ -24,8 +13,8 @@
         <!--Set the 'ActionMode' effect to prevent 'ActionMode' from squeezing the 'Toolbar'-->
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowActionBarOverlay">true</item>
-
     </style>
+
 
     <!--Custom default AppBar style, here in order to make the text displayed as white,
     inherited the black-style ActionBar-->

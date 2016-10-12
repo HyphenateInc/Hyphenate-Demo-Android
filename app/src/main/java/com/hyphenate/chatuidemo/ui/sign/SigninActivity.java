@@ -4,12 +4,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -24,11 +22,11 @@ import com.hyphenate.util.EMLog;
 /**
  * Created by lzan13 on 2016/10/10.
  */
-public class SigninActivity extends BaseActivity {
+public class SignInActivity extends BaseActivity {
 
     private BaseActivity mActivity;
 
-    private final String TAG = "SignupAcitivity";
+    protected static final String TAG = SignInActivity.class.getSimpleName();
 
     // Loading dialog
     private ProgressDialog mDialog;
@@ -36,23 +34,9 @@ public class SigninActivity extends BaseActivity {
     // Use ButterKnife to get the control
     @BindView(R.id.edt_account) EditText mAccountView;
     @BindView(R.id.edt_password) EditText mPasswordView;
-    @BindView(R.id.btn_sign_in) View mSigninBtn;
-    @BindView(R.id.btn_sign_up) View mSignupBtn;
 
     private String mPassword;
     private String mAccount;
-
-    // Use ButterKnife to get the string res
-    @BindString(R.string.em_sign_in_begin) String signinBegin;
-    @BindString(R.string.em_error_invalid_password) String invalidPassword;
-    @BindString(R.string.em_error_invalid_username) String invalidUsername;
-    @BindString(R.string.em_error_network_error) String networkError;
-    @BindString(R.string.em_error_server_busy) String serverBusy;
-    @BindString(R.string.em_error_server_timeout) String serverTimeout;
-    @BindString(R.string.em_error_user_not_found) String userNotFound;
-    @BindString(R.string.em_error_user_authentication_failed) String userAuthenticationFailed;
-    @BindString(R.string.em_error_unknown_error) String unknownError;
-    @BindString(R.string.em_error_sign_in_failed) String signinFailed;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +50,7 @@ public class SigninActivity extends BaseActivity {
     }
 
     /**
-     * 界面UI初始化方法，一般是为了先通过 findViewById 实例化控件
+     * Init layout view
      */
     private void initView() {
         mActivity = this;
@@ -79,15 +63,15 @@ public class SigninActivity extends BaseActivity {
     /**
      * Already have an account! Go sign in
      */
-    @OnClick(R.id.btn_sign_up) void signup() {
-        Intent intent = new Intent(mActivity, SignupActivity.class);
+    @OnClick(R.id.btn_sign_up) void signUp() {
+        Intent intent = new Intent(mActivity, SignUpActivity.class);
         startActivity(intent);
     }
 
     /**
      * Verify the input information, Call sign in
      */
-    @OnClick(R.id.btn_sign_in) void attemptSignin() {
+    @OnClick(R.id.btn_sign_in) void attemptSignIn() {
 
         // reset error
         mAccountView.setError(null);
@@ -115,16 +99,18 @@ public class SigninActivity extends BaseActivity {
             // Let the input box get focus
             focusView.requestFocus();
         } else {
-            signin();
+            // Call sign in account
+            signIn();
         }
     }
 
     /**
      * Sign in account
      */
-    private void signin() {
+    private void signIn() {
+        final Resources res = mActivity.getResources();
         mDialog = new ProgressDialog(mActivity);
-        mDialog.setMessage(signinBegin);
+        mDialog.setMessage(res.getString(R.string.em_sign_in_begin));
         mDialog.show();
 
         EMClient.getInstance().login(mAccount, mPassword, new EMCallBack() {
@@ -133,18 +119,20 @@ public class SigninActivity extends BaseActivity {
              */
             @Override public void onSuccess() {
 
-                // 登录成功，把用户名保存在本地（可以不保存，根据自己的需求）
+                // Sign in success save account to shared
                 //MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mAccount);
 
-                // 加载所有会话到内存
+                // Load conversation to memory
                 EMClient.getInstance().chatManager().loadAllConversations();
-                // 加载所有群组到内存
+                // Load group to memory
                 EMClient.getInstance().groupManager().loadAllGroups();
 
-                // 关闭登录进度弹出框
                 mDialog.dismiss();
-
-                //Toast.makeText(mActivity, "Sign in success!", Toast.LENGTH_LONG).show();
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        Toast.makeText(mActivity, "Sign in success!", Toast.LENGTH_LONG).show();
+                    }
+                });
                 // Sign in success jump MainActivity
                 Intent intent = new Intent(mActivity, MainActivity.class);
                 startActivity(intent);
@@ -168,39 +156,32 @@ public class SigninActivity extends BaseActivity {
                          */
                         String error = "";
                         switch (i) {
-                            // 网络异常 2
                             case EMError.NETWORK_ERROR:
-                                error = networkError;
+                                error = res.getString(R.string.em_error_network_error);
                                 break;
-                            // 无效的用户名 101
                             case EMError.INVALID_USER_NAME:
-                                error = invalidUsername;
+                                error = res.getString(R.string.em_error_invalid_username);
                                 break;
-                            // 无效的密码 102
                             case EMError.INVALID_PASSWORD:
-                                error = invalidPassword;
+                                error = res.getString(R.string.em_error_invalid_password);
                                 break;
-                            // 用户认证失败，用户名或密码错误 202
                             case EMError.USER_AUTHENTICATION_FAILED:
-                                error = userAuthenticationFailed;
+                                error = res.getString(R.string.em_error_user_authentication_failed);
                                 break;
-                            // 用户不存在 204
                             case EMError.USER_NOT_FOUND:
-                                error = userNotFound;
+                                error = res.getString(R.string.em_error_user_not_found);
                                 break;
-                            // 等待服务器响应超时 301
                             case EMError.SERVER_TIMEOUT:
-                                error = serverTimeout;
+                                error = res.getString(R.string.em_error_server_timeout);
                                 break;
-                            // 服务器繁忙 302
                             case EMError.SERVER_BUSY:
-                                error = serverBusy;
+                                error = res.getString(R.string.em_error_server_busy);
                                 break;
                             case EMError.SERVER_UNKNOWN_ERROR:
-                                error = unknownError;
+                                error = res.getString(R.string.em_error_unknown_error);
                                 break;
                             default:
-                                error = signinFailed;
+                                error = res.getString(R.string.em_error_sign_in_failed);
                                 break;
                         }
                         Toast.makeText(mActivity, error + "-" + i + "-" + s, Toast.LENGTH_LONG)

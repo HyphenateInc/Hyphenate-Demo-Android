@@ -9,7 +9,7 @@
     android:background="@color/sign_background"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    tools:context=".ui.sign.SigninActivity"
+    tools:context=".ui.sign.SignInActivity"
     >
 
     <!--Include communal Toolbar-->

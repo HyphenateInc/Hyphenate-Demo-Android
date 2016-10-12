@@ -16,6 +16,7 @@
 
     <!--sign-->
     <string name="em_sign_in">Sign in</string>
+    <string name="em_sign_out">Sign out</string>
     <string name="em_sign_up">Sign up</string>
     <string name="em_sign_up_begin">Account is begin sign up</string>
     <string name="em_sign_in_begin">Account is begin sign in</string>
