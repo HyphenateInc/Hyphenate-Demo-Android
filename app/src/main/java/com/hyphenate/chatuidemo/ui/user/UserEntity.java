@@ -4,7 +4,7 @@ package com.hyphenate.chatuidemo.ui.user;
  * Created by benson on 2016/10/10.
  */
 
-public class UserEntity {
+public class UserEntity extends EaseUser{
 
     private String header;
     private String userId;
@@ -12,7 +12,9 @@ public class UserEntity {
     private String nick;
     private String avatar;
 
-
+    public UserEntity(String username) {
+        super(username);
+    }
 
     String getHeader() {
         return header;
