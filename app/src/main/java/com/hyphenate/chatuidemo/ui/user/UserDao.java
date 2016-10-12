@@ -41,9 +41,9 @@ public class UserDao {
                 db.delete(UserDao.TABLE_NAME, null, null);
                 for (UserEntity user : contactList) {
                     ContentValues values = new ContentValues();
-                    values.put(UserDao.COLUMN_NAME_ID, user.getUserId());
-                    if (user.getNick() != null) {
-                        values.put(UserDao.COLUMN_NAME_NICK, user.getNick());
+                    values.put(UserDao.COLUMN_NAME_ID, user.getUsername());
+                    if (user.getNickname() != null) {
+                        values.put(UserDao.COLUMN_NAME_NICK, user.getNickname());
                     }
                     if (user.getAvatar() != null) {
                         values.put(UserDao.COLUMN_NAME_AVATAR, user.getAvatar());
@@ -67,26 +67,25 @@ public class UserDao {
                     String nick = cursor.getString(cursor.getColumnIndex(UserDao.COLUMN_NAME_NICK));
                     String avatar =
                             cursor.getString(cursor.getColumnIndex(UserDao.COLUMN_NAME_AVATAR));
-                    UserEntity user = new UserEntity();
-                    user.setUserId(userId);
-                    user.setNick(nick);
+                    UserEntity user = new UserEntity(userId);
+                    user.setNickname(nick);
                     user.setAvatar(avatar);
                     String headerName;
-                    if (!TextUtils.isEmpty(user.getNick())) {
-                        headerName = user.getNick();
+                    if (!TextUtils.isEmpty(user.getNickname())) {
+                        headerName = user.getNickname();
                     } else {
-                        headerName = user.getUserId();
+                        headerName = user.getUsername();
                     }
 
                     if (Character.isDigit(headerName.charAt(0))) {
-                        user.setHeader("#");
+                        user.setInitialLetter("#");
                     } else {
-                        user.setHeader(HanziToPinyin.getInstance()
+                        user.setInitialLetter(HanziToPinyin.getInstance()
                                 .get(headerName.substring(0, 1))
                                 .get(0).target.substring(0, 1).toUpperCase());
-                        char header = user.getHeader().toLowerCase().charAt(0);
+                        char header = user.getInitialLetter().toLowerCase().charAt(0);
                         if (header < 'a' || header > 'z') {
-                            user.setHeader("#");
+                            user.setInitialLetter("#");
                         }
                     }
                     users.put(userId, user);
@@ -94,6 +93,12 @@ public class UserDao {
                 cursor.close();
             }
             return users;
+        }
+    }
+
+    synchronized public void closeDB(){
+        if(openHelper != null){
+            openHelper.closeDB();
         }
     }
 }

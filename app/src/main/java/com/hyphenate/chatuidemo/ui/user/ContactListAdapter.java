@@ -49,17 +49,17 @@ class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ViewHol
     @Override public void onBindViewHolder(ViewHolder holder, int position) {
 
         UserEntity user = userEntities.get(position);
-        holder.contactNameView.setText(user.getUserId());
+        holder.contactNameView.setText(user.getUsername());
 
-        if (position == 0 || user.getHeader() != null && !user.getHeader()
-                .equals(userEntities.get(position - 1).getHeader())) {
-            if (TextUtils.isEmpty(user.getHeader())) {
+        if (position == 0 || user.getInitialLetter() != null && !user.getInitialLetter()
+                .equals(userEntities.get(position - 1).getInitialLetter())) {
+            if (TextUtils.isEmpty(user.getInitialLetter())) {
                 holder.headerView.setVisibility(View.INVISIBLE);
                 holder.baseLineView.setVisibility(View.INVISIBLE);
             } else {
                 holder.headerView.setVisibility(View.VISIBLE);
                 holder.baseLineView.setVisibility(View.VISIBLE);
-                holder.headerView.setText(user.getHeader());
+                holder.headerView.setText(user.getInitialLetter());
             }
         } else {
             holder.headerView.setVisibility(View.INVISIBLE);

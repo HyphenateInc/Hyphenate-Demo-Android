@@ -24,6 +24,7 @@ import com.hyphenate.chatuidemo.ui.user.UserDao;
 import com.hyphenate.chatuidemo.ui.user.UserEntity;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -148,12 +149,13 @@ public class SigninActivity extends BaseActivity {
 
                 try {
                     List<String> contacts = EMClient.getInstance().contactManager().getAllContactsFromServer();
+                    List<UserEntity> entityList = new ArrayList<>();
                     for (String name : contacts) {
-                        UserEntity user = new UserEntity();
-                        user.setUserId(name);
-                        user.setHeader(name.subSequence(0, 1).toString().toUpperCase());
-                        DemoApplication.getInstance().setContactList(user);
+                        UserEntity user = new UserEntity(name);
+                        user.setInitialLetter(name.subSequence(0, 1).toString().toUpperCase());
+                        entityList.add(user);
                     }
+                    DemoApplication.getInstance().setContactList(entityList);
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }

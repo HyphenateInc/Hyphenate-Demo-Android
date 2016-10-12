@@ -50,4 +50,16 @@ public class OpenHelper extends SQLiteOpenHelper {
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
+    public void closeDB() {
+        if (instance != null) {
+            try {
+                SQLiteDatabase db = instance.getWritableDatabase();
+                db.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            instance = null;
+        }
+    }
 }

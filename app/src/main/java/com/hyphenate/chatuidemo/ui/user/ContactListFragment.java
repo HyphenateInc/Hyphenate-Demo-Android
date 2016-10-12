@@ -1,6 +1,5 @@
 package com.hyphenate.chatuidemo.ui.user;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,11 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.OnClick;
-import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.DemoApplication;
 import com.hyphenate.chatuidemo.R;
 
-import com.hyphenate.exceptions.HyphenateException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,6 +32,8 @@ public class ContactListFragment extends Fragment {
 
     LinearLayoutManager layoutManager;
     ContactListAdapter adapter;
+
+    private List<UserEntity> entityList;
 
     public static ContactListFragment newInstance() {
         return new ContactListFragment();
@@ -57,12 +56,6 @@ public class ContactListFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        Collections.sort(DemoApplication.getInstance().getContactList(), new Comparator<UserEntity>() {
-            @Override public int compare(UserEntity o1, UserEntity o2) {
-                return o1.getUserId().compareTo(o2.getUserId());
-            }
-        });
-
        refresh();
 
         adapter.setOnItemClickListener(new ContactListAdapter.OnItemClickListener() {
@@ -73,8 +66,20 @@ public class ContactListFragment extends Fragment {
     }
 
     public void refresh(){
+
+        entityList = new ArrayList<>();
+        for (UserEntity userEntity:DemoApplication.getInstance().getContactList().values()){
+            entityList.add(userEntity);
+        }
+
+        Collections.sort(entityList, new Comparator<UserEntity>() {
+            @Override public int compare(UserEntity o1, UserEntity o2) {
+                return o1.getUsername().compareTo(o2.getUsername());
+            }
+        });
+
         if (adapter == null){
-            adapter = new ContactListAdapter(getActivity(), DemoApplication.getInstance().getContactList());
+            adapter = new ContactListAdapter(getActivity(), entityList);
             recyclerView.setAdapter(adapter);
         }else {
             adapter.notifyDataSetChanged();
@@ -83,38 +88,7 @@ public class ContactListFragment extends Fragment {
 
     @Override public void onResume() {
         super.onResume();
-        if (DemoApplication.getInstance().getContactList().size() == 0) {
-            final ProgressDialog dialog =
-                    ProgressDialog.show(getActivity(), "loading...", "waiting...", false);
-            new Thread(new Runnable() {
-                @Override public void run() {
-                    try {
-                        List<String> contacts =
-                                EMClient.getInstance().contactManager().getAllContactsFromServer();
-                        for (String name : contacts) {
-                            UserEntity user = new UserEntity();
-                            user.setUserId(name);
-                            user.setHeader(name.subSequence(0, 1).toString().toUpperCase());
-                            DemoApplication.getInstance().setContactList(user);
-                        }
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override public void run() {
-                                dialog.dismiss();
-                                refresh();
-                            }
-                        });
-                    } catch (HyphenateException e) {
-                        e.printStackTrace();
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override public void run() {
-
-                                dialog.dismiss();
-                            }
-                        });
-                    }
-                }
-            }).start();
-        }
+        refresh();
     }
 
     @OnClick(R.id.layout_group_entry) void onclick() {
