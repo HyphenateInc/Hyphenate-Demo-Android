@@ -6,6 +6,9 @@ import android.os.Bundle;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 
+/**
+ * Chat with someone in this activity
+ */
 public class ChatActivity extends BaseActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {

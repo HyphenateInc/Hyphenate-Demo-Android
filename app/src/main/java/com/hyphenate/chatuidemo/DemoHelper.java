@@ -27,17 +27,12 @@ public class DemoHelper {
     //
     private static DemoHelper instance;
 
-    //
-    private boolean isInit;
-
     // call broadcast receiver
     private CallReceiver mCallReceiver = null;
 
     // connection listener
     private EMConnectionListener mConnectionListener;
 
-    // if unbuild token
-    private boolean isUnbuildToken = true;
 
     private DemoHelper() {
     }
@@ -54,26 +49,23 @@ public class DemoHelper {
      *
      * @param context application context
      */
-    public synchronized boolean init(Context context) {
-        EMLog.d(TAG, "------- init easemob start --------------");
+    public void init(Context context) {
 
         mContext = context;
 
         if (isMainProcess()) {
+            EMLog.d(TAG, "------- init hyphenate start --------------");
             //init hyphenate sdk with options
             EMClient.getInstance().init(context, initOptions());
 
             // set debug mode open:true, close:false
             EMClient.getInstance().setDebugMode(true);
+
+            initGlobalListener();
+
+            EMLog.d(TAG, "------- init hyphenate end --------------");
         }
 
-        //
-        initGlobalListener();
-
-        // init success
-        isInit = true;
-        EMLog.d(TAG, "------- init easemob end --------------");
-        return isInit;
     }
 
     /**
@@ -155,53 +147,36 @@ public class DemoHelper {
      *
      * @param callback to receive the result of the logout
      */
-    public void signOut(final EMCallBack callback) {
-        /**
-         * Call sdk sign out, this method requires two parameters
-         *
-         *  boolean: The first argument is required，Indicates that the push token is to be deallocated,
-         *  and if account offline, this parameter is set to false
-         *
-         *  callback: Optional parameter to receive the result of the logout
-         */
-        EMClient.getInstance().logout(isUnbuildToken, new EMCallBack() {
-            @Override public void onSuccess() {
-                isUnbuildToken = true;
+    public void signOut(boolean unbindDeviceToken, final EMCallBack callback) {
+        Log.d(TAG, "Sign out: " + unbindDeviceToken);
+        EMClient.getInstance().logout(unbindDeviceToken, new EMCallBack() {
+
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "Sign out: onSuccess");
                 if (callback != null) {
                     callback.onSuccess();
                 }
+
             }
 
-            @Override public void onError(int i, String s) {
-                isUnbuildToken = true;
+            @Override
+            public void onProgress(int progress, String status) {
                 if (callback != null) {
-                    callback.onError(i, s);
+                    callback.onProgress(progress, status);
                 }
             }
 
-            @Override public void onProgress(int i, String s) {
+            @Override
+            public void onError(int code, String error) {
+                Log.d(TAG, "Sign out: onSuccess");
                 if (callback != null) {
-                    callback.onProgress(i, s);
+                    callback.onError(code, error);
                 }
             }
         });
     }
 
-    /**
-     * Check whether the login has been successful
-     */
-    public boolean isLoginedInBefore() {
-        return EMClient.getInstance().isLoggedInBefore();
-    }
-
-    /**
-     * Determines whether the current app is connected to the chat server
-     *
-     * @return connection state
-     */
-    public boolean isConnection() {
-        return EMClient.getInstance().isConnected();
-    }
 
     /**
      * check the application process name if process name is not qualified, then we think it is a

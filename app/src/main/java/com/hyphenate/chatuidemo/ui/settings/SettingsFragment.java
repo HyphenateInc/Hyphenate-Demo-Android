@@ -40,7 +40,7 @@ public class SettingsFragment extends Fragment {
      * Call sign out
      */
     @OnClick(R.id.btn_sign_out) void singOut() {
-        DemoHelper.getInstance().signOut(new EMCallBack() {
+        DemoHelper.getInstance().signOut(true, new EMCallBack() {
             @Override public void onSuccess() {
                 startActivity(new Intent(getActivity(), SignInActivity.class));
                 ((MainActivity) getActivity()).finish();
