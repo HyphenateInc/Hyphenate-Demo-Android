@@ -20,7 +20,7 @@ public class OpenHelper extends SQLiteOpenHelper {
             + UserDao.TABLE_NAME
             + " ("
             + UserDao.COLUMN_NAME_ID
-            + "TEXT PRIMARY KEY, "
+            + " TEXT PRIMARY KEY, "
             + UserDao.COLUMN_NAME_NICK
             + " TEXT, "
             + UserDao.COLUMN_NAME_AVATAR
