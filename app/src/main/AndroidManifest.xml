@@ -60,6 +60,8 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
 
+      <activity android:name=".ui.user.GroupListActivity"/>
+
         <!-- gcm start -->
         <receiver
             android:name="com.hyphenate.chat.EMGCMBroadcastReceiver"

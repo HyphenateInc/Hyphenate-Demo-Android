@@ -14,10 +14,16 @@ import butterknife.OnClick;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chatuidemo.DemoApplication;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.ui.MainActivity;
+import com.hyphenate.chatuidemo.ui.user.UserDao;
+import com.hyphenate.chatuidemo.ui.user.UserEntity;
+import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lzan13 on 2016/10/10.
@@ -127,6 +133,20 @@ public class SignInActivity extends BaseActivity {
                 // Load group to memory
                 EMClient.getInstance().groupManager().loadAllGroups();
 
+                try {
+                    List<String> contacts = EMClient.getInstance().contactManager().getAllContactsFromServer();
+                    List<UserEntity> entityList = new ArrayList<>();
+                    for (String name : contacts) {
+                        UserEntity user = new UserEntity(name);
+                        user.setInitialLetter(name.subSequence(0, 1).toString().toUpperCase());
+                        entityList.add(user);
+                    }
+                    DemoApplication.getInstance().setContactList(entityList);
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+
+                // 关闭登录进度弹出框
                 mDialog.dismiss();
                 runOnUiThread(new Runnable() {
                     @Override public void run() {
