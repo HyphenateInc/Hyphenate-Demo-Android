@@ -44,6 +44,7 @@ public class ConversationListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mCvsListView.init();
 
+
     }
 
     @Override public void onDestroy() {
