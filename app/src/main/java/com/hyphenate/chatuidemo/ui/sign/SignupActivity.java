@@ -1,12 +1,12 @@
 package com.hyphenate.chatuidemo.ui.sign;
 
 import android.app.ProgressDialog;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -20,31 +20,21 @@ import com.hyphenate.util.EMLog;
 /**
  * Created by lzan13 on 2016/10/10.
  */
-public class SignupActivity extends BaseActivity {
+public class SignUpActivity extends BaseActivity {
 
     private BaseActivity mActivity;
 
-    private final String TAG = "SignupAcitivity";
+    protected static final String TAG = SignUpActivity.class.getSimpleName();
 
-    // Loading dialog
+    // Alert dialog
     private ProgressDialog mDialog;
 
     // Use ButterKnife to get the control
     @BindView(R.id.edt_account) EditText mAccountView;
     @BindView(R.id.edt_password) EditText mPasswordView;
-    @BindView(R.id.btn_sign_in) View mSigninBtn;
-    @BindView(R.id.btn_sign_up) View mSignupBtn;
 
     private String mPassword;
     private String mAccount;
-
-    // Use ButterKnife to get the string res
-    @BindString(R.string.em_sign_up_begin) String signupBegin;
-    @BindString(R.string.em_error_network_error) String networkError;
-    @BindString(R.string.em_error_user_already_exit) String userAlreadyExist;
-    @BindString(R.string.em_error_illegal_argument) String illegalArgument;
-    @BindString(R.string.em_error_unknown_error) String unknownError;
-    @BindString(R.string.em_error_sign_up_failed) String signupFailed;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,14 +54,14 @@ public class SignupActivity extends BaseActivity {
     /**
      * Don't have an account? Go sign up
      */
-    @OnClick(R.id.btn_sign_in) void signin() {
+    @OnClick(R.id.btn_sign_in) void signIn() {
         finish();
     }
 
     /**
      * Verify the input information, Call sign up
      */
-    @OnClick(R.id.btn_sign_up) void attemptSignup() {
+    @OnClick(R.id.btn_sign_up) void attemptSignUp() {
 
         // reset error
         mAccountView.setError(null);
@@ -99,16 +89,18 @@ public class SignupActivity extends BaseActivity {
             // Let the input box get focus
             focusView.requestFocus();
         } else {
-            signup();
+            // Call sign up account
+            signUp();
         }
     }
 
     /**
      * Sign up account
      */
-    private void signup() {
+    private void signUp() {
+        final Resources res = mActivity.getResources();
         mDialog = new ProgressDialog(mActivity);
-        mDialog.setMessage(signupBegin);
+        mDialog.setMessage(res.getString(R.string.em_sign_up_begin));
         mDialog.show();
         new Thread(new Runnable() {
             @Override public void run() {
@@ -143,22 +135,22 @@ public class SignupActivity extends BaseActivity {
                             String error = "";
                             switch (errorCode) {
                                 case EMError.NETWORK_ERROR:
-                                    error = networkError;
+                                    error = res.getString(R.string.em_error_network_error);
                                     break;
                                 case EMError.USER_ALREADY_EXIST:
-                                    error = userAlreadyExist;
+                                    error = res.getString(R.string.em_error_user_already_exit);
                                     break;
                                 case EMError.USER_ILLEGAL_ARGUMENT:
-                                    error = illegalArgument;
+                                    error = res.getString(R.string.em_error_illegal_argument);
                                     break;
                                 case EMError.SERVER_UNKNOWN_ERROR:
-                                    error = unknownError;
+                                    error = res.getString(R.string.em_error_unknown_error);
                                     break;
                                 case EMError.USER_REG_FAILED:
-                                    error = signupFailed;
+                                    error = res.getString(R.string.em_error_sign_up_failed);
                                     break;
                                 default:
-                                    error = signupFailed;
+                                    error = res.getString(R.string.em_error_sign_up_failed);
                                     break;
                             }
                             Toast.makeText(mActivity,

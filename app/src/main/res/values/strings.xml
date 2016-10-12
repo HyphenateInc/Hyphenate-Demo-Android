@@ -16,6 +16,7 @@
 
     <!--sign-->
     <string name="em_sign_in">Sign in</string>
+    <string name="em_sign_out">Sign out</string>
     <string name="em_sign_up">Sign up</string>
     <string name="em_sign_up_begin">Account is begin sign up</string>
     <string name="em_sign_in_begin">Account is begin sign in</string>
@@ -38,17 +39,4 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="groups">Groups</string>
 
-
-    <string name="location_recv">[%1$s location]</string>
-    <string name="location_message">The location information</string>
-    <string name="recording_video">Record video</string>
-    <string name="location_prefix">[my location]</string>
-    <string name="voice">Voice</string>
-    <string name="picture">[Picture]</string>
-    <string name="video">[Video]</string>
-    <string name="file">[file]</string>
-    <string name="dynamic_expression">[Dynamic expression]</string>
-    <string name="voice_prefix">[Voice]</string>
-    <string name="voice_call">[Voice call]</string>
-    <string name="video_call">[Video call]</string>
 </resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="text_ack_msg">Read</string>
+    <string name="text_delivered_msg">Delivered</string>
+    <string name="location_recv">[%1$s location]</string>
+    <string name="location_message">The location information</string>
+    <string name="recording_video">Record video</string>
+    <string name="location_prefix">[my location]</string>
+    <string name="voice">Voice</string>
+    <string name="picture">[Picture]</string>
+    <string name="video">[Video]</string>
+    <string name="file">[file]</string>
+    <string name="dynamic_expression">[Dynamic expression]</string>
+    <string name="voice_prefix">[Voice]</string>
+    <string name="voice_call">[Voice call]</string>
+    <string name="video_call">[Video call]</string>
+    <string name="send_fail">Send failed</string>
+    <string name="error_send_invalid_content">The message content is not allowed to be sent!</string>
+    <string name="error_send_not_in_the_group">You already were not in the group</string>
+    <string name="connect_failuer_toast">Please check the network or try again later</string>
+    <string name="network_unavailable">The network connection is not available, please check the network</string>
+</resources>

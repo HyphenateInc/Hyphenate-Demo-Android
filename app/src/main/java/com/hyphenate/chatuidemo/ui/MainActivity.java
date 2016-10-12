@@ -19,7 +19,7 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.DemoApplication;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.ui.sign.SigninActivity;
+import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
 import com.hyphenate.chatuidemo.ui.user.ContactListFragment;
 import com.hyphenate.chatuidemo.ui.chat.ConversationListFragment;
 import com.hyphenate.chatuidemo.ui.settings.SettingsFragment;
@@ -49,7 +49,7 @@ public class MainActivity extends BaseActivity {
             EMClient.getInstance().chatManager().loadAllConversations();
         } else {
             // Go sign in
-            Intent intent = new Intent(this, SigninActivity.class);
+            Intent intent = new Intent(this, SignInActivity.class);
             startActivity(intent);
             finish();
         }
