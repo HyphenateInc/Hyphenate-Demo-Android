@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.hyphenate.chatuidemo.ui.chat.ChatActivity"
     >
 
     <android.support.v7.widget.Toolbar
         style="@style/ToolbarNormalTheme"
+        app:navigationIcon="@drawable/ic_back"
         android:id="@+id/toolbar_actionbar"
-        android:navigationIcon="@drawable/ease_ic_back"
+        android:layout_alignParentTop="true"
         />
 
     <com.hyphenate.easeui.widget.EaseChatMessageListView
         android:id="@+id/message_list"
+        android:layout_above="@+id/layout_input_container"
+        android:layout_below="@id/toolbar_actionbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:cacheColorHint="#00000000"
@@ -23,6 +27,31 @@
         android:listSelector="#00000000"
         />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_input_container"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        >
+
+        <EditText
+            android:id="@+id/edt_msg_content"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="input text"
+            />
+
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_weight="0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发送"
+            />
+
+    </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

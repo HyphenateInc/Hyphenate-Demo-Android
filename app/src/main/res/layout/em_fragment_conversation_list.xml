@@ -5,6 +5,12 @@
     android:orientation="vertical"
     tools:context="com.hyphenate.chatuidemo.ui.chat.ConversationListFragment">
 
+  <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/btn_test"
+      android:text="test"
+      />
 
   <com.hyphenate.easeui.widget.EaseConversationListView
       android:layout_width="match_parent"

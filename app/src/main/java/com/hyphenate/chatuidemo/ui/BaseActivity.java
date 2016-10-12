@@ -50,6 +50,7 @@ public class BaseActivity extends AppCompatActivity{
             mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
             if (mActionBarToolbar != null) {
                 setSupportActionBar(mActionBarToolbar);
+                mActionBarToolbar.setTitleTextColor(getResources().getColor(R.color.colorTextPrimary));
             }
         }
         return mActionBarToolbar;

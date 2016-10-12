@@ -43,11 +43,13 @@
             android:autoLink="web"
             android:layout_centerInParent="true"
             android:gravity="center|left"
-            android:paddingRight="6dp"
-            android:paddingLeft="1dp"
-            android:minHeight="38dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:minHeight="@dimen/chat_item_text_min_height"
             android:lineSpacingExtra="2dp"
-            android:textColor="#000000"
+            android:textColor="@color/em_white_100"
             android:maxWidth="225.0dip"
             android:textSize="15sp" />
       </RelativeLayout>

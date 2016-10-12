@@ -52,15 +52,18 @@
         <activity
             android:name=".ui.sign.SignInActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
             android:name=".ui.sign.SignUpActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
 
-      <activity android:name=".ui.user.GroupListActivity"/>
+        <activity android:name=".ui.user.GroupListActivity"/>
+
+        <activity
+            android:name=".ui.chat.ChatActivity"
+            android:screenOrientation="portrait"
+            />
 
         <!-- gcm start -->
         <receiver
@@ -122,8 +125,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAzTPKEIuWRgCtcn6NJeHqOPXcbG6YWM-4"/>
 
-        <activity android:name=".ui.chat.ChatActivity">
-        </activity>
     </application>
 
 </manifest>
