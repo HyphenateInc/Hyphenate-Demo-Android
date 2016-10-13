@@ -65,6 +65,7 @@ public class MainActivity extends BaseActivity {
         adapter.addFragment(ConversationListFragment.newInstance(), "Chats");
         adapter.addFragment(SettingsFragment.newInstance(), "Settings");
         mViewPager.setAdapter(adapter);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override public void onPageSelected(int position) {
                 Toolbar toolbar = getActionBarToolbar();

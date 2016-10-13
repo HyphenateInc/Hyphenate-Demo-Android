@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.hyphenate.chatuidemo.R;
 
+import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,7 +25,7 @@ class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ViewHol
 
     private Context context;
     private List<UserEntity> userEntities;
-    private OnItemClickListener listener;
+    private EaseListItemClickListener listener;
 
     ContactListAdapter(Context context, List<UserEntity> list) {
 
@@ -32,11 +33,8 @@ class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ViewHol
         userEntities = list;
     }
 
-    interface OnItemClickListener {
-        void ItemClickListener();
-    }
 
-    void setOnItemClickListener(OnItemClickListener listener) {
+    void setOnItemClickListener(EaseListItemClickListener listener) {
         this.listener = listener;
     }
 
@@ -46,7 +44,7 @@ class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ViewHol
         return new ViewHolder(view);
     }
 
-    @Override public void onBindViewHolder(ViewHolder holder, int position) {
+    @Override public void onBindViewHolder(ViewHolder holder, final int position) {
 
         UserEntity user = userEntities.get(position);
         holder.contactNameView.setText(user.getUsername());
@@ -69,7 +67,7 @@ class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ViewHol
         if (listener != null) {
             holder.contactItemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
-                    listener.ItemClickListener();
+                    listener.onItemClick(v, position);
                 }
             });
         }

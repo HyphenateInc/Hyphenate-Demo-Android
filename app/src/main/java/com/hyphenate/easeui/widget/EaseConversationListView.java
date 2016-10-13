@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Pair;
+import android.widget.AdapterView;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.easeui.adapter.EaseConversationListAdapter;
@@ -57,7 +58,7 @@ public class EaseConversationListView extends RecyclerView {
 
     /**
      * Init this view, which use a default sorted conversation list.
-     * If you want to show list with your own sort, use {@link #init(List)}
+     * If you want to show list with your own sort, use {@link #init(Comparator)}
      */
     public void init() {
         init(null);
@@ -81,8 +82,10 @@ public class EaseConversationListView extends RecyclerView {
             };
         }
 
-        EaseConversationListAdapter mAdapter = new EaseConversationListAdapter(getContext(), comparator);
+        mAdapter = new EaseConversationListAdapter(getContext(), comparator);
         setAdapter(mAdapter);
+
+        mAdapter.edit().replaceAll(loadConversationList()).commit();
     }
 
     /**
@@ -94,38 +97,36 @@ public class EaseConversationListView extends RecyclerView {
     }
 
     /**
-     * Refresh list view
+     * Refresh conversations list view
      */
     public void refresh() {
-        if (!handler.hasMessages(MSG_REFRESH_ADAPTER_DATA)) {
-            handler.sendEmptyMessage(MSG_REFRESH_ADAPTER_DATA);
-        }
+        mAdapter.edit().replaceAll(loadConversationList()).commit();
     }
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message message) {
-            switch (message.what) {
-                case MSG_REFRESH_ADAPTER_DATA:
-//                    if (adapter != null) {
-//                        adapter.notifyDataSetChanged();
-//                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
+    /**
+     * get list item entity
+     * @param position
+     */
+    public EMConversation getItem(int position){
+        return mAdapter.getItem(position);
+    }
 
     /**
+     * set list item onclick listener
+     * @param onItemClickListener EaseListItemClickListener
+     */
+    public void setOnItemClickListener(EaseListItemClickListener onItemClickListener){
+        mAdapter.setOnItemClickListener(onItemClickListener);
+    }
+    List<EMConversation> conversationList;
+    /**
      * load conversation list
-     *
-     * @return +
+     * @return
      */
     protected List<EMConversation> loadConversationList() {
         // get all conversations
         Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
-        List<EMConversation> conversationList = new ArrayList<>(conversations.values());
+        conversationList = new ArrayList<>(conversations.values());
         return conversationList;
     }
 

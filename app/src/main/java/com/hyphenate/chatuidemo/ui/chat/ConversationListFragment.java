@@ -12,9 +12,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseConversationListView;
+import com.hyphenate.easeui.widget.EaseListItemClickListener;
 
 /**
  * A fragment which shows conversation list
@@ -23,7 +25,7 @@ public class ConversationListFragment extends Fragment {
 
     private Unbinder mUnbinder;
 
-    @BindView(R.id.list_view) EaseConversationListView mCvsListView;
+    @BindView(R.id.list_view) EaseConversationListView mConversationListView;
 
 
     public ConversationListFragment() {
@@ -45,11 +47,23 @@ public class ConversationListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mCvsListView.init();
+        // init ConversationListView
+        mConversationListView.init();
+        // set item click listener
+        mConversationListView.setOnItemClickListener(new EaseListItemClickListener() {
+            @Override public void onItemClick(View view, int position) {
+            EMConversation conversation = mConversationListView.getItem(position);
+            //enter to chat activity
+            startActivity(new Intent(getActivity(), ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, conversation.getUserName()));
+            }
+        });
     }
 
-    @OnClick(R.id.btn_test) void test(){
-        startActivity(new Intent(getActivity(), ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, "zw321"));
+
+    @Override public void onResume() {
+        super.onResume();
+        //refresh list
+        mConversationListView.refresh();
     }
 
 

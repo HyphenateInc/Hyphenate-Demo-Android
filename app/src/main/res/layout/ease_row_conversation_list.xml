@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="59dp"
-    android:id="@+id/list_itease_layout"
+    android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical">
 
     <RelativeLayout
@@ -54,8 +54,10 @@
 
 
     <TextView
+        android:text="bbbb"
         android:id="@+id/txt_message"
-        android:layout_toLeftOf="@id/txt_time"
+        android:layout_toLeftOf="@+id/txt_unread_msg_number"
+        android:layout_toRightOf="@id/img_msg_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -73,8 +75,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginRight="5dp"
         android:gravity="center"
+        android:background="@drawable/ease_unread_count_bg"
         android:layout_alignBaseline="@id/txt_message"
-        android:text="7"
         android:textColor="@android:color/white"
         android:textSize="12sp" />
 
