@@ -13,6 +13,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseConversationListView;
 
 /**
@@ -48,7 +49,7 @@ public class ConversationListFragment extends Fragment {
     }
 
     @OnClick(R.id.btn_test) void test(){
-        startActivity(new Intent(getActivity(), ChatActivity.class));
+        startActivity(new Intent(getActivity(), ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, "zw321"));
     }
 
 
