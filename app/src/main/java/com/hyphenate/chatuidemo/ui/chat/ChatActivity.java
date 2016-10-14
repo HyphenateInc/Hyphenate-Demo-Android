@@ -74,13 +74,14 @@ public class ChatActivity extends BaseActivity {
      */
     @OnClick(R.id.btn_send) void onSendMessage(){
         if(!TextUtils.isEmpty(mContentEditText.getText())){
-            mContentEditText.setText("");
             // create a message
             EMMessage message = EMMessage.createTxtSendMessage(mContentEditText.getText().toString(), toChatUsername);
             // send message
             EMClient.getInstance().chatManager().sendMessage(message);
             // refresh ui
             mMessageListView.refreshSelectLast();
+            // set edit blank
+            mContentEditText.setText("");
         }
     }
 
