@@ -88,6 +88,12 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics-ndk:1.1.3@aar') {
         transitive = true;
     }
+    compile('io.branch.sdk.android:library:2.4.6@aar') {
+        transitive = true;
+    }
+    compile('io.fabric.sdk.android:fabric:1.3.10@aar') {
+        transitive = true;
+    }
 }
 crashlytics {
     enableNdk true
