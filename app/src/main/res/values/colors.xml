@@ -9,13 +9,16 @@
     <color name="contact_name_color">#1b1d1d</color>
     <color name="header_text_color">#adb9c1</color>
     <color name="base_line_color">#e0e0e0</color>
+
     <!--layout_background-->
+    <color name="dark_background">#243e55</color>
+
     <color name="text_black">#ff212121</color>
 
-    <!--sign background color-->
-    <color name="sign_background">#243e55</color>
     <color name="sign_text_white">#ddffffff</color>
     <color name="sign_text_hint">#61ffffff</color>
+
+    <color name="em_transparent">#00000000</color>
 
     <!--white color-->
     <color name="em_white_100">#ffffffff</color>

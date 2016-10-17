@@ -14,6 +14,34 @@
         in addition to (.) (_) (-) can not contain other special characters,
         can not be e-mail Account</string>
 
+    <!--call-->
+    <string name="em_call_voice">Voice call</string>
+    <string name="em_call_video">Video call</string>
+    <string name="em_call_accepted">Call is connected</string>
+    <string name="em_call_busy">%1$s is busy</string>
+    <string name="em_call_cancel">Call canceled</string>
+    <string name="em_call_cancel_incoming_call">Call canceled</string>
+    <string name="em_call_connecting">Calling %1$s</string>
+    <string name="em_call_connected">Wait for %1$s to answer</string>
+    <string name="em_call_connected_incoming_call">%1$s call incoming</string>
+    <string name="em_call_connection_fail">Call connection failed</string>
+    <string name="em_call_disconnected">The call has ended</string>
+    <string name="em_call_no_data">No call data</string>
+    <string name="em_call_not_answer">%1$s not answer</string>
+    <string name="em_call_no_response">%1$s no response</string>
+    <string name="em_call_not_online">%1$s not online</string>
+    <string name="em_call_network_unstable">Network unstable</string>
+    <string name="em_call_network_normal">Network normal</string>
+    <string name="em_call_reject">%1$s rejected</string>
+    <string name="em_call_reject_incoming_call">Rejected</string>
+    <string name="em_call_local_sdk_version_outdated">Local sdk version outdated</string>
+    <string name="em_call_remote_sdk_version_outdated">Remote sdk version outdated</string>
+    <string name="em_call_sdk_version_different">Both sdk version different</string>
+    <string name="em_call_video_pause">Video streaming pause</string>
+    <string name="em_call_video_resume">Video streaming resume</string>
+    <string name="em_call_voice_pause">Voice transfer pause</string>
+    <string name="em_call_voice_resume">Voice transfer resume</string>
+
     <!--sign-->
     <string name="em_sign_in">Sign in</string>
     <string name="em_sign_out">Sign out</string>

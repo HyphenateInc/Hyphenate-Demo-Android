@@ -45,10 +45,10 @@ public class EaseUserUtils {
             } catch (Exception e) {
                 //use default avatar
                 Glide.with(context).load(user.getAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(
-                        R.drawable.ease_default_avatar).into(imageView);
+                        R.mipmap.ease_default_avatar).into(imageView);
             }
         }else{
-            Glide.with(context).load(R.drawable.ease_default_avatar).into(imageView);
+            Glide.with(context).load(R.mipmap.ease_default_avatar).into(imageView);
         }
     }
 

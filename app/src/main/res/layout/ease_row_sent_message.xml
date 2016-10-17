@@ -24,7 +24,7 @@
           android:layout_alignParentRight="true"
           android:layout_alignParentTop="true"
           android:layout_marginRight="@dimen/margin_chat_activity"
-          android:src="@drawable/ease_default_avatar"
+          android:src="@mipmap/ease_default_avatar"
           android:scaleType="fitXY" />
 
       <RelativeLayout
@@ -69,7 +69,7 @@
           android:layout_centerVertical="true"
           android:layout_toLeftOf="@id/bubble"
           android:clickable="true"
-          android:src="@drawable/ease_msg_state_failed_resend"
+          android:src="@mipmap/ease_msg_state_failed_resend"
           android:visibility="gone" />
 
       <TextView

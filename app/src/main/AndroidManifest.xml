@@ -48,18 +48,32 @@
             </intent-filter>
         </activity>
 
+        <!--Sign in activity-->
         <activity
             android:name=".ui.sign.SignInActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <!--Sign up activity-->
         <activity
             android:name=".ui.sign.SignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <!--Video call activity-->
+        <activity
+            android:name=".ui.chat.call.VideoCallActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <!--Voice call activity-->
+        <activity
+            android:name=".ui.chat.call.VoiceCallActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
 
-      <activity android:name=".ui.user.GroupListActivity"/>
+        <activity android:name=".ui.user.GroupListActivity"/>
 
         <!-- gcm start -->
         <receiver

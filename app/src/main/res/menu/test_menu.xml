@@ -5,7 +5,7 @@
     <item
         android:id="@+id/menu_add_contacts"
         android:title="Add contacts"
-        android:icon="@drawable/em_ic_action_add_contact"
+        android:icon="@mipmap/em_ic_action_add_contact"
         app:showAsAction="always"
         />
 </menu>

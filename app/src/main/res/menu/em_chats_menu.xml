@@ -4,13 +4,13 @@
     <item
         android:id="@+id/menu_search"
         android:title="Search"
-        android:icon="@drawable/em_ic_action_light_search"
+        android:icon="@mipmap/em_ic_action_light_search"
         app:showAsAction="always"
         />
     <item
         android:id="@+id/menu_add_contacts"
         android:title="Add chat"
-        android:icon="@drawable/em_ic_action_new_chat"
+        android:icon="@mipmap/em_ic_action_new_chat"
         app:showAsAction="always"
         />
 </menu>

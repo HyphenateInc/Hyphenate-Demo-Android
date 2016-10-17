@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
     <!--contact-->
     <dimen name="header_size">20.5sp</dimen>
     <dimen name="contact_name_size">16sp</dimen>
@@ -8,14 +8,26 @@
     <dimen name="contact_avatar_size">39.5dp</dimen>
     <dimen name="contact_avatar_margin_left">43dp</dimen>
     <dimen name="contact_name_margin_left">17.5dp</dimen>
-    
+
     <!--group-->
     <dimen name="group_icon_padding_left">7dp</dimen>
     <dimen name="group_text_margin_left">8.5dp</dimen>
     <dimen name="group_text_size">14sp</dimen>
     <dimen name="group_arrow_right_icon">16dp</dimen>
+
     <dimen name="base_line_height">1dp</dimen>
     <dimen name="base_line_margin_left">72.5dp</dimen>
+
+
+    <!--call-->
+    <dimen name="call_name_size">18sp</dimen>
+    <dimen name="call_switch_width">48dp</dimen>
+    <dimen name="call_switch_height">48dp</dimen>
+    <dimen name="call_avatar_size">96dp</dimen>
+    <dimen name="call_btn_margin">8dp</dimen>
+    <dimen name="call_layout_margin">16dp</dimen>
+
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>

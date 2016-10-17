@@ -9,7 +9,8 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
-import com.hyphenate.chatuidemo.receiver.CallReceiver;
+import com.hyphenate.chatuidemo.ui.chat.call.CallReceiver;
+import com.hyphenate.chatuidemo.ui.chat.call.CallStateChangeListener;
 import com.hyphenate.util.EMLog;
 import java.util.Iterator;
 import java.util.List;
@@ -30,8 +31,10 @@ public class DemoHelper {
     //
     private boolean isInit;
 
-    // call broadcast receiver
+    // Call broadcast receiver
     private CallReceiver mCallReceiver = null;
+    // Call state listener
+    private CallStateChangeListener mCallStateChangeListener = null;
 
     // connection listener
     private EMConnectionListener mConnectionListener;
@@ -117,6 +120,28 @@ public class DemoHelper {
         }
         // Register the call receiver
         mContext.registerReceiver(mCallReceiver, callFilter);
+    }
+
+    /**
+     * Add call state listener
+     */
+    public void addCallStateChangeListener() {
+        if (mCallStateChangeListener == null) {
+            mCallStateChangeListener = new CallStateChangeListener();
+        }
+        EMClient.getInstance().callManager().addCallStateChangeListener(mCallStateChangeListener);
+    }
+
+    /**
+     * Remove call state listener
+     */
+    public void removeCallStateChangeListener() {
+        if (mCallStateChangeListener != null) {
+            EMClient.getInstance()
+                    .callManager()
+                    .removeCallStateChangeListener(mCallStateChangeListener);
+            mCallStateChangeListener = null;
+        }
     }
 
     /**

@@ -13,7 +13,10 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.MainActivity;
+import com.hyphenate.chatuidemo.ui.chat.call.VideoCallActivity;
+import com.hyphenate.chatuidemo.ui.chat.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
+import com.hyphenate.easeui.EaseConstant;
 
 /**
  * Created by lzan13 on 2016/10/11.
@@ -54,5 +57,27 @@ public class SettingsFragment extends Fragment {
 
             }
         });
+    }
+
+    /**
+     * Test onClick
+     */
+    @OnClick({ R.id.btn_call_video, R.id.btn_call_voice }) void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_call_video:
+                Intent videoIntent = new Intent();
+                videoIntent.setClass(getActivity(), VideoCallActivity.class);
+                videoIntent.putExtra(EaseConstant.EXTRA_USER_ID, "lz2");
+                videoIntent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
+                startActivity(videoIntent);
+                break;
+            case R.id.btn_call_voice:
+                Intent voiceIntent = new Intent();
+                voiceIntent.setClass(getActivity(), VoiceCallActivity.class);
+                voiceIntent.putExtra(EaseConstant.EXTRA_USER_ID, "lz2");
+                voiceIntent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
+                startActivity(voiceIntent);
+                break;
+        }
     }
 }
