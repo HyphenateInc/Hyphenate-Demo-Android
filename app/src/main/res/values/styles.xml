@@ -5,10 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
-        <!--Set theme not title-->
-        <item name="windowNoTitle">true</item>
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
 
         <!--Set the 'ActionMode' effect to prevent 'ActionMode' from squeezing the 'Toolbar'-->
         <item name="android:windowActionModeOverlay">true</item>

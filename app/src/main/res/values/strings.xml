@@ -67,4 +67,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="groups">Groups</string>
 
+
+    <string name="chat_voice_call">Voice call</string>
+    <string name="chat_video_call">Video call</string>
+    <string name="chat_expand_more">More</string>
+
 </resources>

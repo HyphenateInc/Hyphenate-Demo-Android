@@ -2,7 +2,6 @@
 <resources>
     <color name="colorPrimary">#243e55</color>
     <color name="colorPrimaryDark">#243e55</color>
-    <color name="colorAccent">#FF4081</color>
     <color name="colorTextPrimary">#ffffff</color>
     <color name="tab_indicator">#ffffff</color>
 

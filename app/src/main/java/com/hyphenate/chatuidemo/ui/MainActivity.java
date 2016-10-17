@@ -1,6 +1,5 @@
 package com.hyphenate.chatuidemo.ui;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -17,17 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chatuidemo.DemoApplication;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
 import com.hyphenate.chatuidemo.ui.user.ContactListFragment;
 import com.hyphenate.chatuidemo.ui.chat.ConversationListFragment;
 import com.hyphenate.chatuidemo.ui.settings.SettingsFragment;
 
-import com.hyphenate.chatuidemo.ui.user.UserEntity;
-import com.hyphenate.exceptions.HyphenateException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +67,7 @@ public class MainActivity extends BaseActivity {
         adapter.addFragment(ConversationListFragment.newInstance(), "Chats");
         adapter.addFragment(SettingsFragment.newInstance(), "Settings");
         mViewPager.setAdapter(adapter);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override public void onPageSelected(int position) {
                 Toolbar toolbar = getActionBarToolbar();
@@ -79,7 +75,7 @@ public class MainActivity extends BaseActivity {
                 toolbar.getMenu().clear();
                 if (position == 0) {
                     getActionBarToolbar().inflateMenu(R.menu.em_contacts_menu);
-                } else if (position == 1) getActionBarToolbar().inflateMenu(R.menu.em_chats_menu);
+                } else if (position == 1) getActionBarToolbar().inflateMenu(R.menu.em_conversations_menu);
             }
 
             @Override public void onPageScrolled(int position, float positionOffset,

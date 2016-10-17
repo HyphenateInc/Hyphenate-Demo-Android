@@ -1,17 +1,23 @@
 package com.hyphenate.chatuidemo;
 
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCmdMessageBody;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chatuidemo.ui.chat.call.CallReceiver;
 import com.hyphenate.chatuidemo.ui.chat.call.CallStateChangeListener;
 import com.hyphenate.util.EMLog;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,9 +34,6 @@ public class DemoHelper {
     //
     private static DemoHelper instance;
 
-    //
-    private boolean isInit;
-
     // Call broadcast receiver
     private CallReceiver mCallReceiver = null;
     // Call state listener
@@ -39,8 +42,11 @@ public class DemoHelper {
     // connection listener
     private EMConnectionListener mConnectionListener;
 
-    // if unbuild token
-    private boolean isUnbuildToken = true;
+    private EMMessageListener messageListener = null;
+    /**
+     * save foreground Activity which registered message listeners
+     */
+    private List<Activity> activityList = new ArrayList<Activity>();
 
     private DemoHelper() {
     }
@@ -57,23 +63,21 @@ public class DemoHelper {
      *
      * @param context application context
      */
-    public synchronized boolean init(Context context) {
+    public void init(Context context) {
         mContext = context;
 
         if (isMainProcess()) {
+            EMLog.d(TAG, "------- init hyphenate start --------------");
             //init hyphenate sdk with options
             EMClient.getInstance().init(context, initOptions());
 
             // set debug mode open:true, close:false
             EMClient.getInstance().setDebugMode(true);
+
+            setGlobalListener();
+
+            EMLog.d(TAG, "------- init hyphenate end --------------");
         }
-
-        //
-        initGlobalListener();
-
-        // init success
-        isInit = true;
-        return isInit;
     }
 
     /**
@@ -97,15 +101,14 @@ public class DemoHelper {
 
     /**
      * init global listener
-     *
-     * These include:
-     * connection monitoring{@link #setConnectionListener()}
      */
-    public void initGlobalListener() {
+    public void setGlobalListener() {
         // set call listener
         setCallReceiverListener();
         // set connection listener
         setConnectionListener();
+
+        registerMessageListener();
     }
 
     /**
@@ -170,37 +173,92 @@ public class DemoHelper {
     }
 
     /**
+     * new messages listener
+     * If this event already handled by an activity, you don't need handle it again
+     * activityList.size() <= 0 means all activities already in background or not in Activity Stack
+     */
+    protected void registerMessageListener() {
+        messageListener = new EMMessageListener() {
+            private BroadcastReceiver broadCastReceiver = null;
+
+            @Override public void onMessageReceived(List<EMMessage> messages) {
+                for (EMMessage message : messages) {
+                    EMLog.d(TAG, "onMessageReceived id : " + message.getMsgId());
+                    // in background, do not refresh UI, notify it in notification bar
+                    if (hasForegroundActivies()) {
+                        //getNotifier().onNewMsg(message);
+                    }
+                }
+            }
+
+            @Override public void onCmdMessageReceived(List<EMMessage> messages) {
+                for (EMMessage message : messages) {
+                    EMLog.d(TAG, "onCmdMessageReceived");
+                    //get message body
+                    EMCmdMessageBody cmdMsgBody = (EMCmdMessageBody) message.getBody();
+                    final String action = cmdMsgBody.action();//获取自定义action
+
+                    //get extension attribute if you need
+                    //message.getStringAttribute("");
+                    EMLog.d(TAG, String.format("CmdMessage：action:%s,message:%s", action,
+                            message.toString()));
+                }
+            }
+
+            @Override public void onMessageRead(List<EMMessage> messages) {
+            }
+
+            @Override public void onMessageDelivered(List<EMMessage> message) {
+            }
+
+            @Override public void onMessageChanged(EMMessage message, Object change) {
+
+            }
+        };
+
+        EMClient.getInstance().chatManager().addMessageListener(messageListener);
+    }
+
+    public boolean hasForegroundActivies() {
+        return activityList.size() != 0;
+    }
+
+    public void pushActivity(Activity activity) {
+        if (!activityList.contains(activity)) {
+            activityList.add(0, activity);
+        }
+    }
+
+    public void popActivity(Activity activity) {
+        activityList.remove(activity);
+    }
+
+    /**
      * Sign out account
      *
      * @param callback to receive the result of the logout
      */
-    public void signOut(final EMCallBack callback) {
-        /**
-         * Call sdk sign out, this method requires two parameters
-         *
-         *  boolean: The first argument is required，Indicates that the push token is to be deallocated,
-         *  and if account offline, this parameter is set to false
-         *
-         *  callback: Optional parameter to receive the result of the logout
-         */
-        EMClient.getInstance().logout(isUnbuildToken, new EMCallBack() {
+    public void signOut(boolean unbindDeviceToken, final EMCallBack callback) {
+        Log.d(TAG, "Sign out: " + unbindDeviceToken);
+        EMClient.getInstance().logout(unbindDeviceToken, new EMCallBack() {
+
             @Override public void onSuccess() {
-                isUnbuildToken = true;
+                Log.d(TAG, "Sign out: onSuccess");
                 if (callback != null) {
                     callback.onSuccess();
                 }
             }
 
-            @Override public void onError(int i, String s) {
-                isUnbuildToken = true;
+            @Override public void onProgress(int progress, String status) {
                 if (callback != null) {
-                    callback.onError(i, s);
+                    callback.onProgress(progress, status);
                 }
             }
 
-            @Override public void onProgress(int i, String s) {
+            @Override public void onError(int code, String error) {
+                Log.d(TAG, "Sign out: onSuccess");
                 if (callback != null) {
-                    callback.onProgress(i, s);
+                    callback.onError(code, error);
                 }
             }
         });

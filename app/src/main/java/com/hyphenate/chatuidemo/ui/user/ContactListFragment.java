@@ -14,6 +14,9 @@ import butterknife.OnClick;
 import com.hyphenate.chatuidemo.DemoApplication;
 import com.hyphenate.chatuidemo.R;
 
+import com.hyphenate.chatuidemo.ui.chat.ChatActivity;
+import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -58,9 +61,10 @@ public class ContactListFragment extends Fragment {
 
        refresh();
 
-        adapter.setOnItemClickListener(new ContactListAdapter.OnItemClickListener() {
-            @Override public void ItemClickListener() {
-
+        adapter.setOnItemClickListener(new EaseListItemClickListener() {
+            @Override public void onItemClick(View view, int position) {
+                UserEntity user = entityList.get(position);
+                startActivity(new Intent(getActivity(), ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, user.getUsername()));
             }
         });
     }

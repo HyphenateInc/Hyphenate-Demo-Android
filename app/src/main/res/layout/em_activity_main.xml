@@ -10,7 +10,6 @@
     <android.support.v7.widget.Toolbar
         style="@style/ToolbarNormalTheme"
         android:id="@+id/toolbar_actionbar"
-        app:titleTextColor="@color/colorTextPrimary"
         app:title="Contacts"
         />
 

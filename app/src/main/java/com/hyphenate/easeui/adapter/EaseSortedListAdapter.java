@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<EaseSortedListAdapter.ViewHolder<? extends T>> {
+public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface Editor<T> {
         Editor<T> add(T item);
@@ -74,22 +74,28 @@ public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<Ease
 
     }
 
-
-    @Override
-    public final ViewHolder<? extends T> onCreateViewHolder(ViewGroup parent, int viewType) {
-        return onCreateViewHolder(mInflater, parent, viewType);
-    }
-
-    protected abstract ViewHolder<? extends T> onCreateViewHolder(LayoutInflater inflater, ViewGroup parent, int viewType);
-
+    /**
+     * Called by the SortedList to decide whether two object represent the same Item or not.
+     * <p>
+     * For example, if your items have unique ids, this method should check their equality.
+     * @param item1
+     * @param item2
+     * @return
+     */
     protected abstract boolean areItemsTheSame(T item1, T item2);
+
+    /**
+     * Called by the SortedList when it wants to check whether two items have the same data
+     * or not. SortedList uses this information to decide whether it should call
+     * onChanged(int, int) or not.
+     * <p>
+     * SortedList uses this method to check equality instead of {@link Object#equals(Object)}
+     * @param oldItem
+     * @param newItem
+     * @return
+     */
     protected abstract boolean areItemContentsTheSame(T oldItem, T newItem);
 
-    @Override
-    public final void onBindViewHolder(ViewHolder<? extends T> holder, int position) {
-        final T item = mSortedList.get(position);
-        ((ViewHolder<T>) holder).bind(item);
-    }
 
     public final Editor<T> edit() {
         return new EditorImpl();
@@ -220,30 +226,6 @@ public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<Ease
             }
             mSortedList.endBatchedUpdates();
             mActions.clear();
-        }
-    }
-
-    public abstract static class ViewHolder<T> extends RecyclerView.ViewHolder {
-
-        private T mCurrentItem;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-        }
-
-        public final void bind(T item) {
-            mCurrentItem = item;
-            performBind(item);
-        }
-
-        /**
-         * bind view holder
-         * @param item
-         */
-        protected abstract void performBind(T item);
-
-        public final T getCurrentItem() {
-            return mCurrentItem;
         }
     }
 
