@@ -19,21 +19,20 @@ public class CallStateChangeListener implements EMCallStateChangeListener {
         EventBus.getDefault().post(event);
 
         switch (callState) {
-            case CONNECTING: // 正在呼叫对方
-                EMLog.i(TAG, "正在呼叫对方" + callError);
+            case CONNECTING:
+                // Set call state connecting
                 CallStatus.getInstance().setCallState(CallStatus.CALL_STATUS_CONNECTING);
                 break;
-            case CONNECTED: // 正在等待对方接受呼叫申请（对方申请与你进行通话）
-                EMLog.i(TAG, "正在等待对方接受呼叫申请" + callError);
+            case CONNECTED:
+                // Set call state connecting
                 CallStatus.getInstance().setCallState(CallStatus.CALL_STATUS_CONNECTING);
                 break;
-            case ACCEPTED: // 通话已接通
-                EMLog.i(TAG, "通话已接通");
+            case ACCEPTED:
+                // Set call state accepted
                 CallStatus.getInstance().setCallState(CallStatus.CALL_STATUS_ACCEPTED);
                 break;
-            case DISCONNNECTED: // 通话已中断
-                EMLog.i(TAG, "通话已结束" + callError);
-                // 通话结束，重置通话状态
+            case DISCONNNECTED:
+                // End call, Reset call status
                 CallStatus.getInstance().reset();
                 if (callError == CallError.ERROR_UNAVAILABLE) {
                     EMLog.i(TAG, "对方不在线" + callError);

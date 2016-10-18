@@ -27,6 +27,7 @@ public class CallStatus {
     public static final int ML_CALL_TRANSPORT = 0x08;
     // Version different
     public static final int ML_CALL_VERSION_DIFFERENT = 0x09;
+
     // Call status
     public static int CALL_STATUS_NORMAL = 0x00;
     public static int CALL_STATUS_CONNECTING = 0x01;

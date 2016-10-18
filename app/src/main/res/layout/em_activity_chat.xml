@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EFEEEC"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.hyphenate.chatuidemo.ui.chat.ChatActivity"
     >
 
     <android.support.v7.widget.Toolbar
-        style="@style/ToolbarNormalTheme"
-        app:navigationIcon="@drawable/em_ic_back"
         android:id="@+id/toolbar_actionbar"
         android:layout_alignParentTop="true"
+        app:navigationIcon="@drawable/em_ic_back"
+        style="@style/ToolbarNormalTheme"
         />
 
     <com.hyphenate.easeui.widget.EaseChatMessageListView
         android:id="@+id/message_list"
-        android:layout_above="@+id/layout_input_container"
-        android:layout_below="@id/toolbar_actionbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/layout_input_container"
+        android:layout_below="@id/toolbar_actionbar"
         android:cacheColorHint="#00000000"
         android:divider="@null"
         android:dividerHeight="5dp"
@@ -29,26 +29,26 @@
         />
 
     <LinearLayout
+        android:id="@+id/layout_input_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/layout_input_container"
-        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
         >
 
         <EditText
             android:id="@+id/edt_msg_content"
-            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:hint="input text"
             />
 
         <Button
             android:id="@+id/btn_send"
-            android:layout_weight="0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0"
             android:text="发送"
             />
 
