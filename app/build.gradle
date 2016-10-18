@@ -2,46 +2,46 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-  compileSdkVersion 24
-  buildToolsVersion "24.0.2"
-  //use legacy for for android 6.0
-  useLibrary 'org.apache.http.legacy'
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
+    //use legacy for for android 6.0
+    useLibrary 'org.apache.http.legacy'
 
-  defaultConfig {
-    applicationId "com.hyphenate.chatuidemo"
-    minSdkVersion 15
-    targetSdkVersion 22
-    versionCode 1
-    versionName '1.0.0'
-    multiDexEnabled true
-  }
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    defaultConfig {
+        applicationId "com.hyphenate.chatuidemo"
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode 1
+        versionName '1.0.0'
+        multiDexEnabled true
     }
-  }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  testCompile 'junit:junit:4.12'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
 
-  compile 'com.jakewharton:butterknife:8.4.0'
-  apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
 
-  // Deisgn support Already included v4 and appcompat-v7, So here on the introduction of 'design'
-  compile 'com.android.support:design:24.2.1'
+    // Deisgn support Already included v4 and appcompat-v7, So here on the introduction of 'design'
+    compile 'com.android.support:design:24.2.1'
 
-  compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'org.greenrobot:eventbus:3.0.0'
 
-  compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 
-  compile 'com.google.android.gms:play-services-gcm:9.4.0'
-  compile 'com.google.android.gms:play-services-places:9.4.0'
-  compile 'com.google.android.gms:play-services-maps:9.4.0'
+    compile 'com.google.android.gms:play-services-gcm:9.4.0'
+    compile 'com.google.android.gms:play-services-places:9.4.0'
+    compile 'com.google.android.gms:play-services-maps:9.4.0'
 
-  compile 'com.parse:parse-android:1.13.1'
+    compile 'com.parse:parse-android:1.13.1'
 
-  compile 'com.hyphenate:hyphenate-sdk:3.1.5'
+    compile 'com.hyphenate:hyphenate-sdk:3.1.5'
 }
