@@ -1,4 +1,4 @@
-package com.hyphenate.chatuidemo.ui.chat.call;
+package com.hyphenate.chatuidemo.ui.call;
 
 import android.hardware.Camera;
 import com.hyphenate.chat.EMCallManager;

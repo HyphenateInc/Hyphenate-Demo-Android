@@ -29,11 +29,7 @@
             android:layout_height="@dimen/contact_avatar_size"
             android:layout_marginLeft="@dimen/contact_avatar_margin_left"
             android:scaleType="centerInside"
-<<<<<<< HEAD
-            android:src="@mipmap/ic_launcher"
-=======
             android:src="@drawable/ease_default_avatar"
->>>>>>> e86cce45ed648de18d877bb10effeb9c8fde651d
             app:imgShapeType="round"
             />
 

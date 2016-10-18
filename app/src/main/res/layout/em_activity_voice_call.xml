@@ -9,7 +9,7 @@
     android:background="@color/dark_background"
     android:clipToPadding="false"
     android:fitsSystemWindows="false"
-    tools:context=".ui.chat.call.VoiceCallActivity"
+    tools:context=".ui.call.VoiceCallActivity"
     >
 
     <!--call background-->

@@ -1,4 +1,4 @@
-package com.hyphenate.chatuidemo.ui.chat.call;
+package com.hyphenate.chatuidemo.ui.call;
 
 import android.annotation.TargetApi;
 import android.content.Context;

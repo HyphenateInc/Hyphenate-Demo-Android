@@ -10,6 +10,7 @@ import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessage.ChatType;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.easeui.ui.EaseMapActivity;
 import com.hyphenate.exceptions.HyphenateException;
 
 public class EaseChatRowLocation extends EaseChatRow {

@@ -19,11 +19,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-<<<<<<< HEAD
-=======
-        android:gravity="center_vertical"
-        android:orientation="vertical"
->>>>>>> e86cce45ed648de18d877bb10effeb9c8fde651d
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +26,6 @@
             android:gravity="center_vertical"
             android:orientation="vertical"
             >
-<<<<<<< HEAD
             <!-- title container layout-->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -45,43 +39,6 @@
                     android:textColor="@color/list_item_primary_text"
                     android:textSize="16sp"
                     />
-=======
-            <TextView
-                android:id="@+id/txt_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="aaaa"
-                android:textColor="@color/list_item_primary_text"
-                android:textSize="16sp"
-                />
-
-            <TextView
-                android:id="@+id/txt_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="7dp"
-                android:layout_weight="0"
-                android:text="bbbb"
-                android:textColor="@color/ease_gray"
-                android:textSize="13sp"
-                />
-        </LinearLayout>
-
-        <!-- subtitle container layout-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-            <ImageView
-                android:id="@+id/img_msg_state"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentLeft="true"
-                android:visibility="gone"
-                />
->>>>>>> e86cce45ed648de18d877bb10effeb9c8fde651d
 
                 <TextView
                     android:id="@+id/txt_time"
@@ -96,7 +53,6 @@
                     />
             </LinearLayout>
 
-<<<<<<< HEAD
             <!-- subtitle container layout-->
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -128,34 +84,6 @@
                     android:textColor="@android:color/white"
                     android:textSize="12sp"
                     />
-=======
-            <TextView
-                android:id="@+id/txt_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/txt_unread_msg_number"
-                android:layout_toRightOf="@id/img_msg_state"
-                android:ellipsize="end"
-                android:gravity="start"
-                android:singleLine="true"
-                android:text="bbbb"
-                android:textColor="@color/list_item_secondary_text"
-                android:textSize="14sp"
-                />
-
-            <TextView
-                android:id="@+id/txt_unread_msg_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/txt_message"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/ease_unread_count_bg"
-                android:gravity="center"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                />
->>>>>>> e86cce45ed648de18d877bb10effeb9c8fde651d
 
                 <ImageView
                     android:id="@+id/img_msg_state"

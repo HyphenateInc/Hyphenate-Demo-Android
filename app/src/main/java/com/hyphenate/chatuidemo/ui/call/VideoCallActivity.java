@@ -1,5 +1,6 @@
-package com.hyphenate.chatuidemo.ui.chat.call;
+package com.hyphenate.chatuidemo.ui.call;
 
+import android.hardware.Camera;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,38 +12,51 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.hyphenate.chat.EMCallManager;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMCallStateChangeListener.CallError;
 import com.hyphenate.chat.EMCallStateChangeListener.CallState;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.exceptions.EMNoActiveCallException;
 import com.hyphenate.exceptions.EMServiceNotReadyException;
+import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.media.EMLocalSurfaceView;
+import com.hyphenate.media.EMOppositeSurfaceView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class VoiceCallActivity extends CallActivity {
+/**
+ * Create by lzan13 2016/10/13
+ * Video call activity
+ */
+public class VideoCallActivity extends CallActivity {
+
+    // Video call helper
+    private EMCallManager.EMVideoCallHelper mVideoCallHelper;
+    // Video call data processor
+    private CameraDataProcessor mCameraDataProcessor;
 
     // Use ButterKnife define view
+    @BindView(R.id.layout_call_control) View mControlLayout;
+    @BindView(R.id.surface_view_local) EMLocalSurfaceView mLocalSurfaceView;
+    @BindView(R.id.surface_view_opposite) EMOppositeSurfaceView mOppositeSurfaceView;
+
     @BindView(R.id.img_call_background) ImageView mCallBackgroundView;
     @BindView(R.id.text_call_status) TextView mCallStatusView;
-    @BindView(R.id.img_call_avatar) EaseImageView mAvatarView;
-    @BindView(R.id.text_call_username) TextView mUsernameView;
+    @BindView(R.id.btn_change_camera_switch) ImageButton mChangeCameraSwitch;
     @BindView(R.id.btn_exit_full_screen) ImageButton mExitFullScreenBtn;
+    @BindView(R.id.btn_camera_switch) ImageButton mCameraSwitch;
     @BindView(R.id.btn_mic_switch) ImageButton mMicSwitch;
     @BindView(R.id.btn_speaker_switch) ImageButton mSpeakerSwitch;
     @BindView(R.id.fab_reject_call) FloatingActionButton mRejectCallFab;
     @BindView(R.id.fab_end_call) FloatingActionButton mEndCallFab;
     @BindView(R.id.fab_answer_call) FloatingActionButton mAnswerCallFab;
 
-    /**
-     * Call entrance
-     */
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.em_activity_voice_call);
+        setContentView(R.layout.em_activity_video_call);
 
         // init ButterKnife
         ButterKnife.bind(this);
@@ -51,18 +65,48 @@ public class VoiceCallActivity extends CallActivity {
     }
 
     /**
-     * Init layout view and call
+     * Init layout view
      */
     @Override protected void initView() {
         super.initView();
 
-        // Set call type
-        mCallType = 1;
-        // Set switch status
+        // default call type video
+        mCallType = 0;
+
+        // Set button state
+        mChangeCameraSwitch.setActivated(false);
+        mCameraSwitch.setActivated(CallStatus.getInstance().isCamera());
         mMicSwitch.setActivated(CallStatus.getInstance().isMic());
         mSpeakerSwitch.setActivated(CallStatus.getInstance().isSpeaker());
 
-        mUsernameView.setText(mCallId);
+        // SDK call helper
+        mVideoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
+        // Set the default video call resolution, default to (320, 240)
+        mVideoCallHelper.setResolution(640, 480);
+        // Setting the video call bit rate defaults to (150)
+        mVideoCallHelper.setVideoBitrate(200);
+        // Set the local preview image displayed on the top floor, be sure to set as soon as possible, otherwise invalid
+        mLocalSurfaceView.setZOrderMediaOverlay(true);
+        mLocalSurfaceView.setZOrderOnTop(true);
+
+        try {
+            // By default, the front camera is used
+            EMClient.getInstance()
+                    .callManager()
+                    .setCameraFacing(Camera.CameraInfo.CAMERA_FACING_FRONT);
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+        }
+
+        // Set local and opposite SurfaceView
+        EMClient.getInstance()
+                .callManager()
+                .setSurfaceView(mLocalSurfaceView, mOppositeSurfaceView);
+
+        mCameraDataProcessor = new CameraDataProcessor();
+        // Set video call data processor
+        EMClient.getInstance().callManager().setCameraDataProcessor(mCameraDataProcessor);
+
         // Check call state
         if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_NORMAL) {
             // Set call state
@@ -125,11 +169,11 @@ public class VoiceCallActivity extends CallActivity {
     }
 
     /**
-     * 开始呼叫对方
+     * Make call
      */
     private void makeCall() {
         try {
-            EMClient.getInstance().callManager().makeVoiceCall(mCallId);
+            EMClient.getInstance().callManager().makeVideoCall(mCallId);
         } catch (EMServiceNotReadyException e) {
             e.printStackTrace();
         }
@@ -139,17 +183,37 @@ public class VoiceCallActivity extends CallActivity {
      * widget onClick
      */
     @OnClick({
-            R.id.btn_exit_full_screen, R.id.btn_mic_switch, R.id.btn_speaker_switch,
+            R.id.img_call_background, R.id.layout_call_control, R.id.surface_view_local,
+            R.id.surface_view_opposite, R.id.btn_exit_full_screen, R.id.btn_change_camera_switch,
+            R.id.btn_mic_switch, R.id.btn_camera_switch, R.id.btn_speaker_switch,
             R.id.fab_reject_call, R.id.fab_end_call, R.id.fab_answer_call
     }) void onClick(View v) {
         switch (v.getId()) {
+            case R.id.layout_call_control:
+            case R.id.img_call_background:
+                onControlLayout();
+                break;
+            case R.id.surface_view_local:
+                onControlLayout();
+                break;
+            case R.id.surface_view_opposite:
+                onControlLayout();
+                break;
             case R.id.btn_exit_full_screen:
-                // Minimize the view
+                // Minimize the layout
                 exitFullScreen();
+                break;
+            case R.id.btn_change_camera_switch:
+                // Change camera
+                changeCamera();
                 break;
             case R.id.btn_mic_switch:
                 // Microphone switch
                 onMicrophone();
+                break;
+            case R.id.btn_camera_switch:
+                // Camera switch
+                onCamera();
                 break;
             case R.id.btn_speaker_switch:
                 // Speaker switch
@@ -171,6 +235,17 @@ public class VoiceCallActivity extends CallActivity {
     }
 
     /**
+     * Control layout
+     */
+    private void onControlLayout() {
+        if (mControlLayout.isShown()) {
+            mControlLayout.setVisibility(View.GONE);
+        } else {
+            mControlLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
      * Minimize the layout
      */
     private void exitFullScreen() {
@@ -179,6 +254,21 @@ public class VoiceCallActivity extends CallActivity {
         // Back home
         //        mActivity.moveTaskToBack(true);
         mActivity.finish();
+    }
+
+    /**
+     * Change camera
+     */
+    private void changeCamera() {
+        // Vibrate
+        vibrate();
+        if (mChangeCameraSwitch.isActivated()) {
+            EMClient.getInstance().callManager().switchCamera();
+            mChangeCameraSwitch.setActivated(false);
+        } else {
+            EMClient.getInstance().callManager().switchCamera();
+            mChangeCameraSwitch.setActivated(true);
+        }
     }
 
     /**
@@ -197,6 +287,25 @@ public class VoiceCallActivity extends CallActivity {
             EMClient.getInstance().callManager().resumeVoiceTransfer();
             mMicSwitch.setActivated(true);
             CallStatus.getInstance().setMic(true);
+        }
+    }
+
+    /**
+     * Camera switch
+     */
+    private void onCamera() {
+        // Vibrate
+        vibrate();
+        if (mCameraSwitch.isActivated()) {
+            // Pause video streaming
+            EMClient.getInstance().callManager().pauseVideoStreaming();
+            mCameraSwitch.setActivated(false);
+            CallStatus.getInstance().setCamera(false);
+        } else {
+            // Resume video streaming
+            EMClient.getInstance().callManager().resumeVideoStreaming();
+            mCameraSwitch.setActivated(true);
+            CallStatus.getInstance().setCamera(true);
         }
     }
 
@@ -296,6 +405,13 @@ public class VoiceCallActivity extends CallActivity {
     }
 
     /**
+     * Set surfaceView
+     */
+    private void surfaceViewProcessor() {
+        mOppositeSurfaceView.setVisibility(View.VISIBLE);
+    }
+
+    /**
      * Open Speaker
      * Turn on the speaker switch, and set the audio playback mode
      * 1、MODE_NORMAL:   Normal mode, generally used for putting audio
@@ -357,6 +473,8 @@ public class VoiceCallActivity extends CallActivity {
                 stopCallSound();
                 // Set call state
                 mCallStatus = CallStatus.ML_CALL_ACCEPTED;
+                // Set SurfaceView processor
+                surfaceViewProcessor();
                 break;
             case DISCONNNECTED:
                 // Set call state view show content
@@ -414,6 +532,12 @@ public class VoiceCallActivity extends CallActivity {
             case NETWORK_NORMAL:
                 mCallStatusView.setText(R.string.em_call_network_normal);
                 break;
+            case VIDEO_PAUSE:
+                mCallStatusView.setText(R.string.em_call_video_pause);
+                break;
+            case VIDEO_RESUME:
+                mCallStatusView.setText(R.string.em_call_video_resume);
+                break;
             case VOICE_PAUSE:
                 mCallStatusView.setText(R.string.em_call_voice_pause);
                 break;
@@ -425,8 +549,36 @@ public class VoiceCallActivity extends CallActivity {
         }
     }
 
+    /**
+     * Call end finish activity
+     */
+    @Override protected void onFinish() {
+        // Call end release SurfaceView
+        mLocalSurfaceView = null;
+        mOppositeSurfaceView = null;
+        super.onFinish();
+    }
+
+    /**
+     * The activity is not visible
+     */
+    @Override protected void onUserLeaveHint() {
+        if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_ACCEPTED) {
+            // The activity is not visible, Pause video streaming
+            EMClient.getInstance().callManager().pauseVideoStreaming();
+        }
+        super.onUserLeaveHint();
+    }
+
+    /**
+     * The activity is resume
+     */
     @Override protected void onResume() {
         super.onResume();
+        if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_ACCEPTED) {
+            // The activity is resume, Resume video streaming
+            EMClient.getInstance().callManager().resumeVideoStreaming();
+        }
     }
 
     @Override protected void onDestroy() {

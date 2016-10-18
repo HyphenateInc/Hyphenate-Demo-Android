@@ -1,4 +1,4 @@
-package com.hyphenate.chatuidemo.ui.chat.call;
+package com.hyphenate.chatuidemo.ui.call;
 
 /**
  * Created by lzan13 on 2016/10/13.

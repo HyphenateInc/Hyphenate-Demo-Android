@@ -74,13 +74,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="6dp"
+            android:layout_marginRight="@dimen/chat_item_progress_margin"
             android:layout_toLeftOf="@id/bubble"
             android:clickable="true"
             android:src="@drawable/ease_msg_state_failed_resend"
             android:visibility="gone"
             />
-<<<<<<< HEAD
 
         <TextView
             android:id="@+id/tv_ack"
@@ -96,32 +95,11 @@
             />
 
         <TextView
-=======
-
-        <TextView
-            android:id="@+id/tv_ack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="6dp"
-            android:layout_toLeftOf="@id/bubble"
-            android:text="@string/text_ack_msg"
-            android:textSize="12sp"
-            android:visibility="invisible"
-            style="@style/chat_text_name_style"
-            />
-
-        <TextView
->>>>>>> e86cce45ed648de18d877bb10effeb9c8fde651d
             android:id="@+id/tv_delivered"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-<<<<<<< HEAD
             android:layout_marginRight="@dimen/chat_item_progress_margin"
-=======
-            android:layout_marginRight="6dp"
->>>>>>> e86cce45ed648de18d877bb10effeb9c8fde651d
             android:layout_toLeftOf="@id/bubble"
             android:text="@string/text_delivered_msg"
             android:textSize="12sp"
@@ -134,11 +112,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_centerVertical="true"
-<<<<<<< HEAD
             android:layout_marginRight="@dimen/chat_item_progress_margin"
-=======
-            android:layout_marginRight="6dp"
->>>>>>> e86cce45ed648de18d877bb10effeb9c8fde651d
             android:layout_toLeftOf="@+id/bubble"
             android:layout_toStartOf="@+id/bubble"
             android:visibility="visible"

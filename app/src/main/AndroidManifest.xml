@@ -60,27 +60,37 @@
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!--Video call activity-->
         <activity
-            android:name=".ui.chat.call.VideoCallActivity"
+            android:name=".ui.call.VideoCallActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
         <!--Voice call activity-->
         <activity
-            android:name=".ui.chat.call.VoiceCallActivity"
+            android:name=".ui.call.VoiceCallActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 
         <activity android:name=".ui.user.GroupListActivity"/>
-        <!--Chat activity-->
+
         <activity
-<<<<<<< HEAD
             android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
             android:screenOrientation="portrait"
             />
-
         <activity
-=======
->>>>>>> e86cce45ed648de18d877bb10effeb9c8fde651d
+            android:name="com.hyphenate.easeui.ui.EaseShowImageActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.hyphenate.easeui.ui.EaseShowVideoActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name="com.hyphenate.easeui.ui.EaseMapActivity"
+            android:screenOrientation="portrait"
+            />
+
+
+        <!--Chat activity-->
+        <activity
             android:name=".ui.chat.ChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"

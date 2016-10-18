@@ -1,4 +1,4 @@
-package com.hyphenate.chatuidemo.ui.chat.call;
+package com.hyphenate.chatuidemo.ui.call;
 
 import com.hyphenate.chat.EMCallStateChangeListener;
 

@@ -13,8 +13,8 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.MainActivity;
-import com.hyphenate.chatuidemo.ui.chat.call.VideoCallActivity;
-import com.hyphenate.chatuidemo.ui.chat.call.VoiceCallActivity;
+import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
+import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
 import com.hyphenate.easeui.EaseConstant;
 
