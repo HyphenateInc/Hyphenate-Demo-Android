@@ -132,6 +132,9 @@ public class DemoHelper {
         if (mCallStateChangeListener == null) {
             mCallStateChangeListener = new CallStateChangeListener();
         }
+
+
+
         EMClient.getInstance().callManager().addCallStateChangeListener(mCallStateChangeListener);
     }
 

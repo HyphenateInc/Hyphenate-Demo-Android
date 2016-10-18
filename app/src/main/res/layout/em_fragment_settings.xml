@@ -20,7 +20,7 @@
             android:id="@+id/btn_call_video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/em_call_voice"
+            android:text="@string/em_call_video"
             />
     </LinearLayout>
     <Button

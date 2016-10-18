@@ -61,7 +61,6 @@
         <!--Video call activity-->
         <activity
             android:name=".ui.chat.call.VideoCallActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
         <!--Voice call activity-->

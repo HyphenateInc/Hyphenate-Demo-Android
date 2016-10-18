@@ -2,7 +2,6 @@ package com.hyphenate.chatuidemo.ui.chat.call;
 
 import android.hardware.Camera;
 import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
@@ -44,7 +43,7 @@ public class VideoCallActivity extends CallActivity {
     @BindView(R.id.surface_view_local) EMLocalSurfaceView mLocalSurfaceView;
     @BindView(R.id.surface_view_opposite) EMOppositeSurfaceView mOppositeSurfaceView;
 
-    @BindView(R.id.img_call_backgound) ImageView mCallBackgroundView;
+    @BindView(R.id.img_call_background) ImageView mCallBackgroundView;
     @BindView(R.id.text_call_status) TextView mCallStatusView;
     @BindView(R.id.btn_change_camera_switch) ImageButton mChangeCameraSwitch;
     @BindView(R.id.btn_exit_full_screen) ImageButton mExitFullScreenBtn;
@@ -184,14 +183,14 @@ public class VideoCallActivity extends CallActivity {
      * widget onClick
      */
     @OnClick({
-            R.id.img_call_backgound, R.id.layout_call_control, R.id.surface_view_local,
+            R.id.img_call_background, R.id.layout_call_control, R.id.surface_view_local,
             R.id.surface_view_opposite, R.id.btn_exit_full_screen, R.id.btn_change_camera_switch,
             R.id.btn_mic_switch, R.id.btn_camera_switch, R.id.btn_speaker_switch,
             R.id.fab_reject_call, R.id.fab_end_call, R.id.fab_answer_call
     }) void onClick(View v) {
         switch (v.getId()) {
             case R.id.layout_call_control:
-            case R.id.img_call_backgound:
+            case R.id.img_call_background:
                 onControlLayout();
                 break;
             case R.id.surface_view_local:

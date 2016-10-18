@@ -51,11 +51,11 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
         String username = conversation.getUserName();
         if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {
             // group message, show group avatar
-            holder.mAvatarView.setImageResource(R.mipmap.ease_ic_group_default);
+            holder.mAvatarView.setImageResource(R.drawable.ease_ic_group_default);
             EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
             holder.mNameView.setText(group != null ? group.getGroupName() : username);
         } else if (conversation.getType() == EMConversation.EMConversationType.ChatRoom) {
-            holder.mAvatarView.setImageResource(R.mipmap.ease_ic_group_default);
+            holder.mAvatarView.setImageResource(R.drawable.ease_ic_group_default);
             EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(username);
             holder.mNameView.setText(
                     room != null && !TextUtils.isEmpty(room.getName()) ? room.getName() : username);

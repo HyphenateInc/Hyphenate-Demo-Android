@@ -14,7 +14,7 @@
 
     <!--call background-->
     <ImageView
-        android:id="@+id/img_call_backgound"
+        android:id="@+id/img_call_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
@@ -55,7 +55,7 @@
                 android:id="@+id/img_call_avatar"
                 android:layout_width="@dimen/call_avatar_size"
                 android:layout_height="@dimen/call_avatar_size"
-                android:src="@mipmap/ease_default_avatar"
+                android:src="@drawable/ease_default_avatar"
                 app:imgShapeType="round"
                 />
             <!--Name-->
@@ -110,7 +110,7 @@
                     android:layout_width="@dimen/call_switch_width"
                     android:layout_height="@dimen/call_switch_height"
                     android:background="@drawable/em_btn_rectangle_white"
-                    android:src="@mipmap/em_ic_fullscreen_exit_white_24dp"
+                    android:src="@drawable/em_ic_fullscreen_exit_white_24dp"
                     />
             </LinearLayout>
 
@@ -126,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="@dimen/call_btn_margin"
-                    android:src="@mipmap/em_ic_call_end_white_24dp"
+                    android:src="@drawable/em_ic_call_end_white_24dp"
                     app:fabSize="normal"
                     />
 
@@ -137,7 +137,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="@dimen/call_btn_margin"
-                    android:src="@mipmap/em_ic_call_end_white_24dp"
+                    android:src="@drawable/em_ic_call_end_white_24dp"
                     android:visibility="gone"
                     app:fabSize="normal"
                     />
@@ -149,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_margin="@dimen/call_btn_margin"
-                    android:src="@mipmap/em_ic_call_white_24dp"
+                    android:src="@drawable/em_ic_call_white_24dp"
                     app:backgroundTint="@color/em_green_87"
                     app:fabSize="normal"
                     />

@@ -1,7 +1,6 @@
 package com.hyphenate.chatuidemo.ui.chat.call;
 
 import android.media.AudioManager;
-import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
@@ -27,7 +26,7 @@ import org.greenrobot.eventbus.ThreadMode;
 public class VoiceCallActivity extends CallActivity {
 
     // Use ButterKnife define view
-    @BindView(R.id.img_call_backgound) ImageView mCallBackgroundView;
+    @BindView(R.id.img_call_background) ImageView mCallBackgroundView;
     @BindView(R.id.text_call_status) TextView mCallStatusView;
     @BindView(R.id.img_call_avatar) EaseImageView mAvatarView;
     @BindView(R.id.text_call_username) TextView mUsernameView;
