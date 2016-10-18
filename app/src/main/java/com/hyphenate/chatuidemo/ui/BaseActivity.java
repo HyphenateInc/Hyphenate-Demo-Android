@@ -12,19 +12,18 @@ import com.hyphenate.chatuidemo.R;
 /**
  * Created by wei on 2016/9/27.
  */
-public class BaseActivity extends AppCompatActivity{
+public class BaseActivity extends AppCompatActivity {
 
     private Toolbar mActionBarToolbar;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //http://stackoverflow.com/questions/4341600/how-to-prevent-multiple-instances-of-an-activity-when-it-is-launched-with-differ/
         // should be in launcher activity, but all app use this can avoid the problem
-        if(!isTaskRoot()){
+        if (!isTaskRoot()) {
             Intent intent = getIntent();
             String action = intent.getAction();
-            if(intent.hasCategory(Intent.CATEGORY_LAUNCHER) && action.equals(Intent.ACTION_MAIN)){
+            if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && action.equals(Intent.ACTION_MAIN)) {
                 finish();
                 return;
             }
@@ -35,15 +34,13 @@ public class BaseActivity extends AppCompatActivity{
         }
     }
 
-    @Override
-    public void setContentView(int layoutResID) {
+    @Override public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
         getActionBarToolbar();
     }
 
     /**
      * get the actionbar(toolbar) which view id is R.id.toolbar_actionbar
-     * @return
      */
     protected Toolbar getActionBarToolbar() {
         if (mActionBarToolbar == null) {
@@ -54,5 +51,12 @@ public class BaseActivity extends AppCompatActivity{
             }
         }
         return mActionBarToolbar;
+    }
+
+    /**
+     * finish activity
+     */
+    protected void onFinish() {
+        finish();
     }
 }

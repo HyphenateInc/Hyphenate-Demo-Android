@@ -20,7 +20,7 @@
         android:layout_width="@dimen/contact_avatar_size"
         android:layout_height="@dimen/contact_avatar_size"
         android:layout_centerVertical="true"
-        android:src="@mipmap/cell_groups"
+        android:src="@drawable/cell_groups"
         />
     <TextView
         android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:paddingRight="@dimen/group_arrow_right_icon"
-        android:src="@mipmap/cell_chevron_right"
+        android:src="@drawable/cell_chevron_right"
         />
   </RelativeLayout>
 

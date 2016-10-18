@@ -14,7 +14,8 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
-import com.hyphenate.chatuidemo.receiver.CallReceiver;
+import com.hyphenate.chatuidemo.ui.chat.call.CallReceiver;
+import com.hyphenate.chatuidemo.ui.chat.call.CallStateChangeListener;
 import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -33,8 +34,10 @@ public class DemoHelper {
     //
     private static DemoHelper instance;
 
-    // call broadcast receiver
+    // Call broadcast receiver
     private CallReceiver mCallReceiver = null;
+    // Call state listener
+    private CallStateChangeListener mCallStateChangeListener = null;
 
     // connection listener
     private EMConnectionListener mConnectionListener;
@@ -44,7 +47,6 @@ public class DemoHelper {
      * save foreground Activity which registered message listeners
      */
     private List<Activity> activityList = new ArrayList<Activity>();
-
 
     private DemoHelper() {
     }
@@ -62,7 +64,6 @@ public class DemoHelper {
      * @param context application context
      */
     public void init(Context context) {
-
         mContext = context;
 
         if (isMainProcess()) {
@@ -77,17 +78,13 @@ public class DemoHelper {
 
             EMLog.d(TAG, "------- init hyphenate end --------------");
         }
-
     }
 
     /**
      * init sdk options
      */
     private EMOptions initOptions() {
-        /**
-         * init sdk options more
-         * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1chat_1_1_e_m_options.html
-         */
+        // set init sdk options
         EMOptions options = new EMOptions();
         // change to need confirm contact invitation
         options.setAcceptInvitationAlways(false);
@@ -104,7 +101,6 @@ public class DemoHelper {
 
     /**
      * init global listener
-     *
      */
     public void setGlobalListener() {
         // set call listener
@@ -127,6 +123,31 @@ public class DemoHelper {
         }
         // Register the call receiver
         mContext.registerReceiver(mCallReceiver, callFilter);
+    }
+
+    /**
+     * Add call state listener
+     */
+    public void addCallStateChangeListener() {
+        if (mCallStateChangeListener == null) {
+            mCallStateChangeListener = new CallStateChangeListener();
+        }
+
+
+
+        EMClient.getInstance().callManager().addCallStateChangeListener(mCallStateChangeListener);
+    }
+
+    /**
+     * Remove call state listener
+     */
+    public void removeCallStateChangeListener() {
+        if (mCallStateChangeListener != null) {
+            EMClient.getInstance()
+                    .callManager()
+                    .removeCallStateChangeListener(mCallStateChangeListener);
+            mCallStateChangeListener = null;
+        }
     }
 
     /**
@@ -163,19 +184,17 @@ public class DemoHelper {
         messageListener = new EMMessageListener() {
             private BroadcastReceiver broadCastReceiver = null;
 
-            @Override
-            public void onMessageReceived(List<EMMessage> messages) {
+            @Override public void onMessageReceived(List<EMMessage> messages) {
                 for (EMMessage message : messages) {
                     EMLog.d(TAG, "onMessageReceived id : " + message.getMsgId());
                     // in background, do not refresh UI, notify it in notification bar
-                    if(hasForegroundActivies()){
+                    if (hasForegroundActivies()) {
                         //getNotifier().onNewMsg(message);
                     }
                 }
             }
 
-            @Override
-            public void onCmdMessageReceived(List<EMMessage> messages) {
+            @Override public void onCmdMessageReceived(List<EMMessage> messages) {
                 for (EMMessage message : messages) {
                     EMLog.d(TAG, "onCmdMessageReceived");
                     //get message body
@@ -184,20 +203,18 @@ public class DemoHelper {
 
                     //get extension attribute if you need
                     //message.getStringAttribute("");
-                    EMLog.d(TAG, String.format("CmdMessage：action:%s,message:%s", action,message.toString()));
+                    EMLog.d(TAG, String.format("CmdMessage：action:%s,message:%s", action,
+                            message.toString()));
                 }
             }
 
-            @Override
-            public void onMessageRead(List<EMMessage> messages) {
+            @Override public void onMessageRead(List<EMMessage> messages) {
             }
 
-            @Override
-            public void onMessageDelivered(List<EMMessage> message) {
+            @Override public void onMessageDelivered(List<EMMessage> message) {
             }
 
-            @Override
-            public void onMessageChanged(EMMessage message, Object change) {
+            @Override public void onMessageChanged(EMMessage message, Object change) {
 
             }
         };
@@ -205,17 +222,17 @@ public class DemoHelper {
         EMClient.getInstance().chatManager().addMessageListener(messageListener);
     }
 
-    public boolean hasForegroundActivies(){
+    public boolean hasForegroundActivies() {
         return activityList.size() != 0;
     }
 
-    public void pushActivity(Activity activity){
-        if(!activityList.contains(activity)){
-            activityList.add(0,activity);
+    public void pushActivity(Activity activity) {
+        if (!activityList.contains(activity)) {
+            activityList.add(0, activity);
         }
     }
 
-    public void popActivity(Activity activity){
+    public void popActivity(Activity activity) {
         activityList.remove(activity);
     }
 
@@ -228,24 +245,20 @@ public class DemoHelper {
         Log.d(TAG, "Sign out: " + unbindDeviceToken);
         EMClient.getInstance().logout(unbindDeviceToken, new EMCallBack() {
 
-            @Override
-            public void onSuccess() {
+            @Override public void onSuccess() {
                 Log.d(TAG, "Sign out: onSuccess");
                 if (callback != null) {
                     callback.onSuccess();
                 }
-
             }
 
-            @Override
-            public void onProgress(int progress, String status) {
+            @Override public void onProgress(int progress, String status) {
                 if (callback != null) {
                     callback.onProgress(progress, status);
                 }
             }
 
-            @Override
-            public void onError(int code, String error) {
+            @Override public void onError(int code, String error) {
                 Log.d(TAG, "Sign out: onSuccess");
                 if (callback != null) {
                     callback.onError(code, error);
@@ -253,7 +266,6 @@ public class DemoHelper {
             }
         });
     }
-
 
     /**
      * check the application process name if process name is not qualified, then we think it is a

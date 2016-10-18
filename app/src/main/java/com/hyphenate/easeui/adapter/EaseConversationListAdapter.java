@@ -38,14 +38,14 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
         mContext = context;
     }
 
-
     @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //set the view holder
-        return new ConversationListHolder(LayoutInflater.from(mContext).inflate(R.layout.ease_row_conversation_list, parent, false));
+        return new ConversationListHolder(LayoutInflater.from(mContext)
+                .inflate(R.layout.ease_row_conversation_list, parent, false));
     }
 
     @Override public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
-        ConversationListHolder holder = (ConversationListHolder)viewHolder;
+        ConversationListHolder holder = (ConversationListHolder) viewHolder;
         EMConversation conversation = getItem(position);
         // get username or group id
         String username = conversation.getUserName();
@@ -57,7 +57,8 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
         } else if (conversation.getType() == EMConversation.EMConversationType.ChatRoom) {
             holder.mAvatarView.setImageResource(R.drawable.ease_ic_group_default);
             EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(username);
-            holder.mNameView.setText(room != null && !TextUtils.isEmpty(room.getName()) ? room.getName() : username);
+            holder.mNameView.setText(
+                    room != null && !TextUtils.isEmpty(room.getName()) ? room.getName() : username);
         } else {
             //single chat conversation
             EaseUserUtils.setUserAvatar(mContext, username, holder.mAvatarView);
@@ -82,12 +83,14 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
             //holder.message.setText(EaseSmileUtils.getSmiledText(getContext(), EaseCommonUtils.getMessageDigest(lastMessage, (this.getContext()))),
             //        TextView.BufferType.SPANNABLE);
             holder.mMessageView.setText(EaseCommonUtils.getMessageDigest(lastMessage, mContext));
-            if(content != null){
+            if (content != null) {
                 holder.mMessageView.setText(content);
             }
             //show the message time
-            holder.mTimeView.setText(DateUtils.getTimestampString(new Date(lastMessage.getMsgTime())));
-            if (lastMessage.direct() == EMMessage.Direct.SEND && lastMessage.status() == EMMessage.Status.FAIL) {
+            holder.mTimeView.setText(
+                    DateUtils.getTimestampString(new Date(lastMessage.getMsgTime())));
+            if (lastMessage.direct() == EMMessage.Direct.SEND
+                    && lastMessage.status() == EMMessage.Status.FAIL) {
                 holder.mMsgStateView.setVisibility(View.VISIBLE);
             } else {
                 holder.mMsgStateView.setVisibility(View.GONE);
@@ -97,7 +100,7 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
         //set item onclick listener
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                if(mOnItemClickListener != null){
+                if (mOnItemClickListener != null) {
                     mOnItemClickListener.onItemClick(v, position);
                 }
             }
@@ -108,7 +111,8 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
         return item1.getUserName().equals(item2.getUserName());
     }
 
-    @Override protected boolean areItemContentsTheSame(EMConversation oldItem, EMConversation newItem) {
+    @Override
+    protected boolean areItemContentsTheSame(EMConversation oldItem, EMConversation newItem) {
         return oldItem.equals(newItem);
     }
 
@@ -124,15 +128,14 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
         //}
     }
 
-    public void setOnItemClickListener(EaseListItemClickListener onItemClickListener){
+    public void setOnItemClickListener(EaseListItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
-
 
     /**
      * view holder class
      */
-    static class ConversationListHolder extends RecyclerView.ViewHolder{
+    static class ConversationListHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.img_avatar) ImageView mAvatarView;
         @BindView(R.id.txt_name) TextView mNameView;
         @BindView(R.id.img_msg_state) ImageView mMsgStateView;
@@ -140,12 +143,9 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
         @BindView(R.id.txt_time) TextView mTimeView;
         @BindView(R.id.txt_unread_msg_number) TextView mUnreadNumView;
 
-        public ConversationListHolder(View itemView){
+        public ConversationListHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
     }
-
-
-
 }

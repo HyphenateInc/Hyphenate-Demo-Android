@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="38"
-    android:versionName="3.1.5"
-    package="com.hyphenate.chatuidemo">
+    package="com.hyphenate.chatuidemo"
+    >
 
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -49,21 +48,34 @@
             </intent-filter>
         </activity>
 
+        <!--Sign in activity-->
         <activity
             android:name=".ui.sign.SignInActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <!--Sign up activity-->
         <activity
             android:name=".ui.sign.SignUpActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <!--Video call activity-->
+        <activity
+            android:name=".ui.chat.call.VideoCallActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <!--Voice call activity-->
+        <activity
+            android:name=".ui.chat.call.VoiceCallActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
 
         <activity android:name=".ui.user.GroupListActivity"/>
-
+        <!--Chat activity-->
         <activity
             android:name=".ui.chat.ChatActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"
             />
 

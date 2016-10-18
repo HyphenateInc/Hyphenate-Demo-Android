@@ -11,6 +11,8 @@ android {
         applicationId "com.hyphenate.chatuidemo"
         minSdkVersion 15
         targetSdkVersion 22
+        versionCode 1
+        versionName '1.0.0'
         multiDexEnabled true
     }
     buildTypes {
@@ -30,6 +32,8 @@ dependencies {
 
     // Deisgn support Already included v4 and appcompat-v7, So here on the introduction of 'design'
     compile 'com.android.support:design:24.2.1'
+
+    compile 'org.greenrobot:eventbus:3.0.0'
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
