@@ -76,11 +76,19 @@ public class CallActivity extends BaseActivity {
         } else {
             createSoundPoolWithConstructor();
         }
-        // load sound
-        if (isInComingCall) {
-            loadId = mSoundPool.load(mActivity, R.raw.sound_call_incoming, 1);
-        } else {
-            loadId = mSoundPool.load(mActivity, R.raw.sound_calling, 1);
+        if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_NORMAL) {
+            // load sound
+            if (isInComingCall) {
+                loadId = mSoundPool.load(mActivity, R.raw.sound_call_incoming, 1);
+            } else {
+                loadId = mSoundPool.load(mActivity, R.raw.sound_calling, 1);
+            }
+            // Load SoundPool listener
+            mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+                @Override public void onLoadComplete(SoundPool soundPool, int i, int i1) {
+                    playCallSound();
+                }
+            });
         }
     }
 
