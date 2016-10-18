@@ -15,6 +15,7 @@ import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chatuidemo.receiver.CallReceiver;
+import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,12 +28,10 @@ import java.util.List;
 public class DemoHelper {
 
     protected static final String TAG = DemoHelper.class.getSimpleName();
-    // context
-    private Context mContext;
-
     //
     private static DemoHelper instance;
-
+    // context
+    private Context mContext;
     // call broadcast receiver
     private CallReceiver mCallReceiver = null;
 
@@ -44,7 +43,6 @@ public class DemoHelper {
      * save foreground Activity which registered message listeners
      */
     private List<Activity> activityList = new ArrayList<Activity>();
-
 
     private DemoHelper() {
     }
@@ -69,6 +67,8 @@ public class DemoHelper {
             EMLog.d(TAG, "------- init hyphenate start --------------");
             //init hyphenate sdk with options
             EMClient.getInstance().init(context, initOptions());
+            //init EaseUI if you want to use it
+            EaseUI.getInstance().init(context);
 
             // set debug mode open:true, close:false
             EMClient.getInstance().setDebugMode(true);
@@ -77,7 +77,6 @@ public class DemoHelper {
 
             EMLog.d(TAG, "------- init hyphenate end --------------");
         }
-
     }
 
     /**
@@ -104,7 +103,6 @@ public class DemoHelper {
 
     /**
      * init global listener
-     *
      */
     public void setGlobalListener() {
         // set call listener
@@ -163,19 +161,17 @@ public class DemoHelper {
         messageListener = new EMMessageListener() {
             private BroadcastReceiver broadCastReceiver = null;
 
-            @Override
-            public void onMessageReceived(List<EMMessage> messages) {
+            @Override public void onMessageReceived(List<EMMessage> messages) {
                 for (EMMessage message : messages) {
                     EMLog.d(TAG, "onMessageReceived id : " + message.getMsgId());
                     // in background, do not refresh UI, notify it in notification bar
-                    if(hasForegroundActivies()){
+                    if (hasForegroundActivies()) {
                         //getNotifier().onNewMsg(message);
                     }
                 }
             }
 
-            @Override
-            public void onCmdMessageReceived(List<EMMessage> messages) {
+            @Override public void onCmdMessageReceived(List<EMMessage> messages) {
                 for (EMMessage message : messages) {
                     EMLog.d(TAG, "onCmdMessageReceived");
                     //get message body
@@ -184,20 +180,18 @@ public class DemoHelper {
 
                     //get extension attribute if you need
                     //message.getStringAttribute("");
-                    EMLog.d(TAG, String.format("CmdMessage：action:%s,message:%s", action,message.toString()));
+                    EMLog.d(TAG, String.format("CmdMessage：action:%s,message:%s", action,
+                            message.toString()));
                 }
             }
 
-            @Override
-            public void onMessageRead(List<EMMessage> messages) {
+            @Override public void onMessageRead(List<EMMessage> messages) {
             }
 
-            @Override
-            public void onMessageDelivered(List<EMMessage> message) {
+            @Override public void onMessageDelivered(List<EMMessage> message) {
             }
 
-            @Override
-            public void onMessageChanged(EMMessage message, Object change) {
+            @Override public void onMessageChanged(EMMessage message, Object change) {
 
             }
         };
@@ -205,17 +199,17 @@ public class DemoHelper {
         EMClient.getInstance().chatManager().addMessageListener(messageListener);
     }
 
-    public boolean hasForegroundActivies(){
+    public boolean hasForegroundActivies() {
         return activityList.size() != 0;
     }
 
-    public void pushActivity(Activity activity){
-        if(!activityList.contains(activity)){
-            activityList.add(0,activity);
+    public void pushActivity(Activity activity) {
+        if (!activityList.contains(activity)) {
+            activityList.add(0, activity);
         }
     }
 
-    public void popActivity(Activity activity){
+    public void popActivity(Activity activity) {
         activityList.remove(activity);
     }
 
@@ -228,24 +222,20 @@ public class DemoHelper {
         Log.d(TAG, "Sign out: " + unbindDeviceToken);
         EMClient.getInstance().logout(unbindDeviceToken, new EMCallBack() {
 
-            @Override
-            public void onSuccess() {
+            @Override public void onSuccess() {
                 Log.d(TAG, "Sign out: onSuccess");
                 if (callback != null) {
                     callback.onSuccess();
                 }
-
             }
 
-            @Override
-            public void onProgress(int progress, String status) {
+            @Override public void onProgress(int progress, String status) {
                 if (callback != null) {
                     callback.onProgress(progress, status);
                 }
             }
 
-            @Override
-            public void onError(int code, String error) {
+            @Override public void onError(int code, String error) {
                 Log.d(TAG, "Sign out: onSuccess");
                 if (callback != null) {
                     callback.onError(code, error);
@@ -253,7 +243,6 @@ public class DemoHelper {
             }
         });
     }
-
 
     /**
      * check the application process name if process name is not qualified, then we think it is a

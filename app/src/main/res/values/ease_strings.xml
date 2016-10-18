@@ -19,4 +19,17 @@
     <string name="error_send_not_in_the_group">You already were not in the group</string>
     <string name="connect_failuer_toast">Please check the network or try again later</string>
     <string name="network_unavailable">The network connection is not available, please check the network</string>
+    <string name="chat_edit_hint">Write a message</string>
+    <string name="not_download">Did not download:</string>
+    <string name="Have_downloaded">Already downloaded</string>
+    <string name="is_down_please_wait">Downloading video, please wait a moment</string>
+    <string name="Did_not_download">Not yet downloaded</string>
+    <string name="downwaiting">Downloading the file, please wait a moment</string>
+    <string name="Failed_to_download_file">Failed to download file:</string>
+    <string name="Download_the_pictures">Download the pictures: 0%</string>
+    <string name="Download_the_pictures_new">Download the pictures:</string>
+    <string name="cant_find_pictures">"Can't find pictures"</string>
+    <string name="File_does_not_exist">File does not exist</string>
+    <string name="The_file_is_not_greater_than_10_m">The file can not be larger than 10M</string>
+    <string name="Is_download_voice_click_later">Downloading the voice message, click later</string>
 </resources>

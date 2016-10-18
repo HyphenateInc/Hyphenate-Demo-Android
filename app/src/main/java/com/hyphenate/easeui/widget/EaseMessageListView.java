@@ -1,13 +1,16 @@
 package com.hyphenate.easeui.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ListView;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.adapter.EaseMessageListAdapter;
+import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 
@@ -17,9 +20,9 @@ import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
  * A list view to show chat message list
  */
 
-public class EaseChatMessageListView extends ListView {
+public class EaseMessageListView extends ListView {
 
-    protected static final String TAG = EaseChatMessageListView.class.getSimpleName();
+    protected static final String TAG = EaseMessageListView.class.getSimpleName();
     protected Context context;
     protected EMConversation conversation;
     protected int chatType;
@@ -30,17 +33,19 @@ public class EaseChatMessageListView extends ListView {
     protected Drawable myBubbleBg;
     protected Drawable otherBuddleBg;
 
-    public EaseChatMessageListView(Context context, AttributeSet attrs, int defStyle) {
+    protected  EaseMessageListItemStyle itemStyle;
+
+    public EaseMessageListView(Context context, AttributeSet attrs, int defStyle) {
         this(context, attrs);
     }
 
-    public EaseChatMessageListView(Context context, AttributeSet attrs) {
+    public EaseMessageListView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        parseStyle(context, attrs);
+        parseAttrs(context, attrs);
         init(context);
     }
 
-    public EaseChatMessageListView(Context context) {
+    public EaseMessageListView(Context context) {
         super(context);
         init(context);
     }
@@ -62,24 +67,26 @@ public class EaseChatMessageListView extends ListView {
         conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername, EaseCommonUtils
                 .getConversationType(chatType), true);
         messageAdapter = new EaseMessageListAdapter(context, toChatUsername, chatType, this);
-        //messageAdapter.setShowAvatar(showAvatar);
-        //messageAdapter.setShowUserNick(showUserNick);
-        //messageAdapter.setMyBubbleBg(myBubbleBg);
-        //messageAdapter.setOtherBuddleBg(otherBuddleBg);
-        //messageAdapter.setCustomChatRowProvider(customChatRowProvider);
         // set message adapter
         setAdapter(messageAdapter);
+
+        messageAdapter.setItemStyle(itemStyle);
 
         refreshSelectLast();
     }
 
-    protected void parseStyle(Context context, AttributeSet attrs) {
-        //TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EaseChatMessageList);
-        //showAvatar = ta.getBoolean(R.styleable.EaseChatMessageList_msgListShowUserAvatar, true);
-        //myBubbleBg = ta.getDrawable(R.styleable.EaseChatMessageList_msgListMyBubbleBackground);
-        //otherBuddleBg = ta.getDrawable(R.styleable.EaseChatMessageList_msgListMyBubbleBackground);
-        //showUserNick = ta.getBoolean(R.styleable.EaseChatMessageList_msgListShowUserNick, false);
-        //ta.recycle();
+    protected void parseAttrs(Context context, AttributeSet attrs) {
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.EaseMessageListView);
+
+        EaseMessageListItemStyle.Builder builder = new EaseMessageListItemStyle.Builder();
+        builder.showAvatar(ta.getBoolean(R.styleable.EaseMessageListView_msgListShowUserAvatar, true))
+                .showUserNick(ta.getBoolean(R.styleable.EaseMessageListView_msgListShowUserNick, false))
+                .myBubbleBg(ta.getDrawable(R.styleable.EaseMessageListView_msgListMyBubbleBackground))
+                .otherBuddleBg(ta.getDrawable(R.styleable.EaseMessageListView_msgListMyBubbleBackground));
+
+        itemStyle = builder.build();
+
+        ta.recycle();
     }
 
 
@@ -124,7 +131,7 @@ public class EaseChatMessageListView extends ListView {
         return showUserNick;
     }
 
-    public interface MessageListItemClickListener{
+    public interface MessageListItemClicksListener {
         void onResendClick(EMMessage message);
         /**
          * there is default handling when bubble is clicked, if you want handle it, return true
@@ -142,9 +149,9 @@ public class EaseChatMessageListView extends ListView {
      * set click listener
      * @param listener
      */
-    public void setItemClickListener(MessageListItemClickListener listener){
+    public void setItemClickListener(MessageListItemClicksListener listener){
         if (messageAdapter != null) {
-            messageAdapter.setItemClickListener(listener);
+            messageAdapter.setItemClicksListener(listener);
         }
     }
 

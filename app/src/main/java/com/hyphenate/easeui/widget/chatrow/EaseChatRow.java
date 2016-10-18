@@ -16,8 +16,9 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessage.Direct;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
 import com.hyphenate.easeui.utils.EaseUserUtils;
-import com.hyphenate.easeui.widget.EaseChatMessageListView;
+import com.hyphenate.easeui.widget.EaseMessageListView;
 import com.hyphenate.util.DateUtils;
 import java.util.Date;
 
@@ -26,7 +27,6 @@ public abstract class EaseChatRow extends LinearLayout {
 
     protected LayoutInflater inflater;
     protected Context context;
-    protected BaseAdapter adapter;
     protected EMMessage message;
     protected int position;
 
@@ -46,7 +46,11 @@ public abstract class EaseChatRow extends LinearLayout {
     protected EMCallBack messageSendCallback;
     protected EMCallBack messageReceiveCallback;
 
-    protected EaseChatMessageListView.MessageListItemClickListener itemClickListener;
+    protected EaseMessageListView.MessageListItemClicksListener itemClickListener;
+    protected EaseMessageListItemStyle style;
+
+    protected BaseAdapter adapter;
+    protected EaseMessageListItemStyle itemStyle;
 
     public EaseChatRow(Context context, EMMessage message, int position, BaseAdapter adapter) {
         super(context);
@@ -76,16 +80,18 @@ public abstract class EaseChatRow extends LinearLayout {
     }
 
     /**
-     * set property according message and postion
-     * 
-     * @param message
+     * set view property
      * @param position
+     * @param itemClickListener
+     * @param itemStyle
      */
-    public void setUpView(EMMessage message, int position,
-            EaseChatMessageListView.MessageListItemClickListener itemClickListener) {
-        this.message = message;
+    public void setUpView(int position,
+            EaseMessageListView.MessageListItemClicksListener itemClickListener,
+            EaseMessageListItemStyle itemStyle) {
         this.position = position;
+        this.message = (EMMessage) adapter.getItem(position);
         this.itemClickListener = itemClickListener;
+        this.itemStyle = itemStyle;
 
         setUpBaseView();
         onSetUpView();

@@ -25,11 +25,12 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRowText;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
-import com.hyphenate.easeui.widget.EaseChatMessageListView.MessageListItemClickListener;
+import com.hyphenate.easeui.widget.EaseMessageListView.MessageListItemClicksListener;
 
 public class EaseMessageListAdapter extends BaseAdapter {
 
@@ -62,23 +63,16 @@ public class EaseMessageListAdapter extends BaseAdapter {
     private EMConversation conversation;
     EMMessage[] messages = null;
 
-    private String toChatUsername;
-
-    private MessageListItemClickListener itemClickListener;
+    private MessageListItemClicksListener itemClicksListener;
     private EaseCustomChatRowProvider customRowProvider;
 
-    private boolean showUserNick;
-    private boolean showAvatar;
-    private Drawable myBubbleBg;
-    private Drawable otherBuddleBg;
-
     private ListView listView;
+    private EaseMessageListItemStyle itemStyle;
 
     public EaseMessageListAdapter(Context context, String username, int chatType,
             ListView listView) {
         this.context = context;
         this.listView = listView;
-        toChatUsername = username;
         this.conversation = EMClient.getInstance()
                 .chatManager()
                 .getConversation(username, EaseCommonUtils.getConversationType(chatType), true);
@@ -261,53 +255,23 @@ public class EaseMessageListAdapter extends BaseAdapter {
             convertView = createChatRow(context, message, position);
         }
 
-        //refresh ui with messages
-        ((EaseChatRow) convertView).setUpView(message, position, itemClickListener);
+        //setup the item view
+        ((EaseChatRow) convertView).setUpView(position, itemClicksListener, itemStyle);
 
         return convertView;
     }
 
-    public String getToChatUsername() {
-        return toChatUsername;
+
+    public void setItemStyle(EaseMessageListItemStyle itemStyle){
+        this.itemStyle = itemStyle;
     }
 
-    public void setShowUserNick(boolean showUserNick) {
-        this.showUserNick = showUserNick;
-    }
-
-    public void setShowAvatar(boolean showAvatar) {
-        this.showAvatar = showAvatar;
-    }
-
-    public void setMyBubbleBg(Drawable myBubbleBg) {
-        this.myBubbleBg = myBubbleBg;
-    }
-
-    public void setOtherBuddleBg(Drawable otherBuddleBg) {
-        this.otherBuddleBg = otherBuddleBg;
-    }
-
-    public void setItemClickListener(MessageListItemClickListener listener) {
-        itemClickListener = listener;
+    public void setItemClicksListener(MessageListItemClicksListener listener) {
+        itemClicksListener = listener;
     }
 
     public void setCustomChatRowProvider(EaseCustomChatRowProvider rowProvider) {
         customRowProvider = rowProvider;
     }
 
-    public boolean isShowUserNick() {
-        return showUserNick;
-    }
-
-    public boolean isShowAvatar() {
-        return showAvatar;
-    }
-
-    public Drawable getMyBubbleBg() {
-        return myBubbleBg;
-    }
-
-    public Drawable getOtherBuddleBg() {
-        return otherBuddleBg;
-    }
 }

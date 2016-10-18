@@ -7,51 +7,51 @@
     tools:context=".ui.user.ContactListFragment"
     >
 
-  <RelativeLayout
-      android:id="@+id/layout_group_entry"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/contact_item_height"
-      android:background="?android:attr/selectableItemBackground"
-      android:paddingLeft="@dimen/group_icon_padding_left"
-      >
+    <RelativeLayout
+        android:id="@+id/layout_group_entry"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/contact_item_height"
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingLeft="@dimen/group_icon_padding_left"
+        >
 
-    <ImageView
-        android:id="@+id/img_group_icon"
-        android:layout_width="@dimen/contact_avatar_size"
-        android:layout_height="@dimen/contact_avatar_size"
-        android:layout_centerVertical="true"
-        android:src="@mipmap/cell_groups"
-        />
+        <ImageView
+            android:id="@+id/img_group_icon"
+            android:layout_width="@dimen/contact_avatar_size"
+            android:layout_height="@dimen/contact_avatar_size"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/cell_groups"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/group_text_margin_left"
+            android:layout_toRightOf="@id/img_group_icon"
+            android:text="@string/groups"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/group_text_size"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="@dimen/group_arrow_right_icon"
+            android:src="@mipmap/cell_chevron_right"
+            />
+    </RelativeLayout>
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/group_text_margin_left"
-        android:layout_toRightOf="@id/img_group_icon"
-        android:text="@string/groups"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/group_text_size"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_line_height"
+        android:background="@color/base_line_color"
         />
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:paddingRight="@dimen/group_arrow_right_icon"
-        android:src="@mipmap/cell_chevron_right"
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_contacts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         />
-  </RelativeLayout>
-
-  <TextView
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/base_line_height"
-      android:background="@color/base_line_color"
-      />
-
-  <android.support.v7.widget.RecyclerView
-      android:id="@+id/rv_contacts"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      />
 
 </LinearLayout>

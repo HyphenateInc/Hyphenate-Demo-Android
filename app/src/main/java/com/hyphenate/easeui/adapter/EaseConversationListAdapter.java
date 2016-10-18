@@ -90,7 +90,7 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
             if (lastMessage.direct() == EMMessage.Direct.SEND && lastMessage.status() == EMMessage.Status.FAIL) {
                 holder.mMsgStateView.setVisibility(View.VISIBLE);
             } else {
-                holder.mMsgStateView.setVisibility(View.GONE);
+                holder.mMsgStateView.setVisibility(View.INVISIBLE);
             }
         }
 
