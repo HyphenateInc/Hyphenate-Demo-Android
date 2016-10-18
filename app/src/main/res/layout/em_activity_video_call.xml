@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/dark_background"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="false"
+    tools:context=".ui.chat.call.VideoCallActivity"
+    >
+
+    <!--Call background-->
+    <ImageView
+        android:id="@+id/img_call_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        />
+
+    <!--Opposite surfaceView-->
+    <com.hyphenate.media.EMOppositeSurfaceView
+        android:id="@+id/surface_view_opposite"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        />
+
+    <RelativeLayout
+        android:id="@+id/layout_call_control"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        >
+
+        <!--Local surfaceView-->
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/call_layout_margin"
+            >
+            <!--Change camera-->
+            <ImageButton
+                android:id="@+id/btn_change_camera_switch"
+                android:layout_width="@dimen/call_switch_width"
+                android:layout_height="@dimen/call_switch_height"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/em_btn_rectangle_white"
+                android:src="@drawable/em_checkbox_change_camera"
+                />
+            <!--Call status-->
+            <TextView
+                android:id="@+id/text_call_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/app_name"
+                android:textColor="@color/em_white_87"
+                />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_calling"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/call_layout_margin"
+                android:orientation="horizontal"
+                >
+
+                <!--Camera-->
+                <ImageButton
+                    android:id="@+id/btn_camera_switch"
+                    android:layout_width="@dimen/call_switch_width"
+                    android:layout_height="@dimen/call_switch_height"
+                    android:background="@drawable/em_btn_rectangle_white"
+                    android:src="@drawable/em_checkbox_camera"
+                    />
+
+                <!--Speaker-->
+                <ImageButton
+                    android:id="@+id/btn_speaker_switch"
+                    android:layout_width="@dimen/call_switch_width"
+                    android:layout_height="@dimen/call_switch_height"
+                    android:background="@drawable/em_btn_rectangle_white"
+                    android:src="@drawable/em_checkbox_speaker"
+                    />
+
+                <!--Microphone-->
+                <ImageButton
+                    android:id="@+id/btn_mic_switch"
+                    android:layout_width="@dimen/call_switch_width"
+                    android:layout_height="@dimen/call_switch_height"
+                    android:background="@drawable/em_btn_rectangle_white"
+                    android:src="@drawable/em_checkbox_mic"
+                    />
+
+                <!--Exit full screen-->
+                <ImageButton
+                    android:id="@+id/btn_exit_full_screen"
+                    android:layout_width="@dimen/call_switch_width"
+                    android:layout_height="@dimen/call_switch_height"
+                    android:background="@drawable/em_btn_rectangle_white"
+                    android:src="@drawable/em_ic_fullscreen_exit_white_24dp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <!--Reject call-->
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_reject_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/call_btn_margin"
+                    android:src="@drawable/em_ic_call_end_white_24dp"
+                    app:fabSize="normal"
+                    />
+
+                <!--End call-->
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_end_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/call_btn_margin"
+                    android:src="@drawable/em_ic_call_end_white_24dp"
+                    android:visibility="gone"
+                    app:fabSize="normal"
+                    />
+
+                <!--Answer call-->
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_answer_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/call_btn_margin"
+                    android:src="@drawable/em_ic_call_white_24dp"
+                    app:backgroundTint="@color/em_green_87"
+                    app:fabSize="normal"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+        <com.hyphenate.media.EMLocalSurfaceView
+            android:id="@+id/surface_view_local"
+            android:layout_width="120dp"
+            android:layout_height="160dp"
+            android:layout_alignEnd="@+id/relativeLayout"
+            android:layout_alignRight="@+id/relativeLayout"
+            android:layout_alignTop="@+id/relativeLayout"
+            />
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

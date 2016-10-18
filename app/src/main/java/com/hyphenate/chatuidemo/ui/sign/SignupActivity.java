@@ -120,10 +120,6 @@ public class SignUpActivity extends BaseActivity {
                     });
                 } catch (final HyphenateException e) {
                     e.printStackTrace();
-                    /**
-                     * More error code
-                     * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1_e_m_error.html
-                     */
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
                             if (!mActivity.isFinishing()) {

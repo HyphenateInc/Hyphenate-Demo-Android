@@ -28,4 +28,8 @@ public class EaseConstant {
 
     public static final String EXTRA_CHAT_TYPE = "chatType";
     public static final String EXTRA_USER_ID = "userId";
+    public static final String EXTRA_IS_INCOMING_CALL = "isIncomingCall";
+    public static final String EXTRA_FROM = "from";
+    public static final String EXTRA_TYPE = "type";
+    public static final String EXTRA_TO = "to";
 }

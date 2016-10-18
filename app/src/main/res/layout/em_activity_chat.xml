@@ -29,12 +29,40 @@
         android:listSelector="#00000000"
         />
 
+<<<<<<< HEAD
     <com.hyphenate.chatuidemo.ui.widget.ChatInputView
         android:id="@+id/input_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         />
+=======
+    <LinearLayout
+        android:id="@+id/layout_input_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        >
+
+        <EditText
+            android:id="@+id/edt_msg_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="input text"
+            />
+
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="发送"
+            />
+
+    </LinearLayout>
+>>>>>>> e86cce45ed648de18d877bb10effeb9c8fde651d
 
 
 </RelativeLayout>

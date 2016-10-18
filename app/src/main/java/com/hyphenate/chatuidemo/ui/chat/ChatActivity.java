@@ -122,8 +122,6 @@ public class ChatActivity extends BaseActivity {
             }
         });
 
-        EMMessage message;
-        message.setMessageStatusCallback();
         return true;
     }
 

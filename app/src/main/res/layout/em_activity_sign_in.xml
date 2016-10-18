@@ -6,7 +6,7 @@
     android:id="@+id/ml_layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sign_background"
+    android:background="@color/dark_background"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     tools:context=".ui.sign.SignInActivity"
@@ -28,7 +28,7 @@
             >
 
             <LinearLayout
-                android:id="@+id/layout_signin_form"
+                android:id="@+id/layout_sign_in_form"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="16dp"
@@ -57,7 +57,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/em_hint_account"
-                        android:inputType="textVisiblePassword"
                         android:maxLines="1"
                         android:textColor="@color/sign_text_white"
                         android:textColorHint="@color/sign_text_hint"

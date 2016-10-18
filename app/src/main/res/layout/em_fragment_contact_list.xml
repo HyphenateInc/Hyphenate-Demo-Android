@@ -42,10 +42,37 @@
             />
     </RelativeLayout>
 
+<<<<<<< HEAD
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/base_line_height"
         android:background="@color/base_line_color"
+=======
+    <ImageView
+        android:id="@+id/img_group_icon"
+        android:layout_width="@dimen/contact_avatar_size"
+        android:layout_height="@dimen/contact_avatar_size"
+        android:layout_centerVertical="true"
+        android:src="@drawable/cell_groups"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/group_text_margin_left"
+        android:layout_toRightOf="@id/img_group_icon"
+        android:text="@string/groups"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/group_text_size"
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:paddingRight="@dimen/group_arrow_right_icon"
+        android:src="@drawable/cell_chevron_right"
+>>>>>>> e86cce45ed648de18d877bb10effeb9c8fde651d
         />
 
     <android.support.v7.widget.RecyclerView

@@ -14,7 +14,8 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
-import com.hyphenate.chatuidemo.receiver.CallReceiver;
+import com.hyphenate.chatuidemo.ui.chat.call.CallReceiver;
+import com.hyphenate.chatuidemo.ui.chat.call.CallStateChangeListener;
 import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
@@ -32,8 +33,11 @@ public class DemoHelper {
     private static DemoHelper instance;
     // context
     private Context mContext;
-    // call broadcast receiver
+
+    // Call broadcast receiver
     private CallReceiver mCallReceiver = null;
+    // Call state listener
+    private CallStateChangeListener mCallStateChangeListener = null;
 
     // connection listener
     private EMConnectionListener mConnectionListener;
@@ -60,7 +64,6 @@ public class DemoHelper {
      * @param context application context
      */
     public void init(Context context) {
-
         mContext = context;
 
         if (isMainProcess()) {
@@ -83,10 +86,7 @@ public class DemoHelper {
      * init sdk options
      */
     private EMOptions initOptions() {
-        /**
-         * init sdk options more
-         * http://www.easemob.com/apidoc/android/chat3.0/classcom_1_1hyphenate_1_1chat_1_1_e_m_options.html
-         */
+        // set init sdk options
         EMOptions options = new EMOptions();
         // change to need confirm contact invitation
         options.setAcceptInvitationAlways(false);
@@ -125,6 +125,31 @@ public class DemoHelper {
         }
         // Register the call receiver
         mContext.registerReceiver(mCallReceiver, callFilter);
+    }
+
+    /**
+     * Add call state listener
+     */
+    public void addCallStateChangeListener() {
+        if (mCallStateChangeListener == null) {
+            mCallStateChangeListener = new CallStateChangeListener();
+        }
+
+
+
+        EMClient.getInstance().callManager().addCallStateChangeListener(mCallStateChangeListener);
+    }
+
+    /**
+     * Remove call state listener
+     */
+    public void removeCallStateChangeListener() {
+        if (mCallStateChangeListener != null) {
+            EMClient.getInstance()
+                    .callManager()
+                    .removeCallStateChangeListener(mCallStateChangeListener);
+            mCallStateChangeListener = null;
+        }
     }
 
     /**
