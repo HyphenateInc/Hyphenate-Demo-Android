@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_search"
-        android:title="Search"
         android:icon="@mipmap/em_ic_action_light_search"
+        android:title="Search"
         app:showAsAction="always"
         />
     <item
         android:id="@+id/menu_add_contacts"
-        android:title="Add chat"
         android:icon="@mipmap/em_ic_action_new_chat"
+        android:title="Add chat"
         app:showAsAction="always"
         />
 </menu>
