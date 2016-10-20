@@ -32,7 +32,7 @@ import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.ui.widget.ChatInputView;
-import com.hyphenate.chatuidemo.ui.widget.chatrow.EaseChatRowCall;
+import com.hyphenate.chatuidemo.ui.widget.chatrow.ChatRowCall;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.EaseMessageListView;
@@ -442,7 +442,7 @@ public class ChatActivity extends BaseActivity {
                 if (message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_VIDEO_CALL, false)
                         || message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_VOICE_CALL,
                         false)) {
-                    return new EaseChatRowCall(ChatActivity.this, message, position, adapter);
+                    return new ChatRowCall(ChatActivity.this, message, position, adapter);
                 }
                 return null;
             }

@@ -20,12 +20,12 @@ import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
  * Create by lzan13 2016/10/20
  * Video and Voice call chatrow
  */
-public class EaseChatRowCall extends EaseChatRow {
+public class ChatRowCall extends EaseChatRow {
 
     private TextView contentView;
     private ImageView callIcon;
 
-    public EaseChatRowCall(Context context, EMMessage message, int position, BaseAdapter adapter) {
+    public ChatRowCall(Context context, EMMessage message, int position, BaseAdapter adapter) {
         super(context, message, position, adapter);
     }
 
