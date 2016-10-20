@@ -3,10 +3,13 @@ package com.hyphenate.chatuidemo.ui.call;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindView;
@@ -37,6 +40,9 @@ public class VideoCallActivity extends CallActivity {
     private EMCallManager.EMVideoCallHelper mVideoCallHelper;
     // Video call data processor
     private CameraDataProcessor mCameraDataProcessor;
+
+    // SurfaceView state, 0 local is small, 1 opposite is small
+    private int surfaceViewState = 0;
 
     // Use ButterKnife define view
     @BindView(R.id.layout_call_control) View mControlLayout;
@@ -73,6 +79,8 @@ public class VideoCallActivity extends CallActivity {
         // default call type video
         mCallType = 0;
 
+        mChronometer = (Chronometer) findViewById(R.id.chronometer_call_time);
+
         // Set button state
         mChangeCameraSwitch.setActivated(false);
         mCameraSwitch.setActivated(CallStatus.getInstance().isCamera());
@@ -84,10 +92,10 @@ public class VideoCallActivity extends CallActivity {
         // Set the default video call resolution, default to (320, 240)
         mVideoCallHelper.setResolution(640, 480);
         // Setting the video call bit rate defaults to (150)
-        mVideoCallHelper.setVideoBitrate(200);
+        mVideoCallHelper.setVideoBitrate(300);
         // Set the local preview image displayed on the top floor, be sure to set as soon as possible, otherwise invalid
-        mLocalSurfaceView.setZOrderMediaOverlay(true);
-        mLocalSurfaceView.setZOrderOnTop(true);
+        //mLocalSurfaceView.setZOrderMediaOverlay(true);
+        //mLocalSurfaceView.setZOrderOnTop(true);
 
         try {
             // By default, the front camera is used
@@ -159,7 +167,7 @@ public class VideoCallActivity extends CallActivity {
         } else {
             isInComingCall = CallStatus.getInstance().isInComing();
             // Set call state view show content
-            mCallStatus = CallStatus.ML_CALL_ACCEPTED;
+            mCallStatus = CallStatus.CALL_ACCEPTED;
             mCallStatusView.setText(R.string.em_call_accepted);
             // Set button statue
             mRejectCallFab.setVisibility(View.GONE);
@@ -194,10 +202,18 @@ public class VideoCallActivity extends CallActivity {
                 onControlLayout();
                 break;
             case R.id.surface_view_local:
-                onControlLayout();
+                if (surfaceViewState == 0) {
+                    changeSurfaceViewSize();
+                } else {
+                    onControlLayout();
+                }
                 break;
             case R.id.surface_view_opposite:
-                onControlLayout();
+                if (surfaceViewState == 1) {
+                    changeSurfaceViewSize();
+                } else {
+                    onControlLayout();
+                }
                 break;
             case R.id.btn_exit_full_screen:
                 // Minimize the layout
@@ -243,6 +259,32 @@ public class VideoCallActivity extends CallActivity {
         } else {
             mControlLayout.setVisibility(View.VISIBLE);
         }
+    }
+
+    /**
+     * Change surfaceView size
+     */
+    private void changeSurfaceViewSize() {
+        //RelativeLayout.LayoutParams localLayoutParams =
+        //        (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
+        //RelativeLayout.LayoutParams oppositeLayoutParams =
+        //        (RelativeLayout.LayoutParams) mOppositeSurfaceView.getLayoutParams();
+        //if (surfaceViewState == 1) {
+        //    surfaceViewState = 0;
+        //    localLayoutParams.width = 240;
+        //    localLayoutParams.height = 320;
+        //    oppositeLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        //    oppositeLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        //} else {
+        //    surfaceViewState = 1;
+        //    localLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        //    localLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        //    oppositeLayoutParams.width = 240;
+        //    oppositeLayoutParams.height = 320;
+        //}
+        //
+        //mLocalSurfaceView.setLayoutParams(localLayoutParams);
+        //mOppositeSurfaceView.setLayoutParams(oppositeLayoutParams);
     }
 
     /**
@@ -344,7 +386,7 @@ public class VideoCallActivity extends CallActivity {
                     Toast.LENGTH_LONG).show();
         }
         // Set call state
-        mCallStatus = CallStatus.ML_CALL_REJECT_INCOMING_CALL;
+        mCallStatus = CallStatus.CALL_REJECT_INCOMING_CALL;
         // Save call message to
         saveCallMessage();
         // Finish activity
@@ -395,7 +437,7 @@ public class VideoCallActivity extends CallActivity {
             // Call answerCall();
             EMClient.getInstance().callManager().answerCall();
             // Set call state
-            mCallStatus = CallStatus.ML_CALL_ACCEPTED;
+            mCallStatus = CallStatus.CALL_ACCEPTED;
             CallStatus.getInstance().setCallState(CallStatus.CALL_STATUS_ACCEPTED);
         } catch (EMNoActiveCallException e) {
             e.printStackTrace();
@@ -409,6 +451,11 @@ public class VideoCallActivity extends CallActivity {
      */
     private void surfaceViewProcessor() {
         mOppositeSurfaceView.setVisibility(View.VISIBLE);
+        RelativeLayout.LayoutParams lp =
+                (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
+        lp.width = mActivity.getResources().getDimensionPixelSize(R.dimen.call_local_width);
+        lp.height = mActivity.getResources().getDimensionPixelSize(R.dimen.call_local_height);
+        mLocalSurfaceView.setLayoutParams(lp);
     }
 
     /**
@@ -472,46 +519,50 @@ public class VideoCallActivity extends CallActivity {
                 mCallStatusView.setText(R.string.em_call_accepted);
                 stopCallSound();
                 // Set call state
-                mCallStatus = CallStatus.ML_CALL_ACCEPTED;
+                mCallStatus = CallStatus.CALL_ACCEPTED;
                 // Set SurfaceView processor
                 surfaceViewProcessor();
+                // Start time
+                mChronometer.setBase(SystemClock.elapsedRealtime());
+                mChronometer.start();
                 break;
             case DISCONNNECTED:
+                mChronometer.stop();
                 // Set call state view show content
                 mCallStatusView.setText(R.string.em_call_disconnected);
                 // Check call error
                 if (callError == CallError.ERROR_UNAVAILABLE) {
-                    mCallStatus = CallStatus.ML_CALL_OFFLINE;
+                    mCallStatus = CallStatus.CALL_OFFLINE;
                     mCallStatusView.setText(String.format(
                             mActivity.getResources().getString(R.string.em_call_not_online),
                             mCallId));
                 } else if (callError == CallError.ERROR_BUSY) {
-                    mCallStatus = CallStatus.ML_CALL_BUSY;
+                    mCallStatus = CallStatus.CALL_BUSY;
                     mCallStatusView.setText(
                             String.format(mActivity.getResources().getString(R.string.em_call_busy),
                                     mCallId));
                 } else if (callError == CallError.REJECTED) {
-                    mCallStatus = CallStatus.ML_CALL_REJECT;
+                    mCallStatus = CallStatus.CALL_REJECT;
                     mCallStatusView.setText(String.format(
                             mActivity.getResources().getString(R.string.em_call_reject), mCallId));
                 } else if (callError == CallError.ERROR_NORESPONSE) {
-                    mCallStatus = CallStatus.ML_CALL_NO_RESPONSE;
+                    mCallStatus = CallStatus.CALL_NO_RESPONSE;
                     mCallStatusView.setText(String.format(
                             mActivity.getResources().getString(R.string.em_call_no_response),
                             mCallId));
                 } else if (callError == CallError.ERROR_TRANSPORT) {
-                    mCallStatus = CallStatus.ML_CALL_TRANSPORT;
+                    mCallStatus = CallStatus.CALL_TRANSPORT;
                     mCallStatusView.setText(R.string.em_call_connection_fail);
                 } else if (callError == CallError.ERROR_LOCAL_SDK_VERSION_OUTDATED) {
-                    mCallStatus = CallStatus.ML_CALL_VERSION_DIFFERENT;
+                    mCallStatus = CallStatus.CALL_VERSION_DIFFERENT;
                     mCallStatusView.setText(R.string.em_call_local_sdk_version_outdated);
                 } else if (callError == CallError.ERROR_REMOTE_SDK_VERSION_OUTDATED) {
-                    mCallStatus = CallStatus.ML_CALL_VERSION_DIFFERENT;
+                    mCallStatus = CallStatus.CALL_VERSION_DIFFERENT;
                     mCallStatusView.setText(R.string.em_call_remote_sdk_version_outdated);
                 } else {
-                    if (mCallStatus == CallStatus.ML_CALL_CANCEL) {
+                    if (mCallStatus == CallStatus.CALL_CANCEL) {
                         // Set call state
-                        mCallStatus = CallStatus.ML_CALL_CANCEL_INCOMING_CALL;
+                        mCallStatus = CallStatus.CALL_CANCEL_INCOMING_CALL;
                     }
                     mCallStatusView.setText(R.string.em_call_cancel_incoming_call);
                 }

@@ -1,5 +1,6 @@
 package com.hyphenate.chatuidemo.ui.chat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -14,6 +15,8 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
+import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
+import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.ui.widget.ChatInputView;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseMessageListView;
@@ -36,16 +39,14 @@ public class ChatActivity extends BaseActivity {
      */
     private int chatType;
 
-
-
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_chat);
         ButterKnife.bind(this);
 
         toChatUsername = getIntent().getStringExtra(EaseConstant.EXTRA_USER_ID);
-        chatType = getIntent().getIntExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
-
+        chatType =
+                getIntent().getIntExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
 
         //TODO use nickname to set title
         getSupportActionBar().setTitle(toChatUsername);
@@ -58,33 +59,35 @@ public class ChatActivity extends BaseActivity {
         // init message list view
         mMessageListView.init(toChatUsername, chatType, null);
 
-        mMessageListView.setItemClickListener(new EaseMessageListView.MessageListItemClicksListener() {
-            @Override public void onResendClick(EMMessage message) {
+        mMessageListView.setItemClickListener(
+                new EaseMessageListView.MessageListItemClicksListener() {
+                    @Override public void onResendClick(EMMessage message) {
 
-            }
+                    }
 
-            @Override public boolean onBubbleClick(EMMessage message) {
-                return false;
-            }
+                    @Override public boolean onBubbleClick(EMMessage message) {
+                        return false;
+                    }
 
-            @Override public void onBubbleLongClick(EMMessage message) {
+                    @Override public void onBubbleLongClick(EMMessage message) {
 
-            }
+                    }
 
-            @Override public void onUserAvatarClick(String username) {
+                    @Override public void onUserAvatarClick(String username) {
 
-            }
+                    }
 
-            @Override public void onUserAvatarLongClick(String username) {
+                    @Override public void onUserAvatarLongClick(String username) {
 
-            }
-        });
+                    }
+                });
 
         mInputView.setViewEventListener(new ChatInputView.ChatInputViewEventListener() {
             @Override public void onSendMessage(CharSequence content) {
-                if(!TextUtils.isEmpty(content)){
+                if (!TextUtils.isEmpty(content)) {
                     // create a message
-                    EMMessage message = EMMessage.createTxtSendMessage(content.toString(), toChatUsername);
+                    EMMessage message =
+                            EMMessage.createTxtSendMessage(content.toString(), toChatUsername);
                     // send message
                     EMClient.getInstance().chatManager().sendMessage(message);
                     // refresh ui
@@ -97,7 +100,6 @@ public class ChatActivity extends BaseActivity {
 
     }
 
-
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
@@ -106,7 +108,7 @@ public class ChatActivity extends BaseActivity {
         toolbar.inflateMenu(R.menu.em_chat_menu);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.menu_take_photo:
 
                         break;
@@ -115,6 +117,20 @@ public class ChatActivity extends BaseActivity {
                     case R.id.menu_location:
                         break;
                     case R.id.menu_file:
+                        break;
+                    case R.id.menu_video_call:
+                        Intent videoIntent = new Intent();
+                        videoIntent.setClass(ChatActivity.this, VideoCallActivity.class);
+                        videoIntent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
+                        videoIntent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
+                        startActivity(videoIntent);
+                        break;
+                    case R.id.menu_voice_call:
+                        Intent voiceIntent = new Intent();
+                        voiceIntent.setClass(ChatActivity.this, VoiceCallActivity.class);
+                        voiceIntent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
+                        voiceIntent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
+                        startActivity(voiceIntent);
                         break;
                 }
 
@@ -130,7 +146,8 @@ public class ChatActivity extends BaseActivity {
             for (EMMessage message : list) {
                 String username = null;
                 // group message
-                if (message.getChatType() == EMMessage.ChatType.GroupChat || message.getChatType() == EMMessage.ChatType.ChatRoom) {
+                if (message.getChatType() == EMMessage.ChatType.GroupChat
+                        || message.getChatType() == EMMessage.ChatType.ChatRoom) {
                     username = message.getTo();
                 } else {
                     // single chat message

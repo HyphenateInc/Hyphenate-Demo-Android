@@ -9,6 +9,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.WindowManager;
+import android.widget.Chronometer;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
@@ -22,6 +26,9 @@ import org.greenrobot.eventbus.EventBus;
 public class CallActivity extends BaseActivity {
 
     protected BaseActivity mActivity;
+
+    // Call time view
+    protected Chronometer mChronometer;
 
     // Call id
     protected String mCallId;
@@ -39,6 +46,9 @@ public class CallActivity extends BaseActivity {
     protected int streamID;
     protected int loadId;
 
+    // Vibration
+    protected Vibrator mVibrator;
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // eep the screen lit, close the input method, and unlock the device
@@ -47,9 +57,6 @@ public class CallActivity extends BaseActivity {
                 | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
     }
-
-    // Vibration
-    protected Vibrator mVibrator;
 
     /**
      * Init layout view
@@ -61,7 +68,7 @@ public class CallActivity extends BaseActivity {
         mCallId = getIntent().getStringExtra(EaseConstant.EXTRA_USER_ID);
         isInComingCall = getIntent().getBooleanExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
         // Set default call end status
-        mCallStatus = CallStatus.ML_CALL_CANCEL;
+        mCallStatus = CallStatus.CALL_CANCEL;
 
         // Add call status listener
         DemoHelper.getInstance().addCallStateChangeListener();
@@ -96,7 +103,63 @@ public class CallActivity extends BaseActivity {
      * Call end save message to local
      */
     protected void saveCallMessage() {
+        EMMessage message = null;
+        EMTextMessageBody body = null;
+        String content = null;
+        if (isInComingCall) {
+            message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+            message.setFrom(mCallId);
+        } else {
+            message = EMMessage.createSendMessage(EMMessage.Type.TXT);
+            message.setReceipt(mCallId);
+        }
 
+        switch (mCallStatus) {
+            case CallStatus.CALL_ACCEPTED:
+                content = mChronometer.getText().toString();
+                break;
+            case CallStatus.CALL_CANCEL:
+                content = mActivity.getString(R.string.em_call_cancel);
+                break;
+            case CallStatus.CALL_CANCEL_INCOMING_CALL:
+                content = mActivity.getString(R.string.em_call_cancel_incoming_call);
+                break;
+            case CallStatus.CALL_BUSY:
+                content = String.format(mActivity.getString(R.string.em_call_busy), mCallId);
+                break;
+            case CallStatus.CALL_OFFLINE:
+                content = String.format(mActivity.getString(R.string.em_call_not_online), mCallId);
+                break;
+            case CallStatus.CALL_REJECT_INCOMING_CALL:
+                content = mActivity.getString(R.string.em_call_reject_incoming_call);
+                break;
+            case CallStatus.CALL_REJECT:
+                content = String.format(mActivity.getString(R.string.em_call_reject), mCallId);
+                break;
+            case CallStatus.CALL_NO_RESPONSE:
+                content = String.format(mActivity.getString(R.string.em_call_no_response), mCallId);
+                break;
+            case CallStatus.CALL_TRANSPORT:
+                content = mActivity.getString(R.string.em_call_connection_fail);
+                break;
+            case CallStatus.CALL_VERSION_DIFFERENT:
+                content = String.format(mActivity.getString(R.string.em_call_not_online), mCallId);
+                break;
+            default:
+                content = mActivity.getString(R.string.em_call_cancel);
+                break;
+        }
+        body = new EMTextMessageBody(content);
+        message.addBody(body);
+        message.setStatus(EMMessage.Status.SUCCESS);
+        if (mCallType == 0) {
+            message.setAttribute(EaseConstant.MESSAGE_ATTR_IS_VIDEO_CALL, true);
+        } else {
+            message.setAttribute(EaseConstant.MESSAGE_ATTR_IS_VOICE_CALL, true);
+        }
+        message.setUnread(false);
+        // Call SDK saveMessage(), save message to local
+        EMClient.getInstance().chatManager().saveMessage(message);
     }
 
     /**
