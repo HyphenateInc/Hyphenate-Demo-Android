@@ -26,6 +26,10 @@ public class EaseChatRowImage extends EaseChatRowFile{
     protected ImageView imageView;
     private EMImageMessageBody imgBody;
 
+
+    private static final int THUMBNAIL_WIDTH = 160;
+    private static final int THUMBNAIL_HEIGHT = 160;
+
     public EaseChatRowImage(Context context, EMMessage message, int position, BaseAdapter adapter) {
         super(context, message, position, adapter);
     }
@@ -120,20 +124,17 @@ public class EaseChatRowImage extends EaseChatRowFile{
                 protected Bitmap doInBackground(Object... args) {
                     File file = new File(thumbernailPath);
                     if (file.exists()) {
-                        return EaseImageUtils.decodeScaleImage(thumbernailPath, 160, 160);
+                        return EaseImageUtils.decodeScaleImage(thumbernailPath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
                     } else if (new File(imgBody.thumbnailLocalPath()).exists()) {
-                        return EaseImageUtils.decodeScaleImage(imgBody.thumbnailLocalPath(), 160, 160);
+                        return EaseImageUtils.decodeScaleImage(imgBody.thumbnailLocalPath(), THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
                     }
                     else {
                         if (message.direct() == EMMessage.Direct.SEND) {
                             if (localFullSizePath != null && new File(localFullSizePath).exists()) {
-                                return EaseImageUtils.decodeScaleImage(localFullSizePath, 160, 160);
-                            } else {
-                                return null;
+                                return EaseImageUtils.decodeScaleImage(localFullSizePath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
                             }
-                        } else {
-                            return null;
                         }
+                        return null;
                     }
 
                 }

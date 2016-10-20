@@ -1,20 +1,16 @@
 package com.hyphenate.easeui.widget;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Pair;
-import android.widget.AdapterView;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.easeui.adapter.EaseConversationListAdapter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -123,10 +119,17 @@ public class EaseConversationListView extends RecyclerView {
      * load conversation list
      * @return
      */
-    protected List<EMConversation> loadConversationList() {
+    protected synchronized List<EMConversation> loadConversationList() {
         // get all conversations
         Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
         conversationList = new ArrayList<>(conversations.values());
+        Iterator iterator = conversationList.iterator();
+        while (iterator.hasNext()){
+            EMConversation conversation = (EMConversation) iterator.next();
+            if(conversation.getAllMessages().size() == 0){
+                iterator.remove();
+            }
+        }
         return conversationList;
     }
 

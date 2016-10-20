@@ -5,11 +5,11 @@
     <string name="location_recv">[%1$s location]</string>
     <string name="location_message">The location information</string>
     <string name="recording_video">Record video</string>
-    <string name="location_prefix">[my location]</string>
+    <string name="location_prefix">[My location]</string>
     <string name="voice">Voice</string>
     <string name="picture">[Picture]</string>
     <string name="video">[Video]</string>
-    <string name="file">[file]</string>
+    <string name="file">[File]</string>
     <string name="dynamic_expression">[Dynamic expression]</string>
     <string name="voice_prefix">[Voice]</string>
     <string name="voice_call">[Voice call]</string>
@@ -23,7 +23,7 @@
     <string name="not_download">Did not download:</string>
     <string name="Have_downloaded">Already downloaded</string>
     <string name="is_down_please_wait">Downloading video, please wait a moment</string>
-    <string name="Did_not_download">Not yet downloaded</string>
+    <string name="Did_not_download">Not downloaded</string>
     <string name="downwaiting">Downloading the file, please wait a moment</string>
     <string name="Failed_to_download_file">Failed to download file:</string>
     <string name="Download_the_pictures">Download the pictures: 0%</string>
