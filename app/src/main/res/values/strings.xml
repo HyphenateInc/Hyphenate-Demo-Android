@@ -71,5 +71,7 @@
     <string name="chat_voice_call">Voice call</string>
     <string name="chat_video_call">Video call</string>
     <string name="chat_expand_more">More</string>
+    <string name="sd_card_does_not_exist">"SD card does not exist, can't take pictures"</string>
+    <string name="unable_to_get_location">Unable to get to your location information!</string>
 
 </resources>

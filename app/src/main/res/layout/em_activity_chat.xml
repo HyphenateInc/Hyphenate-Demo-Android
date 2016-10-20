@@ -21,7 +21,7 @@
         android:id="@+id/message_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/layout_input_container"
+        android:layout_above="@+id/input_view"
         android:layout_below="@id/toolbar_actionbar"
         android:cacheColorHint="#00000000"
         android:divider="@null"
