@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,9 +32,12 @@ import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.ui.widget.ChatInputView;
+import com.hyphenate.chatuidemo.ui.widget.chatrow.EaseChatRowCall;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.EaseMessageListView;
+import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
+import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 import com.hyphenate.util.PathUtil;
 import java.io.File;
 import java.util.List;
@@ -52,6 +56,9 @@ public class ChatActivity extends BaseActivity {
     protected static final int REQUEST_CODE_SELECT_FILE = 12;
     protected static final int REQUEST_CODE_GROUP_DETAIL = 13;
     protected static final int REQUEST_CODE_CONTEXT_MENU = 14;
+
+    protected static final int MESSAGE_TYPE_RECV_CALL = 1;
+    protected static final int MESSAGE_TYPE_SENT_CALL = 2;
 
     protected File cameraFile;
 
@@ -89,8 +96,11 @@ public class ChatActivity extends BaseActivity {
             }
         });
 
+        // Set chatrow provider TODO 等待张伟修改 listview.init()方法
+        setCustomChatRowProvider();
         // init message list view
         mMessageListView.init(toChatUsername, chatType, null);
+
         mMessageListView.setItemClickListener(
                 new EaseMessageListView.MessageListItemClicksListener() {
                     @Override public void onResendClick(EMMessage message) {
@@ -409,6 +419,34 @@ public class ChatActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    private void setCustomChatRowProvider() {
+        mMessageListView.setCustomChatRowProvider(new EaseCustomChatRowProvider() {
+            @Override public int getCustomChatRowTypeCount() {
+                return 2;
+            }
+
+            @Override public int getCustomChatRowType(EMMessage message) {
+                if (message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_VIDEO_CALL, false)
+                        || message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_VOICE_CALL,
+                        false)) {
+                    return message.direct() == EMMessage.Direct.RECEIVE ? MESSAGE_TYPE_RECV_CALL
+                            : MESSAGE_TYPE_SENT_CALL;
+                }
+                return 0;
+            }
+
+            @Override public EaseChatRow getCustomChatRow(EMMessage message, int position,
+                    BaseAdapter adapter) {
+                if (message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_VIDEO_CALL, false)
+                        || message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_VOICE_CALL,
+                        false)) {
+                    return new EaseChatRowCall(ChatActivity.this, message, position, adapter);
+                }
+                return null;
+            }
+        });
     }
 
     /**
