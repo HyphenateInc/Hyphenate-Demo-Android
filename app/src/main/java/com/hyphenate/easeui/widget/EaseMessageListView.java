@@ -160,8 +160,8 @@ public class EaseMessageListView extends ListView {
      * @param rowProvider
      */
     public void setCustomChatRowProvider(EaseCustomChatRowProvider rowProvider){
-        //if (messageAdapter != null) {
-        //    messageAdapter.setCustomChatRowProvider(rowProvider);
-        //}
+        if (messageAdapter != null) {
+            messageAdapter.setCustomChatRowProvider(rowProvider);
+        }
     }
 }

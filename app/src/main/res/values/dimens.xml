@@ -28,6 +28,7 @@
     <dimen name="call_layout_margin">16dp</dimen>
     <dimen name="call_local_width">120dp</dimen>
     <dimen name="call_local_height">160dp</dimen>
+    <dimen name="call_message_icon_margin">8dp</dimen>
 
 
     <!-- Default screen margins, per the Android Design guidelines. -->

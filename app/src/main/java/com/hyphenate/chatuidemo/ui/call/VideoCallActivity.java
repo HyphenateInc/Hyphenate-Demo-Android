@@ -289,13 +289,16 @@ public class VideoCallActivity extends CallActivity {
 
     /**
      * Minimize the layout
+     * TODO Video call minimization is not currently supported
      */
     private void exitFullScreen() {
         // Vibrate
         vibrate();
         // Back home
         //        mActivity.moveTaskToBack(true);
-        mActivity.finish();
+        //mActivity.finish();
+        Toast.makeText(mActivity, "Video call minimization is not currently supported",
+                Toast.LENGTH_LONG).show();
     }
 
     /**

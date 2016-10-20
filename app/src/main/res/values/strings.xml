@@ -41,6 +41,8 @@
     <string name="em_call_video_resume">Video streaming resume</string>
     <string name="em_call_voice_pause">Voice transfer pause</string>
     <string name="em_call_voice_resume">Voice transfer resume</string>
+    <string name="em_call_voice_calling">Voice calling</string>
+    <string name="em_call_video_calling">Video calling</string>
 
     <!--sign-->
     <string name="em_sign_in">Sign in</string>
