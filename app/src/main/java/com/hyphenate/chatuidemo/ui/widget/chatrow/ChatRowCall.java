@@ -12,7 +12,6 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.call.CallStatus;
 import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
-import com.hyphenate.chatuidemo.ui.chat.ChatActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
 
@@ -31,8 +30,8 @@ public class ChatRowCall extends EaseChatRow {
 
     @Override protected void onInflateView() {
         inflater.inflate(
-                message.direct() == EMMessage.Direct.RECEIVE ? R.layout.ease_row_received_call
-                        : R.layout.ease_row_sent_call, this);
+                message.direct() == EMMessage.Direct.RECEIVE ? R.layout.em_row_received_call
+                        : R.layout.em_row_sent_call, this);
     }
 
     @Override protected void onFindViewById() {
