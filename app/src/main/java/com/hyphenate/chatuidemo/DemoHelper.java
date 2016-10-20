@@ -88,7 +88,6 @@ public class DemoHelper {
     private EMOptions initOptions() {
         // set init sdk options
         EMOptions options = new EMOptions();
-        options.setAppKey("easemob-demo#chatdemoui");
         // change to need confirm contact invitation
         options.setAcceptInvitationAlways(false);
         // set if need read ack
