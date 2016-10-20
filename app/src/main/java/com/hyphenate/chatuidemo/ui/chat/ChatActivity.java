@@ -28,6 +28,8 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
+import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
+import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.ui.widget.ChatInputView;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
@@ -51,7 +53,6 @@ public class ChatActivity extends BaseActivity {
     protected static final int REQUEST_CODE_GROUP_DETAIL = 13;
     protected static final int REQUEST_CODE_CONTEXT_MENU = 14;
 
-
     protected File cameraFile;
 
     /**
@@ -64,7 +65,6 @@ public class ChatActivity extends BaseActivity {
      */
     protected int chatType;
 
-
     protected EMConversation conversation;
 
     /**
@@ -72,14 +72,14 @@ public class ChatActivity extends BaseActivity {
      */
     protected int pagesize = 20;
 
-
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_chat);
         ButterKnife.bind(this);
 
         toChatUsername = getIntent().getStringExtra(EaseConstant.EXTRA_USER_ID);
-        chatType = getIntent().getIntExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
+        chatType =
+                getIntent().getIntExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
 
         //TODO use nickname to set title
         getSupportActionBar().setTitle(toChatUsername);
@@ -91,34 +91,36 @@ public class ChatActivity extends BaseActivity {
 
         // init message list view
         mMessageListView.init(toChatUsername, chatType, null);
-        mMessageListView.setItemClickListener(new EaseMessageListView.MessageListItemClicksListener() {
-            @Override public void onResendClick(EMMessage message) {
-                resendMessage(message);
-            }
+        mMessageListView.setItemClickListener(
+                new EaseMessageListView.MessageListItemClicksListener() {
+                    @Override public void onResendClick(EMMessage message) {
+                        resendMessage(message);
+                    }
 
-            @Override public boolean onBubbleClick(EMMessage message) {
-                // override you want click listener and return true
-                return false;
-            }
+                    @Override public boolean onBubbleClick(EMMessage message) {
+                        // override you want click listener and return true
+                        return false;
+                    }
 
-            @Override public void onBubbleLongClick(EMMessage message) {
+                    @Override public void onBubbleLongClick(EMMessage message) {
 
-            }
+                    }
 
-            @Override public void onUserAvatarClick(String username) {
+                    @Override public void onUserAvatarClick(String username) {
 
-            }
+                    }
 
-            @Override public void onUserAvatarLongClick(String username) {
+                    @Override public void onUserAvatarLongClick(String username) {
 
-            }
-        });
+                    }
+                });
 
         mInputView.setViewEventListener(new ChatInputView.ChatInputViewEventListener() {
             @Override public void onSendMessage(CharSequence content) {
-                if(!TextUtils.isEmpty(content)){
+                if (!TextUtils.isEmpty(content)) {
                     // create a message
-                    EMMessage message = EMMessage.createTxtSendMessage(content.toString(), toChatUsername);
+                    EMMessage message =
+                            EMMessage.createTxtSendMessage(content.toString(), toChatUsername);
                     // send message
                     EMClient.getInstance().chatManager().sendMessage(message);
                     // refresh ui
@@ -128,7 +130,10 @@ public class ChatActivity extends BaseActivity {
         });
         // received messages code in onResume() method
 
-        conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername, EaseCommonUtils.getConversationType(chatType), true);
+        conversation = EMClient.getInstance()
+                .chatManager()
+                .getConversation(toChatUsername, EaseCommonUtils.getConversationType(chatType),
+                        true);
         conversation.markAllMessagesAsRead();
         // the number of messages loaded into conversation is getChatOptions().getNumberOfMessagesLoaded
         // you can change this number
@@ -141,9 +146,7 @@ public class ChatActivity extends BaseActivity {
             }
             conversation.loadMoreMsgFromDB(msgId, pagesize - msgCount);
         }
-
     }
-
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -153,7 +156,7 @@ public class ChatActivity extends BaseActivity {
         toolbar.inflateMenu(R.menu.em_chat_menu);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.menu_take_photo:
                         selectPicFromCamera();
                         break;
@@ -166,6 +169,20 @@ public class ChatActivity extends BaseActivity {
                     case R.id.menu_file:
                         selectFileFromLocal();
                         break;
+                    case R.id.menu_video_call:
+                        Intent videoIntent = new Intent();
+                        videoIntent.setClass(ChatActivity.this, VideoCallActivity.class);
+                        videoIntent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
+                        videoIntent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
+                        startActivity(videoIntent);
+                        break;
+                    case R.id.menu_voice_call:
+                        Intent voiceIntent = new Intent();
+                        voiceIntent.setClass(ChatActivity.this, VoiceCallActivity.class);
+                        voiceIntent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
+                        voiceIntent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
+                        startActivity(voiceIntent);
+                        break;
                 }
 
                 return false;
@@ -174,7 +191,6 @@ public class ChatActivity extends BaseActivity {
 
         return true;
     }
-
 
     //methods of send various types message
     protected void sendVoiceMessage(String filePath, int length) {
@@ -188,12 +204,15 @@ public class ChatActivity extends BaseActivity {
     }
 
     protected void sendLocationMessage(double latitude, double longitude, String locationAddress) {
-        EMMessage message = EMMessage.createLocationSendMessage(latitude, longitude, locationAddress, toChatUsername);
+        EMMessage message =
+                EMMessage.createLocationSendMessage(latitude, longitude, locationAddress,
+                        toChatUsername);
         sendMessage(message);
     }
 
     protected void sendVideoMessage(String videoPath, String thumbPath, int videoLength) {
-        EMMessage message = EMMessage.createVideoSendMessage(videoPath, thumbPath, videoLength, toChatUsername);
+        EMMessage message =
+                EMMessage.createVideoSendMessage(videoPath, thumbPath, videoLength, toChatUsername);
         sendMessage(message);
     }
 
@@ -202,14 +221,14 @@ public class ChatActivity extends BaseActivity {
         sendMessage(message);
     }
 
-    protected void sendMessage(EMMessage message){
+    protected void sendMessage(EMMessage message) {
         if (message == null) {
             return;
         }
         onSetMessageAttributes(message);
-        if (chatType == EaseConstant.CHATTYPE_GROUP){
+        if (chatType == EaseConstant.CHATTYPE_GROUP) {
             message.setChatType(EMMessage.ChatType.GroupChat);
-        }else if(chatType == EaseConstant.CHATTYPE_CHATROOM){
+        } else if (chatType == EaseConstant.CHATTYPE_CHATROOM) {
             message.setChatType(EMMessage.ChatType.ChatRoom);
         }
         //send message
@@ -218,24 +237,19 @@ public class ChatActivity extends BaseActivity {
         mMessageListView.refreshSelectLast();
     }
 
-
-    public void resendMessage(EMMessage message){
+    public void resendMessage(EMMessage message) {
         message.setStatus(EMMessage.Status.CREATE);
         EMClient.getInstance().chatManager().sendMessage(message);
         mMessageListView.refresh();
     }
 
-
-
     /**
      * send image
-     *
-     * @param selectedImage
      */
     protected void sendPicByUri(Uri selectedImage) {
         String[] filePathColumn = { MediaStore.Images.Media.DATA };
-        Cursor
-                cursor = this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+        Cursor cursor =
+                this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
@@ -257,18 +271,15 @@ public class ChatActivity extends BaseActivity {
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
                 return;
-
             }
             sendImageMessage(file.getAbsolutePath());
         }
-
     }
 
     /**
      * send file
-     * @param uri
      */
-    protected void sendFileByUri(Uri uri){
+    protected void sendFileByUri(Uri uri) {
         String filePath = null;
         if ("content".equalsIgnoreCase(uri.getScheme())) {
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
@@ -293,7 +304,8 @@ public class ChatActivity extends BaseActivity {
         }
         //limit the size < 10M
         if (file.length() > 10 * 1024 * 1024) {
-            Toast.makeText(this, R.string.The_file_is_not_greater_than_10_m, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.The_file_is_not_greater_than_10_m, Toast.LENGTH_SHORT)
+                    .show();
             return;
         }
         sendFileMessage(filePath);
@@ -308,12 +320,12 @@ public class ChatActivity extends BaseActivity {
             return;
         }
 
-        cameraFile = new File(PathUtil.getInstance().getImagePath(), EMClient.getInstance().getCurrentUser()
-                + System.currentTimeMillis() + ".jpg");
+        cameraFile = new File(PathUtil.getInstance().getImagePath(),
+                EMClient.getInstance().getCurrentUser() + System.currentTimeMillis() + ".jpg");
         cameraFile.getParentFile().mkdirs();
         startActivityForResult(
-                new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(cameraFile)),
-                REQUEST_CODE_CAMERA);
+                new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(cameraFile)), REQUEST_CODE_CAMERA);
     }
 
     /**
@@ -324,9 +336,9 @@ public class ChatActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT < 19) {
             intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/*");
-
         } else {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         }
         startActivityForResult(intent, REQUEST_CODE_LOCAL);
     }
@@ -340,10 +352,10 @@ public class ChatActivity extends BaseActivity {
             intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-
         } else {
             //19 after this api is not available, demo here simply handle into the gallery to select the picture
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         }
         startActivityForResult(intent, REQUEST_CODE_SELECT_FILE);
     }
@@ -355,22 +367,20 @@ public class ChatActivity extends BaseActivity {
             // Start the Intent by requesting a result, identified by a request code.
             startActivityForResult(intent, REQUEST_CODE_MAP);
         } catch (GooglePlayServicesRepairableException e) {
-            GooglePlayServicesUtil
-                    .getErrorDialog(e.getConnectionStatusCode(), this, 0);
+            GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), this, 0);
         } catch (GooglePlayServicesNotAvailableException e) {
-            Toast.makeText(this, "Google Play Services is not available.",
-                    Toast.LENGTH_LONG)
+            Toast.makeText(this, "Google Play Services is not available.", Toast.LENGTH_LONG)
                     .show();
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_CAMERA) { // capture new image
-                if (cameraFile != null && cameraFile.exists())
+                if (cameraFile != null && cameraFile.exists()) {
                     sendImageMessage(cameraFile.getAbsolutePath());
+                }
             } else if (requestCode == REQUEST_CODE_LOCAL) { // send local image
                 if (data != null) {
                     Uri selectedImage = data.getData();
@@ -387,9 +397,9 @@ public class ChatActivity extends BaseActivity {
                 if (locationAddress != null && !locationAddress.equals("")) {
                     sendLocationMessage(latitude, longitude, locationAddress);
                 } else {
-                    Toast.makeText(this, R.string.unable_to_get_loaction, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.unable_to_get_location, Toast.LENGTH_SHORT)
+                            .show();
                 }
-
             } else if (requestCode == REQUEST_CODE_SELECT_FILE) { //send the file
                 if (data != null) {
                     Uri uri = data.getData();
@@ -403,19 +413,18 @@ public class ChatActivity extends BaseActivity {
 
     /**
      * set message Extension attributes
-     * @param message
      */
     protected void onSetMessageAttributes(EMMessage message) {
 
     }
-
 
     EMMessageListener mMessageListener = new EMMessageListener() {
         @Override public void onMessageReceived(List<EMMessage> list) {
             for (EMMessage message : list) {
                 String username = null;
                 // group message
-                if (message.getChatType() == EMMessage.ChatType.GroupChat || message.getChatType() == EMMessage.ChatType.ChatRoom) {
+                if (message.getChatType() == EMMessage.ChatType.GroupChat
+                        || message.getChatType() == EMMessage.ChatType.ChatRoom) {
                     username = message.getTo();
                 } else {
                     // single chat message
@@ -464,5 +473,4 @@ public class ChatActivity extends BaseActivity {
         // remove activity from foreground activity list
         DemoHelper.getInstance().popActivity(this);
     }
-
 }

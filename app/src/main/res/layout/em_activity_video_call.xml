@@ -20,13 +20,26 @@
         android:scaleType="centerCrop"
         />
 
-    <!--Opposite surfaceView-->
-    <com.hyphenate.media.EMOppositeSurfaceView
-        android:id="@+id/surface_view_opposite"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
-        />
+        >
+
+        <!--Opposite surfaceView-->
+        <com.hyphenate.media.EMOppositeSurfaceView
+            android:id="@+id/surface_view_opposite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            />
+
+        <com.hyphenate.media.EMLocalSurfaceView
+            android:id="@+id/surface_view_local"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layout_call_control"
@@ -55,16 +68,29 @@
                 android:background="@drawable/em_btn_rectangle_white"
                 android:src="@drawable/em_checkbox_change_camera"
                 />
-            <!--Call status-->
-            <TextView
-                android:id="@+id/text_call_status"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="@string/app_name"
-                android:textColor="@color/em_white_87"
-                />
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+                <!--Call status-->
+                <TextView
+                    android:id="@+id/text_call_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textColor="@color/em_white_87"
+                    />
+                <!--通话计时控件-->
+                <Chronometer
+                    android:id="@+id/chronometer_call_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/em_white_87"
+                    />
+            </LinearLayout>
         </RelativeLayout>
 
         <LinearLayout
@@ -123,6 +149,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/call_btn_margin"
                 android:orientation="horizontal"
                 >
                 <!--Reject call-->
@@ -133,6 +160,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_margin="@dimen/call_btn_margin"
                     android:src="@drawable/em_ic_call_end_white_24dp"
+                    app:backgroundTint="@color/em_red_87"
                     app:fabSize="normal"
                     />
 
@@ -145,6 +173,7 @@
                     android:layout_margin="@dimen/call_btn_margin"
                     android:src="@drawable/em_ic_call_end_white_24dp"
                     android:visibility="gone"
+                    app:backgroundTint="@color/em_red_87"
                     app:fabSize="normal"
                     />
 
@@ -162,13 +191,5 @@
 
             </LinearLayout>
         </LinearLayout>
-        <com.hyphenate.media.EMLocalSurfaceView
-            android:id="@+id/surface_view_local"
-            android:layout_width="120dp"
-            android:layout_height="160dp"
-            android:layout_alignEnd="@+id/relativeLayout"
-            android:layout_alignRight="@+id/relativeLayout"
-            android:layout_alignTop="@+id/relativeLayout"
-            />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

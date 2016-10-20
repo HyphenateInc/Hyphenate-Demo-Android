@@ -24,8 +24,10 @@
     <dimen name="call_switch_width">48dp</dimen>
     <dimen name="call_switch_height">48dp</dimen>
     <dimen name="call_avatar_size">96dp</dimen>
-    <dimen name="call_btn_margin">8dp</dimen>
+    <dimen name="call_btn_margin">16dp</dimen>
     <dimen name="call_layout_margin">16dp</dimen>
+    <dimen name="call_local_width">120dp</dimen>
+    <dimen name="call_local_height">160dp</dimen>
 
 
     <!-- Default screen margins, per the Android Design guidelines. -->

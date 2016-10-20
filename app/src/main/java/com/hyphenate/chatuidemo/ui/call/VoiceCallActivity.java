@@ -2,8 +2,10 @@ package com.hyphenate.chatuidemo.ui.call;
 
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -58,6 +60,9 @@ public class VoiceCallActivity extends CallActivity {
 
         // Set call type
         mCallType = 1;
+
+        mChronometer = (Chronometer) findViewById(R.id.chronometer_call_time);
+
         // Set switch status
         mMicSwitch.setActivated(CallStatus.getInstance().isMic());
         mSpeakerSwitch.setActivated(CallStatus.getInstance().isSpeaker());
@@ -115,7 +120,7 @@ public class VoiceCallActivity extends CallActivity {
         } else {
             isInComingCall = CallStatus.getInstance().isInComing();
             // Set call state view show content
-            mCallStatus = CallStatus.ML_CALL_ACCEPTED;
+            mCallStatus = CallStatus.CALL_ACCEPTED;
             mCallStatusView.setText(R.string.em_call_accepted);
             // Set button statue
             mRejectCallFab.setVisibility(View.GONE);
@@ -235,7 +240,7 @@ public class VoiceCallActivity extends CallActivity {
                     Toast.LENGTH_LONG).show();
         }
         // Set call state
-        mCallStatus = CallStatus.ML_CALL_REJECT_INCOMING_CALL;
+        mCallStatus = CallStatus.CALL_REJECT_INCOMING_CALL;
         // Save call message to
         saveCallMessage();
         // Finish activity
@@ -286,7 +291,7 @@ public class VoiceCallActivity extends CallActivity {
             // Call answerCall();
             EMClient.getInstance().callManager().answerCall();
             // Set call state
-            mCallStatus = CallStatus.ML_CALL_ACCEPTED;
+            mCallStatus = CallStatus.CALL_ACCEPTED;
             CallStatus.getInstance().setCallState(CallStatus.CALL_STATUS_ACCEPTED);
         } catch (EMNoActiveCallException e) {
             e.printStackTrace();
@@ -356,44 +361,49 @@ public class VoiceCallActivity extends CallActivity {
                 mCallStatusView.setText(R.string.em_call_accepted);
                 stopCallSound();
                 // Set call state
-                mCallStatus = CallStatus.ML_CALL_ACCEPTED;
+                mCallStatus = CallStatus.CALL_ACCEPTED;
+                // Start time
+                mChronometer.setBase(SystemClock.elapsedRealtime());
+                mChronometer.start();
                 break;
             case DISCONNNECTED:
+                // Stop time
+                mChronometer.stop();
                 // Set call state view show content
                 mCallStatusView.setText(R.string.em_call_disconnected);
                 // Check call error
                 if (callError == CallError.ERROR_UNAVAILABLE) {
-                    mCallStatus = CallStatus.ML_CALL_OFFLINE;
+                    mCallStatus = CallStatus.CALL_OFFLINE;
                     mCallStatusView.setText(String.format(
                             mActivity.getResources().getString(R.string.em_call_not_online),
                             mCallId));
                 } else if (callError == CallError.ERROR_BUSY) {
-                    mCallStatus = CallStatus.ML_CALL_BUSY;
+                    mCallStatus = CallStatus.CALL_BUSY;
                     mCallStatusView.setText(
                             String.format(mActivity.getResources().getString(R.string.em_call_busy),
                                     mCallId));
                 } else if (callError == CallError.REJECTED) {
-                    mCallStatus = CallStatus.ML_CALL_REJECT;
+                    mCallStatus = CallStatus.CALL_REJECT;
                     mCallStatusView.setText(String.format(
                             mActivity.getResources().getString(R.string.em_call_reject), mCallId));
                 } else if (callError == CallError.ERROR_NORESPONSE) {
-                    mCallStatus = CallStatus.ML_CALL_NO_RESPONSE;
+                    mCallStatus = CallStatus.CALL_NO_RESPONSE;
                     mCallStatusView.setText(String.format(
                             mActivity.getResources().getString(R.string.em_call_no_response),
                             mCallId));
                 } else if (callError == CallError.ERROR_TRANSPORT) {
-                    mCallStatus = CallStatus.ML_CALL_TRANSPORT;
+                    mCallStatus = CallStatus.CALL_TRANSPORT;
                     mCallStatusView.setText(R.string.em_call_connection_fail);
                 } else if (callError == CallError.ERROR_LOCAL_SDK_VERSION_OUTDATED) {
-                    mCallStatus = CallStatus.ML_CALL_VERSION_DIFFERENT;
+                    mCallStatus = CallStatus.CALL_VERSION_DIFFERENT;
                     mCallStatusView.setText(R.string.em_call_local_sdk_version_outdated);
                 } else if (callError == CallError.ERROR_REMOTE_SDK_VERSION_OUTDATED) {
-                    mCallStatus = CallStatus.ML_CALL_VERSION_DIFFERENT;
+                    mCallStatus = CallStatus.CALL_VERSION_DIFFERENT;
                     mCallStatusView.setText(R.string.em_call_remote_sdk_version_outdated);
                 } else {
-                    if (mCallStatus == CallStatus.ML_CALL_CANCEL) {
+                    if (mCallStatus == CallStatus.CALL_CANCEL) {
                         // Set call state
-                        mCallStatus = CallStatus.ML_CALL_CANCEL_INCOMING_CALL;
+                        mCallStatus = CallStatus.CALL_CANCEL_INCOMING_CALL;
                     }
                     mCallStatusView.setText(R.string.em_call_cancel_incoming_call);
                 }

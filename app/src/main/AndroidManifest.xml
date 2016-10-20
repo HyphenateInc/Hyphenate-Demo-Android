@@ -61,11 +61,14 @@
         <!--Video call activity-->
         <activity
             android:name=".ui.call.VideoCallActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
         <!--Voice call activity-->
         <activity
             android:name=".ui.call.VoiceCallActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
