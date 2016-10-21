@@ -16,6 +16,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chatuidemo.ui.call.CallReceiver;
 import com.hyphenate.chatuidemo.ui.call.CallStateChangeListener;
+import com.hyphenate.chatuidemo.ui.user.UserDao;
 import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
@@ -252,6 +253,7 @@ public class DemoHelper {
                 if (callback != null) {
                     callback.onSuccess();
                 }
+                UserDao.getInstance(mContext).closeDB();
             }
 
             @Override public void onProgress(int progress, String status) {
