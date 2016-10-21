@@ -3,6 +3,7 @@ package com.hyphenate.chatuidemo.ui.settings;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.view.View;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +28,7 @@ public class AccountActivity extends BaseActivity {
         setContentView(R.layout.em_activity_account);
 
         ButterKnife.bind(this);
-        
+
         init();
     }
 
@@ -36,5 +37,12 @@ public class AccountActivity extends BaseActivity {
      */
     private void init() {
         mHyphenateID.setText(EMClient.getInstance().getCurrentUser());
+        getSupportActionBar().setTitle("Account");
+        getActionBarToolbar().setNavigationIcon(R.drawable.em_ic_back);
+        getActionBarToolbar().setNavigationOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }
