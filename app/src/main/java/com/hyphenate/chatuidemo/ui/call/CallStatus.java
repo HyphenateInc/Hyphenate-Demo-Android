@@ -8,25 +8,25 @@ package com.hyphenate.chatuidemo.ui.call;
 public class CallStatus {
 
     // Accepted
-    public static final int ML_CALL_ACCEPTED = 0x00;
+    public static final int CALL_ACCEPTED = 0x00;
     // Cancel call
-    public static final int ML_CALL_CANCEL = 0x01;
+    public static final int CALL_CANCEL = 0x01;
     // Cancel incoming call
-    public static final int ML_CALL_CANCEL_INCOMING_CALL = 0x02;
+    public static final int CALL_CANCEL_INCOMING_CALL = 0x02;
     // Busy
-    public static final int ML_CALL_BUSY = 0x03;
+    public static final int CALL_BUSY = 0x03;
     // Offline
-    public static final int ML_CALL_OFFLINE = 0x04;
+    public static final int CALL_OFFLINE = 0x04;
     // Reject call
-    public static final int ML_CALL_REJECT = 0x05;
+    public static final int CALL_REJECT = 0x05;
     // Reject incoming call
-    public static final int ML_CALL_REJECT_INCOMING_CALL = 0x06;
+    public static final int CALL_REJECT_INCOMING_CALL = 0x06;
     // No response
-    public static final int ML_CALL_NO_RESPONSE = 0x07;
+    public static final int CALL_NO_RESPONSE = 0x07;
     // Connection failed
-    public static final int ML_CALL_TRANSPORT = 0x08;
+    public static final int CALL_TRANSPORT = 0x08;
     // Version different
-    public static final int ML_CALL_VERSION_DIFFERENT = 0x09;
+    public static final int CALL_VERSION_DIFFERENT = 0x09;
 
     // Call status
     public static int CALL_STATUS_NORMAL = 0x00;

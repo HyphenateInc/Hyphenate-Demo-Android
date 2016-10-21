@@ -32,15 +32,29 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/call_layout_margin"
             >
-            <!--Call type-->
-            <TextView
-                android:id="@+id/text_call_status"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@string/app_name"
-                android:textColor="@color/em_white_87"
-                />
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+                <!--Call status-->
+                <TextView
+                    android:id="@+id/text_call_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textColor="@color/em_white_87"
+                    />
+                <!--通话计时控件-->
+                <Chronometer
+                    android:id="@+id/chronometer_call_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/em_white_87"
+                    />
+            </LinearLayout>
         </RelativeLayout>
 
         <LinearLayout
@@ -127,6 +141,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_margin="@dimen/call_btn_margin"
                     android:src="@drawable/em_ic_call_end_white_24dp"
+                    app:backgroundTint="@color/em_red_87"
                     app:fabSize="normal"
                     />
 
@@ -139,6 +154,7 @@
                     android:layout_margin="@dimen/call_btn_margin"
                     android:src="@drawable/em_ic_call_end_white_24dp"
                     android:visibility="gone"
+                    app:backgroundTint="@color/em_red_87"
                     app:fabSize="normal"
                     />
 

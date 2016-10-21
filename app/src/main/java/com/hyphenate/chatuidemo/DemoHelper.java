@@ -136,8 +136,6 @@ public class DemoHelper {
             mCallStateChangeListener = new CallStateChangeListener();
         }
 
-
-
         EMClient.getInstance().callManager().addCallStateChangeListener(mCallStateChangeListener);
     }
 

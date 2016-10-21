@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#243e55</color>
     <color name="colorPrimaryDark">#243e55</color>
+    <color name="colorAccent">#02b163</color>
     <color name="colorTextPrimary">#ffffff</color>
     <color name="tab_indicator">#ffffff</color>
 
@@ -19,6 +20,13 @@
     <color name="sign_text_hint">#61ffffff</color>
 
     <color name="em_transparent">#00000000</color>
+
+    <!--black color-->
+    <color name="em_black_100">#ff232323</color>
+    <color name="em_black_87">#dd232323</color>
+    <color name="em_black_54">#89232323</color>
+    <color name="em_black_38">#61232323</color>
+    <color name="em_black_12">#1e232323</color>
 
     <!--white color-->
     <color name="em_white_100">#ffffffff</color>

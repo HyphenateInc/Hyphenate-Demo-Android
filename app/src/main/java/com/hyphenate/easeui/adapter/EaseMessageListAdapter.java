@@ -15,7 +15,6 @@ package com.hyphenate.easeui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +26,15 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
-import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
-import com.hyphenate.easeui.widget.chatrow.EaseChatRowText;
-import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 import com.hyphenate.easeui.widget.EaseMessageListView.MessageListItemClicksListener;
+import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
+import com.hyphenate.easeui.widget.chatrow.EaseChatRowFile;
+import com.hyphenate.easeui.widget.chatrow.EaseChatRowImage;
+import com.hyphenate.easeui.widget.chatrow.EaseChatRowLocation;
+import com.hyphenate.easeui.widget.chatrow.EaseChatRowText;
+import com.hyphenate.easeui.widget.chatrow.EaseChatRowVideo;
+import com.hyphenate.easeui.widget.chatrow.EaseChatRowVoice;
+import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 
 public class EaseMessageListAdapter extends BaseAdapter {
 
@@ -226,21 +230,21 @@ public class EaseMessageListAdapter extends BaseAdapter {
                     chatRow = new EaseChatRowText(context, message, position, this);
                 //}
                 break;
-            //case LOCATION:
-            //    chatRow = new EaseChatRowLocation(context, message, position, this);
-            //    break;
-            //case FILE:
-            //    chatRow = new EaseChatRowFile(context, message, position, this);
-            //    break;
-            //case IMAGE:
-            //    chatRow = new EaseChatRowImage(context, message, position, this);
-            //    break;
-            //case VOICE:
-            //    chatRow = new EaseChatRowVoice(context, message, position, this);
-            //    break;
-            //case VIDEO:
-            //    chatRow = new EaseChatRowVideo(context, message, position, this);
-            //    break;
+            case LOCATION:
+                chatRow = new EaseChatRowLocation(context, message, position, this);
+                break;
+            case FILE:
+                chatRow = new EaseChatRowFile(context, message, position, this);
+                break;
+            case IMAGE:
+                chatRow = new EaseChatRowImage(context, message, position, this);
+                break;
+            case VOICE:
+                chatRow = new EaseChatRowVoice(context, message, position, this);
+                break;
+            case VIDEO:
+                chatRow = new EaseChatRowVideo(context, message, position, this);
+                break;
             default:
                 break;
         }
