@@ -5,32 +5,10 @@
     tools:context=".ui.settings.SettingsFragment"
     >
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-        <Button
-            android:id="@+id/btn_call_voice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/em_call_voice"
-            />
-        <Button
-            android:id="@+id/btn_call_video"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/em_call_video"
-            />
-    </LinearLayout>
-    <Button
-        android:id="@+id/btn_sign_out"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/em_btn_rectangle_red"
-        android:text="@string/em_sign_out"
-        android:textColor="@color/em_white_87"
+        android:layout_height="match_parent"
         />
 
 </RelativeLayout>
