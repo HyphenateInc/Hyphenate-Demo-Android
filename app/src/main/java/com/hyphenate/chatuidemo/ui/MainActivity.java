@@ -2,6 +2,7 @@ package com.hyphenate.chatuidemo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -51,6 +52,9 @@ public class MainActivity extends BaseActivity {
             finish();
         }
 
+        // Set default setting values
+        //PreferenceManager.setDefaultValues(this, R.xml.preferences_default, false);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_main);
         ButterKnife.bind(this);
@@ -75,7 +79,9 @@ public class MainActivity extends BaseActivity {
                 toolbar.getMenu().clear();
                 if (position == 0) {
                     getActionBarToolbar().inflateMenu(R.menu.em_contacts_menu);
-                } else if (position == 1) getActionBarToolbar().inflateMenu(R.menu.em_conversations_menu);
+                } else if (position == 1) {
+                    getActionBarToolbar().inflateMenu(R.menu.em_conversations_menu);
+                }
             }
 
             @Override public void onPageScrolled(int position, float positionOffset,

@@ -100,6 +100,12 @@
             android:windowSoftInputMode="adjustResize|stateHidden"
             />
 
+
+        <!--Account activity-->
+        <activity
+            android:name=".ui.settings.AccountActivity"
+            android:screenOrientation="portrait"/>
+
         <!-- gcm start -->
         <receiver
             android:name="com.hyphenate.chat.EMGCMBroadcastReceiver"
