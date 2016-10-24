@@ -2,21 +2,18 @@ package com.hyphenate.chatuidemo.ui.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.MainActivity;
-import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
-import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
-import com.hyphenate.easeui.EaseConstant;
 
 /**
  * Created by lzan13 on 2016/10/11.
@@ -28,21 +25,34 @@ public class SettingsFragment extends Fragment {
     }
 
     public static SettingsFragment newInstance() {
-        return new SettingsFragment();
+        SettingsFragment fragment = new SettingsFragment();
+        return fragment;
     }
 
-    @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    @Nullable @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.em_fragment_settings, container, false);
+
         ButterKnife.bind(this, view);
+
+        init();
         return view;
     }
 
+    private void init() {
+
+        // Display the fragment as the main content.
+        getActivity().getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, new SettingsPreference())
+                .commit();
+    }
+
     /**
-     * Call sign out
+     * Sign out account
      */
-    @OnClick(R.id.btn_sign_out) void singOut() {
+    @OnClick(R.id.btn_sign_out) void signOut() {
         DemoHelper.getInstance().signOut(true, new EMCallBack() {
             @Override public void onSuccess() {
                 startActivity(new Intent(getActivity(), SignInActivity.class));
@@ -57,27 +67,5 @@ public class SettingsFragment extends Fragment {
 
             }
         });
-    }
-
-    /**
-     * Test onClick
-     */
-    @OnClick({ R.id.btn_call_video, R.id.btn_call_voice }) void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_call_video:
-                Intent videoIntent = new Intent();
-                videoIntent.setClass(getActivity(), VideoCallActivity.class);
-                videoIntent.putExtra(EaseConstant.EXTRA_USER_ID, "lz2");
-                videoIntent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
-                startActivity(videoIntent);
-                break;
-            case R.id.btn_call_voice:
-                Intent voiceIntent = new Intent();
-                voiceIntent.setClass(getActivity(), VoiceCallActivity.class);
-                voiceIntent.putExtra(EaseConstant.EXTRA_USER_ID, "lz2");
-                voiceIntent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
-                startActivity(voiceIntent);
-                break;
-        }
     }
 }

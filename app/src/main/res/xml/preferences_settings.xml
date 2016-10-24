@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--About-->
+    <PreferenceCategory
+        android:title="About">
+        <Preference
+            android:key="checkbox_preference"
+            android:summary="Check SDK Version"
+            android:title="SDK Version"/>
+    </PreferenceCategory>
+
+    <!-- Notifications -->
+    <PreferenceCategory
+        android:title="Notifiaction">
+        <PreferenceScreen
+            android:key="notification_screen"
+            android:summary="Set push notification"
+            android:title="Notification">
+            <!--Push notification main switch-->
+            <SwitchPreference
+                android:key="notification_switch"
+                android:summary="Notification switch"
+                android:title="Notification"/>
+            <!--Sound switch-->
+            <SwitchPreference
+                android:dependency="notification_switch"
+                android:key="notification_sound_switch"
+                android:layout="?android:attr/preferenceLayoutChild"
+                android:summary="Notification sound switch"
+                android:title="Sound"/>
+            <!--Vibrate switch-->
+            <SwitchPreference
+                android:dependency="notification_switch"
+                android:key="notification_vibrate_switch"
+                android:layout="?android:attr/preferenceLayoutChild"
+                android:summary="notification vibrate switch"
+                android:title="Vibrate"/>
+            <!--Set push display name-->
+            <EditTextPreference
+                android:dependency="notification_switch"
+                android:dialogTitle="Input display name"
+                android:key="notification_display_name"
+                android:summary="Set push notification display name"
+                android:title="Display name"/>
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    <!--Chat&Call-->
+    <PreferenceCategory
+        android:title="Chat And Call">
+        <PreferenceScreen
+            android:key="chat_call_screen"
+            android:summary="Setting chat and call info"
+            android:title="Chat And call">
+            <!--Group invite switch-->
+            <SwitchPreference
+                android:key="accept_group_invite_automatically"
+                android:summary="accept group invites automatically"
+                android:title="Group invites"/>
+            <!--Adaptive video bitrate-->
+            <SwitchPreference
+                android:key="adaptive_video_bitrate"
+                android:summary=""
+                android:title="Adaptive video bitrate"/>
+            <!--Blocked Users-->
+            <PreferenceScreen
+                android:summary=""
+                android:title="Blockd Users">
+                <intent
+                    android:action="android.intent.action.MAIN"
+                    android:targetClass="com.hyphenate.chatuidemo.ui.settings.AccountActivity"
+                    android:targetPackage="com.hyphenate.chatuidemo"/>
+            </PreferenceScreen>
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    <!--Account-->
+    <PreferenceCategory
+        android:title="Account">
+        <PreferenceScreen
+            android:summary="show account info"
+            android:title="Account">
+            <intent
+                android:action="android.intent.action.MAIN"
+                android:targetClass="com.hyphenate.chatuidemo.ui.settings.AccountActivity"
+                android:targetPackage="com.hyphenate.chatuidemo"/>
+        </PreferenceScreen>
+    </PreferenceCategory>
+</PreferenceScreen>
