@@ -12,6 +12,7 @@
     <color name="voice_speaking_shadow">#33f52700</color>
     <color name="voice_cancel_hint">#f52700</color>
     <color name="voice_recording_hint">#1b1d1d</color>
+    <color name="group_name_color">#1b1d1d</color>
 
     <!--layout_background-->
     <color name="dark_background">#243e55</color>

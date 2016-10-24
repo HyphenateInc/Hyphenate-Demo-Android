@@ -8,6 +8,12 @@
     <dimen name="contact_avatar_size">39.5dp</dimen>
     <dimen name="contact_avatar_margin_left">43dp</dimen>
     <dimen name="contact_name_margin_left">17.5dp</dimen>
+    <dimen name="contact_dialog_width">280dp</dimen>
+    <dimen name="contact_dialog_height">218dp</dimen>
+    <dimen name="contact_dialog_avatar_size">79dp</dimen>
+    <dimen name="contact_dialog_txt_margin_top">20dp</dimen>
+    <dimen name="contact_dialog_base_line_height">1.5dp</dimen>
+    <dimen name="contact_dialog_icon_size">20dp</dimen>
 
     <!--group-->
     <dimen name="group_icon_padding_left">7dp</dimen>
@@ -17,6 +23,11 @@
 
     <dimen name="base_line_height">1dp</dimen>
     <dimen name="base_line_margin_left">72.5dp</dimen>
+    <dimen name="group_item_height">73dp</dimen>
+    <dimen name="group_item_avatar_size">39.5dp</dimen>
+    <dimen name="group_item_padding">16dp</dimen>
+    <dimen name="group_name_margin_left">17.5dp</dimen>
+    <dimen name="group_name_size">16sp</dimen>
 
 
     <!--call-->

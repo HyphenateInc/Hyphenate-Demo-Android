@@ -134,6 +134,12 @@ public class SignInActivity extends BaseActivity {
                 EMClient.getInstance().groupManager().loadAllGroups();
 
                 try {
+                    EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+
+                try {
                     List<String> contacts = EMClient.getInstance().contactManager().getAllContactsFromServer();
                     List<UserEntity> entityList = new ArrayList<>();
                     for (String name : contacts) {

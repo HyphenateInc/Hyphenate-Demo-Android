@@ -33,7 +33,6 @@ class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ViewHol
         userEntities = list;
     }
 
-
     void setOnItemClickListener(EaseListItemClickListener listener) {
         this.listener = listener;
     }
@@ -68,6 +67,13 @@ class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ViewHol
             holder.contactItemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     listener.onItemClick(v, position);
+                }
+            });
+
+            holder.contactItemLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override public boolean onLongClick(View v) {
+                    listener.onLongItemClick(v,position);
+                    return true;
                 }
             });
         }

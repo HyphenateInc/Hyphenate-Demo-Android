@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import butterknife.OnClick;
 import com.hyphenate.chatuidemo.DemoApplication;
 import com.hyphenate.chatuidemo.R;
 
+import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
+import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.ui.chat.ChatActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
@@ -32,6 +35,7 @@ import butterknife.ButterKnife;
 public class ContactListFragment extends Fragment {
 
     @BindView(R.id.rv_contacts) RecyclerView recyclerView;
+    ShowDialogFragment dialogFragment;
 
     LinearLayoutManager layoutManager;
     ContactListAdapter adapter;
@@ -59,20 +63,65 @@ public class ContactListFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-       refresh();
+        refresh();
 
         adapter.setOnItemClickListener(new EaseListItemClickListener() {
             @Override public void onItemClick(View view, int position) {
                 UserEntity user = entityList.get(position);
-                startActivity(new Intent(getActivity(), ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, user.getUsername()));
+                showDialog(user);
+            }
+
+            @Override public void onLongItemClick(View view, int position) {
+
             }
         });
     }
 
-    public void refresh(){
+    private void showDialog(final UserEntity user) {
+
+        dialogFragment = new ShowDialogFragment();
+        dialogFragment.show(getFragmentManager(), "dialog");
+
+        dialogFragment.setOnShowDialogClickListener(
+                new ShowDialogFragment.OnShowDialogClickListener() {
+                    @Override public String showNameView() {
+                        if (!TextUtils.isEmpty(user.getNickname())){
+                            return user.getNickname();
+                        }else {
+                            return user.getUsername();
+                        }
+                    }
+
+                    @Override public String showAvatarView() {
+                        return user.getAvatar();
+                    }
+
+                    @Override public void onVoiceCallClick() {
+                        startActivity(new Intent(getActivity(), VoiceCallActivity.class).putExtra(
+                                EaseConstant.EXTRA_USER_ID, user.getUsername())
+                                .putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false));
+                        dialogFragment.dismiss();
+                    }
+
+                    @Override public void onSendMessageClick() {
+                        startActivity(new Intent(getActivity(), ChatActivity.class).putExtra(
+                                EaseConstant.EXTRA_USER_ID, user.getUsername()));
+                        dialogFragment.dismiss();
+                    }
+
+                    @Override public void onVideoCallClick() {
+                        startActivity(new Intent(getActivity(), VideoCallActivity.class).putExtra(
+                                EaseConstant.EXTRA_USER_ID, user.getUsername())
+                                .putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false));
+                        dialogFragment.dismiss();
+                    }
+                });
+    }
+
+    public void refresh() {
 
         entityList = new ArrayList<>();
-        for (UserEntity userEntity:DemoApplication.getInstance().getContactList().values()){
+        for (UserEntity userEntity : DemoApplication.getInstance().getContactList().values()) {
             entityList.add(userEntity);
         }
 
@@ -82,10 +131,10 @@ public class ContactListFragment extends Fragment {
             }
         });
 
-        if (adapter == null){
+        if (adapter == null) {
             adapter = new ContactListAdapter(getActivity(), entityList);
             recyclerView.setAdapter(adapter);
-        }else {
+        } else {
             adapter.notifyDataSetChanged();
         }
     }
