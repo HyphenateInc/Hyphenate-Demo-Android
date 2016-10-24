@@ -56,6 +56,10 @@ public class ConversationListFragment extends Fragment {
             //enter to chat activity
             startActivity(new Intent(getActivity(), ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, conversation.getUserName()));
             }
+
+            @Override public void onLongItemClick(View view, int position) {
+
+            }
         });
     }
 
