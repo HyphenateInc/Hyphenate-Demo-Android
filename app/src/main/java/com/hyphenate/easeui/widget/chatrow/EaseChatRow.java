@@ -93,6 +93,7 @@ public abstract class EaseChatRow extends LinearLayout {
         this.itemClickListener = itemClickListener;
         this.itemStyle = itemStyle;
 
+
         setUpBaseView();
         onSetUpView();
         setClickListener();

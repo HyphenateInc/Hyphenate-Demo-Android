@@ -4,4 +4,5 @@
     <dimen name="margin_chat_activity">5dp</dimen>
     <dimen name="chat_nick_margin_left">12dp</dimen>
     <dimen name="chat_nick_text_size">13sp</dimen>
+    <dimen name="chat_input_img_padding">16dp</dimen>
 </resources>

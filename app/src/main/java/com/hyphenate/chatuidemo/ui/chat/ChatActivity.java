@@ -32,6 +32,8 @@ import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.ui.widget.ChatInputView;
+import com.hyphenate.chatuidemo.ui.widget.VoiceRecordDialog;
+import com.hyphenate.chatuidemo.ui.widget.VoiceRecordView;
 import com.hyphenate.chatuidemo.ui.widget.chatrow.ChatRowCall;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
@@ -77,7 +79,7 @@ public class ChatActivity extends BaseActivity {
     /**
      * load 20 messages at one time
      */
-    protected int pagesize = 20;
+    protected int pageSize = 20;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,11 +98,8 @@ public class ChatActivity extends BaseActivity {
             }
         });
 
-        // Set chatrow provider TODO 等待张伟修改 listview.init()方法
-        setCustomChatRowProvider();
         // init message list view
-        mMessageListView.init(toChatUsername, chatType, null);
-
+        mMessageListView.init(toChatUsername, chatType, newCustomChatRowProvider());
         mMessageListView.setItemClickListener(
                 new EaseMessageListView.MessageListItemClicksListener() {
                     @Override public void onResendClick(EMMessage message) {
@@ -137,11 +136,24 @@ public class ChatActivity extends BaseActivity {
                     mMessageListView.refreshSelectLast();
                 }
             }
+
+            @Override public void onMicClick() {
+                final VoiceRecordDialog dialog = new VoiceRecordDialog(ChatActivity.this);
+                dialog.setRecordCallback(new VoiceRecordView.VoiceRecordCallback() {
+                    @Override
+                    public void onVoiceRecordComplete(String voiceFilePath, int voiceTimeLength) {
+                        dialog.dismiss();
+                        sendVoiceMessage(voiceFilePath, voiceTimeLength);
+                    }
+                });
+                dialog.show();
+
+            }
         });
         // received messages code in onResume() method
 
-        conversation = EMClient.getInstance()
-                .chatManager()
+        //get the conversation
+        conversation = EMClient.getInstance().chatManager()
                 .getConversation(toChatUsername, EaseCommonUtils.getConversationType(chatType),
                         true);
         conversation.markAllMessagesAsRead();
@@ -149,12 +161,12 @@ public class ChatActivity extends BaseActivity {
         // you can change this number
         final List<EMMessage> msgs = conversation.getAllMessages();
         int msgCount = msgs != null ? msgs.size() : 0;
-        if (msgCount < conversation.getAllMsgCount() && msgCount < pagesize) {
+        if (msgCount < conversation.getAllMsgCount() && msgCount < pageSize) {
             String msgId = null;
             if (msgs != null && msgs.size() > 0) {
                 msgId = msgs.get(0).getMsgId();
             }
-            conversation.loadMoreMsgFromDB(msgId, pagesize - msgCount);
+            conversation.loadMoreMsgFromDB(msgId, pageSize - msgCount);
         }
     }
 
@@ -421,8 +433,12 @@ public class ChatActivity extends BaseActivity {
         }
     }
 
-    private void setCustomChatRowProvider() {
-        mMessageListView.setCustomChatRowProvider(new EaseCustomChatRowProvider() {
+    /**
+     * create a chat row provider
+     * @return
+     */
+    private EaseCustomChatRowProvider newCustomChatRowProvider() {
+        return new EaseCustomChatRowProvider() {
             @Override public int getCustomChatRowTypeCount() {
                 return 2;
             }
@@ -446,7 +462,7 @@ public class ChatActivity extends BaseActivity {
                 }
                 return null;
             }
-        });
+        };
     }
 
     /**
@@ -502,6 +518,8 @@ public class ChatActivity extends BaseActivity {
         // register the event listener when enter the foreground
         // remember to remove this listener in onStop()
         EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
+
+        mMessageListView.refresh();
     }
 
     @Override protected void onStop() {

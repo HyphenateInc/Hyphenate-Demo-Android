@@ -51,6 +51,8 @@
                 android:lineSpacingExtra="2dp"
                 android:maxWidth="225.0dip"
                 android:minHeight="@dimen/chat_item_text_min_height"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:textColor="#ff000000"

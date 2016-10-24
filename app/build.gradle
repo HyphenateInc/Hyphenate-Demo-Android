@@ -36,6 +36,7 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.github.florent37:viewanimator:1.0.4'
 
     compile 'com.google.android.gms:play-services-gcm:9.4.0'
     compile 'com.google.android.gms:play-services-places:9.4.0'

@@ -41,17 +41,16 @@ public class EaseMessageListView extends ListView {
 
     public EaseMessageListView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        parseAttrs(context, attrs);
-        init(context);
+        init(context, attrs);
     }
 
     public EaseMessageListView(Context context) {
-        super(context);
-        init(context);
+        this(context, null);
     }
 
-    private void init(Context context){
+    private void init(Context context, AttributeSet attrs){
         this.context = context;
+        parseAttrs(context, attrs);
     }
 
     /**
@@ -67,10 +66,11 @@ public class EaseMessageListView extends ListView {
         conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername, EaseCommonUtils
                 .getConversationType(chatType), true);
         messageAdapter = new EaseMessageListAdapter(context, toChatUsername, chatType, this);
+        messageAdapter.setItemStyle(itemStyle);
+        messageAdapter.setCustomChatRowProvider(customChatRowProvider);
         // set message adapter
         setAdapter(messageAdapter);
 
-        messageAdapter.setItemStyle(itemStyle);
 
         refreshSelectLast();
     }
@@ -155,13 +155,4 @@ public class EaseMessageListView extends ListView {
         }
     }
 
-    /**
-     * set chat row provider
-     * @param rowProvider
-     */
-    public void setCustomChatRowProvider(EaseCustomChatRowProvider rowProvider){
-        if (messageAdapter != null) {
-            messageAdapter.setCustomChatRowProvider(rowProvider);
-        }
-    }
 }
