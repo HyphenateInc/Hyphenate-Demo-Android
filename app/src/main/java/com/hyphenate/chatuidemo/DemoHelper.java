@@ -5,7 +5,9 @@ import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
@@ -265,6 +267,46 @@ public class DemoHelper {
                 }
             }
         });
+    }
+
+    /**
+     * Check notification bar notify switch
+     */
+    public boolean isNotification() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return sharedPref.getBoolean("notification_switch", false);
+    }
+
+    /**
+     * Check sound notify switch
+     */
+    public boolean isSoundNotification() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return sharedPref.getBoolean("notification_sound_switch", false);
+    }
+
+    /**
+     * Check vibrate notify switch
+     */
+    public boolean isVibrateNotification() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return sharedPref.getBoolean("notification_vibrate_switch", false);
+    }
+
+    /**
+     * Accept group invites automatically
+     */
+    public boolean isAcceptGroupInvitesAutomatically() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return sharedPref.getBoolean("accept_group_invites_automatically", false);
+    }
+
+    /**
+     * Adaptive video bitrate
+     */
+    public boolean isAdaptiveVideoBitrate() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return sharedPref.getBoolean("adaptive_video_bitrate", false);
     }
 
     /**

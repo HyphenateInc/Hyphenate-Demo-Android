@@ -15,6 +15,7 @@
 
     <!--layout_background-->
     <color name="dark_background">#243e55</color>
+    <color name="light_background">#3d5b76</color>
 
     <color name="text_black">#ff212121</color>
 
