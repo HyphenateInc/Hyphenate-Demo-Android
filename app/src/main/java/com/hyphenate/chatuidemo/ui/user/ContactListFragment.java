@@ -1,9 +1,13 @@
 package com.hyphenate.chatuidemo.ui.user;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -18,8 +22,10 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.ui.chat.ChatActivity;
+import com.hyphenate.chatuidemo.ui.application.ApplicationActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
+import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,6 +39,10 @@ import butterknife.ButterKnife;
  */
 
 public class ContactListFragment extends Fragment {
+
+    private static String TAG = ContactListFragment.class.getSimpleName();
+    private LocalBroadcastManager localBroadcastManager;
+    private ContactsBroadcastReceiver broadcastReceiver;
 
     @BindView(R.id.rv_contacts) RecyclerView recyclerView;
     ShowDialogFragment dialogFragment;
@@ -85,9 +95,9 @@ public class ContactListFragment extends Fragment {
         dialogFragment.setOnShowDialogClickListener(
                 new ShowDialogFragment.OnShowDialogClickListener() {
                     @Override public String showNameView() {
-                        if (!TextUtils.isEmpty(user.getNickname())){
+                        if (!TextUtils.isEmpty(user.getNickname())) {
                             return user.getNickname();
-                        }else {
+                        } else {
                             return user.getUsername();
                         }
                     }
@@ -139,12 +149,40 @@ public class ContactListFragment extends Fragment {
         }
     }
 
+    private class ContactsBroadcastReceiver extends BroadcastReceiver {
+
+        @Override public void onReceive(Context context, Intent intent) {
+            EMLog.d(TAG, "contact action");
+            refresh();
+        }
+    }
+
     @Override public void onResume() {
         super.onResume();
+
+        // register broadcast register
+        localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+        ContactsBroadcastReceiver broadcastReceiver = new ContactsBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter(EaseConstant.BROADCAST_ACTION_CONTACTS);
+        localBroadcastManager.registerReceiver(broadcastReceiver, intentFilter);
+        // refresh ui
         refresh();
     }
 
-    @OnClick(R.id.layout_group_entry) void onclick() {
-        startActivity(new Intent(getActivity(), GroupListActivity.class));
+    @Override public void onStop() {
+        super.onStop();
+        // unregister broadcast receiver
+        localBroadcastManager.unregisterReceiver(broadcastReceiver);
+    }
+
+    @OnClick({ R.id.layout_group_entry, R.id.layout_application_entry }) void onclick(View v) {
+        switch (v.getId()) {
+            case R.id.layout_group_entry:
+                startActivity(new Intent(getActivity(), GroupListActivity.class));
+                break;
+            case R.id.layout_application_entry:
+                startActivity(new Intent(getActivity(), ApplicationActivity.class));
+                break;
+        }
     }
 }

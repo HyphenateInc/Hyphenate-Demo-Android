@@ -14,6 +14,10 @@
     <dimen name="contact_dialog_txt_margin_top">20dp</dimen>
     <dimen name="contact_dialog_base_line_height">1.5dp</dimen>
     <dimen name="contact_dialog_icon_size">20dp</dimen>
+    <dimen name="contact_search_margin">16dp</dimen>
+    <dimen name="contact_search_padding_horizontal">16dp</dimen>
+    <dimen name="contact_search_padding_vertical">8dp</dimen>
+    <dimen name="contact_search_input_height">48dp</dimen>
 
     <!--group-->
     <dimen name="group_icon_padding_left">7dp</dimen>
@@ -40,6 +44,15 @@
     <dimen name="call_local_width">120dp</dimen>
     <dimen name="call_local_height">160dp</dimen>
     <dimen name="call_message_icon_margin">8dp</dimen>
+
+    <dimen name="devices_height">1dp</dimen>
+
+    <dimen name="application_avatar_size">48dp</dimen>
+    <dimen name="application_padding">8dp</dimen>
+
+    <dimen name="btn_height_big">48dp</dimen>
+    <dimen name="btn_height_small">36dp</dimen>
+    <dimen name="btn_margin">8dp</dimen>
 
 
     <!-- Default screen margins, per the Android Design guidelines. -->

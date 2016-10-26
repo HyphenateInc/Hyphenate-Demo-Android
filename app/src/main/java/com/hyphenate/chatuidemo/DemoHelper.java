@@ -5,9 +5,7 @@ import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
@@ -17,7 +15,8 @@ import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chatuidemo.ui.call.CallReceiver;
-import com.hyphenate.chatuidemo.ui.call.CallStateChangeListener;
+import com.hyphenate.chatuidemo.listener.CallStateChangeListener;
+import com.hyphenate.chatuidemo.listener.ContactsChangeListener;
 import com.hyphenate.chatuidemo.ui.user.UserDao;
 import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.util.EMLog;
@@ -43,9 +42,14 @@ public class DemoHelper {
     private CallStateChangeListener mCallStateChangeListener = null;
 
     // connection listener
-    private EMConnectionListener mConnectionListener;
+    private EMConnectionListener mConnectionListener = null;
 
+    // Message listener
     private EMMessageListener messageListener = null;
+
+    // Contacts listener
+    private ContactsChangeListener mContactListener = null;
+
     /**
      * save foreground Activity which registered message listeners
      */
@@ -113,7 +117,11 @@ public class DemoHelper {
         // set connection listener
         setConnectionListener();
 
+        // register message listener
         registerMessageListener();
+
+        // register contacts listener
+        registerContactsListener();
     }
 
     /**
@@ -135,7 +143,7 @@ public class DemoHelper {
      */
     public void addCallStateChangeListener() {
         if (mCallStateChangeListener == null) {
-            mCallStateChangeListener = new CallStateChangeListener();
+            mCallStateChangeListener = new CallStateChangeListener(mContext);
         }
 
         EMClient.getInstance().callManager().addCallStateChangeListener(mCallStateChangeListener);
@@ -225,6 +233,20 @@ public class DemoHelper {
         EMClient.getInstance().chatManager().addMessageListener(messageListener);
     }
 
+    /**
+     * Register contacts lsitener
+     * Listen for changes to contacts
+     */
+    protected void registerContactsListener() {
+        if (mContactListener == null) {
+            mContactListener = new ContactsChangeListener(mContext);
+        }
+        EMClient.getInstance().contactManager().setContactListener(mContactListener);
+    }
+
+    /**
+     * App is foreground activies
+     */
     public boolean hasForegroundActivies() {
         return activityList.size() != 0;
     }
@@ -269,46 +291,6 @@ public class DemoHelper {
                 }
             }
         });
-    }
-
-    /**
-     * Check notification bar notify switch
-     */
-    public boolean isNotification() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sharedPref.getBoolean("notification_switch", false);
-    }
-
-    /**
-     * Check sound notify switch
-     */
-    public boolean isSoundNotification() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sharedPref.getBoolean("notification_sound_switch", false);
-    }
-
-    /**
-     * Check vibrate notify switch
-     */
-    public boolean isVibrateNotification() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sharedPref.getBoolean("notification_vibrate_switch", false);
-    }
-
-    /**
-     * Accept group invites automatically
-     */
-    public boolean isAcceptGroupInvitesAutomatically() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sharedPref.getBoolean("accept_group_invites_automatically", false);
-    }
-
-    /**
-     * Adaptive video bitrate
-     */
-    public boolean isAdaptiveVideoBitrate() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sharedPref.getBoolean("adaptive_video_bitrate", false);
     }
 
     /**

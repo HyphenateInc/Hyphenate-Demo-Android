@@ -51,6 +51,7 @@
     <string name="em_sign_up_begin">Account is begin sign up</string>
     <string name="em_sign_in_begin">Account is begin sign in</string>
 
+    <!--Error-->
     <string name="em_error_invalid_password">Invalid password</string>
     <string name="em_error_invalid_username">Invalid username</string>
     <string name="em_error_network_error">Network error</string>
@@ -63,6 +64,17 @@
     <string name="em_error_user_already_exit">User already exit</string>
     <string name="em_error_user_authentication_failed">User authentication failed</string>
     <string name="em_error_user_not_found">User not found</string>
+
+    <!--Contacts-->
+    <string name="em_contacts_add">Add contacts</string>
+    <string name="em_contacts_application_success">Contacts apply for sent successfully</string>
+    <string name="em_contacts_application_failed">Contacts apply for failed to send</string>
+    <string name="em_contacts_application">Application</string>
+    <string name="em_contacts_application_agree">Agree</string>
+    <string name="em_contacts_application_reject">Reject</string>
+    <string name="em_wait">Wait...</string>
+    <string name="em_agreed">Agreed</string>
+    <string name="em_rejected">Rejected</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

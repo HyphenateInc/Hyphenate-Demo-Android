@@ -14,6 +14,7 @@
 package com.hyphenate.easeui;
 
 public class EaseConstant {
+    // call attr key
     public static final String MESSAGE_ATTR_IS_VOICE_CALL = "is_voice_call";
     public static final String MESSAGE_ATTR_IS_VIDEO_CALL = "is_video_call";
 
@@ -32,4 +33,15 @@ public class EaseConstant {
     public static final String EXTRA_FROM = "from";
     public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_TO = "to";
+
+    public static final String CONVERSATION_NAME_APPLICATION = "em_application";
+    public static final String MESSAGE_ATTR_TYPE = "em_type";
+    public static final String MESSAGE_ATTR_USERNAME = "em_username";
+    public static final String MESSAGE_ATTR_REASON = "em_reason";
+    public static final String MESSAGE_ATTR_STATUS = "em_status";
+
+    // Broadcast action
+    public static final String BROADCAST_ACTION_CALL = "com.hyphenate.action.call";
+    public static final String BROADCAST_ACTION_CONTACTS = "com.hyphenate.action.contacts";
+    public static final String BROADCAST_ACTION_APPLICATION = "com.hyphenate.action.application";
 }
