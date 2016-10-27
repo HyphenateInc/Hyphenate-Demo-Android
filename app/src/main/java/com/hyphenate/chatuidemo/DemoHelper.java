@@ -250,9 +250,6 @@ public class DemoHelper {
         EMClient.getInstance().contactManager().setContactListener(mContactListener);
     }
 
-    /**
-     * App is foreground activies
-     */
     public boolean hasForegroundActivies() {
         return activityList.size() != 0;
     }
