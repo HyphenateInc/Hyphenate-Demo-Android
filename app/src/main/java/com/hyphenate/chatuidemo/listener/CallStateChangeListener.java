@@ -1,6 +1,14 @@
-package com.hyphenate.chatuidemo.ui.call;
+package com.hyphenate.chatuidemo.listener;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import com.hyphenate.chat.EMCallStateChangeListener;
+import com.hyphenate.chatuidemo.ui.call.CallEvent;
+import com.hyphenate.chatuidemo.ui.call.CallStatus;
+import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
+import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
+import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.util.EMLog;
 import org.greenrobot.eventbus.EventBus;
 
@@ -11,6 +19,12 @@ import org.greenrobot.eventbus.EventBus;
 public class CallStateChangeListener implements EMCallStateChangeListener {
 
     private final String TAG = this.getClass().getSimpleName();
+    private LocalBroadcastManager localBroadcastManager;
+    private Context mContext;
+
+    public CallStateChangeListener(Context context) {
+        mContext = context;
+    }
 
     @Override public void onCallStateChanged(CallState callState, CallError callError) {
         /**
@@ -22,6 +36,13 @@ public class CallStateChangeListener implements EMCallStateChangeListener {
         event.setCallState(callState);
         event.setCallError(callError);
         EventBus.getDefault().post(event);
+
+        // send broadcast
+        Intent intent = new Intent(EaseConstant.BROADCAST_ACTION_CALL);
+        intent.putExtra("callState", callState);
+        intent.putExtra("callError", callError);
+        localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
+        localBroadcastManager.sendBroadcast(intent);
 
         switch (callState) {
             case CONNECTING:

@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
+import com.hyphenate.chatuidemo.ui.user.AddContactsActivity;
 import com.hyphenate.chatuidemo.ui.user.ContactListFragment;
 import com.hyphenate.chatuidemo.ui.chat.ConversationListFragment;
 import com.hyphenate.chatuidemo.ui.settings.SettingsFragment;
@@ -157,6 +158,9 @@ public class MainActivity extends BaseActivity {
 
                 case R.id.menu_public_groups:
                     startActivity(new Intent(MainActivity.this, PublicGroupsListActivity.class));
+                    
+                case R.id.menu_add_contacts:
+                    startActivity(new Intent(MainActivity.this, AddContactsActivity.class));
                     break;
             }
 
