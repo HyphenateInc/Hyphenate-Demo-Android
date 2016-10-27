@@ -47,8 +47,9 @@
 
     <dimen name="devices_height">1dp</dimen>
 
-    <dimen name="application_avatar_size">48dp</dimen>
-    <dimen name="application_padding">8dp</dimen>
+    <dimen name="apply_avatar_size">48dp</dimen>
+    <dimen name="apply_padding">8dp</dimen>
+    <dimen name="apply_margin">8dp</dimen>
 
     <dimen name="btn_height_big">48dp</dimen>
     <dimen name="btn_height_small">36dp</dimen>

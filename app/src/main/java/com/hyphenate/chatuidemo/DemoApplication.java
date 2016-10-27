@@ -18,8 +18,6 @@ public class DemoApplication extends Application {
 
     private Context applicationContext;
 
-    private Map<String, UserEntity> entityMap = new HashMap<>();
-
     public static DemoApplication getInstance() {
         return instance;
     }
@@ -38,13 +36,6 @@ public class DemoApplication extends Application {
     @Override protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
-    }
-
-    public Map<String, UserEntity> getContactList() {
-        if (entityMap.isEmpty()) {
-            entityMap = UserDao.getInstance(applicationContext).getContactList();
-        }
-        return entityMap;
     }
 
     public void setContactList(List<UserEntity> entityList) {

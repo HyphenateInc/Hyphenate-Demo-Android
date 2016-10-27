@@ -34,7 +34,7 @@ public class EaseConstant {
     public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_TO = "to";
 
-    public static final String CONVERSATION_NAME_APPLICATION = "em_application";
+    public static final String CONVERSATION_NAME_APPLY = "em_application";
     public static final String MESSAGE_ATTR_TYPE = "em_type";
     public static final String MESSAGE_ATTR_USERNAME = "em_username";
     public static final String MESSAGE_ATTR_REASON = "em_reason";

@@ -14,9 +14,10 @@
 
         <com.hyphenate.easeui.widget.EaseImageView
             android:id="@+id/img_avatar"
-            android:layout_width="@dimen/application_avatar_size"
-            android:layout_height="@dimen/application_avatar_size"
+            android:layout_width="@dimen/apply_avatar_size"
+            android:layout_height="@dimen/apply_avatar_size"
             android:layout_alignParentLeft="true"
+            android:layout_margin="@dimen/apply_margin"
             android:src="@drawable/ease_default_avatar"
             />
         <LinearLayout
@@ -26,7 +27,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/img_avatar"
             android:orientation="vertical"
-            android:padding="@dimen/application_padding"
+            android:padding="@dimen/apply_padding"
             >
 
             <LinearLayout
@@ -45,7 +46,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/text_application_reason"
+                    android:id="@+id/text_apply_reason"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/app_name"
@@ -65,7 +66,7 @@
                     android:layout_height="@dimen/btn_height_small"
                     android:layout_margin="@dimen/btn_margin"
                     android:background="@drawable/em_btn_rectangle_green"
-                    android:text="@string/em_contacts_application_agree"
+                    android:text="@string/em_contacts_apply_agree"
                     android:textColor="@color/em_white_87"
                     />
                 <Button
@@ -74,12 +75,12 @@
                     android:layout_height="@dimen/btn_height_small"
                     android:layout_margin="@dimen/btn_margin"
                     android:background="@drawable/em_btn_rectangle_green"
-                    android:text="@string/em_contacts_application_reject"
+                    android:text="@string/em_contacts_apply_reject"
                     android:textColor="@color/em_white_87"
                     />
 
                 <TextView
-                    android:id="@+id/text_application_status"
+                    android:id="@+id/text_apply_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/app_name"

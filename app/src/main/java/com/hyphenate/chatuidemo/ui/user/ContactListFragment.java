@@ -15,16 +15,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Toast;
 import butterknife.OnClick;
-import com.hyphenate.chatuidemo.DemoApplication;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 
 import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.ui.chat.ChatActivity;
-import com.hyphenate.chatuidemo.ui.application.ApplicationActivity;
+import com.hyphenate.chatuidemo.ui.apply.ApplyActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
+import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,7 +85,8 @@ public class ContactListFragment extends Fragment {
             }
 
             @Override public void onLongItemClick(View view, int position) {
-
+                UserEntity user = entityList.get(position);
+                deleteContacter(user);
             }
         });
     }
@@ -128,18 +132,33 @@ public class ContactListFragment extends Fragment {
                 });
     }
 
+    /**
+     * delete contacter
+     */
+    private void deleteContacter(final UserEntity userEntity) {
+        new Thread(new Runnable() {
+            @Override public void run() {
+                try {
+                    EMClient.getInstance().contactManager().deleteContact(userEntity.getUsername());
+                    UserDao.getInstance(getActivity()).deleteContact(userEntity);
+                    DemoHelper.getInstance().popContacts(userEntity);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            refresh();
+                            Toast.makeText(getActivity(), "contacter is deleted", Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
     public void refresh() {
 
-        entityList = new ArrayList<>();
-        for (UserEntity userEntity : DemoApplication.getInstance().getContactList().values()) {
-            entityList.add(userEntity);
-        }
-
-        Collections.sort(entityList, new Comparator<UserEntity>() {
-            @Override public int compare(UserEntity o1, UserEntity o2) {
-                return o1.getUsername().compareTo(o2.getUsername());
-            }
-        });
+        loadContacts();
 
         if (adapter == null) {
             adapter = new ContactListAdapter(getActivity(), entityList);
@@ -149,6 +168,26 @@ public class ContactListFragment extends Fragment {
         }
     }
 
+    /**
+     * Load contacts
+     */
+    private void loadContacts() {
+        if (entityList == null) {
+            entityList = new ArrayList<UserEntity>();
+        }
+        entityList.clear();
+        entityList.addAll(DemoHelper.getInstance().getContactList().values());
+        // sort
+        Collections.sort(entityList, new Comparator<UserEntity>() {
+            @Override public int compare(UserEntity o1, UserEntity o2) {
+                return o1.getUsername().compareTo(o2.getUsername());
+            }
+        });
+    }
+
+    /**
+     * Contacts broadcast receiver
+     */
     private class ContactsBroadcastReceiver extends BroadcastReceiver {
 
         @Override public void onReceive(Context context, Intent intent) {
@@ -175,13 +214,13 @@ public class ContactListFragment extends Fragment {
         localBroadcastManager.unregisterReceiver(broadcastReceiver);
     }
 
-    @OnClick({ R.id.layout_group_entry, R.id.layout_application_entry }) void onclick(View v) {
+    @OnClick({ R.id.layout_group_entry, R.id.layout_apply_entry }) void onclick(View v) {
         switch (v.getId()) {
             case R.id.layout_group_entry:
                 startActivity(new Intent(getActivity(), GroupListActivity.class));
                 break;
-            case R.id.layout_application_entry:
-                startActivity(new Intent(getActivity(), ApplicationActivity.class));
+            case R.id.layout_apply_entry:
+                startActivity(new Intent(getActivity(), ApplyActivity.class));
                 break;
         }
     }

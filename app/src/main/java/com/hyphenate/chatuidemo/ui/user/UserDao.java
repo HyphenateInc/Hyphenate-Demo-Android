@@ -82,7 +82,7 @@ public class UserDao {
     public void deleteContact(UserEntity user) {
         SQLiteDatabase db = openHelper.getWritableDatabase();
         if (db.isOpen()) {
-            String whereClause = "Where=?";
+            String whereClause = COLUMN_NAME_ID + "=?";
             String[] whereArgs = { user.getUsername() };
             db.delete(UserDao.TABLE_NAME, whereClause, whereArgs);
         }

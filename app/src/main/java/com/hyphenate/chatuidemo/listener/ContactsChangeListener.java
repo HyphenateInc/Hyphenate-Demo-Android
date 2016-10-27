@@ -1,6 +1,5 @@
 package com.hyphenate.chatuidemo.listener;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
@@ -8,6 +7,7 @@ import com.hyphenate.EMContactListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.ui.user.UserDao;
 import com.hyphenate.chatuidemo.ui.user.UserEntity;
 import com.hyphenate.easeui.EaseConstant;
@@ -36,6 +36,7 @@ public class ContactsChangeListener implements EMContactListener {
         UserEntity userEntity = new UserEntity(username);
         UserDao.getInstance(mContext).saveContact(userEntity);
 
+        DemoHelper.getInstance().putContacts(userEntity);
         // send broadcast
         sendBroadcast(EaseConstant.BROADCAST_ACTION_APPLICATION);
     }
@@ -48,6 +49,9 @@ public class ContactsChangeListener implements EMContactListener {
     @Override public void onContactDeleted(String username) {
         UserEntity userEntity = new UserEntity(username);
         UserDao.getInstance(mContext).deleteContact(userEntity);
+        
+        DemoHelper.getInstance().popContacts(userEntity);
+
         // send Broadcast
         sendBroadcast(EaseConstant.BROADCAST_ACTION_CONTACTS);
     }
@@ -69,7 +73,7 @@ public class ContactsChangeListener implements EMContactListener {
         message.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, username);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, reason);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0);
-        message.setFrom(EaseConstant.CONVERSATION_NAME_APPLICATION);
+        message.setFrom(EaseConstant.CONVERSATION_NAME_APPLY);
         message.setMsgId(msgId);
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);

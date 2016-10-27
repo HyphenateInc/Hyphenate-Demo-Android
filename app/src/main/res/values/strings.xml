@@ -67,11 +67,11 @@
 
     <!--Contacts-->
     <string name="em_contacts_add">Add contacts</string>
-    <string name="em_contacts_application_success">Contacts apply for sent successfully</string>
-    <string name="em_contacts_application_failed">Contacts apply for failed to send</string>
-    <string name="em_contacts_application">Application</string>
-    <string name="em_contacts_application_agree">Agree</string>
-    <string name="em_contacts_application_reject">Reject</string>
+    <string name="em_contacts_apply_send_success">Contacts apply for sent successfully</string>
+    <string name="em_contacts_apply_send_failed">Contacts apply for failed to send</string>
+    <string name="em_contacts_apply">Apply For</string>
+    <string name="em_contacts_apply_agree">Agree</string>
+    <string name="em_contacts_apply_reject">Reject</string>
     <string name="em_wait">Wait...</string>
     <string name="em_agreed">Agreed</string>
     <string name="em_rejected">Rejected</string>

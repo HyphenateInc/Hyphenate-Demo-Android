@@ -8,7 +8,7 @@
     >
 
     <RelativeLayout
-        android:id="@+id/layout_application_entry"
+        android:id="@+id/layout_apply_entry"
         android:layout_width="match_parent"
         android:layout_height="@dimen/contact_item_height"
         android:background="?android:attr/selectableItemBackground"
@@ -30,7 +30,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/group_text_margin_left"
             android:layout_toRightOf="@id/img_application_icon"
-            android:text="@string/em_contacts_application"
+            android:text="@string/em_contacts_apply"
             android:textColor="@android:color/black"
             android:textSize="@dimen/group_text_size"
             />

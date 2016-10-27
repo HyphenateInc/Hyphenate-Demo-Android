@@ -1,4 +1,4 @@
-package com.hyphenate.chatuidemo.ui.application;
+package com.hyphenate.chatuidemo.ui.apply;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -15,28 +15,29 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.exceptions.HyphenateException;
+import java.util.Collections;
 
 /**
  * Created by lzan13 on 2016/10/26.
- * Application info activity
+ * Apply for info activity
  */
 
-public class ApplicationActivity extends BaseActivity {
+public class ApplyActivity extends BaseActivity {
 
     private BaseActivity mActivity;
 
-    @BindView(R.id.recycler_view_application) RecyclerView mRecyclerView;
+    @BindView(R.id.recycler_view_apply) RecyclerView mRecyclerView;
 
     private EMConversation mConversation;
 
     private int mPageSize = 30;
 
-    private ApplicationAdapter mApplicationAdapter;
+    private ApplyAdapter mApplyAdapter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.em_activity_application);
+        setContentView(R.layout.em_activity_apply);
 
         ButterKnife.bind(this);
 
@@ -49,7 +50,7 @@ public class ApplicationActivity extends BaseActivity {
     private void initView() {
         mActivity = this;
 
-        getSupportActionBar().setTitle(R.string.em_contacts_application);
+        getSupportActionBar().setTitle(R.string.em_contacts_apply);
         getActionBarToolbar().setNavigationIcon(R.drawable.em_ic_back);
         getActionBarToolbar().setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -58,7 +59,7 @@ public class ApplicationActivity extends BaseActivity {
         });
         mConversation = EMClient.getInstance()
                 .chatManager()
-                .getConversation(EaseConstant.CONVERSATION_NAME_APPLICATION, null, true);
+                .getConversation(EaseConstant.CONVERSATION_NAME_APPLY, null, true);
         // 设置当前会话未读数为 0
         mConversation.markAllMessagesAsRead();
         int count = mConversation.getAllMessages().size();
@@ -70,11 +71,11 @@ public class ApplicationActivity extends BaseActivity {
         }
 
         // 实例化适配器
-        mApplicationAdapter = new ApplicationAdapter(mActivity);
+        mApplyAdapter = new ApplyAdapter(mActivity);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
-        mRecyclerView.setAdapter(mApplicationAdapter);
+        mRecyclerView.setAdapter(mApplyAdapter);
 
         setItemClickListener();
     }
@@ -83,8 +84,8 @@ public class ApplicationActivity extends BaseActivity {
      * Refresh ui
      */
     private void refresh() {
-        if (mApplicationAdapter != null) {
-            mApplicationAdapter.notifyDataSetChanged();
+        if (mApplyAdapter != null) {
+            mApplyAdapter.notifyDataSetChanged();
         }
     }
 
@@ -92,20 +93,20 @@ public class ApplicationActivity extends BaseActivity {
      * Set item click listener
      */
     private void setItemClickListener() {
-        mApplicationAdapter.setItemClickListener(new ApplicationAdapter.ItemClickListener() {
+        mApplyAdapter.setItemClickListener(new ApplyAdapter.ItemClickListener() {
             /**
              * Item action event
              *
-             * @param position item position
+             * @param msgId item message id
              * @param action item action
              */
-            @Override public void onItemAction(int position, int action) {
+            @Override public void onItemAction(String msgId, int action) {
                 switch (action) {
                     case 0:
-                        agreeApplication(position);
+                        agreeApply(msgId);
                         break;
                     case 1:
-                        rejectApplication(position);
+                        rejectApply(msgId);
                         break;
                 }
             }
@@ -113,9 +114,9 @@ public class ApplicationActivity extends BaseActivity {
     }
 
     /**
-     * Agree application
+     * Agree contacts apply for
      */
-    private void agreeApplication(final int position) {
+    private void agreeApply(final String msgId) {
         final ProgressDialog dialog = new ProgressDialog(mActivity);
         dialog.setMessage(mActivity.getResources().getString(R.string.em_wait));
         dialog.show();
@@ -123,22 +124,23 @@ public class ApplicationActivity extends BaseActivity {
         new Thread(new Runnable() {
             @Override public void run() {
                 try {
-                    EMMessage message = mConversation.getAllMessages().get(position);
+                    EMMessage message = mConversation.getMessage(msgId, false);
                     EMClient.getInstance()
                             .contactManager()
                             .acceptInvitation(
                                     message.getStringAttribute(EaseConstant.MESSAGE_ATTR_USERNAME,
                                             ""));
 
-                    // update application message status
+                    // update contacts apply for message status
                     message.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS,
                             mActivity.getString(R.string.em_agreed));
                     EMClient.getInstance().chatManager().updateMessage(message);
 
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
-                            Toast.makeText(mActivity, "", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mActivity, R.string.em_agreed, Toast.LENGTH_LONG).show();
                             dialog.dismiss();
+                            refresh();
                         }
                     });
                 } catch (HyphenateException e) {
@@ -149,30 +151,32 @@ public class ApplicationActivity extends BaseActivity {
     }
 
     /**
-     * reject application
+     * reject contacts apply for
      */
-    private void rejectApplication(final int positon) {
+    private void rejectApply(final String msgId) {
         final ProgressDialog dialog = new ProgressDialog(mActivity);
         dialog.setMessage(mActivity.getResources().getString(R.string.em_wait));
         dialog.show();
         new Thread(new Runnable() {
             @Override public void run() {
                 try {
-                    EMMessage message = mConversation.getAllMessages().get(positon);
+                    EMMessage message = mConversation.getMessage(msgId, false);
                     EMClient.getInstance()
                             .contactManager()
                             .declineInvitation(
                                     message.getStringAttribute(EaseConstant.MESSAGE_ATTR_USERNAME,
                                             ""));
-                    // update application message status
+                    // update contacts apply for message status
                     message.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS,
                             mActivity.getString(R.string.em_rejected));
                     EMClient.getInstance().chatManager().updateMessage(message);
 
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
-                            Toast.makeText(mActivity, "", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mActivity, R.string.em_rejected, Toast.LENGTH_LONG)
+                                    .show();
                             dialog.dismiss();
+                            refresh();
                         }
                     });
                 } catch (HyphenateException e) {

@@ -2,7 +2,6 @@ package com.hyphenate.chatuidemo.ui.user;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -62,7 +61,7 @@ public class AddContactsActivity extends BaseActivity {
                     EMClient.getInstance().contactManager().addContact(addUsername, "Add friends");
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
-                            Toast.makeText(mActivity, R.string.em_contacts_application_success,
+                            Toast.makeText(mActivity, R.string.em_contacts_apply_send_success,
                                     Toast.LENGTH_LONG).show();
                         }
                     });
@@ -73,7 +72,7 @@ public class AddContactsActivity extends BaseActivity {
                     EMLog.e(TAG, "add contacts: error - " + errorCode + ", msg - " + errorMsg);
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
-                            Toast.makeText(mActivity, R.string.em_contacts_application_failed,
+                            Toast.makeText(mActivity, R.string.em_contacts_apply_send_failed,
                                     Toast.LENGTH_LONG).show();
                         }
                     });

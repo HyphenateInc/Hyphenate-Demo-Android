@@ -112,7 +112,7 @@
             android:windowSoftInputMode="adjustResize|stateVisible"/>
 
         <activity
-            android:name=".ui.application.ApplicationActivity"
+            android:name=".ui.apply.ApplyActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 

@@ -18,11 +18,14 @@ import com.hyphenate.chatuidemo.ui.call.CallReceiver;
 import com.hyphenate.chatuidemo.listener.CallStateChangeListener;
 import com.hyphenate.chatuidemo.listener.ContactsChangeListener;
 import com.hyphenate.chatuidemo.ui.user.UserDao;
+import com.hyphenate.chatuidemo.ui.user.UserEntity;
 import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wei on 2016/10/11.
@@ -35,6 +38,9 @@ public class DemoHelper {
     private static DemoHelper instance;
     // context
     private Context mContext;
+
+    // Contacts map
+    private Map<String, UserEntity> entityMap = new HashMap<>();
 
     // Call broadcast receiver
     private CallReceiver mCallReceiver = null;
@@ -259,6 +265,34 @@ public class DemoHelper {
 
     public void popActivity(Activity activity) {
         activityList.remove(activity);
+    }
+
+    /**
+     * get contacts list from db
+     */
+    public Map<String, UserEntity> getContactList() {
+        if (entityMap.isEmpty()) {
+            entityMap = UserDao.getInstance(mContext).getContactList();
+        }
+        return entityMap;
+    }
+
+    /**
+     * put user to map
+     */
+    public void putContacts(UserEntity userEntity) {
+        if (entityMap != null) {
+            entityMap.put(userEntity.getUsername(), userEntity);
+        }
+    }
+
+    /**
+     * remove user from db
+     */
+    public void popContacts(UserEntity userEntity) {
+        if (entityMap != null) {
+            entityMap.remove(userEntity.getUsername());
+        }
     }
 
     /**
