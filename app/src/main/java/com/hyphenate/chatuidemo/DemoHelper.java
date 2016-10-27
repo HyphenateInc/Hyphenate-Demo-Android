@@ -271,19 +271,23 @@ public class DemoHelper {
         return entityMap;
     }
 
-    public void putContacts(UserEntity userEntity) {
+    public void addContacts(UserEntity userEntity) {
         if (entityMap != null) {
             entityMap.put(userEntity.getUsername(), userEntity);
         }
+
+        UserDao.getInstance(mContext).saveContact(userEntity);
     }
 
     /**
      * remove user from db
      */
-    public void popContacts(UserEntity userEntity) {
+    public void deleteContacts(UserEntity userEntity) {
         if (entityMap != null) {
             entityMap.remove(userEntity.getUsername());
         }
+
+        UserDao.getInstance(mContext).deleteContact(userEntity);
     }
 
     /**

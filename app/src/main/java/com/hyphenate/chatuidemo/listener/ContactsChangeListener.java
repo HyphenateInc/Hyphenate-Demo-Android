@@ -34,9 +34,8 @@ public class ContactsChangeListener implements EMContactListener {
      */
     @Override public void onContactAdded(String username) {
         UserEntity userEntity = new UserEntity(username);
-        UserDao.getInstance(mContext).saveContact(userEntity);
 
-        DemoHelper.getInstance().putContacts(userEntity);
+        DemoHelper.getInstance().addContacts(userEntity);
         // send broadcast
         sendBroadcast(EaseConstant.BROADCAST_ACTION_APPLICATION);
     }
@@ -48,9 +47,8 @@ public class ContactsChangeListener implements EMContactListener {
      */
     @Override public void onContactDeleted(String username) {
         UserEntity userEntity = new UserEntity(username);
-        UserDao.getInstance(mContext).deleteContact(userEntity);
-        
-        DemoHelper.getInstance().popContacts(userEntity);
+
+        DemoHelper.getInstance().deleteContacts(userEntity);
 
         // send Broadcast
         sendBroadcast(EaseConstant.BROADCAST_ACTION_CONTACTS);
