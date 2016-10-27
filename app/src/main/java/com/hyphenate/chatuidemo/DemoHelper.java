@@ -264,9 +264,6 @@ public class DemoHelper {
         activityList.remove(activity);
     }
 
-    /**
-     * get contacts list from db
-     */
     public Map<String, UserEntity> getContactList() {
         if (entityMap.isEmpty()) {
             entityMap = UserDao.getInstance(mContext).getContactList();
@@ -274,9 +271,6 @@ public class DemoHelper {
         return entityMap;
     }
 
-    /**
-     * put user to map
-     */
     public void putContacts(UserEntity userEntity) {
         if (entityMap != null) {
             entityMap.put(userEntity.getUsername(), userEntity);
