@@ -28,6 +28,8 @@
     <dimen name="group_item_padding">16dp</dimen>
     <dimen name="group_name_margin_left">17.5dp</dimen>
     <dimen name="group_name_size">16sp</dimen>
+    <dimen name="group_details_item_height">70dp</dimen>
+    <dimen name="group_details_name_size">24sp</dimen>
 
 
     <!--call-->

@@ -31,6 +31,7 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
+import com.hyphenate.chatuidemo.ui.user.GroupDetailsActivity;
 import com.hyphenate.chatuidemo.ui.widget.ChatInputView;
 import com.hyphenate.chatuidemo.ui.widget.chatrow.ChatRowCall;
 import com.hyphenate.easeui.EaseConstant;
@@ -79,10 +80,13 @@ public class ChatActivity extends BaseActivity {
      */
     protected int pagesize = 20;
 
+    public static ChatActivity activityInstance;
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_chat);
         ButterKnife.bind(this);
+        activityInstance = this;
 
         toChatUsername = getIntent().getStringExtra(EaseConstant.EXTRA_USER_ID);
         chatType =
@@ -164,6 +168,14 @@ public class ChatActivity extends BaseActivity {
         //add the action buttons to toolbar
         Toolbar toolbar = getActionBarToolbar();
         toolbar.inflateMenu(R.menu.em_chat_menu);
+
+        if (chatType == EaseConstant.CHATTYPE_GROUP) {
+
+            menu.findItem(R.id.menu_group_detail).setVisible(true);
+            menu.findItem(R.id.menu_voice_call).setVisible(false);
+            menu.findItem(R.id.menu_video_call).setVisible(false);
+        }
+
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
@@ -192,6 +204,10 @@ public class ChatActivity extends BaseActivity {
                         voiceIntent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
                         voiceIntent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
                         startActivity(voiceIntent);
+                        break;
+
+                    case R.id.menu_group_detail:
+                        startActivity(new Intent(ChatActivity.this, GroupDetailsActivity.class).putExtra("groupId",toChatUsername));
                         break;
                 }
 

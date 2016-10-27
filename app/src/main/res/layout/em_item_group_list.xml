@@ -6,11 +6,12 @@
     >
 
   <RelativeLayout
+      android:id="@+id/layout_group_list"
       android:layout_width="match_parent"
       android:layout_height="@dimen/group_item_height"
+      android:background="?android:attr/selectableItemBackground"
       android:paddingLeft="@dimen/group_item_padding"
       android:paddingRight="@dimen/group_item_padding"
-      android:background="?android:attr/selectableItemBackground"
       >
     <ImageView
         android:id="@+id/img_group_avatar"
@@ -47,11 +48,24 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/img_guide_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:src="@drawable/cell_chevron_right"
+        />
+
+    <Button
+        android:id="@+id/btn_group_join"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@color/colorAccent"
+        android:text="JOIN"
+        android:textColor="@color/colorTextPrimary"
+        android:visibility="gone"
         />
   </RelativeLayout>
 
