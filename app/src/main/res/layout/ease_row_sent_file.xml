@@ -65,8 +65,9 @@
                     android:layout_gravity="center_vertical"
                     android:ellipsize="middle"
                     android:singleLine="true"
-                    android:textColor="#000"
+                    android:textColor="@color/chat_row_me_primary_text"
                     android:textSize="15sp"
+
                     />
 
                 <RelativeLayout

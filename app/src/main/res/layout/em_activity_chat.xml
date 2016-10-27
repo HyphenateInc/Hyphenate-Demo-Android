@@ -17,6 +17,7 @@
         />
 
 
+
     <com.hyphenate.easeui.widget.EaseMessageListView
         android:id="@+id/message_list"
         android:layout_width="match_parent"
@@ -28,7 +29,6 @@
         android:dividerHeight="5dp"
         android:listSelector="#00000000"
         />
-
     <com.hyphenate.chatuidemo.ui.widget.ChatInputView
         android:id="@+id/input_view"
         android:layout_width="match_parent"

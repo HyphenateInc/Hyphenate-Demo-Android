@@ -28,7 +28,6 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessage.ChatType;
 import com.hyphenate.chat.EMVoiceMessageBody;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.util.EMLog;
 import java.io.File;
 
@@ -88,16 +87,16 @@ public class EaseChatRowVoicePlayClickListener implements View.OnClickListener {
 		AudioManager audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
 
 		mediaPlayer = new MediaPlayer();
-		if (EaseUI.getInstance().getSettingsProvider().isSpeakerOpened()) {
+		//if (EaseUI.getInstance().getSettingsProvider().isSpeakerOpened()) {
 			audioManager.setMode(AudioManager.MODE_NORMAL);
 			audioManager.setSpeakerphoneOn(true);
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_RING);
-		} else {
-			audioManager.setSpeakerphoneOn(false);// 关闭扬声器
-			// 把声音设定成Earpiece（听筒）出来，设定为正在通话中
-			audioManager.setMode(AudioManager.MODE_IN_CALL);
-			mediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
-		}
+		//} else {
+		//	audioManager.setSpeakerphoneOn(false);// 关闭扬声器
+		//	// 把声音设定成Earpiece（听筒）出来，设定为正在通话中
+		//	audioManager.setMode(AudioManager.MODE_IN_CALL);
+		//	mediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
+		//}
 		try {
 			mediaPlayer.setDataSource(filePath);
 			mediaPlayer.prepare();

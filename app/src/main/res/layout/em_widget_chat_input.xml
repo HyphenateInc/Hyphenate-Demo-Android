@@ -32,16 +32,26 @@
         />
 
     <ImageView
-        android:id="@+id/btn_send"
+        android:id="@+id/img_send"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="0"
         android:background="?android:attr/selectableItemBackground"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingLeft="@dimen/chat_input_img_padding"
+        android:paddingRight="@dimen/chat_input_img_padding"
         android:scaleType="centerInside"
+        android:visibility="gone"
         android:src="@drawable/em_ic_chat_send"
         android:text="send"
         />
 
+    <ImageView
+        android:id="@+id/img_mic"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/chat_input_img_padding"
+        android:paddingRight="@dimen/chat_input_img_padding"
+        android:background="?android:attr/selectableItemBackground"
+        android:src="@drawable/em_ic_chat_mic_selector"
+        />
 </LinearLayout>

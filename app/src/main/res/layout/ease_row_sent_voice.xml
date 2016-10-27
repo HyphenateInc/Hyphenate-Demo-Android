@@ -38,6 +38,7 @@
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/iv_userhead"
             android:background="@drawable/ease_msg_bubble_me"
+            android:minHeight="@dimen/chat_item_text_min_height"
             >
             <ImageView
                 android:id="@+id/iv_voice"

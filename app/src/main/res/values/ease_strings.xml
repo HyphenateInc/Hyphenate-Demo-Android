@@ -32,4 +32,12 @@
     <string name="File_does_not_exist">File does not exist</string>
     <string name="The_file_is_not_greater_than_10_m">The file can not be larger than 10M</string>
     <string name="Is_download_voice_click_later">Downloading the voice message, click later</string>
+    <string name="send_failure_please">Send failure, please test whether the server connection</string>
+    <string name="record_no_permission">Recording without permission</string>
+    <string name="record_recording_time_is_too_short">The recording time is too short</string>
+    <string name="record_need_sdcard_support">Send voice need sdcard support</string>
+    <string name="record_tap_to_record">Tap and hold to record</string>
+    <string name="record_move_up_to_cancel">Release to send, swipe up to cancel</string>
+    <string name="record_release_to_cancel">Release to cancel</string>
+    <string name="record_recoding_fail">The recording failure, please try again！</string>
 </resources>
