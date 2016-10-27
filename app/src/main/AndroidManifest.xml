@@ -105,6 +105,16 @@
         <activity
             android:name=".ui.settings.AccountActivity"
             android:screenOrientation="portrait"/>
+        <!--Add contacts-->
+        <activity
+            android:name=".ui.user.AddContactsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateVisible"/>
+
+        <activity
+            android:name=".ui.apply.ApplyActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
 
         <!-- gcm start -->
         <receiver

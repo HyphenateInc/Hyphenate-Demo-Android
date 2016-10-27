@@ -34,6 +34,26 @@ public class UserDao {
         return instance;
     }
 
+    /**
+     * Save User to db
+     *
+     * @param user Save UserEntity
+     */
+    public void saveContact(UserEntity user) {
+        SQLiteDatabase db = openHelper.getWritableDatabase();
+        if (db.isOpen()) {
+            ContentValues values = new ContentValues();
+            values.put(UserDao.COLUMN_NAME_ID, user.getUsername());
+            if (user.getNickname() != null) {
+                values.put(UserDao.COLUMN_NAME_NICK, user.getNickname());
+            }
+            if (user.getAvatar() != null) {
+                values.put(UserDao.COLUMN_NAME_AVATAR, user.getAvatar());
+            }
+            db.replace(UserDao.TABLE_NAME, null, values);
+        }
+    }
+
     public void saveContactList(List<UserEntity> contactList) {
         {
             SQLiteDatabase db = openHelper.getWritableDatabase();
@@ -54,14 +74,27 @@ public class UserDao {
         }
     }
 
+    /**
+     * Delete user from db
+     *
+     * @param user delete UserEntity
+     */
+    public void deleteContact(UserEntity user) {
+        SQLiteDatabase db = openHelper.getWritableDatabase();
+        if (db.isOpen()) {
+            String whereClause = COLUMN_NAME_ID + "=?";
+            String[] whereArgs = { user.getUsername() };
+            db.delete(UserDao.TABLE_NAME, whereClause, whereArgs);
+        }
+    }
+
     public Map<String, UserEntity> getContactList() {
 
         {
             SQLiteDatabase db = openHelper.getReadableDatabase();
             Map<String, UserEntity> users = new HashMap<>();
             if (db.isOpen()) {
-                Cursor cursor =
-                        db.rawQuery("select * from " + UserDao.TABLE_NAME, null);
+                Cursor cursor = db.rawQuery("select * from " + UserDao.TABLE_NAME, null);
                 while (cursor.moveToNext()) {
                     String userId = cursor.getString(cursor.getColumnIndex(UserDao.COLUMN_NAME_ID));
                     String nick = cursor.getString(cursor.getColumnIndex(UserDao.COLUMN_NAME_NICK));
@@ -96,8 +129,8 @@ public class UserDao {
         }
     }
 
-    synchronized public void closeDB(){
-        if(openHelper != null){
+    synchronized public void closeDB() {
+        if (openHelper != null) {
             openHelper.closeDB();
         }
     }
