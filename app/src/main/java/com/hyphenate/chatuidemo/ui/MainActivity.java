@@ -27,6 +27,14 @@ import com.hyphenate.chatuidemo.ui.chat.ConversationListFragment;
 import com.hyphenate.chatuidemo.ui.settings.SettingsFragment;
 import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
 import com.hyphenate.chatuidemo.ui.user.ContactListFragment;
+import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
+import com.hyphenate.chatuidemo.ui.user.AddContactsActivity;
+import com.hyphenate.chatuidemo.ui.user.ContactListFragment;
+import com.hyphenate.chatuidemo.ui.chat.ConversationListFragment;
+import com.hyphenate.chatuidemo.ui.settings.SettingsFragment;
+
+import com.hyphenate.chatuidemo.ui.user.InviteMembersActivity;
+import com.hyphenate.chatuidemo.ui.user.PublicGroupsListActivity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -148,7 +156,11 @@ public class MainActivity extends BaseActivity {
 
         //add the action buttons to toolbar
         Toolbar toolbar = getActionBarToolbar();
-        toolbar.inflateMenu(R.menu.em_contacts_menu);
+        if (mViewPager.getCurrentItem() == 0) {
+            toolbar.inflateMenu(R.menu.em_contacts_menu);
+        } else if (mViewPager.getCurrentItem() == 1) {
+            toolbar.inflateMenu(R.menu.em_conversations_menu);
+        }
         toolbar.setOnMenuItemClickListener(new ToolBarMenuItemClickListener());
         return true;
     }
@@ -160,6 +172,22 @@ public class MainActivity extends BaseActivity {
 
         @Override public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
+
+                case R.id.menu_new_chat:
+
+                    break;
+
+                case R.id.menu_create_group:
+
+                    startActivity(new Intent(MainActivity.this, InviteMembersActivity.class));
+                    break;
+
+                case R.id.menu_public_groups:
+                    startActivity(new Intent(MainActivity.this, PublicGroupsListActivity.class));
+                    
+                case R.id.menu_add_contacts:
+                    startActivity(new Intent(MainActivity.this, AddContactsActivity.class));
+                    break;
             }
 
             return false;

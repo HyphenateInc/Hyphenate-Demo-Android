@@ -6,13 +6,11 @@
     android:orientation="vertical"
     >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/layout_contact_item"
         android:layout_width="match_parent"
         android:layout_height="@dimen/contact_item_height"
         android:background="?android:attr/selectableItemBackground"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
         android:paddingLeft="16dp"
         >
         <TextView
@@ -21,6 +19,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/header_text_color"
             android:textSize="@dimen/header_size"
+            android:layout_centerVertical="true"
             />
 
         <com.hyphenate.easeui.widget.EaseImageView
@@ -31,6 +30,8 @@
             android:scaleType="centerInside"
             android:src="@drawable/ease_default_avatar"
             app:imgShapeType="round"
+            android:layout_toRightOf="@id/txt_header"
+            android:layout_centerVertical="true"
             />
 
         <TextView
@@ -39,9 +40,21 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/contact_name_margin_left"
             android:textColor="@color/contact_name_color"
+            android:layout_toRightOf="@id/img_contact_avatar"
+            android:layout_centerVertical="true"
             android:textSize="@dimen/contact_name_size"
             />
-    </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/txt_base_line"
