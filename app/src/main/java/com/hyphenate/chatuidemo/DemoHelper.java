@@ -285,6 +285,10 @@ public class DemoHelper {
         return entityMap;
     }
 
+    public void setContactList(List<UserEntity> entityList) {
+        UserDao.getInstance(mContext).saveContactList(entityList);
+    }
+
     public void putContacts(UserEntity userEntity) {
         if (entityMap != null) {
             entityMap.put(userEntity.getUsername(), userEntity);

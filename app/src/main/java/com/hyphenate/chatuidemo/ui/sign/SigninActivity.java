@@ -15,6 +15,7 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.DemoApplication;
+import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.ui.MainActivity;
@@ -147,7 +148,7 @@ public class SignInActivity extends BaseActivity {
                         user.setInitialLetter(name.subSequence(0, 1).toString().toUpperCase());
                         entityList.add(user);
                     }
-                    DemoApplication.getInstance().setContactList(entityList);
+                    DemoHelper.getInstance().setContactList(entityList);
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }
