@@ -12,10 +12,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>
 
-        <!--Set the 'ActionMode' effect to prevent 'ActionMode' from squeezing the 'Toolbar'-->
-        <item name="android:windowActionModeOverlay">true</item>
-        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
 

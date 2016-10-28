@@ -7,10 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chatuidemo.R;
@@ -68,6 +66,18 @@ public class ConversationListFragment extends Fragment {
         super.onResume();
         //refresh list
         mConversationListView.refresh();
+    }
+
+    public void refresh(){
+        mConversationListView.refresh();
+    }
+
+    /**
+     * filter conversation list with passed query string
+     * @param str
+     */
+    public void filter(CharSequence str) {
+        mConversationListView.filter(str);
     }
 
 

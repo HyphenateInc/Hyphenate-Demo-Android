@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
@@ -21,7 +20,6 @@ import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.util.DateUtils;
-import internal.org.apache.http.entity.mime.MIME;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -116,17 +114,6 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
         return oldItem.equals(newItem);
     }
 
-    private void filter(String query) {
-        //final String lowerCaseQuery = query.toLowerCase();
-        //
-        //final List<EMConversation> filteredModelList = new ArrayList<>();
-        //for (ExampleModel model : models) {
-        //    final String text = model.getText().toLowerCase();
-        //    if (text.contains(lowerCaseQuery)) {
-        //        filteredModelList.add(model);
-        //    }
-        //}
-    }
 
     public void setOnItemClickListener(EaseListItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;

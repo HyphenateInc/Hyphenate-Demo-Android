@@ -4,8 +4,6 @@ import android.content.Context;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -197,6 +195,7 @@ public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<Recy
                             return !items.contains(item);
                         }
                     });
+
                     for (int i = itemsToRemove.size() - 1; i >= 0; i--) {
                         final T item = itemsToRemove.get(i);
                         mSortedList.remove(item);

@@ -488,9 +488,9 @@ public class ChatActivity extends BaseActivity {
                 // if the message is for current conversation
                 if (username.equals(toChatUsername)) {
                     mMessageListView.refreshSelectLast();
-                    //EaseUI.getInstance().getNotifier().vibrateAndPlayTone(message);
+                    DemoHelper.getInstance().getNotifier().vibrateAndPlayTone(message);
                 } else {
-                    //EaseUI.getInstance().getNotifier().onNewMsg(message);
+                    DemoHelper.getInstance().getNotifier().onNewMsg(message);
                 }
             }
         }

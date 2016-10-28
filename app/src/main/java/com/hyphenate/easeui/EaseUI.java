@@ -37,7 +37,9 @@ public class EaseUI {
     }
 
     public void init(Context context) {
-
+        if(settingsProvider == null){
+            settingsProvider = new DefaultSettingsProvider();
+        }
     }
 
     /**

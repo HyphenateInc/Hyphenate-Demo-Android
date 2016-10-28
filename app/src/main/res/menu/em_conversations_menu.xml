@@ -2,10 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_search"
+        android:id="@+id/menu_conversations_search"
         android:icon="@drawable/em_ic_action_light_search"
         android:title="Search"
         app:showAsAction="always"
+        app:actionLayout="@layout/em_search_view"
         />
     <item
         android:id="@+id/menu_add_contacts"
