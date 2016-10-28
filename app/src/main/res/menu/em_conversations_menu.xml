@@ -9,7 +9,7 @@
         app:showAsAction="always"
         />
     <item
-        android:id="@+id/menu_add_contacts"
+        android:id="@+id/menu_add_chats"
         android:icon="@drawable/em_ic_action_new_chat"
         android:title="Add chat"
         app:showAsAction="always"
