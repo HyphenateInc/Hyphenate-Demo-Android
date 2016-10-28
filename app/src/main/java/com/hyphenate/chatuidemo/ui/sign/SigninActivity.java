@@ -140,7 +140,8 @@ public class SignInActivity extends BaseActivity {
                 }
 
                 try {
-                    List<String> contacts = EMClient.getInstance().contactManager().getAllContactsFromServer();
+                    List<String> contacts =
+                            EMClient.getInstance().contactManager().getAllContactsFromServer();
                     List<UserEntity> entityList = new ArrayList<>();
                     for (String name : contacts) {
                         UserEntity user = new UserEntity(name);
@@ -148,6 +149,9 @@ public class SignInActivity extends BaseActivity {
                         entityList.add(user);
                     }
                     DemoApplication.getInstance().setContactList(entityList);
+
+                    // sync blacklist
+                    EMClient.getInstance().contactManager().getBlackListFromServer();
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }
