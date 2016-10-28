@@ -76,7 +76,7 @@ public class ConversationListFragment extends Fragment {
      * filter conversation list with passed query string
      * @param str
      */
-    public void filter(CharSequence str) {
+    public void filter(String str) {
         mConversationListView.filter(str);
     }
 

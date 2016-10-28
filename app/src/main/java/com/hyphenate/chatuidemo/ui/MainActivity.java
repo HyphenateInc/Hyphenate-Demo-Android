@@ -26,13 +26,8 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.chat.ConversationListFragment;
 import com.hyphenate.chatuidemo.ui.settings.SettingsFragment;
 import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
-import com.hyphenate.chatuidemo.ui.user.ContactListFragment;
-import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
 import com.hyphenate.chatuidemo.ui.user.AddContactsActivity;
 import com.hyphenate.chatuidemo.ui.user.ContactListFragment;
-import com.hyphenate.chatuidemo.ui.chat.ConversationListFragment;
-import com.hyphenate.chatuidemo.ui.settings.SettingsFragment;
-
 import com.hyphenate.chatuidemo.ui.user.InviteMembersActivity;
 import com.hyphenate.chatuidemo.ui.user.PublicGroupsListActivity;
 import java.util.ArrayList;
@@ -105,7 +100,7 @@ public class MainActivity extends BaseActivity {
                     // search conversations list
                     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                         @Override public boolean onQueryTextSubmit(String query) {
-                            mConversationListFragment.filter(searchView.getQuery());
+                            mConversationListFragment.filter(searchView.getQuery().toString());
                             return true;
                         }
 

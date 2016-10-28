@@ -93,10 +93,10 @@ public class EaseConversationListView extends RecyclerView {
      * filter conversation list with passed string
      * @param cs
      */
-    public void filter(CharSequence cs) {
+    public void filter(String cs) {
         if(cs == null)
             cs = "";
-        mAdapter.edit().replaceAll(getFilterList(cs.toString())).commit();
+        mAdapter.edit().replaceAll(getFilterList(cs)).commit();
     }
 
     Handler mHandler = new Handler(){
