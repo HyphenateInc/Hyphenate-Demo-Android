@@ -84,7 +84,7 @@ public class EaseChatRowLocation extends EaseChatRow {
         intent.putExtra("latitude", locBody.getLatitude());
         intent.putExtra("longitude", locBody.getLongitude());
         intent.putExtra("address", locBody.getAddress());
-        activity.startActivity(intent);
+        context.startActivity(intent);
     }
 
 }

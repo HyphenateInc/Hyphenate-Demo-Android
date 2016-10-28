@@ -25,12 +25,15 @@ import com.google.android.gms.location.places.ui.PlacePicker;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
+import com.hyphenate.chatuidemo.ui.user.GroupDetailsActivity;
+import com.hyphenate.chatuidemo.ui.user.UserEntity;
 import com.hyphenate.chatuidemo.ui.widget.ChatInputView;
 import com.hyphenate.chatuidemo.ui.widget.VoiceRecordDialog;
 import com.hyphenate.chatuidemo.ui.widget.VoiceRecordView;
@@ -81,17 +84,19 @@ public class ChatActivity extends BaseActivity {
      */
     protected int pageSize = 20;
 
+    public static ChatActivity activityInstance;
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_chat);
         ButterKnife.bind(this);
+        activityInstance = this;
 
         toChatUsername = getIntent().getStringExtra(EaseConstant.EXTRA_USER_ID);
         chatType =
                 getIntent().getIntExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
 
-        //TODO use nickname to set title
-        getSupportActionBar().setTitle(toChatUsername);
+        setToolbarTitle();
         getActionBarToolbar().setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 finish();
@@ -100,6 +105,7 @@ public class ChatActivity extends BaseActivity {
 
         // init message list view
         mMessageListView.init(toChatUsername, chatType, newCustomChatRowProvider());
+        registerForContextMenu(mMessageListView);
         mMessageListView.setItemClickListener(
                 new EaseMessageListView.MessageListItemClicksListener() {
                     @Override public void onResendClick(EMMessage message) {
@@ -170,12 +176,37 @@ public class ChatActivity extends BaseActivity {
         }
     }
 
+    private void setToolbarTitle() {
+        String nick = toChatUsername;
+        if(chatType == EaseConstant.CHATTYPE_SINGLE){ //p2p chat
+            UserEntity user = DemoHelper.getInstance().getContactList().get(toChatUsername);
+            if(user != null){
+                nick = user.getNickname();
+            }
+        }else if(chatType == EaseConstant.CHATTYPE_GROUP){ //group chat
+            EMGroup group = EMClient.getInstance().groupManager().getGroup(toChatUsername);
+            if(group != null){
+                nick = group.getGroupName();
+            }
+        }
+        getSupportActionBar().setTitle(nick);
+    }
+
+
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
 
         //add the action buttons to toolbar
         Toolbar toolbar = getActionBarToolbar();
         toolbar.inflateMenu(R.menu.em_chat_menu);
+
+        if (chatType == EaseConstant.CHATTYPE_GROUP) {
+
+            menu.findItem(R.id.menu_group_detail).setVisible(true);
+            menu.findItem(R.id.menu_voice_call).setVisible(false);
+            menu.findItem(R.id.menu_video_call).setVisible(false);
+        }
+
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
@@ -204,6 +235,10 @@ public class ChatActivity extends BaseActivity {
                         voiceIntent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
                         voiceIntent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
                         startActivity(voiceIntent);
+                        break;
+
+                    case R.id.menu_group_detail:
+                        startActivity(new Intent(ChatActivity.this, GroupDetailsActivity.class).putExtra("groupId",toChatUsername));
                         break;
                 }
 
@@ -488,9 +523,9 @@ public class ChatActivity extends BaseActivity {
                 // if the message is for current conversation
                 if (username.equals(toChatUsername)) {
                     mMessageListView.refreshSelectLast();
-                    //EaseUI.getInstance().getNotifier().vibrateAndPlayTone(message);
+                    DemoHelper.getInstance().getNotifier().vibrateAndPlayTone(message);
                 } else {
-                    //EaseUI.getInstance().getNotifier().onNewMsg(message);
+                    DemoHelper.getInstance().getNotifier().onNewMsg(message);
                 }
             }
         }

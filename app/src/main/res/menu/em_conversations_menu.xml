@@ -2,15 +2,31 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_search"
+        android:id="@+id/menu_conversations_search"
         android:icon="@drawable/em_ic_action_light_search"
         android:title="Search"
+        app:actionLayout="@layout/em_search_view"
         app:showAsAction="always"
         />
     <item
-        android:id="@+id/menu_add_contacts"
+        android:id="@+id/menu_add_chats"
         android:icon="@drawable/em_ic_action_new_chat"
         android:title="Add chat"
         app:showAsAction="always"
-        />
+        >
+        <menu>
+            <item
+                android:id="@+id/menu_new_chat"
+                android:title="New Chat"
+                />
+            <item
+                android:id="@+id/menu_create_group"
+                android:title="Create Group"
+                />
+            <item
+                android:id="@+id/menu_public_groups"
+                android:title="Public Groups"
+                />
+        </menu>
+    </item>
 </menu>

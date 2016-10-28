@@ -14,6 +14,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
+import com.hyphenate.chatuidemo.model.MessageNotifier;
 import com.hyphenate.chatuidemo.ui.call.CallReceiver;
 import com.hyphenate.chatuidemo.listener.CallStateChangeListener;
 import com.hyphenate.chatuidemo.listener.ContactsChangeListener;
@@ -61,6 +62,8 @@ public class DemoHelper {
      */
     private List<Activity> activityList = new ArrayList<Activity>();
 
+    private MessageNotifier mNotifier = new MessageNotifier();
+
     private DemoHelper() {
     }
 
@@ -88,7 +91,9 @@ public class DemoHelper {
 
             // set debug mode open:true, close:false
             EMClient.getInstance().setDebugMode(true);
-
+            //init message notifier
+            mNotifier.init(context);
+            //set events listeners
             setGlobalListener();
 
             EMLog.d(TAG, "------- init hyphenate end --------------");
@@ -205,8 +210,8 @@ public class DemoHelper {
                 for (EMMessage message : messages) {
                     EMLog.d(TAG, "onMessageReceived id : " + message.getMsgId());
                     // in background, do not refresh UI, notify it in notification bar
-                    if (hasForegroundActivies()) {
-                        //getNotifier().onNewMsg(message);
+                    if (!hasForegroundActivities()) {
+                        getNotifier().onNewMsg(message);
                     }
                 }
             }
@@ -250,7 +255,7 @@ public class DemoHelper {
         EMClient.getInstance().contactManager().setContactListener(mContactListener);
     }
 
-    public boolean hasForegroundActivies() {
+    public boolean hasForegroundActivities() {
         return activityList.size() != 0;
     }
 
@@ -264,11 +269,19 @@ public class DemoHelper {
         activityList.remove(activity);
     }
 
+    public MessageNotifier getNotifier() {
+        return mNotifier;
+    }
+
     public Map<String, UserEntity> getContactList() {
         if (entityMap.isEmpty()) {
             entityMap = UserDao.getInstance(mContext).getContactList();
         }
         return entityMap;
+    }
+
+    public void setContactList(List<UserEntity> entityList) {
+        UserDao.getInstance(mContext).saveContactList(entityList);
     }
 
     public void addContacts(UserEntity userEntity) {

@@ -90,6 +90,11 @@
             android:name="com.hyphenate.easeui.ui.EaseMapActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".ui.user.GroupDetailsActivity"/>
+        <activity android:name=".ui.user.InviteMembersActivity"/>
+        <activity android:name=".ui.user.MembersListActivity"/>
+        <activity android:name=".ui.user.NewGroupActivity"/>
+        <activity android:name=".ui.user.PublicGroupsListActivity"/>
 
 
         <!--Chat activity-->

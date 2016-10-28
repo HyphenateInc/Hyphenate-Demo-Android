@@ -1,13 +1,18 @@
 package com.hyphenate.easeui.widget;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.easeui.adapter.EaseConversationListAdapter;
+import com.hyphenate.easeui.model.EaseUser;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -22,7 +27,7 @@ public class EaseConversationListView extends RecyclerView {
     protected final int MSG_REFRESH_ADAPTER_DATA = 0;
 
     protected Context mContext;
-    protected List<EMConversation> mConversationList = new ArrayList<EMConversation>();
+    protected List<EMConversation> mConversationList;
     protected EaseConversationListAdapter mAdapter;
 
     public EaseConversationListView(Context context) {
@@ -81,22 +86,33 @@ public class EaseConversationListView extends RecyclerView {
         mAdapter = new EaseConversationListAdapter(getContext(), comparator);
         setAdapter(mAdapter);
 
-        mAdapter.edit().replaceAll(loadConversationList()).commit();
+        mAdapter.edit().replaceAll(mConversationList).commit();
     }
 
     /**
      * filter conversation list with passed string
-     * @param str
+     * @param cs
      */
-    public void filter(CharSequence str) {
-        //mAdapter.getFilter().filter(str);
+    public void filter(String cs) {
+        if(cs == null)
+            cs = "";
+        mAdapter.edit().replaceAll(getFilterList(cs)).commit();
     }
+
+    Handler mHandler = new Handler(){
+        @Override public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what == MSG_REFRESH_ADAPTER_DATA){
+                mAdapter.edit().replaceAll(loadConversationList()).commit();
+            }
+        }
+    };
 
     /**
      * Refresh conversations list view
      */
     public void refresh() {
-        mAdapter.edit().replaceAll(loadConversationList()).commit();
+        mHandler.sendEmptyMessage(MSG_REFRESH_ADAPTER_DATA);
     }
 
     /**
@@ -114,7 +130,7 @@ public class EaseConversationListView extends RecyclerView {
     public void setOnItemClickListener(EaseListItemClickListener onItemClickListener){
         mAdapter.setOnItemClickListener(onItemClickListener);
     }
-    List<EMConversation> conversationList;
+
     /**
      * load conversation list
      * @return
@@ -122,17 +138,42 @@ public class EaseConversationListView extends RecyclerView {
     protected synchronized List<EMConversation> loadConversationList() {
         // get all conversations
         Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
-        conversationList = new ArrayList<>(conversations.values());
-        Iterator iterator = conversationList.iterator();
+        if (mConversationList == null) {
+            mConversationList = new ArrayList<>(conversations.values());
+        } else {
+            mConversationList.clear();
+            mConversationList.addAll(conversations.values());
+        }
+        Iterator iterator = mConversationList.iterator();
         while (iterator.hasNext()){
             EMConversation conversation = (EMConversation) iterator.next();
             if(conversation.getAllMessages().size() == 0){
                 iterator.remove();
             }
         }
-        return conversationList;
+        return mConversationList;
     }
 
+    protected synchronized  List<EMConversation> getFilterList(String query){
+        List<EMConversation> list = new ArrayList<>();
+        Iterator iterator = mConversationList.iterator();
+        while (iterator.hasNext()){
+            EMConversation conversation = (EMConversation) iterator.next();
+            String username = conversation.getUserName();
+            EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
+            if(group != null){
+                username = group.getGroupName();
+            }else{
+                EaseUser user = EaseUserUtils.getUserInfo(username);
+                if(user != null && user.getNickname() != null)
+                    username = user.getNickname();
+            }
 
+            if(username.contains(query)){
+                list.add(conversation);
+            }
+        }
+        return list;
+    }
 
 }

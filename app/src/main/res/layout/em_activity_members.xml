@@ -9,12 +9,12 @@
   <android.support.v7.widget.Toolbar
       android:id="@+id/toolbar_actionbar"
       app:navigationIcon="@drawable/em_ic_back"
-      app:title="Groups"
+      app:title="Members"
       style="@style/ToolbarNormalTheme"
       />
 
   <android.support.v7.widget.RecyclerView
-      android:id="@+id/recycler_group"
+      android:id="@+id/recycler_members"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       />

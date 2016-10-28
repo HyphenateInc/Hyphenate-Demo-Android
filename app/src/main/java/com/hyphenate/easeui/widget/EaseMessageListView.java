@@ -41,16 +41,18 @@ public class EaseMessageListView extends ListView {
 
     public EaseMessageListView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        parseAttrs(context, attrs);
+        init(context);
     }
 
     public EaseMessageListView(Context context) {
-        this(context, null);
+        super(context);
+        init(context);
     }
 
-    private void init(Context context, AttributeSet attrs){
+
+    private void init(Context context){
         this.context = context;
-        parseAttrs(context, attrs);
     }
 
     /**

@@ -111,7 +111,7 @@ public class EaseChatRowVideo extends EaseChatRowFile {
                 e.printStackTrace();
             }
         }
-        activity.startActivity(intent);
+        context.startActivity(intent);
 	}
 	
 	/**
@@ -152,7 +152,7 @@ public class EaseChatRowVideo extends EaseChatRowFile {
 
                     } else {
                         if (message.status() == EMMessage.Status.FAIL) {
-                            if (EaseCommonUtils.isNetWorkConnected(activity)) {
+                            if (EaseCommonUtils.isNetWorkConnected(context)) {
                                 EMClient.getInstance().chatManager().downloadThumbnail(message);
                             }
                         }

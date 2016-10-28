@@ -13,7 +13,6 @@
  */
 package com.hyphenate.easeui.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.view.View;
@@ -214,6 +213,18 @@ public class EaseMessageListAdapter extends BaseAdapter {
 
         return -1;// invalid
     }
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        EMMessage message = getItem(position);
+        if (convertView == null) {
+            convertView = createChatRow(context, message, position);
+        }
+
+        //setup the item view
+        ((EaseChatRow) convertView).setUpView(position, itemClicksListener, itemStyle);
+
+        return convertView;
+    }
+
 
     protected EaseChatRow createChatRow(Context context, EMMessage message, int position) {
         EaseChatRow chatRow = null;
@@ -227,7 +238,7 @@ public class EaseMessageListAdapter extends BaseAdapter {
                 //        false)) {
                 //    chatRow = new EaseChatRowBigExpression(context, message, position, this);
                 //} else {
-                    chatRow = new EaseChatRowText(context, message, position, this);
+                chatRow = new EaseChatRowText(context, message, position, this);
                 //}
                 break;
             case LOCATION:
@@ -250,19 +261,6 @@ public class EaseMessageListAdapter extends BaseAdapter {
         }
 
         return chatRow;
-    }
-
-    @SuppressLint("NewApi")
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        EMMessage message = getItem(position);
-        if (convertView == null) {
-            convertView = createChatRow(context, message, position);
-        }
-
-        //setup the item view
-        ((EaseChatRow) convertView).setUpView(position, itemClicksListener, itemStyle);
-
-        return convertView;
     }
 
 

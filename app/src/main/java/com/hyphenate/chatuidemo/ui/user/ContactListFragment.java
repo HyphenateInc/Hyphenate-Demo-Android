@@ -195,6 +195,9 @@ public class ContactListFragment extends Fragment {
         }
     }
 
+
+
+
     @Override public void onResume() {
         super.onResume();
 
