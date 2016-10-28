@@ -145,7 +145,7 @@ public class EaseChatRowImage extends EaseChatRowFile{
                         EaseImageCache.getInstance().put(thumbernailPath, image);
                     } else {
                         if (message.status() == EMMessage.Status.FAIL) {
-                            if (EaseCommonUtils.isNetWorkConnected(activity)) {
+                            if (EaseCommonUtils.isNetWorkConnected(context)) {
                                 new Thread(new Runnable() {
 
                                     @Override
