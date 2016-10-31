@@ -78,8 +78,29 @@
 
     <string name="em_blacklist">Black List</string>
 
+    <!--Setting Preference-->
+    <string name="em_pref_key_about">em_pref_about</string>
+    <string name="em_pref_key_notification">em_pref_notification</string>
+    <string name="em_pref_key_notification_sound">em_pref_notification_sound</string>
+    <string name="em_pref_key_notification_vibrate">em_pref_notification_vibrate</string>
+    <string name="em_pref_key_notification_display_name">em_pref_notification_name</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!--Status-->
+    <string name="em_pref_on">Open</string>
+    <string name="em_pref_off">Close</string>
+
+    <!--About-->
+    <string name="em_pref_about">About</string>
+    <string name="em_pref_about_version">SDK Version</string>
+
+    <!--Notification-->
+    <string name="em_pref_notification">Notification</string>
+    <string name="em_pref_notification_switch">Notification Switch</string>
+    <string name="em_pref_notification_summary">Set push notification</string>
+    <string name="em_pref_notification_sound">Notification Sound</string>
+    <string name="em_pref_notification_vibrate">Notification Vibrate</string>
+    <string name="em_pref_notification_display_name">Display name</string>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="groups">Groups</string>
 
