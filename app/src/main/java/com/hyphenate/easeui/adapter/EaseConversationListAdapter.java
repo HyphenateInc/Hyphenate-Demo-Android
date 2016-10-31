@@ -16,6 +16,7 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
@@ -47,20 +48,25 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
         EMConversation conversation = getItem(position);
         // get username or group id
         String username = conversation.getUserName();
-        if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {
-            // group message, show group avatar
-            holder.mAvatarView.setImageResource(R.drawable.ease_ic_group_default);
-            EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
-            holder.mNameView.setText(group != null ? group.getGroupName() : username);
-        } else if (conversation.getType() == EMConversation.EMConversationType.ChatRoom) {
-            holder.mAvatarView.setImageResource(R.drawable.ease_ic_group_default);
-            EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(username);
-            holder.mNameView.setText(
-                    room != null && !TextUtils.isEmpty(room.getName()) ? room.getName() : username);
+        if (conversation.getUserName().equals(EaseConstant.CONVERSATION_NAME_APPLY)) {
+            holder.mNameView.setText(R.string.em_contacts_apply);
         } else {
-            //single chat conversation
-            EaseUserUtils.setUserAvatar(mContext, username, holder.mAvatarView);
-            EaseUserUtils.setUserNick(username, holder.mNameView);
+            if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {
+                // group message, show group avatar
+                holder.mAvatarView.setImageResource(R.drawable.ease_ic_group_default);
+                EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
+                holder.mNameView.setText(group != null ? group.getGroupName() : username);
+            } else if (conversation.getType() == EMConversation.EMConversationType.ChatRoom) {
+                holder.mAvatarView.setImageResource(R.drawable.ease_ic_group_default);
+                EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(username);
+                holder.mNameView.setText(
+                        room != null && !TextUtils.isEmpty(room.getName()) ? room.getName()
+                                : username);
+            } else {
+                //single chat conversation
+                EaseUserUtils.setUserAvatar(mContext, username, holder.mAvatarView);
+                EaseUserUtils.setUserNick(username, holder.mNameView);
+            }
         }
 
         if (conversation.getUnreadMsgCount() > 0) {

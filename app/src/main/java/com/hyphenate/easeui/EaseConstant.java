@@ -43,5 +43,5 @@ public class EaseConstant {
     // Broadcast action
     public static final String BROADCAST_ACTION_CALL = "com.hyphenate.action.call";
     public static final String BROADCAST_ACTION_CONTACTS = "com.hyphenate.action.contacts";
-    public static final String BROADCAST_ACTION_APPLICATION = "com.hyphenate.action.application";
+    public static final String BROADCAST_ACTION_APPLY = "com.hyphenate.action.apply";
 }

@@ -8,7 +8,6 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chatuidemo.DemoHelper;
-import com.hyphenate.chatuidemo.ui.user.UserDao;
 import com.hyphenate.chatuidemo.ui.user.UserEntity;
 import com.hyphenate.easeui.EaseConstant;
 
@@ -34,11 +33,10 @@ public class ContactsChangeListener implements EMContactListener {
      */
     @Override public void onContactAdded(String username) {
         UserEntity userEntity = new UserEntity(username);
-        UserDao.getInstance(mContext).saveContact(userEntity);
 
-        DemoHelper.getInstance().putContacts(userEntity);
+        DemoHelper.getInstance().addContacts(userEntity);
         // send broadcast
-        sendBroadcast(EaseConstant.BROADCAST_ACTION_APPLICATION);
+        sendBroadcast(EaseConstant.BROADCAST_ACTION_APPLY);
     }
 
     /**
@@ -48,9 +46,8 @@ public class ContactsChangeListener implements EMContactListener {
      */
     @Override public void onContactDeleted(String username) {
         UserEntity userEntity = new UserEntity(username);
-        UserDao.getInstance(mContext).deleteContact(userEntity);
-        
-        DemoHelper.getInstance().popContacts(userEntity);
+
+        DemoHelper.getInstance().deleteContacts(userEntity);
 
         // send Broadcast
         sendBroadcast(EaseConstant.BROADCAST_ACTION_CONTACTS);
@@ -63,7 +60,6 @@ public class ContactsChangeListener implements EMContactListener {
      * @param reason request reason
      */
     @Override public void onContactInvited(String username, String reason) {
-        // 根据申请者的 username 和当前登录账户 username 拼接出msgId方便后边更新申请信息
         String msgId = username + 0;
 
         // Create message save application info
@@ -78,7 +74,7 @@ public class ContactsChangeListener implements EMContactListener {
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);
         // send broadcast
-        sendBroadcast(EaseConstant.BROADCAST_ACTION_APPLICATION);
+        sendBroadcast(EaseConstant.BROADCAST_ACTION_APPLY);
     }
 
     /**
@@ -87,9 +83,23 @@ public class ContactsChangeListener implements EMContactListener {
      * @param username The requestor's username
      */
     @Override public void onFriendRequestAccepted(String username) {
+        String msgId = username + 0;
 
+        // Create message save application info
+        EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+        EMTextMessageBody body = new EMTextMessageBody(username + " agrees with your apply");
+        message.addBody(body);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, username);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON,
+                username + " agrees with your apply");
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS, "Agreed");
+        message.setFrom(EaseConstant.CONVERSATION_NAME_APPLY);
+        message.setMsgId(msgId);
+        // save message to db
+        EMClient.getInstance().chatManager().saveMessage(message);
         // send broadcast
-        sendBroadcast(EaseConstant.BROADCAST_ACTION_APPLICATION);
+        sendBroadcast(EaseConstant.BROADCAST_ACTION_APPLY);
     }
 
     /**
@@ -99,8 +109,23 @@ public class ContactsChangeListener implements EMContactListener {
      */
     @Override public void onFriendRequestDeclined(String username) {
 
+        String msgId = username + 0;
+
+        // Create message save application info
+        EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+        EMTextMessageBody body = new EMTextMessageBody(username + " declined your apply");
+        message.addBody(body);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, username);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON,
+                username + "  declined your apply");
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS, "Rejected");
+        message.setFrom(EaseConstant.CONVERSATION_NAME_APPLY);
+        message.setMsgId(msgId);
+        // save message to db
+        EMClient.getInstance().chatManager().saveMessage(message);
         // send broadcast
-        sendBroadcast(EaseConstant.BROADCAST_ACTION_APPLICATION);
+        sendBroadcast(EaseConstant.BROADCAST_ACTION_APPLY);
     }
 
     /**

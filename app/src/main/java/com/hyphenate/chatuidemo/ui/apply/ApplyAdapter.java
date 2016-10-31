@@ -84,7 +84,7 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHol
     }
 
     /**
-     * 申请与通知列表内Button点击事件
+     * Set apply for view listener
      */
     private View.OnClickListener viewListener = new View.OnClickListener() {
         @Override public void onClick(View v) {
@@ -123,7 +123,7 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHol
     }
 
     /**
-     * 自定义ViewHolder
+     * Apply for ViewHolder
      */
     protected static class ApplyViewHolder extends RecyclerView.ViewHolder {
         EaseImageView imageViewAvatar;
@@ -133,9 +133,6 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHol
         Button agreeBtn;
         Button rejectBtn;
 
-        /**
-         *
-         */
         public ApplyViewHolder(View itemView) {
             super(itemView);
             imageViewAvatar = (EaseImageView) itemView.findViewById(R.id.img_avatar);

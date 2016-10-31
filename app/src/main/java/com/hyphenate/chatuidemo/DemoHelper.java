@@ -64,7 +64,6 @@ public class DemoHelper {
 
     private MessageNotifier mNotifier = new MessageNotifier();
 
-
     private DemoHelper() {
     }
 
@@ -96,8 +95,6 @@ public class DemoHelper {
             mNotifier.init(context);
             //set events listeners
             setGlobalListener();
-
-
 
             EMLog.d(TAG, "------- init hyphenate end --------------");
         }
@@ -248,7 +245,6 @@ public class DemoHelper {
     }
 
     /**
-     *
      * Register contacts lsitener
      * Listen for changes to contacts
      */
@@ -273,7 +269,6 @@ public class DemoHelper {
         activityList.remove(activity);
     }
 
-
     public MessageNotifier getNotifier() {
         return mNotifier;
     }
@@ -289,19 +284,23 @@ public class DemoHelper {
         UserDao.getInstance(mContext).saveContactList(entityList);
     }
 
-    public void putContacts(UserEntity userEntity) {
+    public void addContacts(UserEntity userEntity) {
         if (entityMap != null) {
             entityMap.put(userEntity.getUsername(), userEntity);
         }
+
+        UserDao.getInstance(mContext).saveContact(userEntity);
     }
 
     /**
      * remove user from db
      */
-    public void popContacts(UserEntity userEntity) {
+    public void deleteContacts(UserEntity userEntity) {
         if (entityMap != null) {
             entityMap.remove(userEntity.getUsername());
         }
+
+        UserDao.getInstance(mContext).deleteContact(userEntity);
     }
 
     /**
