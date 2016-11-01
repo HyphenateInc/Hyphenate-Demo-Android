@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.chatuidemo.DemoApplication;
+import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
@@ -42,7 +43,7 @@ public class InviteMembersActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         membersList = getIntent().getStringArrayListExtra("members");
-        isOwner = getIntent().getBooleanExtra("isOwner",false);
+        isOwner = getIntent().getBooleanExtra("isOwner", false);
         groupId = getIntent().getStringExtra("groupId");
 
         manager = new LinearLayoutManager(this);
@@ -99,7 +100,7 @@ public class InviteMembersActivity extends BaseActivity {
     public void refresh() {
 
         entityList.clear();
-        for (UserEntity userEntity : DemoApplication.getInstance().getContactList().values()) {
+        for (UserEntity userEntity : DemoHelper.getInstance().getContactList().values()) {
             entityList.add(userEntity);
         }
 

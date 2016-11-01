@@ -14,6 +14,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
+import com.hyphenate.chatuidemo.listener.GroupChangeListener;
 import com.hyphenate.chatuidemo.ui.call.CallReceiver;
 import com.hyphenate.chatuidemo.listener.CallStateChangeListener;
 import com.hyphenate.chatuidemo.listener.ContactsChangeListener;
@@ -55,6 +56,9 @@ public class DemoHelper {
 
     // Contacts listener
     private ContactsChangeListener mContactListener = null;
+
+    private GroupChangeListener mGroupListener = null;
+
 
     /**
      * save foreground Activity which registered message listeners
@@ -107,6 +111,7 @@ public class DemoHelper {
         options.setRequireAck(true);
         // set if need delivery ack
         options.setRequireDeliveryAck(false);
+        options.setAutoAcceptGroupInvitation(false);
 
         //set gcm project number
         options.setGCMNumber("998166487724");
@@ -128,6 +133,16 @@ public class DemoHelper {
 
         // register contacts listener
         registerContactsListener();
+
+        registerGroupListener();
+    }
+
+    private void registerGroupListener() {
+        if (mGroupListener == null){
+            mGroupListener = new GroupChangeListener(mContext);
+        }
+
+        EMClient.getInstance().groupManager().addGroupChangeListener(mGroupListener);
     }
 
     /**

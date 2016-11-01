@@ -30,8 +30,6 @@ public class ApplyActivity extends BaseActivity {
 
     private EMConversation mConversation;
 
-    private int mPageSize = 30;
-
     private ApplyAdapter mApplyAdapter;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +61,7 @@ public class ApplyActivity extends BaseActivity {
         // 设置当前会话未读数为 0
         mConversation.markAllMessagesAsRead();
         int count = mConversation.getAllMessages().size();
+        int mPageSize = 30;
         if (count < mConversation.getAllMsgCount() && count < mPageSize) {
             // 获取已经在列表中的最上边的一条消息id
             String msgId = mConversation.getAllMessages().get(0).getMsgId();
@@ -125,11 +124,18 @@ public class ApplyActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMMessage message = mConversation.getMessage(msgId, false);
-                    EMClient.getInstance()
-                            .contactManager()
-                            .acceptInvitation(
-                                    message.getStringAttribute(EaseConstant.MESSAGE_ATTR_USERNAME,
-                                            ""));
+                    if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+                        EMClient.getInstance()
+                                .groupManager()
+                                .acceptInvitation(message.getStringAttribute(EaseConstant.MESSAGE_ATTR_GROUPID), message.getStringAttribute(
+                                        EaseConstant.MESSAGE_ATTR_USERNAME));
+                    } else {
+
+                        EMClient.getInstance()
+                                .contactManager()
+                                .acceptInvitation(message.getStringAttribute(
+                                        EaseConstant.MESSAGE_ATTR_USERNAME, ""));
+                    }
 
                     // update contacts apply for message status
                     message.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS,
@@ -143,8 +149,14 @@ public class ApplyActivity extends BaseActivity {
                             refresh();
                         }
                     });
-                } catch (HyphenateException e) {
+                } catch (final HyphenateException e) {
                     e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                    });
                 }
             }
         }).start();
@@ -161,11 +173,27 @@ public class ApplyActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMMessage message = mConversation.getMessage(msgId, false);
-                    EMClient.getInstance()
-                            .contactManager()
-                            .declineInvitation(
-                                    message.getStringAttribute(EaseConstant.MESSAGE_ATTR_USERNAME,
-                                            ""));
+                    if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+
+                        if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
+
+                            EMClient.getInstance()
+                                    .groupManager()
+                                    .declineInvitation(message.getStringAttribute(EaseConstant.MESSAGE_ATTR_GROUPID), message.getStringAttribute(
+                                            EaseConstant.MESSAGE_ATTR_USERNAME), "");
+                        } else {
+
+                            EMClient.getInstance()
+                                    .groupManager()
+                                    .declineApplication(message.getStringAttribute(EaseConstant.MESSAGE_ATTR_GROUPID),
+                                            EaseConstant.MESSAGE_ATTR_USERNAME, "");
+                        }
+                    } else {
+                        EMClient.getInstance()
+                                .contactManager()
+                                .declineInvitation(message.getStringAttribute(
+                                        EaseConstant.MESSAGE_ATTR_USERNAME, ""));
+                    }
                     // update contacts apply for message status
                     message.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS,
                             mActivity.getString(R.string.em_rejected));
@@ -179,8 +207,15 @@ public class ApplyActivity extends BaseActivity {
                             refresh();
                         }
                     });
-                } catch (HyphenateException e) {
+                } catch (final HyphenateException e) {
                     e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_LONG)
+                                    .show();
+                            dialog.dismiss();
+                        }
+                    });
                 }
             }
         }).start();

@@ -94,6 +94,7 @@ public class MembersListActivity extends BaseActivity {
                                                             .removeUserFromGroup(groupId, member);
                                                     runOnUiThread(new Runnable() {
                                                         @Override public void run() {
+                                                            progressDialog.dismiss();
                                                             membersList.remove(member);
                                                             adapter.notifyDataSetChanged();
                                                             toolbar.setTitle("Members("
@@ -105,6 +106,7 @@ public class MembersListActivity extends BaseActivity {
                                                     e.printStackTrace();
                                                     runOnUiThread(new Runnable() {
                                                         @Override public void run() {
+                                                            progressDialog.dismiss();
                                                             Snackbar.make(toolbar, "delete failure"
                                                                             + e.getMessage().toString(),
                                                                     Snackbar.LENGTH_SHORT).show();

@@ -158,7 +158,7 @@ public class MainActivity extends BaseActivity {
 
                 case R.id.menu_public_groups:
                     startActivity(new Intent(MainActivity.this, PublicGroupsListActivity.class));
-                    
+
                 case R.id.menu_add_contacts:
                     startActivity(new Intent(MainActivity.this, AddContactsActivity.class));
                     break;
