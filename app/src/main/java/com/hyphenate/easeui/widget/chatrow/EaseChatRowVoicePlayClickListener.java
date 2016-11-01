@@ -13,7 +13,6 @@
  */
 package com.hyphenate.easeui.widget.chatrow;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
@@ -44,7 +43,7 @@ public class EaseChatRowVoicePlayClickListener implements View.OnClickListener {
 	private AnimationDrawable voiceAnimation = null;
 	MediaPlayer mediaPlayer = null;
 	ImageView iv_read_status;
-	Activity activity;
+	Context context;
 	private ChatType chatType;
 	private BaseAdapter adapter;
 
@@ -52,13 +51,13 @@ public class EaseChatRowVoicePlayClickListener implements View.OnClickListener {
 	public static EaseChatRowVoicePlayClickListener currentPlayListener = null;
 	public static String playMsgId;
 
-	public EaseChatRowVoicePlayClickListener(EMMessage message, ImageView v, ImageView iv_read_status, BaseAdapter adapter, Activity context) {
+	public EaseChatRowVoicePlayClickListener(EMMessage message, ImageView v, ImageView iv_read_status, BaseAdapter adapter, Context context) {
 		this.message = message;
 		voiceBody = (EMVoiceMessageBody) message.getBody();
 		this.iv_read_status = iv_read_status;
 		this.adapter = adapter;
 		voiceIconView = v;
-		this.activity = context;
+		this.context = context;
 		this.chatType = message.getChatType();
 	}
 
@@ -84,7 +83,7 @@ public class EaseChatRowVoicePlayClickListener implements View.OnClickListener {
 			return;
 		}
 		playMsgId = message.getMsgId();
-		AudioManager audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+		AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
 		mediaPlayer = new MediaPlayer();
 		//if (EaseUI.getInstance().getSettingsProvider().isSpeakerOpened()) {
@@ -150,7 +149,7 @@ public class EaseChatRowVoicePlayClickListener implements View.OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		String st = activity.getResources().getString(R.string.Is_download_voice_click_later);
+		String st = context.getResources().getString(R.string.Is_download_voice_click_later);
 		if (isPlaying) {
 			if (playMsgId != null && playMsgId.equals(message.getMsgId())) {
 				currentPlayListener.stopPlayVoice();
@@ -171,9 +170,9 @@ public class EaseChatRowVoicePlayClickListener implements View.OnClickListener {
 					EMLog.e(TAG, "file not exist");
 
 			} else if (message.status() == EMMessage.Status.INPROGRESS) {
-				Toast.makeText(activity, st, Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, st, Toast.LENGTH_SHORT).show();
 			} else if (message.status() == EMMessage.Status.FAIL) {
-				Toast.makeText(activity, st, Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, st, Toast.LENGTH_SHORT).show();
 				new AsyncTask<Void, Void, Void>() {
 
 					@Override

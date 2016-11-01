@@ -15,6 +15,7 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.DemoApplication;
+import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.ui.MainActivity;
@@ -140,14 +141,17 @@ public class SignInActivity extends BaseActivity {
                 }
 
                 try {
-                    List<String> contacts = EMClient.getInstance().contactManager().getAllContactsFromServer();
+                    List<String> contacts =
+                            EMClient.getInstance().contactManager().getAllContactsFromServer();
                     List<UserEntity> entityList = new ArrayList<>();
                     for (String name : contacts) {
                         UserEntity user = new UserEntity(name);
                         user.setInitialLetter(name.subSequence(0, 1).toString().toUpperCase());
                         entityList.add(user);
                     }
-                    DemoApplication.getInstance().setContactList(entityList);
+                    // sync blacklist
+                    EMClient.getInstance().contactManager().getBlackListFromServer();
+                    DemoHelper.getInstance().setContactList(entityList);
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }

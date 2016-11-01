@@ -58,18 +58,14 @@ public class ApplyActivity extends BaseActivity {
         mConversation = EMClient.getInstance()
                 .chatManager()
                 .getConversation(EaseConstant.CONVERSATION_NAME_APPLY, null, true);
-        // 设置当前会话未读数为 0
         mConversation.markAllMessagesAsRead();
         int count = mConversation.getAllMessages().size();
         int mPageSize = 30;
         if (count < mConversation.getAllMsgCount() && count < mPageSize) {
-            // 获取已经在列表中的最上边的一条消息id
             String msgId = mConversation.getAllMessages().get(0).getMsgId();
-            // 分页加载更多消息，需要传递已经加载的消息的最上边一条消息的id，以及需要加载的消息的条数
             mConversation.loadMoreMsgFromDB(msgId, mPageSize - count);
         }
 
-        // 实例化适配器
         mApplyAdapter = new ApplyAdapter(mActivity);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -77,15 +73,6 @@ public class ApplyActivity extends BaseActivity {
         mRecyclerView.setAdapter(mApplyAdapter);
 
         setItemClickListener();
-    }
-
-    /**
-     * Refresh ui
-     */
-    private void refresh() {
-        if (mApplyAdapter != null) {
-            mApplyAdapter.notifyDataSetChanged();
-        }
     }
 
     /**
@@ -219,5 +206,14 @@ public class ApplyActivity extends BaseActivity {
                 }
             }
         }).start();
+    }
+
+    /**
+     * Refresh ui
+     */
+    private void refresh() {
+        if (mApplyAdapter != null) {
+            mApplyAdapter.notifyDataSetChanged();
+        }
     }
 }

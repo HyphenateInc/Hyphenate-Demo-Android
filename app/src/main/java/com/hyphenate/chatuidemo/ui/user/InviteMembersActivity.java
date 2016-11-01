@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.hyphenate.chatuidemo.DemoApplication;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;

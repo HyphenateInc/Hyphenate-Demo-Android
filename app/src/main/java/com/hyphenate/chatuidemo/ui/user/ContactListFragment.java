@@ -140,8 +140,7 @@ public class ContactListFragment extends Fragment {
             @Override public void run() {
                 try {
                     EMClient.getInstance().contactManager().deleteContact(userEntity.getUsername());
-                    UserDao.getInstance(getActivity()).deleteContact(userEntity);
-                    DemoHelper.getInstance().popContacts(userEntity);
+                    DemoHelper.getInstance().deleteContacts(userEntity);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override public void run() {
                             refresh();
@@ -195,6 +194,9 @@ public class ContactListFragment extends Fragment {
             refresh();
         }
     }
+
+
+
 
     @Override public void onResume() {
         super.onResume();

@@ -76,6 +76,8 @@
     <string name="em_agreed">Agreed</string>
     <string name="em_rejected">Rejected</string>
 
+    <string name="em_blacklist">Black List</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -87,5 +89,7 @@
     <string name="chat_expand_more">More</string>
     <string name="sd_card_does_not_exist">"SD card does not exist, can't take pictures"</string>
     <string name="unable_to_get_location">Unable to get to your location information!</string>
+    <string name="hint_search">Search</string>
+    <string name="delete_conversation">Delete conversation</string>
 
 </resources>

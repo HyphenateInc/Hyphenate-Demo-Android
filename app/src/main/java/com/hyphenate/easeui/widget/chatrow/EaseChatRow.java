@@ -1,7 +1,8 @@
 package com.hyphenate.easeui.widget.chatrow;
 
-import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.BaseAdapter;
@@ -38,7 +39,6 @@ public abstract class EaseChatRow extends LinearLayout {
     protected TextView percentageView;
     protected ProgressBar progressBar;
     protected ImageView statusView;
-    protected Activity activity;
 
     protected TextView ackedView;
     protected TextView deliveredView;
@@ -52,10 +52,11 @@ public abstract class EaseChatRow extends LinearLayout {
     protected BaseAdapter adapter;
     protected EaseMessageListItemStyle itemStyle;
 
+    protected Handler handler = new Handler(Looper.getMainLooper());
+
     public EaseChatRow(Context context, EMMessage message, int position, BaseAdapter adapter) {
         super(context);
         this.context = context;
-        this.activity = (Activity) context;
         this.message = message;
         this.position = position;
         this.adapter = adapter;
@@ -182,7 +183,7 @@ public abstract class EaseChatRow extends LinearLayout {
                 
                 @Override
                 public void onProgress(final int progress, String status) {
-                    activity.runOnUiThread(new Runnable() {
+                    handler.post(new Runnable() {
                         @Override
                         public void run() {
                             if(percentageView != null)
@@ -215,7 +216,7 @@ public abstract class EaseChatRow extends LinearLayout {
                 
                 @Override
                 public void onProgress(final int progress, String status) {
-                    activity.runOnUiThread(new Runnable() {
+                    handler.post(new Runnable() {
                         public void run() {
                             if(percentageView != null){
                                 percentageView.setText(progress + "%");
@@ -307,16 +308,16 @@ public abstract class EaseChatRow extends LinearLayout {
 
 
     protected void updateView() {
-        activity.runOnUiThread(new Runnable() {
+        handler.post(new Runnable() {
             public void run() {
                 if (message.status() == EMMessage.Status.FAIL) {
 
                     if (message.getError() == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
-                        Toast.makeText(activity,activity.getString(R.string.send_fail) + activity.getString(R.string.error_send_invalid_content), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,context.getString(R.string.send_fail) + context.getString(R.string.error_send_invalid_content), Toast.LENGTH_SHORT).show();
                     } else if (message.getError() == EMError.GROUP_NOT_JOINED) {
-                        Toast.makeText(activity,activity.getString(R.string.send_fail) + activity.getString(R.string.error_send_not_in_the_group), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,context.getString(R.string.send_fail) + context.getString(R.string.error_send_not_in_the_group), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(activity,activity.getString(R.string.send_fail) + activity.getString(R.string.connect_failuer_toast), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,context.getString(R.string.send_fail) + context.getString(R.string.connect_failuer_toast), Toast.LENGTH_SHORT).show();
                     }
                 }
 

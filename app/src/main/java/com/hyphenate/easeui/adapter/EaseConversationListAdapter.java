@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
@@ -17,11 +16,11 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.util.DateUtils;
-import internal.org.apache.http.entity.mime.MIME;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -49,20 +48,25 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
         EMConversation conversation = getItem(position);
         // get username or group id
         String username = conversation.getUserName();
-        if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {
-            // group message, show group avatar
-            holder.mAvatarView.setImageResource(R.drawable.ease_ic_group_default);
-            EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
-            holder.mNameView.setText(group != null ? group.getGroupName() : username);
-        } else if (conversation.getType() == EMConversation.EMConversationType.ChatRoom) {
-            holder.mAvatarView.setImageResource(R.drawable.ease_ic_group_default);
-            EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(username);
-            holder.mNameView.setText(
-                    room != null && !TextUtils.isEmpty(room.getName()) ? room.getName() : username);
+        if (conversation.getUserName().equals(EaseConstant.CONVERSATION_NAME_APPLY)) {
+            holder.mNameView.setText(R.string.em_contacts_apply);
         } else {
-            //single chat conversation
-            EaseUserUtils.setUserAvatar(mContext, username, holder.mAvatarView);
-            EaseUserUtils.setUserNick(username, holder.mNameView);
+            if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {
+                // group message, show group avatar
+                holder.mAvatarView.setImageResource(R.drawable.ease_ic_group_default);
+                EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
+                holder.mNameView.setText(group != null ? group.getGroupName() : username);
+            } else if (conversation.getType() == EMConversation.EMConversationType.ChatRoom) {
+                holder.mAvatarView.setImageResource(R.drawable.ease_ic_group_default);
+                EMChatRoom room = EMClient.getInstance().chatroomManager().getChatRoom(username);
+                holder.mNameView.setText(
+                        room != null && !TextUtils.isEmpty(room.getName()) ? room.getName()
+                                : username);
+            } else {
+                //single chat conversation
+                EaseUserUtils.setUserAvatar(mContext, username, holder.mAvatarView);
+                EaseUserUtils.setUserNick(username, holder.mNameView);
+            }
         }
 
         if (conversation.getUnreadMsgCount() > 0) {
@@ -116,17 +120,6 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
         return oldItem.equals(newItem);
     }
 
-    private void filter(String query) {
-        //final String lowerCaseQuery = query.toLowerCase();
-        //
-        //final List<EMConversation> filteredModelList = new ArrayList<>();
-        //for (ExampleModel model : models) {
-        //    final String text = model.getText().toLowerCase();
-        //    if (text.contains(lowerCaseQuery)) {
-        //        filteredModelList.add(model);
-        //    }
-        //}
-    }
 
     public void setOnItemClickListener(EaseListItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
