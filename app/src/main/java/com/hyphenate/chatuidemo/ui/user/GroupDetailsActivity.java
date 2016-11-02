@@ -96,7 +96,13 @@ public class GroupDetailsActivity extends BaseActivity {
         layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new MembersListAdapter(this, members, LinearLayoutManager.HORIZONTAL,group.isMemberAllowToInvite());
+        if (isOwner) {
+            adapter =
+                    new MembersListAdapter(this, members, LinearLayoutManager.HORIZONTAL, isOwner);
+        } else {
+            adapter = new MembersListAdapter(this, members, LinearLayoutManager.HORIZONTAL,
+                    group.isMemberAllowToInvite());
+        }
         recyclerView.setAdapter(adapter);
 
         updateGroup();
@@ -274,6 +280,7 @@ public class GroupDetailsActivity extends BaseActivity {
     }
 
     protected void updateGroup() {
+        final ProgressDialog progressDialog = ProgressDialog.show(this,"waiting....","update...",false);
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -291,10 +298,16 @@ public class GroupDetailsActivity extends BaseActivity {
                                 isOwner = false;
                                 exitGroupView.setText("leave group");
                             }
+                            progressDialog.dismiss();
                         }
                     });
                 } catch (Exception e) {
 
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            progressDialog.dismiss();
+                        }
+                    });
                 }
             }
         }).start();

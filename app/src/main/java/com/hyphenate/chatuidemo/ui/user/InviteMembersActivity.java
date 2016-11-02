@@ -42,7 +42,7 @@ public class InviteMembersActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         membersList = getIntent().getStringArrayListExtra("members");
-        isOwner = getIntent().getBooleanExtra("isOwner",false);
+        isOwner = getIntent().getBooleanExtra("isOwner", false);
         groupId = getIntent().getStringExtra("groupId");
 
         manager = new LinearLayoutManager(this);
