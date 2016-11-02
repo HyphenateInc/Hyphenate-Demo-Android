@@ -77,6 +77,7 @@
     <string name="em_rejected">Rejected</string>
 
     <string name="em_blacklist">Black List</string>
+    <string name="em_blacklist_unblock">Unblock</string>
 
     <!--Setting Preference-->
     <string name="em_pref_key_about">em_pref_about</string>

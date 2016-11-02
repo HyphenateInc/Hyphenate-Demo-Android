@@ -60,7 +60,7 @@ public class ContactsChangeListener implements EMContactListener {
      * @param reason request reason
      */
     @Override public void onContactInvited(String username, String reason) {
-        String msgId = username + 0;
+        String msgId = username + System.currentTimeMillis();
 
         // Create message save application info
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
@@ -83,7 +83,7 @@ public class ContactsChangeListener implements EMContactListener {
      * @param username The requestor's username
      */
     @Override public void onFriendRequestAccepted(String username) {
-        String msgId = username + 0;
+        String msgId = username + System.currentTimeMillis();
 
         // Create message save application info
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
@@ -109,15 +109,14 @@ public class ContactsChangeListener implements EMContactListener {
      */
     @Override public void onFriendRequestDeclined(String username) {
 
-        String msgId = username + 0;
+        String msgId = username + System.currentTimeMillis();
 
         // Create message save application info
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(username + " declined your apply");
         message.addBody(body);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, username);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON,
-                username + "  declined your apply");
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, username + "  declined your apply");
         message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS, "Rejected");
         message.setFrom(EaseConstant.CONVERSATION_NAME_APPLY);

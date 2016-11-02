@@ -39,7 +39,7 @@
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/btn_margin"
             android:background="@drawable/em_btn_rectangle_green"
-            android:text="@string/em_contacts_apply_agree"
+            android:text="@string/em_blacklist_unblock"
             android:textColor="@color/em_white_87"
             />
     </RelativeLayout>

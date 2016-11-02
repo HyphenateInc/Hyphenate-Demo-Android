@@ -69,7 +69,7 @@
                 android:title="Blockd Users">
                 <intent
                     android:action="android.intent.action.MAIN"
-                    android:targetClass="com.hyphenate.chatuidemo.ui.settings.BlacklistActivity"
+                    android:targetClass="com.hyphenate.chatuidemo.ui.settings.BlackListActivity"
                     android:targetPackage="com.hyphenate.chatuidemo"/>
             </PreferenceScreen>
         </PreferenceScreen>
