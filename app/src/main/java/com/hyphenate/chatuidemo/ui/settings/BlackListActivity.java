@@ -17,13 +17,13 @@ import com.hyphenate.exceptions.HyphenateException;
  * Blacklist activity
  */
 
-public class BlacklistActivity extends BaseActivity {
+public class BlackListActivity extends BaseActivity {
 
     private BaseActivity mActivity;
 
     @BindView(R.id.recycler_view_blacklist) RecyclerView mRecyclerView;
 
-    private BlacklistAdapter mAdapter;
+    private BlackListAdapter mAdapter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -49,7 +49,7 @@ public class BlacklistActivity extends BaseActivity {
             }
         });
 
-        mAdapter = new BlacklistAdapter(mActivity);
+        mAdapter = new BlackListAdapter(mActivity);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
@@ -71,7 +71,7 @@ public class BlacklistActivity extends BaseActivity {
      * Set item click listener
      */
     private void setItemClickListener() {
-        mAdapter.setItemClickListener(new BlacklistAdapter.ItemClickListener() {
+        mAdapter.setItemClickListener(new BlackListAdapter.ItemClickListener() {
             /**
              * Item action event
              *

@@ -124,7 +124,7 @@
 
         <!--Blacklist activity-->
         <activity
-            android:name=".ui.settings.BlacklistActivity"
+            android:name=".ui.settings.BlackListActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 
