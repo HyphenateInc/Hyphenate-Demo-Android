@@ -13,7 +13,7 @@
     >
 
     <!--Include communal Toolbar-->
-    <include layout="@layout/em_widget_toolbar_communal"/>
+    <!--<include layout="@layout/em_widget_toolbar_communal"/>-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -35,6 +35,13 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/logo_margin"
+                    android:src="@drawable/em_logo_green"
+                    />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

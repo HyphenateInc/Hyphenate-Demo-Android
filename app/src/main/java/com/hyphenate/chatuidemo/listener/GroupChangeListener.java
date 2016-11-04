@@ -38,7 +38,7 @@ public class GroupChangeListener implements EMGroupChangeListener {
         EMTextMessageBody body = new EMTextMessageBody(" receive invitation to join the group：" + s1);
         message.setChatType(EMMessage.ChatType.GroupChat);
         message.addBody(body);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID,s);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_ID,s);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, s2);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, s3);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0);
@@ -67,7 +67,7 @@ public class GroupChangeListener implements EMGroupChangeListener {
         EMTextMessageBody body = new EMTextMessageBody(s2 + " Apply to join group：" + s2);
         message.setChatType(EMMessage.ChatType.GroupChat);
         message.addBody(body);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID,s);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_ID,s);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, s2);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, s3);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0);

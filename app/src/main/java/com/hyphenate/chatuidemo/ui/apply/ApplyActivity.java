@@ -21,7 +21,6 @@ import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
-import java.util.Collections;
 
 /**
  * Created by lzan13 on 2016/10/26.
@@ -125,7 +124,7 @@ public class ApplyActivity extends BaseActivity {
                         EMClient.getInstance()
                                 .groupManager()
                                 .acceptInvitation(message.getStringAttribute(
-                                        EaseConstant.MESSAGE_ATTR_GROUPID),
+                                        EaseConstant.MESSAGE_ATTR_GROUP_ID),
                                         message.getStringAttribute(
                                                 EaseConstant.MESSAGE_ATTR_USERNAME));
                     } else {
@@ -179,7 +178,7 @@ public class ApplyActivity extends BaseActivity {
                             EMClient.getInstance()
                                     .groupManager()
                                     .declineInvitation(message.getStringAttribute(
-                                            EaseConstant.MESSAGE_ATTR_GROUPID),
+                                            EaseConstant.MESSAGE_ATTR_GROUP_ID),
                                             message.getStringAttribute(
                                                     EaseConstant.MESSAGE_ATTR_USERNAME), "");
                         } else {
@@ -187,7 +186,7 @@ public class ApplyActivity extends BaseActivity {
                             EMClient.getInstance()
                                     .groupManager()
                                     .declineApplication(message.getStringAttribute(
-                                            EaseConstant.MESSAGE_ATTR_GROUPID),
+                                            EaseConstant.MESSAGE_ATTR_GROUP_ID),
                                             EaseConstant.MESSAGE_ATTR_USERNAME, "");
                         }
                     } else {

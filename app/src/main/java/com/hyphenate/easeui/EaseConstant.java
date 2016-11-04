@@ -34,10 +34,10 @@ public class EaseConstant {
     public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_TO = "to";
 
-    public static final String CONVERSATION_NAME_APPLY = "em_application";
+    public static final String CONVERSATION_NAME_APPLY = "em_conversation_apply";
     public static final String MESSAGE_ATTR_TYPE = "em_type";
     public static final String MESSAGE_ATTR_USERNAME = "em_username";
-    public static final String MESSAGE_ATTR_GROUPID = "em_groupId";
+    public static final String MESSAGE_ATTR_GROUP_ID = "em_group_id";
     public static final String MESSAGE_ATTR_REASON = "em_reason";
     public static final String MESSAGE_ATTR_STATUS = "em_status";
     public static final String MESSAGE_ATTR_GROUP_TYPE = "em_group_type";
