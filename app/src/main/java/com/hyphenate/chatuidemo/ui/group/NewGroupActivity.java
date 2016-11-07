@@ -1,4 +1,4 @@
-package com.hyphenate.chatuidemo.ui.user;
+package com.hyphenate.chatuidemo.ui.group;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -39,7 +39,9 @@ public class NewGroupActivity extends BaseActivity {
     @BindView(R.id.text_new_group_members_size) TextView membersSizeView;
     @BindView(R.id.recycler_new_group_members) RecyclerView recyclerView;
     @BindView(R.id.layout_allow_members_to_invite) RelativeLayout inviteView;
-    @BindView(R.id.switch_allow_members_to_invite) Switch mSwitch;
+    @BindView(R.id.switch_allow_members_to_invite) Switch inviteSwitch;
+    @BindView(R.id.layout_appear_in_group_search) RelativeLayout groupTypeView;
+    @BindView(R.id.switch_appear_in_group_search) Switch groupTypeSwitch;
 
     LinearLayoutManager manager;
     private List<String> newMembers;
@@ -70,8 +72,7 @@ public class NewGroupActivity extends BaseActivity {
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(manager);
 
-        MembersListAdapter adapter =
-                new MembersListAdapter(this, newMembers, LinearLayoutManager.HORIZONTAL, false);
+        MembersListAdapter adapter = new MembersListAdapter(this, newMembers, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setAdapter(adapter);
     }
 
@@ -85,36 +86,30 @@ public class NewGroupActivity extends BaseActivity {
         item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override public boolean onMenuItemClick(MenuItem item) {
                 if (!TextUtils.isEmpty(groupNameView.getText().toString())) {
-                    final ProgressDialog progressDialog =
-                            ProgressDialog.show(NewGroupActivity.this, "creating group",
-                                    "waiting...", false);
+                    final ProgressDialog progressDialog = ProgressDialog.show(NewGroupActivity.this, "creating group", "waiting...", false);
 
                     new Thread(new Runnable() {
                         @Override public void run() {
 
-                            EMGroupManager.EMGroupOptions options =
-                                    new EMGroupManager.EMGroupOptions();
+                            EMGroupManager.EMGroupOptions options = new EMGroupManager.EMGroupOptions();
                             options.maxUsers = 200;
-                            options.style = mSwitch.isChecked()
-                                    ? EMGroupManager.EMGroupStyle.EMGroupStylePrivateMemberCanInvite
-                                    : EMGroupManager.EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
+                            if (groupTypeSwitch.isChecked()) {
+                                options.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicJoinNeedApproval;
+                            } else {
+                                options.style = inviteSwitch.isChecked() ? EMGroupManager.EMGroupStyle.EMGroupStylePrivateMemberCanInvite
+                                        : EMGroupManager.EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
+                            }
 
                             try {
                                 final EMGroup group = EMClient.getInstance()
                                         .groupManager()
-                                        .createGroup(groupNameView.getText().toString(),
-                                                "new group", newMembers.toArray(new String[0]), "",
-                                                options);
+                                        .createGroup(groupNameView.getText().toString(), "new group", newMembers.toArray(new String[0]), "", options);
                                 runOnUiThread(new Runnable() {
                                     public void run() {
                                         progressDialog.dismiss();
                                         finish();
-                                        startActivity(new Intent(NewGroupActivity.this,
-                                                ChatActivity.class).putExtra(
-                                                EaseConstant.EXTRA_CHAT_TYPE,
-                                                EaseConstant.CHATTYPE_GROUP)
-                                                .putExtra(EaseConstant.EXTRA_USER_ID,
-                                                        group.getGroupId()));
+                                        startActivity(new Intent(NewGroupActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_CHAT_TYPE,
+                                                EaseConstant.CHATTYPE_GROUP).putExtra(EaseConstant.EXTRA_USER_ID, group.getGroupId()));
                                     }
                                 });
                             } catch (final HyphenateException e) {
@@ -122,17 +117,14 @@ public class NewGroupActivity extends BaseActivity {
                                 runOnUiThread(new Runnable() {
                                     public void run() {
                                         progressDialog.dismiss();
-                                        Snackbar.make(recyclerView,
-                                                "create failure" + e.getLocalizedMessage(),
-                                                Snackbar.LENGTH_SHORT).show();
+                                        Snackbar.make(recyclerView, "create failure" + e.getLocalizedMessage(), Snackbar.LENGTH_SHORT).show();
                                     }
                                 });
                             }
                         }
                     }).start();
                 } else {
-                    Snackbar.make(recyclerView, "please input group name", Snackbar.LENGTH_SHORT)
-                            .show();
+                    Snackbar.make(recyclerView, "please input group name", Snackbar.LENGTH_SHORT).show();
                 }
                 return true;
             }
@@ -140,13 +132,21 @@ public class NewGroupActivity extends BaseActivity {
         return true;
     }
 
-    @OnClick(R.id.layout_allow_members_to_invite) void onClick(View view) {
+    @OnClick({ R.id.layout_allow_members_to_invite, R.id.layout_appear_in_group_search }) void onClick(View view) {
         switch (view.getId()) {
             case R.id.layout_allow_members_to_invite:
-                if (mSwitch.isChecked()) {
-                    mSwitch.setChecked(false);
+                if (inviteSwitch.isChecked()) {
+                    inviteSwitch.setChecked(false);
                 } else {
-                    mSwitch.setChecked(true);
+                    inviteSwitch.setChecked(true);
+                }
+                break;
+
+            case R.id.layout_appear_in_group_search:
+                if (groupTypeSwitch.isChecked()) {
+                    groupTypeSwitch.setChecked(false);
+                } else {
+                    groupTypeSwitch.setChecked(true);
                 }
                 break;
         }

@@ -35,17 +35,22 @@ public class EaseConstant {
     public static final String EXTRA_TO = "to";
 
     public static final String CONVERSATION_NAME_APPLY = "em_application";
+    //0:chat,1:groupChat
     public static final String MESSAGE_ATTR_TYPE = "em_type";
     public static final String MESSAGE_ATTR_USERNAME = "em_username";
     public static final String MESSAGE_ATTR_GROUPID = "em_groupId";
     public static final String MESSAGE_ATTR_REASON = "em_reason";
     public static final String MESSAGE_ATTR_STATUS = "em_status";
+    //0 : private group,1:public group
     public static final String MESSAGE_ATTR_GROUP_TYPE = "em_group_type";
 
     // Broadcast action
     public static final String BROADCAST_ACTION_CALL = "com.hyphenate.action.call";
     public static final String BROADCAST_ACTION_CONTACTS = "com.hyphenate.action.contacts";
     public static final String BROADCAST_ACTION_APPLICATION = "com.hyphenate.action.application";
+<<<<<<< HEAD
+=======
     public static final String BROADCAST_ACTION_GROUP = "com.hyphenate.action.group";
+>>>>>>> ece292c48c1914184755bf3a0088e41544ba367d
     public static final String BROADCAST_ACTION_APPLY = "com.hyphenate.action.apply";
 }

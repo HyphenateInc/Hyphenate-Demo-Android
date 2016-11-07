@@ -111,11 +111,23 @@ public class ApplyActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMMessage message = mConversation.getMessage(msgId, false);
-                    if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-                        EMClient.getInstance()
-                                .groupManager()
-                                .acceptInvitation(message.getStringAttribute(EaseConstant.MESSAGE_ATTR_GROUPID), message.getStringAttribute(
-                                        EaseConstant.MESSAGE_ATTR_USERNAME));
+                    if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_TYPE) == 1) {
+                        if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
+
+                            EMClient.getInstance()
+                                    .groupManager()
+                                    .acceptInvitation(message.getStringAttribute(
+                                            EaseConstant.MESSAGE_ATTR_GROUPID),
+                                            message.getStringAttribute(
+                                                    EaseConstant.MESSAGE_ATTR_USERNAME));
+                        } else {
+                            EMClient.getInstance()
+                                    .groupManager()
+                                    .acceptApplication(message.getStringAttribute(
+                                            EaseConstant.MESSAGE_ATTR_USERNAME),
+                                            message.getStringAttribute(
+                                                    EaseConstant.MESSAGE_ATTR_GROUPID));
+                        }
                     } else {
 
                         EMClient.getInstance()
@@ -160,19 +172,22 @@ public class ApplyActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMMessage message = mConversation.getMessage(msgId, false);
-                    if (message.getChatType() == EMMessage.ChatType.GroupChat) {
+                    if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_TYPE) == 1) {
 
                         if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
 
                             EMClient.getInstance()
                                     .groupManager()
-                                    .declineInvitation(message.getStringAttribute(EaseConstant.MESSAGE_ATTR_GROUPID), message.getStringAttribute(
-                                            EaseConstant.MESSAGE_ATTR_USERNAME), "");
+                                    .declineInvitation(message.getStringAttribute(
+                                            EaseConstant.MESSAGE_ATTR_GROUPID),
+                                            message.getStringAttribute(
+                                                    EaseConstant.MESSAGE_ATTR_USERNAME), "");
                         } else {
 
                             EMClient.getInstance()
                                     .groupManager()
-                                    .declineApplication(message.getStringAttribute(EaseConstant.MESSAGE_ATTR_GROUPID),
+                                    .declineApplication(message.getStringAttribute(
+                                            EaseConstant.MESSAGE_ATTR_GROUPID),
                                             EaseConstant.MESSAGE_ATTR_USERNAME, "");
                         }
                     } else {
@@ -198,8 +213,7 @@ public class ApplyActivity extends BaseActivity {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
-                            Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_LONG)
-                                    .show();
+                            Toast.makeText(mActivity, e.getMessage(), Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                         }
                     });

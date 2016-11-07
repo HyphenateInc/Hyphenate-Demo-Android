@@ -1,4 +1,4 @@
-package com.hyphenate.chatuidemo.ui.user;
+package com.hyphenate.chatuidemo.ui.group;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +14,8 @@ import butterknife.ButterKnife;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
+import com.hyphenate.chatuidemo.ui.user.ContactListAdapter;
+import com.hyphenate.chatuidemo.ui.user.UserEntity;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,8 +112,7 @@ public class InviteMembersActivity extends BaseActivity {
         });
 
         if (adapter == null) {
-            adapter = new ContactListAdapter(InviteMembersActivity.this, entityList, false,
-                    membersList, isOwner, groupId);
+            adapter = new ContactListAdapter(InviteMembersActivity.this, entityList, false, membersList, isOwner, groupId);
             recyclerView.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
