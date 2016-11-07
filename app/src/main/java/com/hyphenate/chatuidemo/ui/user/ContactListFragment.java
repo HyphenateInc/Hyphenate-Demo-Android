@@ -1,13 +1,10 @@
 package com.hyphenate.chatuidemo.ui.user;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -21,14 +18,15 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 
+import com.hyphenate.chatuidemo.receiver.BroadCastReceiverManager;
 import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.ui.chat.ChatActivity;
 import com.hyphenate.chatuidemo.ui.apply.ApplyActivity;
+import com.hyphenate.chatuidemo.ui.group.GroupListActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,8 +42,6 @@ import butterknife.ButterKnife;
 public class ContactListFragment extends Fragment {
 
     private static String TAG = ContactListFragment.class.getSimpleName();
-    private LocalBroadcastManager localBroadcastManager;
-    private ContactsBroadcastReceiver broadcastReceiver;
 
     @BindView(R.id.rv_contacts) RecyclerView recyclerView;
     ShowDialogFragment dialogFragment;
@@ -62,6 +58,13 @@ public class ContactListFragment extends Fragment {
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setRecyclerView();
+
+        //Contacts broadcast receiver
+        BroadCastReceiverManager.getInstance(getActivity()).setDefaultLocalBroadCastReceiver(new BroadCastReceiverManager.DefaultLocalBroadCastReceiver() {
+            @Override public void defaultOnReceive(Context context, Intent intent) {
+                refresh();
+            }
+        });
     }
 
     @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -184,28 +187,11 @@ public class ContactListFragment extends Fragment {
         });
     }
 
-    /**
-     * Contacts broadcast receiver
-     */
-    private class ContactsBroadcastReceiver extends BroadcastReceiver {
-
-        @Override public void onReceive(Context context, Intent intent) {
-            EMLog.d(TAG, "contact action");
-            refresh();
-        }
-    }
-
-
-
-
     @Override public void onResume() {
         super.onResume();
 
         // register broadcast register
-        localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
-        ContactsBroadcastReceiver broadcastReceiver = new ContactsBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter(EaseConstant.BROADCAST_ACTION_CONTACTS);
-        localBroadcastManager.registerReceiver(broadcastReceiver, intentFilter);
+        BroadCastReceiverManager.getInstance(getActivity()).registerBroadCastReceiver(EaseConstant.BROADCAST_ACTION_CONTACTS);
         // refresh ui
         refresh();
     }
@@ -213,7 +199,7 @@ public class ContactListFragment extends Fragment {
     @Override public void onStop() {
         super.onStop();
         // unregister broadcast receiver
-        localBroadcastManager.unregisterReceiver(broadcastReceiver);
+        BroadCastReceiverManager.getInstance(getActivity()).unRegisterBroadCastReceiver();
     }
 
     @OnClick({ R.id.layout_group_entry, R.id.layout_apply_entry }) void onclick(View v) {

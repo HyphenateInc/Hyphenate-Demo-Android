@@ -73,7 +73,7 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 
-        <activity android:name=".ui.user.GroupListActivity"/>
+        <activity android:name=".ui.group.GroupListActivity"/>
 
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
@@ -90,11 +90,11 @@
             android:name="com.hyphenate.easeui.ui.EaseMapActivity"
             android:screenOrientation="portrait"
             />
-        <activity android:name=".ui.user.GroupDetailsActivity"/>
-        <activity android:name=".ui.user.InviteMembersActivity"/>
-        <activity android:name=".ui.user.MembersListActivity"/>
-        <activity android:name=".ui.user.NewGroupActivity"/>
-        <activity android:name=".ui.user.PublicGroupsListActivity"/>
+        <activity android:name=".ui.group.GroupDetailsActivity"/>
+        <activity android:name=".ui.group.InviteMembersActivity"/>
+        <activity android:name=".ui.group.MembersListActivity"/>
+        <activity android:name=".ui.group.NewGroupActivity"/>
+        <activity android:name=".ui.group.PublicGroupsListActivity"/>
 
 
         <!--Chat activity-->

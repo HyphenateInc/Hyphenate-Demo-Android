@@ -1,4 +1,4 @@
-package com.hyphenate.chatuidemo.ui.user;
+package com.hyphenate.chatuidemo.ui.group;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
@@ -100,6 +100,9 @@ public class PublicGroupsListActivity extends GroupListActivity {
                                                             view.setEnabled(false);
                                                             ((Button) view).setTextColor(
                                                                     Color.parseColor("#8798a4"));
+                                                            Snackbar.make(recyclerView,
+                                                                    "successful application,please waiting...",
+                                                                    Snackbar.LENGTH_SHORT).show();
                                                         }
                                                     });
                                                 } catch (HyphenateException e) {

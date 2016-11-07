@@ -17,7 +17,7 @@ import com.hyphenate.exceptions.HyphenateException;
  * Blacklist activity
  */
 
-public class BlacklistActivity extends BaseActivity {
+public class BlackListActivity extends BaseActivity {
 
     private BaseActivity mActivity;
 

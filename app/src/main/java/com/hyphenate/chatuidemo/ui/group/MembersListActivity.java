@@ -1,4 +1,4 @@
-package com.hyphenate.chatuidemo.ui.user;
+package com.hyphenate.chatuidemo.ui.group;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -35,6 +35,7 @@ public class MembersListActivity extends BaseActivity {
     boolean isOwner = false;
     String groupId;
     ProgressDialog progressDialog;
+    private boolean isChange;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,15 +50,14 @@ public class MembersListActivity extends BaseActivity {
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
 
-        final MembersListAdapter adapter =
-                new MembersListAdapter(this, membersList, LinearLayoutManager.VERTICAL);
+        final MembersListAdapter adapter = new MembersListAdapter(this, membersList, LinearLayoutManager.VERTICAL);
         recyclerView.setAdapter(adapter);
 
         final Toolbar toolbar = getActionBarToolbar();
         toolbar.setTitle("Members(" + membersList.size() + ")");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                finish();
+                onBackPressed();
             }
         });
 
@@ -65,11 +65,10 @@ public class MembersListActivity extends BaseActivity {
             @Override public void onItemClick(View view, int position) {
                 if (!EMClient.getInstance().getCurrentUser().equals(membersList.get(position))) {
 
-                    startActivity(new Intent(MembersListActivity.this, ChatActivity.class).putExtra(
-                            EaseConstant.EXTRA_USER_ID, membersList.get(position)));
+                    startActivity(
+                            new Intent(MembersListActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, membersList.get(position)));
                 } else {
-                    Snackbar.make(toolbar, "you can not chat with yourself", Snackbar.LENGTH_SHORT)
-                            .show();
+                    Snackbar.make(toolbar, "you can not chat with yourself", Snackbar.LENGTH_SHORT).show();
                 }
             }
 
@@ -79,27 +78,22 @@ public class MembersListActivity extends BaseActivity {
                     new AlertDialog.Builder(MembersListActivity.this).setTitle("member")
                             .setMessage("delete member")
                             .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(final DialogInterface dialog, int which) {
-                                    progressDialog = ProgressDialog.show(MembersListActivity.this,
-                                            "delete member", "waiting...", false);
+                                @Override public void onClick(final DialogInterface dialog, int which) {
+                                    progressDialog = ProgressDialog.show(MembersListActivity.this, "delete member", "waiting...", false);
                                     final String member = membersList.get(position);
 
                                     if (!EMClient.getInstance().getCurrentUser().equals(member)) {
                                         new Thread(new Runnable() {
                                             @Override public void run() {
                                                 try {
-                                                    EMClient.getInstance()
-                                                            .groupManager()
-                                                            .removeUserFromGroup(groupId, member);
+                                                    EMClient.getInstance().groupManager().removeUserFromGroup(groupId, member);
                                                     runOnUiThread(new Runnable() {
                                                         @Override public void run() {
                                                             progressDialog.dismiss();
                                                             membersList.remove(member);
+                                                            isChange = true;
                                                             adapter.notifyDataSetChanged();
-                                                            toolbar.setTitle("Members("
-                                                                    + membersList.size()
-                                                                    + ")");
+                                                            toolbar.setTitle("Members(" + membersList.size() + ")");
                                                         }
                                                     });
                                                 } catch (final HyphenateException e) {
@@ -107,17 +101,15 @@ public class MembersListActivity extends BaseActivity {
                                                     runOnUiThread(new Runnable() {
                                                         @Override public void run() {
                                                             progressDialog.dismiss();
-                                                            Snackbar.make(toolbar, "delete failure"
-                                                                            + e.getMessage().toString(),
-                                                                    Snackbar.LENGTH_SHORT).show();
+                                                            Snackbar.make(toolbar, "delete failure" + e.getMessage(), Snackbar.LENGTH_SHORT).show();
                                                         }
                                                     });
                                                 }
                                             }
                                         }).start();
                                     } else {
-                                        Snackbar.make(toolbar, "you can not remove yourself",
-                                                Snackbar.LENGTH_SHORT).show();
+                                        Snackbar.make(toolbar, "you can not remove yourself", Snackbar.LENGTH_SHORT).show();
+                                        progressDialog.dismiss();
                                     }
 
                                     dialog.dismiss();
@@ -132,5 +124,14 @@ public class MembersListActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @Override public void onBackPressed() {
+        if (isChange){
+            Intent intent = new Intent();
+            intent.putExtra("selectedMembers", (ArrayList<String>) membersList);
+            setResult(RESULT_OK,intent);
+        }
+        finish();
     }
 }

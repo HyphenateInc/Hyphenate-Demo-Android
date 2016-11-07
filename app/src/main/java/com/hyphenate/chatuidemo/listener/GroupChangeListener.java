@@ -1,8 +1,5 @@
 package com.hyphenate.chatuidemo.listener;
 
-import android.content.Context;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
@@ -14,17 +11,10 @@ import java.util.UUID;
  * Created by benson on 2016/10/31.
  */
 
-public class GroupChangeListener implements EMGroupChangeListener {
-
-    Context mContext;
-
-    public GroupChangeListener(Context context){
-        this.mContext = context;
-    }
-
+public abstract class GroupChangeListener implements EMGroupChangeListener {
 
     /*!
-	 * current user receive group invitation
+     * current user receive group invitation
 	 * @param s The group ID.
 	 * @param s1 group's name
 	 * @param s2 Who invite you join the group
@@ -36,20 +26,16 @@ public class GroupChangeListener implements EMGroupChangeListener {
 
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(" receive invitation to join the group：" + s1);
-        message.setChatType(EMMessage.ChatType.GroupChat);
         message.addBody(body);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID,s);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID, s);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, s2);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, s3);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE,0);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, " receive invitation to join the group：" + s1);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 1);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE, 0);
         message.setFrom(EaseConstant.CONVERSATION_NAME_APPLY);
         message.setMsgId(msgId);
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);
-        // send broadcast
-        sendBroadcast(EaseConstant.BROADCAST_ACTION_GROUP);
-
     }
 
     /*
@@ -64,26 +50,22 @@ public class GroupChangeListener implements EMGroupChangeListener {
         String msgId = s2 + System.currentTimeMillis();
 
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        EMTextMessageBody body = new EMTextMessageBody(s2 + " Apply to join group：" + s2);
-        message.setChatType(EMMessage.ChatType.GroupChat);
+        EMTextMessageBody body = new EMTextMessageBody(s2 + " Apply to join group：" + s1);
         message.addBody(body);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID,s);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID, s);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, s2);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, s3);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, s2 + " Apply to join public group：" + s1);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 1);
         message.setFrom(EaseConstant.CONVERSATION_NAME_APPLY);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE,1);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE, 1);
         message.setMsgId(msgId);
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);
-        // send broadcast
-        sendBroadcast(EaseConstant.BROADCAST_ACTION_GROUP);
-
     }
 
 
     /*
-	 * Join group's application has been approved
+     * Join group's application has been approved
 	 * @param s The group ID
 	 * @param s1 group's name
 	 * @param s2 who approve the application
@@ -93,16 +75,18 @@ public class GroupChangeListener implements EMGroupChangeListener {
 
         EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(" Accepted your group application ");
-        msg.setChatType(EMMessage.ChatType.GroupChat);
-        msg.setFrom(s2);
-        msg.setTo(s);
-        msg.setMsgId(UUID.randomUUID().toString());
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID, s);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, s1);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, s2 + " Accepted your group application ");
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 1);
+        msg.setFrom(EaseConstant.CONVERSATION_NAME_APPLY);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE, 1);
+        msg.setMsgId(s1 + System.currentTimeMillis());
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS, s2 + " Accepted your group application ");
         msg.addBody(body);
         msg.setStatus(EMMessage.Status.SUCCESS);
         // save accept message
         EMClient.getInstance().chatManager().saveMessage(msg);
-
-        sendBroadcast(EaseConstant.BROADCAST_ACTION_GROUP);
     }
 
     /*!
@@ -113,7 +97,20 @@ public class GroupChangeListener implements EMGroupChangeListener {
 	 * @param s3 decline reason
 	 */
     @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
-
+        EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+        EMTextMessageBody body = new EMTextMessageBody(" Declined your group application ");
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID, s);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, s1);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, s3);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 1);
+        msg.setFrom(EaseConstant.CONVERSATION_NAME_APPLY);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE, 1);
+        msg.setMsgId(s1 + System.currentTimeMillis());
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS, s1 + " Declined your group application ");
+        msg.addBody(body);
+        msg.setStatus(EMMessage.Status.SUCCESS);
+        // save accept message
+        EMClient.getInstance().chatManager().saveMessage(msg);
     }
 
 
@@ -127,17 +124,19 @@ public class GroupChangeListener implements EMGroupChangeListener {
     @Override public void onInvitationAccepted(String s, String s1, String s2) {
 
         EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        EMTextMessageBody body = new EMTextMessageBody(" Accepted your group application ");
-        msg.setChatType(EMMessage.ChatType.GroupChat);
-        msg.setFrom(s);
-        msg.setTo(s1);
-        msg.setMsgId(UUID.randomUUID().toString());
+        EMTextMessageBody body = new EMTextMessageBody(s1 + " Accepted your group invite ");
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID, s);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, s1);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, s2);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 1);
+        msg.setFrom(EaseConstant.CONVERSATION_NAME_APPLY);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE, 0);
+        msg.setMsgId(s1 + System.currentTimeMillis());
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS, s1 + " Accepted your group invite ");
         msg.addBody(body);
         msg.setStatus(EMMessage.Status.SUCCESS);
         // save accept message
         EMClient.getInstance().chatManager().saveMessage(msg);
-
-        sendBroadcast(EaseConstant.BROADCAST_ACTION_GROUP);
     }
 
     /*
@@ -149,19 +148,19 @@ public class GroupChangeListener implements EMGroupChangeListener {
     @Override public void onInvitationDeclined(String s, String s1, String s2) {
 
         EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
-        EMTextMessageBody body = new EMTextMessageBody(" Declined your group application ");
-        msg.setChatType(EMMessage.ChatType.GroupChat);
-        msg.setMsgId(s1+0);
+        EMTextMessageBody body = new EMTextMessageBody(s1 + " Declined your group invite ");
+        msg.setMsgId(s1 + System.currentTimeMillis());
         msg.addBody(body);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID, s);
         msg.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, s1);
         msg.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, s2);
-        msg.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 1);
         msg.setFrom(EaseConstant.CONVERSATION_NAME_APPLY);
-        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE,1);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE, 0);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS, s1 + " Declined your group invite ");
         msg.setStatus(EMMessage.Status.SUCCESS);
         // save accept message
         EMClient.getInstance().chatManager().saveMessage(msg);
-        sendBroadcast(EaseConstant.BROADCAST_ACTION_GROUP);
     }
 
     /*!
@@ -170,7 +169,7 @@ public class GroupChangeListener implements EMGroupChangeListener {
 	 * @param s1 groupName
 	 */
     @Override public void onUserRemoved(String s, String s1) {
-        sendBroadcast(EaseConstant.BROADCAST_ACTION_GROUP);
+
     }
 
     /*!
@@ -181,7 +180,7 @@ public class GroupChangeListener implements EMGroupChangeListener {
      * SDK will delete the group from local DB and local memory cache, then notify user this group has been destroyed
      */
     @Override public void onGroupDestroyed(String s, String s1) {
-        sendBroadcast(EaseConstant.BROADCAST_ACTION_GROUP);
+
     }
 
     /*!
@@ -202,11 +201,5 @@ public class GroupChangeListener implements EMGroupChangeListener {
         msg.setStatus(EMMessage.Status.SUCCESS);
         // save invitation as messages
         EMClient.getInstance().chatManager().saveMessage(msg);
-        sendBroadcast(EaseConstant.BROADCAST_ACTION_GROUP);
-    }
-
-    private void sendBroadcast(String action) {
-        LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
-        localBroadcastManager.sendBroadcast(new Intent(action));
     }
 }

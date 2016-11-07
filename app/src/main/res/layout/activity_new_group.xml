@@ -77,8 +77,10 @@
       />
 
   <RelativeLayout
+      android:id="@+id/layout_appear_in_group_search"
       android:layout_width="match_parent"
       android:layout_height="56dp"
+      android:background="?android:attr/selectableItemBackground"
       >
     <TextView
         android:layout_width="wrap_content"
@@ -90,27 +92,7 @@
         android:textSize="16sp"
         />
     <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="18.5dp"
-        />
-  </RelativeLayout>
-  <RelativeLayout
-      android:layout_width="match_parent"
-      android:layout_height="56dp"
-      >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
-        android:text="Allow members to chat"
-        android:textColor="#212121"
-        android:textSize="16sp"
-        />
-    <Switch
+        android:id="@+id/switch_appear_in_group_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"

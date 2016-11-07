@@ -1,4 +1,4 @@
-package com.hyphenate.chatuidemo.ui.user;
+package com.hyphenate.chatuidemo.ui.group;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;

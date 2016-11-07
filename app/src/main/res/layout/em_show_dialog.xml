@@ -57,7 +57,7 @@
           android:layout_height="wrap_content"
           android:layout_centerHorizontal="true"
           android:layout_gravity="center_horizontal"
-          android:src="@drawable/em_ic_tab_chats_normal"
+          android:src="@drawable/em_ic_send_message"
           android:tint="@color/header_text_color"
           />
       <ImageView
