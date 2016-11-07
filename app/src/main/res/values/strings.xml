@@ -43,6 +43,12 @@
     <string name="em_call_voice_resume">Voice transfer resume</string>
     <string name="em_call_voice_calling">Voice calling</string>
     <string name="em_call_video_calling">Video calling</string>
+    <string name="em_call_info_resolution">Resolution</string>
+    <string name="em_call_info_time_latency">Time Latency</string>
+    <string name="em_call_info_frame_rate">Frame Rate</string>
+    <string name="em_call_info_lost_rate">Lost Rate</string>
+    <string name="em_call_info_local_bitrate">Local Bitrate</string>
+    <string name="em_call_info_remote_bitrate">Remote Bitrate</string>
 
     <!--sign-->
     <string name="em_sign_in">Sign in</string>

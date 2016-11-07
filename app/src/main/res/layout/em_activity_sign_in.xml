@@ -9,6 +9,7 @@
     android:background="@color/dark_background"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
+    android:padding="@dimen/activity_padding"
     tools:context=".ui.sign.SignInActivity"
     >
 
@@ -38,12 +39,13 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/logo_margin"
+                    android:layout_marginBottom="@dimen/logo_margin"
                     android:src="@drawable/em_logo_green"
                     />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:text="@string/em_hint_sign_in"
                     android:textColor="@color/sign_text_white"
                     android:textSize="16sp"
@@ -52,7 +54,7 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
                     android:textColor="@color/sign_text_white"
                     android:textColorHint="@color/sign_text_hint"
                     >
@@ -62,7 +64,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/em_hint_account"
-                        android:maxLines="1"
+                        android:inputType="textImeMultiLine"
                         android:textColor="@color/sign_text_white"
                         android:textColorHint="@color/sign_text_hint"
                         android:textSize="16sp"
@@ -72,6 +74,7 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:textColor="@color/sign_text_white"
                     android:textColorHint="@color/sign_text_hint"
                     >
@@ -82,7 +85,6 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/em_hint_password"
                         android:inputType="textPassword"
-                        android:maxLines="1"
                         android:textColor="@color/sign_text_white"
                         android:textColorHint="@color/sign_text_hint"
                         android:textSize="16sp"
@@ -91,10 +93,10 @@
 
                 <Button
                     android:id="@+id/btn_sign_in"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/btn_height_small"
                     android:layout_marginBottom="16dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="24dp"
                     android:background="@drawable/em_btn_rectangle_green"
                     android:text="@string/em_sign_in"
                     android:textColor="@color/sign_text_white"

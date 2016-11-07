@@ -12,14 +12,6 @@
         android:layout_height="match_parent"
         >
 
-        <com.hyphenate.easeui.widget.EaseImageView
-            android:id="@+id/img_avatar"
-            android:layout_width="@dimen/apply_avatar_size"
-            android:layout_height="@dimen/apply_avatar_size"
-            android:layout_alignParentLeft="true"
-            android:layout_margin="@dimen/apply_margin"
-            android:src="@drawable/ease_default_avatar"
-            />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,6 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
+                android:layout_marginBottom="@dimen/btn_margin"
                 android:orientation="horizontal"
                 >
 
@@ -74,7 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/btn_height_small"
                     android:layout_margin="@dimen/btn_margin"
-                    android:background="@drawable/em_btn_rectangle_green"
+                    android:background="@drawable/em_btn_rectangle_red"
                     android:text="@string/em_contacts_apply_reject"
                     android:textColor="@color/em_white_87"
                     />
@@ -87,6 +80,23 @@
                     android:visibility="gone"
                     />
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/em_black_12"
+                />
         </LinearLayout>
+        <com.hyphenate.easeui.widget.EaseImageView
+            android:id="@+id/img_avatar"
+            android:layout_width="@dimen/apply_avatar_size"
+            android:layout_height="@dimen/apply_avatar_size"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ease_default_avatar"
+            />
     </RelativeLayout>
 </LinearLayout>

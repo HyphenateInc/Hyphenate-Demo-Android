@@ -41,6 +41,9 @@ public class VideoCallActivity extends CallActivity {
     // Video call data processor
     private CameraDataProcessor mCameraDataProcessor;
 
+    // Update video call info
+    private boolean mMonitor = true;
+
     // SurfaceView state, 0 local is small, 1 opposite is small
     private int surfaceViewState = 0;
 
@@ -49,9 +52,18 @@ public class VideoCallActivity extends CallActivity {
     @BindView(R.id.surface_view_local) EMLocalSurfaceView mLocalSurfaceView;
     @BindView(R.id.surface_view_opposite) EMOppositeSurfaceView mOppositeSurfaceView;
 
+    @BindView(R.id.layout_call_info) View mCallInfoView;
+    @BindView(R.id.text_resolution) TextView mResolutionView;
+    @BindView(R.id.text_time_latency) TextView mTimeLatencyView;
+    @BindView(R.id.text_frame_rate) TextView mFrameRateView;
+    @BindView(R.id.text_lost_rate) TextView mLostRateView;
+    @BindView(R.id.text_local_bitrate) TextView mLocalBitrateView;
+    @BindView(R.id.text_remote_bitrate) TextView mRemoteBitrateView;
+
     @BindView(R.id.img_call_background) ImageView mCallBackgroundView;
     @BindView(R.id.text_call_status) TextView mCallStatusView;
     @BindView(R.id.btn_change_camera_switch) ImageButton mChangeCameraSwitch;
+    @BindView(R.id.btn_call_info) ImageButton mCallInfoBtn;
     @BindView(R.id.btn_exit_full_screen) ImageButton mExitFullScreenBtn;
     @BindView(R.id.btn_camera_switch) ImageButton mCameraSwitch;
     @BindView(R.id.btn_mic_switch) ImageButton mMicSwitch;
@@ -193,8 +205,8 @@ public class VideoCallActivity extends CallActivity {
     @OnClick({
             R.id.img_call_background, R.id.layout_call_control, R.id.surface_view_local,
             R.id.surface_view_opposite, R.id.btn_exit_full_screen, R.id.btn_change_camera_switch,
-            R.id.btn_mic_switch, R.id.btn_camera_switch, R.id.btn_speaker_switch,
-            R.id.fab_reject_call, R.id.fab_end_call, R.id.fab_answer_call
+            R.id.btn_call_info, R.id.layout_call_info, R.id.btn_mic_switch, R.id.btn_camera_switch,
+            R.id.btn_speaker_switch, R.id.fab_reject_call, R.id.fab_end_call, R.id.fab_answer_call
     }) void onClick(View v) {
         switch (v.getId()) {
             case R.id.layout_call_control:
@@ -222,6 +234,12 @@ public class VideoCallActivity extends CallActivity {
             case R.id.btn_change_camera_switch:
                 // Change camera
                 changeCamera();
+                break;
+            case R.id.btn_call_info:
+                mCallInfoView.setVisibility(View.VISIBLE);
+                break;
+            case R.id.layout_call_info:
+                mCallInfoView.setVisibility(View.GONE);
                 break;
             case R.id.btn_mic_switch:
                 // Microphone switch
@@ -265,26 +283,50 @@ public class VideoCallActivity extends CallActivity {
      * Change surfaceView size
      */
     private void changeSurfaceViewSize() {
-        //RelativeLayout.LayoutParams localLayoutParams =
-        //        (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
-        //RelativeLayout.LayoutParams oppositeLayoutParams =
-        //        (RelativeLayout.LayoutParams) mOppositeSurfaceView.getLayoutParams();
-        //if (surfaceViewState == 1) {
-        //    surfaceViewState = 0;
-        //    localLayoutParams.width = 240;
-        //    localLayoutParams.height = 320;
-        //    oppositeLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-        //    oppositeLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-        //} else {
-        //    surfaceViewState = 1;
-        //    localLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-        //    localLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-        //    oppositeLayoutParams.width = 240;
-        //    oppositeLayoutParams.height = 320;
-        //}
-        //
-        //mLocalSurfaceView.setLayoutParams(localLayoutParams);
-        //mOppositeSurfaceView.setLayoutParams(oppositeLayoutParams);
+        RelativeLayout.LayoutParams localLayoutParams =
+                (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
+        RelativeLayout.LayoutParams oppositeLayoutParams =
+                (RelativeLayout.LayoutParams) mOppositeSurfaceView.getLayoutParams();
+        if (surfaceViewState == 1) {
+            surfaceViewState = 0;
+            localLayoutParams.width =
+                    mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_width);
+            localLayoutParams.height =
+                    mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_height);
+            localLayoutParams.setMargins(0,
+                    mActivity.getResources().getDimensionPixelOffset(R.dimen.call_small_width), 0,
+                    0);
+
+            oppositeLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            oppositeLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+            oppositeLayoutParams.setMargins(0, 0, 0, 0);
+
+            mLocalSurfaceView.setZOrderMediaOverlay(true);
+            mLocalSurfaceView.setZOrderOnTop(true);
+            mOppositeSurfaceView.setZOrderMediaOverlay(false);
+            mOppositeSurfaceView.setZOrderOnTop(false);
+        } else {
+            surfaceViewState = 1;
+            localLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            localLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+            localLayoutParams.setMargins(0, 0, 0, 0);
+
+            oppositeLayoutParams.width =
+                    mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_width);
+            oppositeLayoutParams.height =
+                    mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_height);
+            oppositeLayoutParams.setMargins(0,
+                    mActivity.getResources().getDimensionPixelOffset(R.dimen.call_small_width), 0,
+                    0);
+
+            mLocalSurfaceView.setZOrderMediaOverlay(false);
+            mLocalSurfaceView.setZOrderOnTop(false);
+            mOppositeSurfaceView.setZOrderMediaOverlay(true);
+            mOppositeSurfaceView.setZOrderOnTop(true);
+        }
+
+        mLocalSurfaceView.setLayoutParams(localLayoutParams);
+        mOppositeSurfaceView.setLayoutParams(oppositeLayoutParams);
     }
 
     /**
@@ -453,11 +495,16 @@ public class VideoCallActivity extends CallActivity {
      * Set surfaceView
      */
     private void surfaceViewProcessor() {
+
+        // 设置显示对方图像控件显示
         mOppositeSurfaceView.setVisibility(View.VISIBLE);
+
         RelativeLayout.LayoutParams lp =
                 (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
-        lp.width = mActivity.getResources().getDimensionPixelSize(R.dimen.call_local_width);
-        lp.height = mActivity.getResources().getDimensionPixelSize(R.dimen.call_local_height);
+        lp.width = mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_width);
+        lp.height = mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_height);
+        lp.setMargins(0, mActivity.getResources().getDimensionPixelOffset(R.dimen.call_small_width),
+                0, 0);
         mLocalSurfaceView.setLayoutParams(lp);
     }
 
@@ -528,6 +575,7 @@ public class VideoCallActivity extends CallActivity {
                 // Start time
                 mChronometer.setBase(SystemClock.elapsedRealtime());
                 mChronometer.start();
+                startMonitor();
                 break;
             case DISCONNNECTED:
                 mChronometer.stop();
@@ -604,9 +652,47 @@ public class VideoCallActivity extends CallActivity {
     }
 
     /**
+     * refresh call info; for debug & testing, you can remove this when release
+     */
+    private void startMonitor() {
+        mMonitor = true;
+        new Thread(new Runnable() {
+            public void run() {
+                while (mMonitor) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            mResolutionView.setText(mVideoCallHelper.getVideoWidth()
+                                    + " x "
+                                    + mVideoCallHelper.getVideoHeight()
+                                    + " px");
+                            mTimeLatencyView.setText(mVideoCallHelper.getVideoLatency() + " ms");
+                            mFrameRateView.setText(mVideoCallHelper.getVideoFrameRate() + " fps");
+                            mLostRateView.setText(mVideoCallHelper.getVideoLostRate() + "%");
+                            mLocalBitrateView.setText(mVideoCallHelper.getLocalBitrate() + " KB");
+                            mRemoteBitrateView.setText(mVideoCallHelper.getRemoteBitrate() + " KB");
+                        }
+                    });
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+        }, "CallMonitor").start();
+    }
+
+    /**
+     * stop refresh call info
+     */
+    private void stopMonitor() {
+        mMonitor = false;
+    }
+
+    /**
      * Call end finish activity
      */
     @Override protected void onFinish() {
+        stopMonitor();
         // Call end release SurfaceView
         mLocalSurfaceView = null;
         mOppositeSurfaceView = null;

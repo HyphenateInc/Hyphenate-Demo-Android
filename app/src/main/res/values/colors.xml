@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#243e55</color>
     <color name="colorPrimaryDark">#243e55</color>
-    <color name="colorAccent">#02b163</color>
+    <color name="colorAccent">#ff00ba6e</color>
     <color name="colorTextPrimary">#ffffff</color>
     <color name="tab_indicator">#ffffff</color>
 
@@ -42,11 +42,11 @@
     <color name="em_white_12">#1effffff</color>
 
     <!--green color-->
-    <color name="em_green_100">#ff039e00</color>
-    <color name="em_green_87">#dd039e00</color>
-    <color name="em_green_54">#89039e00</color>
-    <color name="em_green_38">#61039e00</color>
-    <color name="em_green_12">#1e039e00</color>
+    <color name="em_green_100">#ff00ba6e</color>
+    <color name="em_green_87">#dd00ba6e</color>
+    <color name="em_green_54">#8900ba6e</color>
+    <color name="em_green_38">#6100ba6e</color>
+    <color name="em_green_12">#1e00ba6e</color>
 
     <!--red color -->
     <color name="em_red_100">#ffe62f17</color>
