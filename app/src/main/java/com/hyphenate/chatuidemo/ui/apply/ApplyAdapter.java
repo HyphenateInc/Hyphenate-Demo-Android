@@ -33,7 +33,9 @@ class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHolder> {
 
     ApplyAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
-        EMConversation mConversation = EMClient.getInstance().chatManager().getConversation(EaseConstant.CONVERSATION_NAME_APPLY, null, true);
+        EMConversation mConversation = EMClient.getInstance()
+                .chatManager()
+                .getConversation(EaseConstant.CONVERSATION_NAME_APPLY, null, true);
         mMessages = mConversation.getAllMessages();
         // The list collection is sorted in reverse order
         Collections.reverse(mMessages);
@@ -51,7 +53,8 @@ class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHolder> {
         if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0) == 1) {
 
             try {
-                holder.textViewUsername.setText(message.getStringAttribute(EaseConstant.MESSAGE_ATTR_GROUPID));
+                holder.textViewUsername.setText(
+                        message.getStringAttribute(EaseConstant.MESSAGE_ATTR_GROUP_ID));
             } catch (HyphenateException e) {
                 e.printStackTrace();
             }
