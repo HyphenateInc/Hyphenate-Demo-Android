@@ -110,13 +110,11 @@
           />
 
       <RelativeLayout
-          android:id="@+id/layout_"
           android:layout_width="match_parent"
           android:layout_height="56dip"
           >
 
         <TextView
-            android:id="@+id/tv_group_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -128,47 +126,13 @@
             />
 
         <TextView
+            android:id="@+id/text_appear_in_group_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="19dp"
             android:text="Private"
-            android:textColor="#8798a4"
-            android:textSize="16sp"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:layout_alignParentBottom="true"
-            android:background="#e0e0e0"
-            />
-      </RelativeLayout>
-      <RelativeLayout
-          android:layout_width="match_parent"
-          android:layout_height="56dip"
-          >
-
-        <TextView
-            android:id="@+id/tv_group_nick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:paddingLeft="16dp"
-            android:text="Allow members to chat"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:typeface="serif"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="19dp"
-            android:text="Enable"
             android:textColor="#8798a4"
             android:textSize="16sp"
             />
@@ -248,39 +212,6 @@
             android:background="#e0e0e0"
             />
       </RelativeLayout>
-
-      <RelativeLayout
-          android:layout_width="match_parent"
-          android:layout_height="56dip"
-          >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:paddingLeft="16dp"
-            android:text="Display on lockscreen"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:typeface="serif"
-            />
-
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="18.5dp"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dip"
-            android:layout_alignParentBottom="true"
-            android:background="#e0e0e0"
-            />
-      </RelativeLayout>
-
 
       <TextView
           android:id="@+id/text_exit_group"

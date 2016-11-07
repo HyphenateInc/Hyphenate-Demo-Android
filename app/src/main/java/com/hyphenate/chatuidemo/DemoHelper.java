@@ -2,8 +2,8 @@ package com.hyphenate.chatuidemo;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.util.Log;
@@ -49,17 +49,10 @@ public class DemoHelper {
     // Call state listener
     private CallStateChangeListener mCallStateChangeListener = null;
 
-    // connection listener
-    private EMConnectionListener mConnectionListener = null;
-
-    // Message listener
-    private EMMessageListener messageListener = null;
-
     // Contacts listener
     private ContactsChangeListener mContactListener = null;
 
-    private GroupChangeListener mGroupListener = null;
-
+    private DefaultGroupChangeListener mGroupListener = null;
 
     /**
      * save foreground Activity which registered message listeners
@@ -99,9 +92,52 @@ public class DemoHelper {
             mNotifier.init(context);
             //set events listeners
             setGlobalListener();
+            setNotificationType();
 
             EMLog.d(TAG, "------- init hyphenate end --------------");
         }
+    }
+
+    private void setNotificationType() {
+        mNotifier.setNotificationInfoProvider(new MessageNotifier.EaseNotificationInfoProvider() {
+            @Override public String getDisplayedText(EMMessage message) {
+                return null;
+            }
+
+            @Override public String getLatestText(EMMessage message, int fromUsersNum, int messageNum) {
+                return null;
+            }
+
+            @Override public String getTitle(EMMessage message) {
+                return null;
+            }
+
+            @Override public int getSmallIcon(EMMessage message) {
+                return 0;
+            }
+
+            @Override public Intent getLaunchIntent(EMMessage message) {
+                return null;
+            }
+        });
+
+        EaseUI.getInstance().setSettingsProvider(new EaseUI.EaseSettingsProvider() {
+            @Override public boolean isMsgNotifyAllowed(EMMessage message) {
+                return false;
+            }
+
+            @Override public boolean isMsgSoundAllowed(EMMessage message) {
+                return false;
+            }
+
+            @Override public boolean isMsgVibrateAllowed(EMMessage message) {
+                return false;
+            }
+
+            @Override public boolean isSpeakerOpened() {
+                return false;
+            }
+        });
     }
 
     /**
@@ -116,7 +152,7 @@ public class DemoHelper {
         options.setRequireAck(true);
         // set if need delivery ack
         options.setRequireDeliveryAck(false);
-        options.setAutoAcceptGroupInvitation(false);
+        //options.setAutoAcceptGroupInvitation(false);
 
         //set gcm project number
         options.setGCMNumber("998166487724");
@@ -127,7 +163,7 @@ public class DemoHelper {
     /**
      * init global listener
      */
-    public void setGlobalListener() {
+    private void setGlobalListener() {
         // set call listener
         setCallReceiverListener();
         // set connection listener
@@ -143,11 +179,54 @@ public class DemoHelper {
     }
 
     private void registerGroupListener() {
-        if (mGroupListener == null){
-            mGroupListener = new GroupChangeListener(mContext);
+        if (mGroupListener == null) {
+            mGroupListener = new DefaultGroupChangeListener();
         }
 
         EMClient.getInstance().groupManager().addGroupChangeListener(mGroupListener);
+    }
+
+    private class DefaultGroupChangeListener extends GroupChangeListener {
+        @Override public void onInvitationReceived(String s, String s1, String s2, String s3) {
+            super.onInvitationReceived(s, s1, s2, s3);
+            getNotifier().vibrateAndPlayTone(null);
+
+        }
+
+        @Override public void onRequestToJoinReceived(String s, String s1, String s2, String s3) {
+            super.onRequestToJoinReceived(s, s1, s2, s3);
+        }
+
+        @Override public void onRequestToJoinAccepted(String s, String s1, String s2) {
+            super.onRequestToJoinAccepted(s, s1, s2);
+        }
+
+        @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
+            super.onRequestToJoinDeclined(s, s1, s2, s3);
+
+        }
+
+        @Override public void onInvitationAccepted(String s, String s1, String s2) {
+            super.onInvitationAccepted(s, s1, s2);
+        }
+
+        @Override public void onInvitationDeclined(String s, String s1, String s2) {
+            super.onInvitationDeclined(s, s1, s2);
+
+        }
+
+        @Override public void onUserRemoved(String s, String s1) {
+            super.onUserRemoved(s, s1);
+        }
+
+        @Override public void onGroupDestroyed(String s, String s1) {
+            super.onGroupDestroyed(s, s1);
+        }
+
+        @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
+            super.onAutoAcceptInvitationFromGroup(s, s1, s2);
+            getNotifier().vibrateAndPlayTone(null);
+        }
     }
 
     /**
@@ -155,8 +234,7 @@ public class DemoHelper {
      */
     private void setCallReceiverListener() {
         // Set the call broadcast listener to filter the action
-        IntentFilter callFilter = new IntentFilter(
-                EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
+        IntentFilter callFilter = new IntentFilter(EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
         if (mCallReceiver == null) {
             mCallReceiver = new CallReceiver();
         }
@@ -180,9 +258,7 @@ public class DemoHelper {
      */
     public void removeCallStateChangeListener() {
         if (mCallStateChangeListener != null) {
-            EMClient.getInstance()
-                    .callManager()
-                    .removeCallStateChangeListener(mCallStateChangeListener);
+            EMClient.getInstance().callManager().removeCallStateChangeListener(mCallStateChangeListener);
             mCallStateChangeListener = null;
         }
     }
@@ -191,7 +267,7 @@ public class DemoHelper {
      * Set Connection Listener
      */
     private void setConnectionListener() {
-        mConnectionListener = new EMConnectionListener() {
+        EMConnectionListener mConnectionListener = new EMConnectionListener() {
 
             /**
              * The connection to the server is successful
@@ -217,9 +293,8 @@ public class DemoHelper {
      * If this event already handled by an activity, you don't need handle it again
      * activityList.size() <= 0 means all activities already in background or not in Activity Stack
      */
-    protected void registerMessageListener() {
-        messageListener = new EMMessageListener() {
-            private BroadcastReceiver broadCastReceiver = null;
+    private void registerMessageListener() {
+        EMMessageListener messageListener = new EMMessageListener() {
 
             @Override public void onMessageReceived(List<EMMessage> messages) {
                 for (EMMessage message : messages) {
@@ -240,8 +315,7 @@ public class DemoHelper {
 
                     //get extension attribute if you need
                     //message.getStringAttribute("");
-                    EMLog.d(TAG, String.format("CmdMessage：action:%s,message:%s", action,
-                            message.toString()));
+                    EMLog.d(TAG, String.format("CmdMessage：action:%s,message:%s", action, message.toString()));
                 }
             }
 
@@ -260,17 +334,17 @@ public class DemoHelper {
     }
 
     /**
-     * Register contacts lsitener
+     * Register contacts listener
      * Listen for changes to contacts
      */
-    protected void registerContactsListener() {
+    private void registerContactsListener() {
         if (mContactListener == null) {
             mContactListener = new ContactsChangeListener(mContext);
         }
         EMClient.getInstance().contactManager().setContactListener(mContactListener);
     }
 
-    public boolean hasForegroundActivities() {
+    private boolean hasForegroundActivities() {
         return activityList.size() != 0;
     }
 
@@ -332,6 +406,7 @@ public class DemoHelper {
                 if (callback != null) {
                     callback.onSuccess();
                 }
+                entityMap.clear();
                 UserDao.getInstance(mContext).closeDB();
             }
 
@@ -378,18 +453,16 @@ public class DemoHelper {
      * @return Process name
      */
     private String getAppName(int pID) {
-        String processName = null;
+        String processName;
         ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
         List l = am.getRunningAppProcesses();
         Iterator i = l.iterator();
         PackageManager pm = mContext.getPackageManager();
         while (i.hasNext()) {
-            ActivityManager.RunningAppProcessInfo info =
-                    (ActivityManager.RunningAppProcessInfo) (i.next());
+            ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
             try {
                 if (info.pid == pID) {
-                    CharSequence c = pm.getApplicationLabel(
-                            pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
+                    CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
                     // Log.d("Process", "Id: "+ info.pid +" ProcessName: "+
                     // info.processName +"  Label: "+c.toString());
                     // processName = c.toString();
@@ -400,6 +473,6 @@ public class DemoHelper {
                 // Log.d("Process", "Error>> :"+ e.toString());
             }
         }
-        return processName;
+        return null;
     }
 }

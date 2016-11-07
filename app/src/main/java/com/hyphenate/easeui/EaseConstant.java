@@ -35,11 +35,13 @@ public class EaseConstant {
     public static final String EXTRA_TO = "to";
 
     public static final String CONVERSATION_NAME_APPLY = "em_conversation_apply";
+    //0:chat,1:groupChat
     public static final String MESSAGE_ATTR_TYPE = "em_type";
     public static final String MESSAGE_ATTR_USERNAME = "em_username";
     public static final String MESSAGE_ATTR_GROUP_ID = "em_group_id";
     public static final String MESSAGE_ATTR_REASON = "em_reason";
     public static final String MESSAGE_ATTR_STATUS = "em_status";
+    //0 : private group,1:public group
     public static final String MESSAGE_ATTR_GROUP_TYPE = "em_group_type";
 
     // Broadcast action

@@ -12,6 +12,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,8 +29,8 @@ import com.hyphenate.chatuidemo.ui.settings.SettingsFragment;
 import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
 import com.hyphenate.chatuidemo.ui.user.AddContactsActivity;
 import com.hyphenate.chatuidemo.ui.user.ContactListFragment;
-import com.hyphenate.chatuidemo.ui.user.InviteMembersActivity;
-import com.hyphenate.chatuidemo.ui.user.PublicGroupsListActivity;
+import com.hyphenate.chatuidemo.ui.group.InviteMembersActivity;
+import com.hyphenate.chatuidemo.ui.group.PublicGroupsListActivity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,8 +45,6 @@ public class MainActivity extends BaseActivity {
     private int mCurrentPageIndex = 0;
 
     private ConversationListFragment mConversationListFragment;
-    private ContactListFragment mContactListFragment;
-    private SettingsFragment mSettingsFragment;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         // Check that you are logged in
@@ -75,9 +74,9 @@ public class MainActivity extends BaseActivity {
 
     private void setupViewPager() {
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
-        mContactListFragment = ContactListFragment.newInstance();
+        ContactListFragment mContactListFragment = ContactListFragment.newInstance();
         mConversationListFragment = ConversationListFragment.newInstance();
-        mSettingsFragment = SettingsFragment.newInstance();
+        SettingsFragment mSettingsFragment = SettingsFragment.newInstance();
         //add fragments to adapter
         adapter.addFragment(mContactListFragment, "Contacts");
         adapter.addFragment(mConversationListFragment, "Chats");
@@ -95,7 +94,8 @@ public class MainActivity extends BaseActivity {
                 } else if (position == 1) { //Chats
                     getActionBarToolbar().inflateMenu(R.menu.em_conversations_menu);
                     SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-                    final SearchView searchView = (SearchView) MenuItemCompat.getActionView(toolbar.getMenu().findItem(R.id.menu_conversations_search));
+                    final SearchView searchView =
+                            (SearchView) MenuItemCompat.getActionView(toolbar.getMenu().findItem(R.id.menu_conversations_search));
                     searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
                     // search conversations list
                     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -113,15 +113,13 @@ public class MainActivity extends BaseActivity {
                 mCurrentPageIndex = position;
             }
 
-            @Override public void onPageScrolled(int position, float positionOffset,
-                    int positionOffsetPixels) {
+            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
             @Override public void onPageScrollStateChanged(int state) {
             }
         });
     }
-
 
     private void setupTabLayout() {
         mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.tab_indicator));
@@ -131,20 +129,16 @@ public class MainActivity extends BaseActivity {
             View customTab = LayoutInflater.from(this).inflate(R.layout.em_tab_layout_item, null);
             ImageView imageView = (ImageView) customTab.findViewById(R.id.img_tab_item);
             if (i == 0) {
-                imageView.setImageDrawable(
-                        getResources().getDrawable(R.drawable.em_tab_contacts_selector));
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_contacts_selector));
             } else if (i == 1) {
-                imageView.setImageDrawable(
-                        getResources().getDrawable(R.drawable.em_tab_chats_selector));
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_chats_selector));
             } else {
-                imageView.setImageDrawable(
-                        getResources().getDrawable(R.drawable.em_tab_settings_selector));
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_settings_selector));
             }
             //set the custom tabview
             mTabLayout.getTabAt(i).setCustomView(customTab);
         }
     }
-
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -168,10 +162,6 @@ public class MainActivity extends BaseActivity {
         @Override public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
 
-                case R.id.menu_new_chat:
-
-                    break;
-
                 case R.id.menu_create_group:
 
                     startActivity(new Intent(MainActivity.this, InviteMembersActivity.class));
@@ -189,7 +179,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-
     /**
      * message listener
      */
@@ -197,35 +186,34 @@ public class MainActivity extends BaseActivity {
         @Override public void onMessageReceived(List<EMMessage> list) {
             Fragment fragment = null;
             //display unread tips
-            if(EMClient.getInstance().chatManager().getUnreadMessageCount() > 0){
+            if (EMClient.getInstance().chatManager().getUnreadMessageCount() > 0) {
                 runOnUiThread(new Runnable() {
                     @Override public void run() {
                         getTabUnreadStatusView(1).setVisibility(View.VISIBLE);
                     }
                 });
             }
-            //refresh ConversationListFragment if current index is 1
-            if(mCurrentPageIndex == 1) {
-                fragment = ((PagerAdapter)mViewPager.getAdapter()).getItem(1);
-                ((ConversationListFragment) fragment).refresh();
-            }
-
-
+            //refresh ConversationListFragment
+            fragment = ((PagerAdapter)mViewPager.getAdapter()).getItem(1);
+            ((ConversationListFragment) fragment).refresh();
         }
+
         @Override public void onCmdMessageReceived(List<EMMessage> list) {
         }
+
         @Override public void onMessageRead(List<EMMessage> list) {
         }
+
         @Override public void onMessageDelivered(List<EMMessage> list) {
         }
+
         @Override public void onMessageChanged(EMMessage emMessage, Object o) {
         }
     };
 
-    private ImageView getTabUnreadStatusView(int index){
+    private ImageView getTabUnreadStatusView(int index) {
         View tabView = mTabLayout.getTabAt(index).getCustomView();
-        ImageView unreadStatusView =
-                (ImageView) tabView.findViewById(R.id.img_unread_status);
+        ImageView unreadStatusView = (ImageView) tabView.findViewById(R.id.img_unread_status);
         return unreadStatusView;
     }
 
@@ -234,11 +222,7 @@ public class MainActivity extends BaseActivity {
         //register message listener
         EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
 
-        if (EMClient.getInstance().chatManager().getUnreadMessageCount() > 0) {
-            getTabUnreadStatusView(1).setVisibility(View.VISIBLE);
-        }else {
-            getTabUnreadStatusView(1).setVisibility(View.INVISIBLE);
-        }
+        updateUnreadMsgLabel();
     }
 
     @Override protected void onStop() {
@@ -247,7 +231,22 @@ public class MainActivity extends BaseActivity {
         EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
+    public void updateUnreadMsgLabel(){
+        if (EMClient.getInstance().chatManager().getUnreadMessageCount() > 0) {
+            getTabUnreadStatusView(1).setVisibility(View.VISIBLE);
+        }else {
+            getTabUnreadStatusView(1).setVisibility(View.INVISIBLE);
+        }
+    }
 
     /**
      * Fragment pager adapter

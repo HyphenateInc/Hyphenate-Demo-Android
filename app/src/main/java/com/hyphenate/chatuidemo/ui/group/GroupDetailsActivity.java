@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hyphenate.chatuidemo.ui.user;
+package com.hyphenate.chatuidemo.ui.group;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -28,10 +28,10 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.listener.GroupChangeListener;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.ui.chat.ChatActivity;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
@@ -54,11 +54,14 @@ public class GroupDetailsActivity extends BaseActivity {
     @BindView(R.id.recycler_member) RecyclerView recyclerView;
     @BindView(R.id.text_exit_group) TextView exitGroupView;
     @BindView(R.id.text_allow_member_to_invite) TextView inviteView;
+    @BindView(R.id.text_appear_in_group_search) TextView groupTypeView;
     @BindView(R.id.switch_push_notification) Switch notificationSwitch;
 
     LinearLayoutManager layoutManager;
-    List<String> members = new ArrayList<String>();
+    List<String> members = new ArrayList<>();
     private boolean isOwner = false;
+
+    private DefaultGroupChangeListener listener;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,43 +71,6 @@ public class GroupDetailsActivity extends BaseActivity {
         instance = this;
 
         groupId = getIntent().getStringExtra("groupId");
-        group = EMClient.getInstance().groupManager().getGroup(groupId);
-
-        groupNameView.setText(group.getGroupName());
-        memberSizeView.setText("(" + group.getMemberCount() + ")");
-        if (group.isMemberAllowToInvite()) {
-            inviteView.setText("Enable");
-        } else {
-            inviteView.setText("Disabled");
-        }
-
-        if (group.getOwner() == null || "".equals(group.getOwner()) || !group.getOwner()
-                .equals(EMClient.getInstance().getCurrentUser())) {
-            exitGroupView.setVisibility(View.GONE);
-        }
-        if (EMClient.getInstance().getCurrentUser().equals(group.getOwner())) {
-            isOwner = true;
-            exitGroupView.setText("Delete group");
-        }
-
-        GroupChangeListener groupChangeListener = new GroupChangeListener();
-        EMClient.getInstance().groupManager().addGroupChangeListener(groupChangeListener);
-
-        final List<String> members = new ArrayList<>();
-        members.addAll(group.getMembers());
-
-        layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(layoutManager);
-        if (isOwner) {
-            adapter =
-                    new MembersListAdapter(this, members, LinearLayoutManager.HORIZONTAL, isOwner);
-        } else {
-            adapter = new MembersListAdapter(this, members, LinearLayoutManager.HORIZONTAL,
-                    group.isMemberAllowToInvite());
-        }
-        recyclerView.setAdapter(adapter);
-
         updateGroup();
 
         Toolbar toolbar = getActionBarToolbar();
@@ -115,62 +81,38 @@ public class GroupDetailsActivity extends BaseActivity {
             }
         });
 
-        adapter.setItemClickListener(new EaseListItemClickListener() {
-
-            @Override public void onItemClick(View view, int position) {
-                startActivityForResult(
-                        new Intent(GroupDetailsActivity.this, InviteMembersActivity.class).putExtra(
-                                "groupId", groupId)
-                                .putExtra("isOwner", isOwner)
-                                .putStringArrayListExtra("members", (ArrayList<String>) members),
-                        REQUEST_CODE_MEMBER_REFRESH);
-            }
-
-            @Override public void onLongItemClick(View view, int position) {
-
-            }
-        });
+        listener = new DefaultGroupChangeListener();
+        EMClient.getInstance().groupManager().addGroupChangeListener(listener);
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            if (progressDialog == null) {
-                progressDialog = new ProgressDialog(GroupDetailsActivity.this);
-                progressDialog.setMessage("add");
-                progressDialog.setCanceledOnTouchOutside(false);
-            }
-            switch (requestCode) {
-                case REQUEST_CODE_MEMBER_REFRESH:
-                    progressDialog.show();
-                    refreshGroup();
-                    break;
-
-                default:
-                    break;
+            if (REQUEST_CODE_MEMBER_REFRESH == requestCode) {
+                if (data != null) {
+                    List<String> list = data.getStringArrayListExtra("selectedMembers");
+                    members.clear();
+                    if (!group.getMembers().contains(list.get(0))) {
+                        members.addAll(group.getMembers());
+                    }
+                    members.addAll(list);
+                    memberSizeView.setText("(" + members.size() + ")");
+                    adapter.notifyDataSetChanged();
+                }
             }
         }
     }
 
-    private void refreshMembers() {
-        members.clear();
-        members.addAll(group.getMembers());
-        adapter.notifyDataSetChanged();
-    }
-
-    @OnClick({ R.id.text_exit_group, R.id.layout_member_list, R.id.layout_push_notification })
-    void onClick(View view) {
+    @OnClick({ R.id.text_exit_group, R.id.layout_member_list, R.id.layout_push_notification }) void onClick(View view) {
         switch (view.getId()) {
             case R.id.text_exit_group:
                 exitGroup();
                 break;
-            case R.id.layout_member_list:
-                startActivity(
-                        new Intent(GroupDetailsActivity.this, MembersListActivity.class).putExtra(
-                                "isOwner", isOwner)
-                                .putExtra("groupId", groupId)
-                                .putStringArrayListExtra("members", (ArrayList<String>) members));
+            case R.id.layout_member_list://show member list
+                startActivityForResult(new Intent(GroupDetailsActivity.this, MembersListActivity.class).putExtra("isOwner", isOwner)
+                        .putExtra("groupId", groupId)
+                        .putStringArrayListExtra("members", (ArrayList<String>) members), REQUEST_CODE_MEMBER_REFRESH);
                 break;
 
             case R.id.layout_push_notification:
@@ -186,20 +128,14 @@ public class GroupDetailsActivity extends BaseActivity {
 
     public void exitGroup() {
         new AlertDialog.Builder(GroupDetailsActivity.this).setTitle("group")
-                .setMessage("leave group")
+                .setMessage("exit group")
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
-                        if (progressDialog == null) {
-                            progressDialog = new ProgressDialog(GroupDetailsActivity.this);
-                            progressDialog.setMessage("group");
-                            progressDialog.setCanceledOnTouchOutside(false);
-                        }
 
-                        if (group.getOwner() == null || "".equals(group.getOwner()) || !isOwner) {
-                            leaveGroup();
-                        }
                         if (isOwner) {
                             deleteGroup();
+                        } else {
+                            leaveGroup();
                         }
                         dialog.dismiss();
                     }
@@ -216,6 +152,7 @@ public class GroupDetailsActivity extends BaseActivity {
      * leave group
      */
     private void leaveGroup() {
+        showDialog("leave group", "waiting...");
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -233,8 +170,7 @@ public class GroupDetailsActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         public void run() {
                             progressDialog.dismiss();
-                            Toast.makeText(getApplicationContext(),
-                                    " leave failure " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), " leave failure " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
                 }
@@ -246,6 +182,7 @@ public class GroupDetailsActivity extends BaseActivity {
      * delete group
      */
     private void deleteGroup() {
+        showDialog("delete group", "waiting...");
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -263,8 +200,7 @@ public class GroupDetailsActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         public void run() {
                             progressDialog.dismiss();
-                            Toast.makeText(getApplicationContext(), "failure" + e.getMessage(),
-                                    Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "failure" + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
                 }
@@ -272,25 +208,24 @@ public class GroupDetailsActivity extends BaseActivity {
         }).start();
     }
 
-    private void refreshGroup() {
-        refreshMembers();
-        groupNameView.setText(group.getGroupName());
-        memberSizeView.setText("(" + group.getMemberCount() + ")");
-        progressDialog.dismiss();
-    }
-
     protected void updateGroup() {
-        final ProgressDialog progressDialog = ProgressDialog.show(this,"waiting....","update...",false);
+        showDialog("update group....", "waiting...");
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    EMClient.getInstance().groupManager().getGroupFromServer(groupId);
+                    group = EMClient.getInstance().groupManager().getGroupFromServer(groupId);
 
                     runOnUiThread(new Runnable() {
                         public void run() {
+
+                            if (group == null) {
+                                progressDialog.dismiss();
+                                finish();
+                            }
+
                             groupNameView.setText(group.getGroupName());
                             memberSizeView.setText("(" + group.getMemberCount() + ")");
-                            refreshMembers();
+
                             if (EMClient.getInstance().getCurrentUser().equals(group.getOwner())) {
                                 isOwner = true;
                                 exitGroupView.setText("Delete group");
@@ -298,6 +233,46 @@ public class GroupDetailsActivity extends BaseActivity {
                                 isOwner = false;
                                 exitGroupView.setText("leave group");
                             }
+
+                            if (group.isMemberAllowToInvite()) {
+                                inviteView.setText("Enable");
+                            } else {
+                                inviteView.setText("Disabled");
+                            }
+
+                            if (group.isPublic()){
+                                groupTypeView.setText("Public");
+                            }else {
+                                groupTypeView.setText("Private");
+                            }
+
+                            members.clear();
+                            members.addAll(group.getMembers());
+
+                            layoutManager = new LinearLayoutManager(GroupDetailsActivity.this);
+                            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                            recyclerView.setLayoutManager(layoutManager);
+                            if (isOwner) {
+                                adapter = new MembersListAdapter(GroupDetailsActivity.this, members, LinearLayoutManager.HORIZONTAL, true);
+                            } else {
+                                adapter = new MembersListAdapter(GroupDetailsActivity.this, members, LinearLayoutManager.HORIZONTAL,
+                                        group.isMemberAllowToInvite());
+                            }
+                            recyclerView.setAdapter(adapter);
+
+                            adapter.setItemClickListener(new EaseListItemClickListener() {
+
+                                @Override public void onItemClick(View view, int position) {
+                                    startActivityForResult(
+                                            new Intent(GroupDetailsActivity.this, InviteMembersActivity.class).putExtra("groupId", groupId)
+                                                    .putExtra("isOwner", isOwner)
+                                                    .putStringArrayListExtra("members", (ArrayList<String>) members), REQUEST_CODE_MEMBER_REFRESH);
+                                }
+
+                                @Override public void onItemLongClick(View view, int position) {
+
+                                }
+                            });
                             progressDialog.dismiss();
                         }
                     });
@@ -316,54 +291,41 @@ public class GroupDetailsActivity extends BaseActivity {
     @Override protected void onDestroy() {
         super.onDestroy();
         instance = null;
+        EMClient.getInstance().groupManager().removeGroupChangeListener(listener);
     }
 
-    private class GroupChangeListener implements EMGroupChangeListener {
-
-        @Override public void onInvitationReceived(String groupId, String groupName, String inviter,
-                String reason) {
-            // TODO Auto-generated method stub
-
+    private void showDialog(String title, String msg) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(GroupDetailsActivity.this);
+            progressDialog.setTitle(title);
+            progressDialog.setMessage(msg);
+            progressDialog.setCanceledOnTouchOutside(false);
         }
+        progressDialog.show();
+    }
 
-        @Override public void onRequestToJoinReceived(String s, String s1, String s2, String s3) {
-
-        }
-
-        @Override public void onRequestToJoinAccepted(String s, String s1, String s2) {
-
-        }
-
-        @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
-
-        }
-
-        @Override public void onInvitationAccepted(String groupId, String inviter, String reason) {
-            runOnUiThread(new Runnable() {
-
-                @Override public void run() {
-                    refreshMembers();
-                }
-            });
-        }
-
-        @Override public void onInvitationDeclined(String groupId, String invitee, String reason) {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override public void onUserRemoved(String groupId, String groupName) {
+    private class DefaultGroupChangeListener extends GroupChangeListener {
+        @Override public void onUserRemoved(String s, String s1) {
+            super.onUserRemoved(s, s1);
             finish();
+            if (ChatActivity.activityInstance != null) {
+                ChatActivity.activityInstance.finish();
+            }
         }
 
-        @Override public void onGroupDestroyed(String groupId, String groupName) {
+        @Override public void onGroupDestroyed(String s, String s1) {
+            super.onGroupDestroyed(s, s1);
             finish();
+            if (ChatActivity.activityInstance != null) {
+                ChatActivity.activityInstance.finish();
+            }
         }
 
-        @Override public void onAutoAcceptInvitationFromGroup(String groupId, String inviter,
-                String inviteMessage) {
-            // TODO Auto-generated method stub
-
+        @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
+            members.clear();
+            members.addAll(EMClient.getInstance().groupManager().getGroup(s).getMembers());
+            memberSizeView.setText("(" + members.size() + ")");
+            adapter.notifyDataSetChanged();
         }
     }
 }

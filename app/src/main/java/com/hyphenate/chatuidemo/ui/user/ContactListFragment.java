@@ -23,10 +23,12 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 
+import com.hyphenate.chatuidemo.receiver.BroadCastReceiverManager;
 import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.ui.chat.ChatActivity;
 import com.hyphenate.chatuidemo.ui.apply.ApplyActivity;
+import com.hyphenate.chatuidemo.ui.group.GroupListActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.exceptions.HyphenateException;
@@ -67,6 +69,13 @@ public class ContactListFragment extends Fragment {
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setRecyclerView();
+
+        //Contacts broadcast receiver
+        BroadCastReceiverManager.getInstance(getActivity()).setDefaultLocalBroadCastReceiver(new BroadCastReceiverManager.DefaultLocalBroadCastReceiver() {
+            @Override public void defaultOnReceive(Context context, Intent intent) {
+                refresh();
+            }
+        });
     }
 
     @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,7 +98,7 @@ public class ContactListFragment extends Fragment {
                 itemClick(user);
             }
 
-            @Override public void onLongItemClick(View view, int position) {
+            @Override public void onItemLongClick(View view, int position) {
                 UserEntity user = entityList.get(position);
                 itemLongClick(user);
             }
@@ -269,7 +278,7 @@ public class ContactListFragment extends Fragment {
     @Override public void onStop() {
         super.onStop();
         // unregister broadcast receiver
-        localBroadcastManager.unregisterReceiver(broadcastReceiver);
+        BroadCastReceiverManager.getInstance(getActivity()).unRegisterBroadCastReceiver();
     }
 
     @OnClick({ R.id.layout_group_entry, R.id.layout_apply_entry }) void onclick(View v) {

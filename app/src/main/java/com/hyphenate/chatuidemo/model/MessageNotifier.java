@@ -39,27 +39,26 @@ import java.util.List;
  */
 public class MessageNotifier {
     private final static String TAG = "notify";
-    Ringtone ringtone = null;
+    private Ringtone ringtone = null;
 
-    protected final static String[] msg_eng = { "sent a message", "sent a picture", "sent a voice",
+    private final static String[] msg_eng = { "sent a message", "sent a picture", "sent a voice",
                                                 "sent location message", "sent a video", "sent a file", "%1 contacts sent %2 messages"
                                               };
 
-    protected static int notifyID = 0525; // start notification id
-    protected static int foregroundNotifyID = 0555;
+    private static int notifyID = 0525; // start notification id
 
-    protected NotificationManager notificationManager = null;
+    private NotificationManager notificationManager = null;
 
-    protected HashSet<String> fromUsers = new HashSet<String>();
-    protected int notificationNum = 0;
+    private HashSet<String> fromUsers = new HashSet<String>();
+    private int notificationNum = 0;
 
-    protected Context appContext;
-    protected String packageName;
-    protected String[] msgs;
-    protected long lastNotifiyTime;
-    protected AudioManager audioManager;
-    protected Vibrator vibrator;
-    protected EaseNotificationInfoProvider notificationInfoProvider;
+    private Context appContext;
+    private String packageName;
+    private String[] msgs;
+    private long lastNotifyTime;
+    private AudioManager audioManager;
+    private Vibrator vibrator;
+    private EaseNotificationInfoProvider notificationInfoProvider;
 
     public MessageNotifier() {
     }
@@ -87,7 +86,7 @@ public class MessageNotifier {
      */
     public void reset(){
         resetNotificationCount();
-        cancelNotificaton();
+        cancelNotification();
     }
 
     void resetNotificationCount() {
@@ -95,7 +94,7 @@ public class MessageNotifier {
         fromUsers.clear();
     }
     
-    void cancelNotificaton() {
+    void cancelNotification() {
         if (notificationManager != null)
             notificationManager.cancel(notifyID);
     }
@@ -117,7 +116,7 @@ public class MessageNotifier {
         
         // check if app running background
         if (!EasyUtils.isAppRunningForeground(appContext)) {
-            EMLog.d(TAG, "app is running in backgroud");
+            EMLog.d(TAG, "app is running in background");
             sendNotification(message, false);
         } else {
             sendNotification(message, true);
@@ -127,7 +126,7 @@ public class MessageNotifier {
         vibrateAndPlayTone(message);
     }
     
-    public synchronized void onNewMesg(List<EMMessage> messages) {
+    public synchronized void onNewMsg(List<EMMessage> messages) {
         if(EMClient.getInstance().chatManager().isSilentMessage(messages.get(messages.size()-1))){
             return;
         }
@@ -137,7 +136,7 @@ public class MessageNotifier {
         }
         // check if app running background
         if (!EasyUtils.isAppRunningForeground(appContext)) {
-            EMLog.d(TAG, "app is running in backgroud");
+            EMLog.d(TAG, "app is running in background");
             sendNotification(messages, false);
         } else {
             sendNotification(messages, true);
@@ -151,7 +150,7 @@ public class MessageNotifier {
      * @param messages
      * @param isForeground
      */
-    protected void sendNotification (List<EMMessage> messages, boolean isForeground){
+    private void sendNotification(List<EMMessage> messages, boolean isForeground){
         for(EMMessage message : messages){
             if(!isForeground){
                 notificationNum++;
@@ -161,7 +160,7 @@ public class MessageNotifier {
         sendNotification(messages.get(messages.size()-1), isForeground, false);
     }
     
-    protected void sendNotification (EMMessage message, boolean isForeground){
+    private void sendNotification(EMMessage message, boolean isForeground){
         sendNotification(message, isForeground, true);
     }
     
@@ -170,7 +169,7 @@ public class MessageNotifier {
      * This can be override by subclass to provide customer implementation
      * @param message
      */
-    protected void sendNotification(EMMessage message, boolean isForeground, boolean numIncrease) {
+    private void sendNotification(EMMessage message, boolean isForeground, boolean numIncrease) {
         String username = message.getFrom();
         try {
             String notifyText = username + " ";
@@ -196,23 +195,22 @@ public class MessageNotifier {
             }
             
             PackageManager packageManager = appContext.getPackageManager();
-            String appname = (String) packageManager.getApplicationLabel(appContext.getApplicationInfo());
-            
+
             // set notification title
-            String contentTitle = appname;
+            String contentTitle = (String) packageManager.getApplicationLabel(appContext.getApplicationInfo());
             if (notificationInfoProvider != null) {
                 String customNotifyText = notificationInfoProvider.getDisplayedText(message);
-                String customCotentTitle = notificationInfoProvider.getTitle(message);
+                String customContentTitle = notificationInfoProvider.getTitle(message);
                 if (customNotifyText != null){
                     notifyText = customNotifyText;
                 }
                     
-                if (customCotentTitle != null){
-                    contentTitle = customCotentTitle;
+                if (customContentTitle != null){
+                    contentTitle = customContentTitle;
                 }   
             }
 
-            // create and send notificaiton
+            // create and send notification
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(appContext)
                                                                         .setSmallIcon(appContext.getApplicationInfo().icon)
                                                                         .setWhen(System.currentTimeMillis())
@@ -239,7 +237,7 @@ public class MessageNotifier {
                     Integer.toString(notificationNum));
             
             if (notificationInfoProvider != null) {
-                // lastest text
+                // latest text
                 String customSummaryBody = notificationInfoProvider.getLatestText(message, fromUsersNum,notificationNum);
                 if (customSummaryBody != null){
                     summaryBody = customSummaryBody;
@@ -260,6 +258,7 @@ public class MessageNotifier {
             Notification notification = mBuilder.build();
 
             if (isForeground) {
+                int foregroundNotifyID = 0555;
                 notificationManager.notify(foregroundNotifyID, notification);
                 notificationManager.cancel(foregroundNotifyID);
             } else {
@@ -281,17 +280,17 @@ public class MessageNotifier {
             } 
         }
         
-        if (System.currentTimeMillis() - lastNotifiyTime < 1000) {
+        if (System.currentTimeMillis() - lastNotifyTime < 1000) {
             // received new messages within 2 seconds, skip play ringtone
             return;
         }
         
         try {
-            lastNotifiyTime = System.currentTimeMillis();
+            lastNotifyTime = System.currentTimeMillis();
             
             // check if in silent mode
             if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-                EMLog.e(TAG, "in slient mode now");
+                EMLog.e(TAG, "in silent mode now");
                 return;
             }
             EaseUI.EaseSettingsProvider settingsProvider = EaseUI.getInstance().getSettingsProvider();

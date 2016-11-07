@@ -120,15 +120,24 @@ public class ApplyActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMMessage message = mConversation.getMessage(msgId, false);
-                    if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-                        EMClient.getInstance()
-                                .groupManager()
-                                .acceptInvitation(message.getStringAttribute(
-                                        EaseConstant.MESSAGE_ATTR_GROUP_ID),
-                                        message.getStringAttribute(
-                                                EaseConstant.MESSAGE_ATTR_USERNAME));
-                    } else {
+                    if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_TYPE) == 1) {
+                        if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
 
+                            EMClient.getInstance()
+                                    .groupManager()
+                                    .acceptInvitation(message.getStringAttribute(
+                                            EaseConstant.MESSAGE_ATTR_GROUP_ID),
+                                            message.getStringAttribute(
+                                                    EaseConstant.MESSAGE_ATTR_USERNAME));
+                        } else {
+                            EMClient.getInstance()
+                                    .groupManager()
+                                    .acceptApplication(message.getStringAttribute(
+                                            EaseConstant.MESSAGE_ATTR_USERNAME),
+                                            message.getStringAttribute(
+                                                    EaseConstant.MESSAGE_ATTR_GROUP_ID));
+                        }
+                    } else {
                         EMClient.getInstance()
                                 .contactManager()
                                 .acceptInvitation(message.getStringAttribute(
@@ -139,7 +148,6 @@ public class ApplyActivity extends BaseActivity {
                     message.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS,
                             mActivity.getString(R.string.em_agreed));
                     EMClient.getInstance().chatManager().updateMessage(message);
-
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
                             Toast.makeText(mActivity, R.string.em_agreed, Toast.LENGTH_LONG).show();
@@ -171,10 +179,8 @@ public class ApplyActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMMessage message = mConversation.getMessage(msgId, false);
-                    if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-
+                    if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_TYPE) == 1) {
                         if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
-
                             EMClient.getInstance()
                                     .groupManager()
                                     .declineInvitation(message.getStringAttribute(
@@ -182,7 +188,6 @@ public class ApplyActivity extends BaseActivity {
                                             message.getStringAttribute(
                                                     EaseConstant.MESSAGE_ATTR_USERNAME), "");
                         } else {
-
                             EMClient.getInstance()
                                     .groupManager()
                                     .declineApplication(message.getStringAttribute(

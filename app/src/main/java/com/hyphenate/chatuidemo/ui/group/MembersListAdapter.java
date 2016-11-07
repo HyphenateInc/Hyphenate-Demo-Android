@@ -1,4 +1,4 @@
-package com.hyphenate.chatuidemo.ui.user;
+package com.hyphenate.chatuidemo.ui.group;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -93,7 +93,7 @@ public class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.
 
                 holder.memberListView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override public boolean onLongClick(View v) {
-                        listener.onLongItemClick(v, position);
+                        listener.onItemLongClick(v, position);
                         return true;
                     }
                 });
