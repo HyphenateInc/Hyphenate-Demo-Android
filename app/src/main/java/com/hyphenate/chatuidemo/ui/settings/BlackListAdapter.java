@@ -2,19 +2,14 @@ package com.hyphenate.chatuidemo.ui.settings;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMConversation;
-import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseImageView;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,31 +17,31 @@ import java.util.List;
  * Blacklist
  */
 
-public class BlacklistAdapter extends RecyclerView.Adapter<BlacklistAdapter.BlacklistViewHolder> {
+public class BlackListAdapter extends RecyclerView.Adapter<BlackListAdapter.BlackListViewHolder> {
 
     private Context mContext;
 
     private LayoutInflater mInflater;
 
-    private List<String> mBlacklist;
+    private List<String> mBlackList;
 
     private ItemClickListener mItemClickListener;
 
-    public BlacklistAdapter(Context context) {
+    public BlackListAdapter(Context context) {
         mContext = context;
         mInflater = LayoutInflater.from(mContext);
 
-        mBlacklist = EMClient.getInstance().contactManager().getBlackListUsernames();
+        mBlackList = EMClient.getInstance().contactManager().getBlackListUsernames();
     }
 
-    @Override public BlacklistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override public BlackListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.em_item_apply, parent, false);
-        BlacklistViewHolder holder = new BlacklistViewHolder(view);
+        BlackListViewHolder holder = new BlackListViewHolder(view);
         return holder;
     }
 
-    @Override public void onBindViewHolder(BlacklistViewHolder holder, final int position) {
-        String username = mBlacklist.get(position);
+    @Override public void onBindViewHolder(BlackListViewHolder holder, final int position) {
+        String username = mBlackList.get(position);
         holder.imageViewAvatar.setImageResource(R.drawable.ease_default_avatar);
 
         // apply for username
@@ -56,7 +51,7 @@ public class BlacklistAdapter extends RecyclerView.Adapter<BlacklistAdapter.Blac
     }
 
     @Override public int getItemCount() {
-        return mBlacklist.size();
+        return mBlackList.size();
     }
 
     /**
@@ -98,12 +93,12 @@ public class BlacklistAdapter extends RecyclerView.Adapter<BlacklistAdapter.Blac
     /**
      * BlackList ViewHolder
      */
-    protected static class BlacklistViewHolder extends RecyclerView.ViewHolder {
+    protected static class BlackListViewHolder extends RecyclerView.ViewHolder {
         EaseImageView imageViewAvatar;
         TextView textViewUsername;
         Button unblockBtn;
 
-        public BlacklistViewHolder(View itemView) {
+        public BlackListViewHolder(View itemView) {
             super(itemView);
             imageViewAvatar = (EaseImageView) itemView.findViewById(R.id.img_avatar);
             textViewUsername = (TextView) itemView.findViewById(R.id.text_username);

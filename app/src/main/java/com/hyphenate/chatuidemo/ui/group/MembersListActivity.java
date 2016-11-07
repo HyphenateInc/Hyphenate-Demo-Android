@@ -72,7 +72,7 @@ public class MembersListActivity extends BaseActivity {
                 }
             }
 
-            @Override public void onLongItemClick(View view, final int position) {
+            @Override public void onItemLongClick(View view, final int position) {
 
                 if (isOwner) {
                     new AlertDialog.Builder(MembersListActivity.this).setTitle("member")

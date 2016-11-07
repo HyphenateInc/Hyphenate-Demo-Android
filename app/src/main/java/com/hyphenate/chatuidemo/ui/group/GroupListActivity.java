@@ -121,7 +121,7 @@ public class GroupListActivity extends BaseActivity {
                                 .putExtra(EaseConstant.EXTRA_USER_ID, groupList.get(position).getGroupId()));
             }
 
-            @Override public void onLongItemClick(View view, final int position) {
+            @Override public void onItemLongClick(View view, final int position) {
 
                 isDelete = true;
             }

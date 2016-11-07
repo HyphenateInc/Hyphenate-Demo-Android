@@ -87,7 +87,7 @@ public class ContactListFragment extends Fragment {
                 showDialog(user);
             }
 
-            @Override public void onLongItemClick(View view, int position) {
+            @Override public void onItemLongClick(View view, int position) {
                 UserEntity user = entityList.get(position);
                 deleteContacter(user);
             }

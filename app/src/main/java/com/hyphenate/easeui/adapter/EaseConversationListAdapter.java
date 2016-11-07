@@ -8,8 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
@@ -21,8 +20,12 @@ import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.util.DateUtils;
+
 import java.util.Comparator;
 import java.util.Date;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by wei on 2016/10/9.
@@ -107,6 +110,16 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
                 if (mOnItemClickListener != null) {
                     mOnItemClickListener.onItemClick(v, position);
                 }
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mOnItemClickListener != null){
+                    mOnItemClickListener.onItemLongClick(v, position);
+                    return true;
+                }
+                return false;
             }
         });
     }

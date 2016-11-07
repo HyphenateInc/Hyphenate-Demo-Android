@@ -3,6 +3,7 @@ package com.hyphenate.easeui.adapter;
 import android.content.Context;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.util.SortedListAdapterCallback;
 import android.view.LayoutInflater;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +34,24 @@ public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<Recy
         mInflater = LayoutInflater.from(context);
         mComparator = comparator;
 
-        mSortedList = new SortedList<>(itemClass, new SortedList.Callback<T>() {
+        mSortedList = new SortedList<>(itemClass, new SortedListAdapterCallback<T>(this) {
+            @Override public int compare(T o1, T o2) {
+                int result;
+                if(areItemsTheSame(o1, o2)){
+                    return 0;
+                }else {
+                    return mComparator.compare(o1, o2);
+                }
+            }
+
+            @Override public boolean areContentsTheSame(T oldItem, T newItem) {
+                return EaseSortedListAdapter.this.areItemContentsTheSame(oldItem, newItem);
+            }
+
+            @Override public boolean areItemsTheSame(T item1, T item2) {
+                return EaseSortedListAdapter.this.areItemsTheSame(item1, item2);
+            }
+        }/*new SortedList.Callback<T>() {
             @Override
             public int compare(T a, T b) {
                 return mComparator.compare(a, b);
@@ -68,7 +86,7 @@ public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<Recy
             public boolean areItemsTheSame(T item1, T item2) {
                 return EaseSortedListAdapter.this.areItemsTheSame(item1, item2);
             }
-        });
+        }*/);
 
     }
 
@@ -189,17 +207,18 @@ public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<Recy
             mActions.add(new Action<T>() {
                 @Override
                 public void perform(SortedList<T> list) {
-                    final List<T> itemsToRemove = filter(new Filter<T>() {
-                        @Override
-                        public boolean test(T item) {
-                            return !items.contains(item);
-                        }
-                    });
-
-                    for (int i = itemsToRemove.size() - 1; i >= 0; i--) {
-                        final T item = itemsToRemove.get(i);
-                        mSortedList.remove(item);
-                    }
+                    //final List<T> itemsToRemove = filter(new Filter<T>() {
+                    //    @Override
+                    //    public boolean test(T item) {
+                    //        return !items.contains(item);
+                    //    }
+                    //});
+                    //
+                    //for (int i = itemsToRemove.size() - 1; i >= 0; i--) {
+                    //    final T item = itemsToRemove.get(i);
+                    //    mSortedList.remove(item);
+                    //}
+                    //BUG: 每次取到对象都不一样
                     mSortedList.addAll(items);
                 }
             });

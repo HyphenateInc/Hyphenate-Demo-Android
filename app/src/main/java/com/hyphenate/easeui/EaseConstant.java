@@ -48,5 +48,9 @@ public class EaseConstant {
     public static final String BROADCAST_ACTION_CALL = "com.hyphenate.action.call";
     public static final String BROADCAST_ACTION_CONTACTS = "com.hyphenate.action.contacts";
     public static final String BROADCAST_ACTION_APPLICATION = "com.hyphenate.action.application";
+<<<<<<< HEAD
+=======
+    public static final String BROADCAST_ACTION_GROUP = "com.hyphenate.action.group";
+>>>>>>> ece292c48c1914184755bf3a0088e41544ba367d
     public static final String BROADCAST_ACTION_APPLY = "com.hyphenate.action.apply";
 }

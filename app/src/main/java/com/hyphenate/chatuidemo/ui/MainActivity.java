@@ -12,6 +12,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -192,11 +193,9 @@ public class MainActivity extends BaseActivity {
                     }
                 });
             }
-            //refresh ConversationListFragment if current index is 1
-            if (mCurrentPageIndex == 1) {
-                fragment = ((PagerAdapter) mViewPager.getAdapter()).getItem(1);
-                ((ConversationListFragment) fragment).refresh();
-            }
+            //refresh ConversationListFragment
+            fragment = ((PagerAdapter)mViewPager.getAdapter()).getItem(1);
+            ((ConversationListFragment) fragment).refresh();
         }
 
         @Override public void onCmdMessageReceived(List<EMMessage> list) {
@@ -223,17 +222,30 @@ public class MainActivity extends BaseActivity {
         //register message listener
         EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
 
-        if (EMClient.getInstance().chatManager().getUnreadMessageCount() > 0) {
-            getTabUnreadStatusView(1).setVisibility(View.VISIBLE);
-        } else {
-            getTabUnreadStatusView(1).setVisibility(View.INVISIBLE);
-        }
+        updateUnreadMsgLabel();
     }
 
     @Override protected void onStop() {
         super.onStop();
         //unregister message listener on stop
         EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void updateUnreadMsgLabel(){
+        if (EMClient.getInstance().chatManager().getUnreadMessageCount() > 0) {
+            getTabUnreadStatusView(1).setVisibility(View.VISIBLE);
+        }else {
+            getTabUnreadStatusView(1).setVisibility(View.INVISIBLE);
+        }
     }
 
     /**

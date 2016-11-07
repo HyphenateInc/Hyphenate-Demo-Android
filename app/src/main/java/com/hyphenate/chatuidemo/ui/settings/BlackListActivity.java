@@ -5,12 +5,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.exceptions.HyphenateException;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by lzan13 on 2016/10/27.
@@ -23,7 +25,7 @@ public class BlackListActivity extends BaseActivity {
 
     @BindView(R.id.recycler_view_blacklist) RecyclerView mRecyclerView;
 
-    private BlacklistAdapter mAdapter;
+    private BlackListAdapter mAdapter;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
 
@@ -49,7 +51,7 @@ public class BlackListActivity extends BaseActivity {
             }
         });
 
-        mAdapter = new BlacklistAdapter(mActivity);
+        mAdapter = new BlackListAdapter(mActivity);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
@@ -71,7 +73,7 @@ public class BlackListActivity extends BaseActivity {
      * Set item click listener
      */
     private void setItemClickListener() {
-        mAdapter.setItemClickListener(new BlacklistAdapter.ItemClickListener() {
+        mAdapter.setItemClickListener(new BlackListAdapter.ItemClickListener() {
             /**
              * Item action event
              *

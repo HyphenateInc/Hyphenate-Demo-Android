@@ -3,46 +3,46 @@
 
     <!--About-->
     <PreferenceCategory
-        android:title="About">
+        android:title="@string/em_pref_about">
         <Preference
-            android:key="checkbox_preference"
-            android:summary="Check SDK Version"
-            android:title="SDK Version"/>
+            android:key="@string/em_pref_key_about"
+            android:title="@string/em_pref_about_version"/>
     </PreferenceCategory>
 
     <!-- Notifications -->
     <PreferenceCategory
-        android:title="Notifiaction">
+        android:title="@string/em_pref_notification">
         <PreferenceScreen
-            android:key="notification_screen"
-            android:summary="Set push notification"
-            android:title="Notification">
+            android:summary="@string/em_pref_notification_summary"
+            android:title="@string/em_pref_notification">
             <!--Push notification main switch-->
             <SwitchPreference
-                android:key="notification_switch"
-                android:summary="Notification switch"
-                android:title="Notification"/>
+                android:key="@string/em_pref_key_notification"
+                android:summary="@string/em_pref_notification_summary"
+                android:title="@string/em_pref_notification"/>
             <!--Sound switch-->
             <SwitchPreference
-                android:dependency="notification_switch"
-                android:key="notification_sound_switch"
+                android:dependency="@string/em_pref_key_notification"
+                android:key="@string/em_pref_key_notification_sound"
                 android:layout="?android:attr/preferenceLayoutChild"
-                android:summary="Notification sound switch"
-                android:title="Sound"/>
+                android:summaryOff="@string/em_pref_off"
+                android:summaryOn="@string/em_pref_on"
+                android:title="@string/em_pref_notification_sound"/>
             <!--Vibrate switch-->
             <SwitchPreference
-                android:dependency="notification_switch"
-                android:key="notification_vibrate_switch"
+                android:dependency="@string/em_pref_key_notification"
+                android:key="@string/em_pref_key_notification_vibrate"
                 android:layout="?android:attr/preferenceLayoutChild"
-                android:summary="notification vibrate switch"
-                android:title="Vibrate"/>
+                android:summaryOff="@string/em_pref_off"
+                android:summaryOn="@string/em_pref_on"
+                android:title="@string/em_pref_notification_vibrate"/>
             <!--Set push display name-->
             <EditTextPreference
-                android:dependency="notification_switch"
-                android:dialogTitle="Input display name"
-                android:key="notification_display_name"
-                android:summary="Set push notification display name"
-                android:title="Display name"/>
+                android:dependency="@string/em_pref_key_notification"
+                android:dialogTitle="@string/em_pref_notification_display_name"
+                android:key="@string/em_pref_key_notification_display_name"
+                android:summary=""
+                android:title="@string/em_pref_notification_display_name"/>
         </PreferenceScreen>
     </PreferenceCategory>
 

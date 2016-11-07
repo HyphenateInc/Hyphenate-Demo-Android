@@ -129,7 +129,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
                         selected.add(groupList.get(position));
                         GroupListActivity.item.setIcon(R.drawable.delete);
                         GroupListActivity.toolbar.setTitle("Delete (" + selected.size() + ")");
-                        listener.onLongItemClick(v, position);
+                        listener.onItemLongClick(v, position);
                         return true;
                     }
                 });
