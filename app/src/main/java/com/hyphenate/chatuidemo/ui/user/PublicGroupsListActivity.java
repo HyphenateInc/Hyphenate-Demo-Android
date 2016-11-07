@@ -117,7 +117,7 @@ public class PublicGroupsListActivity extends GroupListActivity {
                                         }).start();
                                     }
 
-                                    @Override public void onLongItemClick(View view, int position) {
+                                    @Override public void onItemLongClick(View view, int position) {
 
                                     }
                                 });

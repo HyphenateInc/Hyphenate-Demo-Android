@@ -83,7 +83,7 @@ public class GroupListActivity extends BaseActivity {
                                 groupList.get(position).getGroupId()));
             }
 
-            @Override public void onLongItemClick(View view, final int position) {
+            @Override public void onItemLongClick(View view, final int position) {
 
                 new AlertDialog.Builder(GroupListActivity.this).setTitle("group")
                         .setMessage("delete group")

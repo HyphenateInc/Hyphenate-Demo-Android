@@ -93,7 +93,7 @@ public class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.
 
                 holder.memberListView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override public boolean onLongClick(View v) {
-                        listener.onLongItemClick(v, position);
+                        listener.onItemLongClick(v, position);
                         return true;
                     }
                 });

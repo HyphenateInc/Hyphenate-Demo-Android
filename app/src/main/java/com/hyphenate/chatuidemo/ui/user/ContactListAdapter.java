@@ -1,6 +1,5 @@
 package com.hyphenate.chatuidemo.ui.user;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -126,7 +124,7 @@ class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ViewHol
 
             holder.contactItemLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override public boolean onLongClick(View v) {
-                    listener.onLongItemClick(v, position);
+                    listener.onItemLongClick(v, position);
                     return true;
                 }
             });

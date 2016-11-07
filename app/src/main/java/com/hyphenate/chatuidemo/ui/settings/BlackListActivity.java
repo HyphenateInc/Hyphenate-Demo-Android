@@ -5,19 +5,21 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.exceptions.HyphenateException;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by lzan13 on 2016/10/27.
  * Blacklist activity
  */
 
-public class BlacklistActivity extends BaseActivity {
+public class BlackListActivity extends BaseActivity {
 
     private BaseActivity mActivity;
 

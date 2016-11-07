@@ -4,14 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.ui.MainActivity;
 import com.hyphenate.chatuidemo.ui.apply.ApplyActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseConversationListView;
@@ -23,6 +27,7 @@ import com.hyphenate.easeui.widget.EaseListItemClickListener;
 public class ConversationListFragment extends Fragment {
 
     private Unbinder mUnbinder;
+    private int mItemLongClickPos;
 
     @BindView(R.id.list_view) EaseConversationListView mConversationListView;
 
@@ -46,6 +51,13 @@ public class ConversationListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         // init ConversationListView
         mConversationListView.init();
+
+        mConversationListView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override public void onCreateContextMenu(ContextMenu menu, View v,
+                    ContextMenu.ContextMenuInfo menuInfo) {
+                getActivity().getMenuInflater().inflate(R.menu.em_delete_conversation, menu);
+            }
+        });
         // set item click listener
         mConversationListView.setOnItemClickListener(new EaseListItemClickListener() {
             @Override public void onItemClick(View view, int position) {
@@ -59,10 +71,25 @@ public class ConversationListFragment extends Fragment {
                 }
             }
 
-            @Override public void onLongItemClick(View view, int position) {
-
+            @Override public void onItemLongClick(View view, int position) {
+                mItemLongClickPos = position;
+                mConversationListView.showContextMenu();
             }
         });
+    }
+
+    @Override public boolean onContextItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.delete_conversation){
+            EMConversation tobeDeleteCons = mConversationListView.getItem(mItemLongClickPos);
+            if(tobeDeleteCons == null){
+                return true;
+            }
+            EMClient.getInstance().chatManager().deleteConversation(tobeDeleteCons.getUserName(), true);
+            refresh();
+
+            ((MainActivity)getActivity()).updateUnreadMsgLabel();
+        }
+        return true;
     }
 
     @Override public void onResume() {

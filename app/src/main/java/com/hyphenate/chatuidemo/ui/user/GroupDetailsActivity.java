@@ -126,7 +126,7 @@ public class GroupDetailsActivity extends BaseActivity {
                         REQUEST_CODE_MEMBER_REFRESH);
             }
 
-            @Override public void onLongItemClick(View view, int position) {
+            @Override public void onItemLongClick(View view, int position) {
 
             }
         });

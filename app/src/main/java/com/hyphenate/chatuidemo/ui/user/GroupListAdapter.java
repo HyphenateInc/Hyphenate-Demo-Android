@@ -98,7 +98,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.View
 
                 holder.groupItem.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override public boolean onLongClick(View v) {
-                        listener.onLongItemClick(v, position);
+                        listener.onItemLongClick(v, position);
                         return true;
                     }
                 });
