@@ -49,24 +49,4 @@ public class SettingsFragment extends Fragment {
                 .commit();
     }
 
-    /**
-     * Sign out account
-     */
-    @OnClick(R.id.btn_sign_out) void signOut() {
-        DemoHelper.getInstance().signOut(true, new EMCallBack() {
-            @Override public void onSuccess() {
-                startActivity(new Intent(getActivity(), SignInActivity.class));
-                ((MainActivity) getActivity()).finish();
-            }
-
-            @Override public void onError(int i, String s) {
-
-            }
-
-            @Override public void onProgress(int i, String s) {
-
-            }
-        });
-    }
-
 }

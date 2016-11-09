@@ -24,7 +24,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="192dp"
+            android:layout_height="@dimen/setting_header_height"
             android:gravity="center"
             android:padding="@dimen/activity_horizontal_margin"
             >
@@ -44,6 +44,7 @@
                 android:layout_alignBottom="@id/img_account_avatar"
                 android:layout_alignRight="@id/img_account_avatar"
                 android:src="@drawable/em_ic_mode_edit_white_24dp"
+                app:fabSize="mini"
                 />
         </RelativeLayout>
 
