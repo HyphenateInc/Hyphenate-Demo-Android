@@ -101,6 +101,7 @@ public class SignUpActivity extends BaseActivity {
         final Resources res = mActivity.getResources();
         mDialog = new ProgressDialog(mActivity);
         mDialog.setMessage(res.getString(R.string.em_sign_up_begin));
+        mDialog.setCanceledOnTouchOutside(false);
         mDialog.show();
         new Thread(new Runnable() {
             @Override public void run() {
