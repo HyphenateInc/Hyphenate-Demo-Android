@@ -50,15 +50,15 @@ public class EaseChatRowVoice extends EaseChatRowFile {
         if (EaseChatRowVoicePlayClickListener.playMsgId != null
                 && EaseChatRowVoicePlayClickListener.playMsgId.equals(message.getMsgId()) && EaseChatRowVoicePlayClickListener.isPlaying) {
             if (message.direct() == EMMessage.Direct.RECEIVE) {
-                voiceImageView.setImageResource(R.drawable.ease_ic_voice_from_playing);
-            } else {
                 voiceImageView.setImageResource(R.drawable.ease_ic_voice_to_playing);
+            } else {
+                voiceImageView.setImageResource(R.drawable.ease_ic_voice_from_playing);
             }
         } else {
             if (message.direct() == EMMessage.Direct.RECEIVE) {
-                voiceImageView.setImageResource(R.drawable.ease_ic_voice_from_stopped);
-            } else {
                 voiceImageView.setImageResource(R.drawable.ease_ic_voice_to_stopped);
+            } else {
+                voiceImageView.setImageResource(R.drawable.ease_ic_voice_from_stopped);
             }
         }
         

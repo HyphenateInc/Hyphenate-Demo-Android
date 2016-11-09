@@ -1,16 +1,15 @@
 package com.hyphenate.chatuidemo.listener;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import com.hyphenate.EMContactListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.receiver.BroadCastReceiverManager;
 import com.hyphenate.chatuidemo.ui.user.UserEntity;
-import com.hyphenate.easeui.EaseConstant;
 
 /**
  * Created by lzan13 on 2016/10/24.
@@ -37,7 +36,7 @@ public class ContactsChangeListener implements EMContactListener {
 
         DemoHelper.getInstance().addContacts(userEntity);
         // send broadcast
-        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(EaseConstant.BROADCAST_ACTION_APPLY);
+        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(Constant.BROADCAST_ACTION_APPLY);
     }
 
     /**
@@ -51,7 +50,7 @@ public class ContactsChangeListener implements EMContactListener {
         DemoHelper.getInstance().deleteContacts(userEntity);
 
         // send Broadcast
-        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(EaseConstant.BROADCAST_ACTION_CONTACTS);
+        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(Constant.BROADCAST_ACTION_CONTACTS);
     }
 
     /**
@@ -67,15 +66,15 @@ public class ContactsChangeListener implements EMContactListener {
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(username + " Apply to become friends");
         message.addBody(body);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, username);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, reason);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0);
-        message.setFrom(EaseConstant.CONVERSATION_NAME_APPLY);
+        message.setAttribute(Constant.MESSAGE_ATTR_USERNAME, username);
+        message.setAttribute(Constant.MESSAGE_ATTR_REASON, reason);
+        message.setAttribute(Constant.MESSAGE_ATTR_TYPE, 0);
+        message.setFrom(Constant.CONVERSATION_NAME_APPLY);
         message.setMsgId(msgId);
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);
         // send broadcast
-        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(EaseConstant.BROADCAST_ACTION_APPLY);
+        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(Constant.BROADCAST_ACTION_APPLY);
     }
 
     /**
@@ -90,16 +89,16 @@ public class ContactsChangeListener implements EMContactListener {
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(username + " agrees with your apply");
         message.addBody(body);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, username);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, username + " agrees with your apply");
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS, "Agreed");
-        message.setFrom(EaseConstant.CONVERSATION_NAME_APPLY);
+        message.setAttribute(Constant.MESSAGE_ATTR_USERNAME, username);
+        message.setAttribute(Constant.MESSAGE_ATTR_REASON, username + " agrees with your apply");
+        message.setAttribute(Constant.MESSAGE_ATTR_TYPE, 0);
+        message.setAttribute(Constant.MESSAGE_ATTR_STATUS, "Agreed");
+        message.setFrom(Constant.CONVERSATION_NAME_APPLY);
         message.setMsgId(msgId);
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);
         // send broadcast
-        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(EaseConstant.BROADCAST_ACTION_APPLY);
+        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(Constant.BROADCAST_ACTION_APPLY);
     }
 
     /**
@@ -115,15 +114,15 @@ public class ContactsChangeListener implements EMContactListener {
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(username + " declined your apply");
         message.addBody(body);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, username);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, username + "  declined your apply");
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS, "Rejected");
-        message.setFrom(EaseConstant.CONVERSATION_NAME_APPLY);
+        message.setAttribute(Constant.MESSAGE_ATTR_USERNAME, username);
+        message.setAttribute(Constant.MESSAGE_ATTR_REASON, username + "  declined your apply");
+        message.setAttribute(Constant.MESSAGE_ATTR_TYPE, 0);
+        message.setAttribute(Constant.MESSAGE_ATTR_STATUS, "Rejected");
+        message.setFrom(Constant.CONVERSATION_NAME_APPLY);
         message.setMsgId(msgId);
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);
         // send broadcast
-        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(EaseConstant.BROADCAST_ACTION_APPLY);
+        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(Constant.BROADCAST_ACTION_APPLY);
     }
 }

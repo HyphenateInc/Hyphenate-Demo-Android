@@ -137,14 +137,14 @@ public class EaseChatExtendMenu extends GridView {
     }
     
     
-    class ChatMenuItemModel{
+    private class ChatMenuItemModel{
         String name;
         int image;
         int id;
         EaseChatExtendMenuItemClickListener clickListener;
     }
     
-    class ChatMenuItem extends LinearLayout {
+    private class ChatMenuItem extends LinearLayout {
         private ImageView imageView;
         private TextView textView;
 

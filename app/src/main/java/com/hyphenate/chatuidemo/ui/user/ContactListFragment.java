@@ -16,18 +16,19 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.Toast;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
-
 import com.hyphenate.chatuidemo.receiver.BroadCastReceiverManager;
+import com.hyphenate.chatuidemo.ui.apply.ApplyActivity;
 import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.ui.chat.ChatActivity;
-import com.hyphenate.chatuidemo.ui.apply.ApplyActivity;
 import com.hyphenate.chatuidemo.ui.group.GroupListActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
@@ -37,9 +38,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by benson on 2016/10/8.
@@ -269,7 +267,7 @@ public class ContactListFragment extends Fragment {
         // register broadcast register
         localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
         broadcastReceiver = new ContactsBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter(EaseConstant.BROADCAST_ACTION_CONTACTS);
+        IntentFilter intentFilter = new IntentFilter(Constant.BROADCAST_ACTION_CONTACTS);
         localBroadcastManager.registerReceiver(broadcastReceiver, intentFilter);
         // refresh ui
         refresh();

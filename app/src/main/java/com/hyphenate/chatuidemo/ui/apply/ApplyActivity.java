@@ -16,9 +16,9 @@ import butterknife.ButterKnife;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
-import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
 
@@ -66,7 +66,7 @@ public class ApplyActivity extends BaseActivity {
         });
         mConversation = EMClient.getInstance()
                 .chatManager()
-                .getConversation(EaseConstant.CONVERSATION_NAME_APPLY, null, true);
+                .getConversation(Constant.CONVERSATION_NAME_APPLY, null, true);
         mConversation.markAllMessagesAsRead();
         int count = mConversation.getAllMessages().size();
         int mPageSize = 30;
@@ -120,32 +120,32 @@ public class ApplyActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMMessage message = mConversation.getMessage(msgId, false);
-                    if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_TYPE) == 1) {
-                        if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
+                    if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE) == 1) {
+                        if (message.getIntAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
 
                             EMClient.getInstance()
                                     .groupManager()
                                     .acceptInvitation(message.getStringAttribute(
-                                            EaseConstant.MESSAGE_ATTR_GROUP_ID),
+                                            Constant.MESSAGE_ATTR_GROUP_ID),
                                             message.getStringAttribute(
-                                                    EaseConstant.MESSAGE_ATTR_USERNAME));
+                                                    Constant.MESSAGE_ATTR_USERNAME));
                         } else {
                             EMClient.getInstance()
                                     .groupManager()
                                     .acceptApplication(message.getStringAttribute(
-                                            EaseConstant.MESSAGE_ATTR_USERNAME),
+                                            Constant.MESSAGE_ATTR_USERNAME),
                                             message.getStringAttribute(
-                                                    EaseConstant.MESSAGE_ATTR_GROUP_ID));
+                                                    Constant.MESSAGE_ATTR_GROUP_ID));
                         }
                     } else {
                         EMClient.getInstance()
                                 .contactManager()
                                 .acceptInvitation(message.getStringAttribute(
-                                        EaseConstant.MESSAGE_ATTR_USERNAME, ""));
+                                        Constant.MESSAGE_ATTR_USERNAME, ""));
                     }
 
                     // update contacts apply for message status
-                    message.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS,
+                    message.setAttribute(Constant.MESSAGE_ATTR_STATUS,
                             mActivity.getString(R.string.em_agreed));
                     EMClient.getInstance().chatManager().updateMessage(message);
                     runOnUiThread(new Runnable() {
@@ -179,29 +179,29 @@ public class ApplyActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMMessage message = mConversation.getMessage(msgId, false);
-                    if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_TYPE) == 1) {
-                        if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
+                    if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE) == 1) {
+                        if (message.getIntAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
                             EMClient.getInstance()
                                     .groupManager()
                                     .declineInvitation(message.getStringAttribute(
-                                            EaseConstant.MESSAGE_ATTR_GROUP_ID),
+                                            Constant.MESSAGE_ATTR_GROUP_ID),
                                             message.getStringAttribute(
-                                                    EaseConstant.MESSAGE_ATTR_USERNAME), "");
+                                                    Constant.MESSAGE_ATTR_USERNAME), "");
                         } else {
                             EMClient.getInstance()
                                     .groupManager()
                                     .declineApplication(message.getStringAttribute(
-                                            EaseConstant.MESSAGE_ATTR_GROUP_ID),
-                                            EaseConstant.MESSAGE_ATTR_USERNAME, "");
+                                            Constant.MESSAGE_ATTR_GROUP_ID),
+                                            Constant.MESSAGE_ATTR_USERNAME, "");
                         }
                     } else {
                         EMClient.getInstance()
                                 .contactManager()
                                 .declineInvitation(message.getStringAttribute(
-                                        EaseConstant.MESSAGE_ATTR_USERNAME, ""));
+                                        Constant.MESSAGE_ATTR_USERNAME, ""));
                     }
                     // update contacts apply for message status
-                    message.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS,
+                    message.setAttribute(Constant.MESSAGE_ATTR_STATUS,
                             mActivity.getString(R.string.em_rejected));
                     EMClient.getInstance().chatManager().updateMessage(message);
 
@@ -251,7 +251,7 @@ public class ApplyActivity extends BaseActivity {
         // register broadcast register
         localBroadcastManager = LocalBroadcastManager.getInstance(mActivity);
         broadcastReceiver = new ApplyBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter(EaseConstant.BROADCAST_ACTION_APPLY);
+        IntentFilter intentFilter = new IntentFilter(Constant.BROADCAST_ACTION_APPLY);
         localBroadcastManager.registerReceiver(broadcastReceiver, intentFilter);
         // refresh ui
         refresh();
