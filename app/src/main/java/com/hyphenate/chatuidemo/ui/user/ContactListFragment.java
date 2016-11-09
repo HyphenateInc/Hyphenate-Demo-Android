@@ -1,10 +1,15 @@
 package com.hyphenate.chatuidemo.ui.user;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -27,6 +32,7 @@ import com.hyphenate.chatuidemo.ui.group.GroupListActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,6 +48,11 @@ import butterknife.ButterKnife;
 public class ContactListFragment extends Fragment {
 
     private static String TAG = ContactListFragment.class.getSimpleName();
+    private LocalBroadcastManager localBroadcastManager;
+    private ContactsBroadcastReceiver broadcastReceiver;
+
+    private AlertDialog.Builder alertDialogBuilder;
+    private AlertDialog contactsMenuDialog;
 
     @BindView(R.id.rv_contacts) RecyclerView recyclerView;
     ShowDialogFragment dialogFragment;
@@ -84,17 +95,22 @@ public class ContactListFragment extends Fragment {
         adapter.setOnItemClickListener(new EaseListItemClickListener() {
             @Override public void onItemClick(View view, int position) {
                 UserEntity user = entityList.get(position);
-                showDialog(user);
+                itemClick(user);
             }
 
             @Override public void onItemLongClick(View view, int position) {
                 UserEntity user = entityList.get(position);
-                deleteContacter(user);
+                itemLongClick(user);
             }
         });
     }
 
-    private void showDialog(final UserEntity user) {
+    /**
+     * Item click event
+     *
+     * @param user current user item
+     */
+    private void itemClick(final UserEntity user) {
 
         dialogFragment = new ShowDialogFragment();
         dialogFragment.show(getFragmentManager(), "dialog");
@@ -136,6 +152,32 @@ public class ContactListFragment extends Fragment {
     }
 
     /**
+     * item long click event
+     *
+     * @param userEntity current click item
+     */
+    private void itemLongClick(final UserEntity userEntity) {
+
+        String[] menus = { "Delete Contact", "Add Blacklist" };
+
+        alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
+            @Override public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        deleteContacter(userEntity);
+                        break;
+                    case 1:
+                        addBlackUser(userEntity);
+                        break;
+                }
+            }
+        });
+        contactsMenuDialog = alertDialogBuilder.create();
+        contactsMenuDialog.show();
+    }
+
+    /**
      * delete contacter
      */
     private void deleteContacter(final UserEntity userEntity) {
@@ -146,9 +188,32 @@ public class ContactListFragment extends Fragment {
                     DemoHelper.getInstance().deleteContacts(userEntity);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override public void run() {
-                            refresh();
-                            Toast.makeText(getActivity(), "contacter is deleted", Toast.LENGTH_LONG)
+                            Toast.makeText(getActivity(), "Contacts is deleted", Toast.LENGTH_LONG)
                                     .show();
+                            refresh();
+                        }
+                    });
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * Add user to Blacklist
+     */
+    private void addBlackUser(final UserEntity userEntity) {
+        new Thread(new Runnable() {
+            @Override public void run() {
+                try {
+                    EMClient.getInstance()
+                            .contactManager()
+                            .addUserToBlackList(userEntity.getUsername(), true);
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            Toast.makeText(getActivity(), "Contacts is add blacklist",
+                                    Toast.LENGTH_LONG).show();
                         }
                     });
                 } catch (HyphenateException e) {
@@ -187,11 +252,25 @@ public class ContactListFragment extends Fragment {
         });
     }
 
+    /**
+     * Contacts broadcast receiver
+     */
+    private class ContactsBroadcastReceiver extends BroadcastReceiver {
+
+        @Override public void onReceive(Context context, Intent intent) {
+            EMLog.d(TAG, "contact action");
+            refresh();
+        }
+    }
+
     @Override public void onResume() {
         super.onResume();
 
         // register broadcast register
-        BroadCastReceiverManager.getInstance(getActivity()).registerBroadCastReceiver(EaseConstant.BROADCAST_ACTION_CONTACTS);
+        localBroadcastManager = LocalBroadcastManager.getInstance(getActivity());
+        broadcastReceiver = new ContactsBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter(EaseConstant.BROADCAST_ACTION_CONTACTS);
+        localBroadcastManager.registerReceiver(broadcastReceiver, intentFilter);
         // refresh ui
         refresh();
     }

@@ -61,7 +61,7 @@ public class ContactsChangeListener implements EMContactListener {
      * @param reason request reason
      */
     @Override public void onContactInvited(String username, String reason) {
-        String msgId = username + 0;
+        String msgId = username + System.currentTimeMillis();
 
         // Create message save application info
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
@@ -84,7 +84,7 @@ public class ContactsChangeListener implements EMContactListener {
      * @param username The requestor's username
      */
     @Override public void onFriendRequestAccepted(String username) {
-        String msgId = username + 0;
+        String msgId = username + System.currentTimeMillis();
 
         // Create message save application info
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
@@ -109,7 +109,7 @@ public class ContactsChangeListener implements EMContactListener {
      */
     @Override public void onFriendRequestDeclined(String username) {
 
-        String msgId = username + 0;
+        String msgId = username + System.currentTimeMillis();
 
         // Create message save application info
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);

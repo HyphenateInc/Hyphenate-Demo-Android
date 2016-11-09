@@ -27,7 +27,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(" receive invitation to join the group：" + s1);
         message.addBody(body);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID, s);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_ID,s);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, s2);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, " receive invitation to join the group：" + s1);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 1);
@@ -52,7 +52,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(s2 + " Apply to join group：" + s1);
         message.addBody(body);
-        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID, s);
+        message.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_ID,s);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, s2);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, s2 + " Apply to join public group：" + s1);
         message.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 1);
@@ -75,7 +75,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
 
         EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(" Accepted your group application ");
-        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID, s);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_ID, s);
         msg.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, s1);
         msg.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, s2 + " Accepted your group application ");
         msg.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 1);
@@ -99,7 +99,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
     @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
         EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(" Declined your group application ");
-        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID, s);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_ID, s);
         msg.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, s1);
         msg.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, s3);
         msg.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 1);
@@ -125,7 +125,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
 
         EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(s1 + " Accepted your group invite ");
-        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID, s);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_ID, s);
         msg.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, s1);
         msg.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, s2);
         msg.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 1);
@@ -151,7 +151,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
         EMTextMessageBody body = new EMTextMessageBody(s1 + " Declined your group invite ");
         msg.setMsgId(s1 + System.currentTimeMillis());
         msg.addBody(body);
-        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUPID, s);
+        msg.setAttribute(EaseConstant.MESSAGE_ATTR_GROUP_ID, s);
         msg.setAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, s1);
         msg.setAttribute(EaseConstant.MESSAGE_ATTR_REASON, s2);
         msg.setAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 1);
