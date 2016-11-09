@@ -54,7 +54,7 @@
         android:paddingRight="10dp"
         android:paddingLeft="5dp"
         android:scaleType="centerInside"
-        android:visibility="visible"
+        android:visibility="gone"
         android:src="@drawable/em_ic_chat_send"
         android:text="send"
         />
@@ -67,7 +67,6 @@
         android:paddingLeft="5dp"
         android:background="?android:attr/selectableItemBackground"
         android:scaleType="centerInside"
-        android:visibility="gone"
         android:src="@drawable/em_ic_chat_expand"
         android:text="send"
         />

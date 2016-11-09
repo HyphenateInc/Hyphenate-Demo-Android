@@ -17,23 +17,23 @@
         android:src="@drawable/ease_default_avatar"
         />
 
-        <RelativeLayout
-            android:layout_toLeftOf="@id/iv_userhead"
-            android:id="@+id/bubble_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_chat_activity"
-            >
-        </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/bubble_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/margin_chat_activity"
+        android:layout_toLeftOf="@id/iv_userhead"
+        >
+    </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/bubble_container"
-            android:layout_alignBottom="@id/bubble_container"
-            android:layout_toLeftOf="@id/bubble_container"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/bubble_container"
+        android:layout_alignTop="@id/bubble_container"
+        android:layout_toLeftOf="@id/bubble_container"
 
-            >
+        >
         <LinearLayout
             android:id="@+id/ll_loading"
             android:layout_width="wrap_content"
@@ -71,23 +71,25 @@
             android:src="@drawable/ease_msg_state_failed_resend"
             android:visibility="gone"
             />
-        </RelativeLayout>
+    </RelativeLayout>
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/chat_item_padding_bottom"
-        android:layout_toLeftOf="@id/iv_userhead"
         android:layout_below="@id/bubble_container"
+        android:layout_toLeftOf="@id/iv_userhead"
+        android:minHeight="@dimen/chat_item_padding_bottom"
         >
         <TextView
             android:id="@+id/timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/chat_text_date_style"
-            android:textSize="@dimen/chat_timestamp_size"
-            android:layout_marginTop="@dimen/chat_timestamp_margin_top"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginTop="@dimen/chat_timestamp_margin_top"
+            android:textSize="@dimen/chat_timestamp_size"
+            android:layout_marginRight="@dimen/margin_chat_activity"
+
+            style="@style/chat_text_date_style"
             />
 
 
@@ -95,6 +97,7 @@
             android:id="@+id/tv_ack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/tv_delivered"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/chat_item_ack_margin"
             android:layout_toLeftOf="@id/timestamp"
@@ -102,7 +105,6 @@
             android:textSize="12sp"
             android:visibility="invisible"
             style="@style/chat_text_name_style"
-            android:layout_alignRight="@+id/tv_delivered"
 
             />
 
