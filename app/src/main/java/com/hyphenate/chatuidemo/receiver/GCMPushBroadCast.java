@@ -41,13 +41,13 @@ public class GCMPushBroadCast extends BroadcastReceiver {
 			String appname = (String) packageManager
 					.getApplicationLabel(context.getApplicationInfo());
 
-			// notification titile
+			// notification title
 			String contentTitle = appname;
 			String packageName = context.getApplicationInfo().packageName;
 
 			Uri defaultSoundUrlUri = RingtoneManager
 					.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-			// create and send notificaiton
+			// create and send notification
 			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 			        context)
 					.setSmallIcon(context.getApplicationInfo().icon)

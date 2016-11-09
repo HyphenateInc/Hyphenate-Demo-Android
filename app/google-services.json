@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "213252893895",
+    "firebase_url": "https://ios-demo-app-a35f7.firebaseio.com",
+    "project_id": "ios-demo-app-a35f7",
+    "storage_bucket": "ios-demo-app-a35f7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213252893895:android:97309bf2bf5a5b61",
+        "android_client_info": {
+          "package_name": "com.hyphenate.chatuidemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213252893895-7j3ekjbugbm4372phfdkkqi239na5f9l.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "213252893895-7b09rcj7op731seggip4dc0g0f2t6irh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqGxxduyRp7zjNeS7d1fVztkM3TTjitdo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

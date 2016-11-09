@@ -63,9 +63,6 @@ public class SignInActivity extends BaseActivity {
     private void initView() {
         mActivity = this;
 
-        //mAccountView.setText(mAccount);
-        //mPasswordView.setText(mPassword);
-
     }
 
     /**

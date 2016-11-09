@@ -32,7 +32,7 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
-import com.hyphenate.chatuidemo.ui.user.GroupDetailsActivity;
+import com.hyphenate.chatuidemo.ui.group.GroupDetailsActivity;
 import com.hyphenate.chatuidemo.ui.user.UserEntity;
 import com.hyphenate.chatuidemo.ui.widget.ChatInputView;
 import com.hyphenate.chatuidemo.ui.widget.VoiceRecordDialog;

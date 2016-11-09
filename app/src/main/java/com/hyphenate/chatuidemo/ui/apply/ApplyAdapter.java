@@ -14,6 +14,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseImageView;
+import com.hyphenate.exceptions.HyphenateException;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,42 +23,46 @@ import java.util.List;
  * Apply and invite message
  */
 
-public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHolder> {
-
-    private Context mContext;
+class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHolder> {
 
     private LayoutInflater mInflater;
 
-    // Apply conversation
-    private EMConversation mConversation;
     private List<EMMessage> mMessages;
 
     private ItemClickListener mItemClickListener;
 
-    public ApplyAdapter(Context context) {
-        mContext = context;
-        mInflater = LayoutInflater.from(mContext);
-        mConversation = EMClient.getInstance()
+    ApplyAdapter(Context context) {
+        mInflater = LayoutInflater.from(context);
+        EMConversation mConversation = EMClient.getInstance()
                 .chatManager()
                 .getConversation(EaseConstant.CONVERSATION_NAME_APPLY, null, true);
         mMessages = mConversation.getAllMessages();
-        // The list collection is sorted in reverse orde
+        // The list collection is sorted in reverse order
         Collections.reverse(mMessages);
     }
 
     @Override public ApplyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.em_item_apply, parent, false);
-        ApplyViewHolder holder = new ApplyViewHolder(view);
-        return holder;
+        return new ApplyViewHolder(view);
     }
 
     @Override public void onBindViewHolder(ApplyViewHolder holder, final int position) {
         EMMessage message = mMessages.get(position);
         holder.imageViewAvatar.setImageResource(R.drawable.ease_default_avatar);
 
-        // apply for username
-        String username = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, "");
-        holder.textViewUsername.setText(username);
+        if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0) == 1) {
+
+            try {
+                holder.textViewUsername.setText(
+                        message.getStringAttribute(EaseConstant.MESSAGE_ATTR_GROUP_ID));
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // apply for username
+            String username = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, "");
+            holder.textViewUsername.setText(username);
+        }
 
         // apply for reason
         String reason = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_REASON, "");
@@ -103,14 +108,14 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHol
     /**
      * item click on the callback interface
      */
-    protected interface ItemClickListener {
+    interface ItemClickListener {
         /**
          * Item action event
          *
          * @param msgId item message id
          * @param action item action
          */
-        public void onItemAction(String msgId, int action);
+        void onItemAction(String msgId, int action);
     }
 
     /**
@@ -125,7 +130,7 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHol
     /**
      * Apply for ViewHolder
      */
-    protected static class ApplyViewHolder extends RecyclerView.ViewHolder {
+    static class ApplyViewHolder extends RecyclerView.ViewHolder {
         EaseImageView imageViewAvatar;
         TextView textViewUsername;
         TextView textViewReason;
@@ -133,7 +138,7 @@ public class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHol
         Button agreeBtn;
         Button rejectBtn;
 
-        public ApplyViewHolder(View itemView) {
+        ApplyViewHolder(View itemView) {
             super(itemView);
             imageViewAvatar = (EaseImageView) itemView.findViewById(R.id.img_avatar);
             textViewUsername = (TextView) itemView.findViewById(R.id.text_username);
