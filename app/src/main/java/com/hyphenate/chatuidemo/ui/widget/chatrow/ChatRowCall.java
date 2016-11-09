@@ -28,11 +28,16 @@ public class ChatRowCall extends EaseChatRow {
         super(context, message, position, adapter);
     }
 
-    @Override protected void onInflateView() {
-        inflater.inflate(
-                message.direct() == EMMessage.Direct.RECEIVE ? R.layout.em_row_received_call
-                        : R.layout.em_row_sent_call, this);
+    @Override protected boolean overrideBaseLayout() {
+        return false;
     }
+
+
+    @Override protected int onGetLayoutId() {
+        return message.direct() == EMMessage.Direct.RECEIVE ? R.layout.em_row_received_call
+                : R.layout.em_row_sent_call;
+    }
+
 
     @Override protected void onFindViewById() {
         contentView = (TextView) findViewById(R.id.tv_chatcontent);
@@ -82,4 +87,5 @@ public class ChatRowCall extends EaseChatRow {
         intent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
         context.startActivity(intent);
     }
+
 }

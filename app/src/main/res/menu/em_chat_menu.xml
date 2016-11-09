@@ -37,6 +37,10 @@
           android:id="@+id/menu_file"
           android:title="File"
           />
+      <!--<item
+          android:id="@+id/menu_video"
+          android:title="Video"
+          />-->
     </menu>
   </item>
   <item

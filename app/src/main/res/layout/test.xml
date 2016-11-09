@@ -12,13 +12,14 @@
     android:orientation="horizontal"
     >
 
-
     <ImageView
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:id="@+id/img_mic"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/chat_input_img_padding"
+        android:paddingRight="@dimen/chat_input_img_padding"
         android:background="?android:attr/selectableItemBackground"
-        android:scaleType="centerInside"
-        android:src="@drawable/em_ic_chat_emoji"
+        android:src="@drawable/em_ic_chat_mic_selector"
         />
 
     <EditText
@@ -29,6 +30,19 @@
         android:background="@null"
         android:hint="@string/chat_edit_hint"
         android:maxLines="3"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:imeOptions="actionSend"
+        />
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:scaleType="centerInside"
+        android:src="@drawable/em_ic_chat_emoji"
         />
 
     <ImageView
@@ -37,26 +51,25 @@
         android:layout_height="match_parent"
         android:layout_weight="0"
         android:background="?android:attr/selectableItemBackground"
-        android:paddingLeft="@dimen/chat_input_img_padding"
-        android:paddingRight="@dimen/chat_input_img_padding"
+        android:paddingRight="10dp"
+        android:paddingLeft="5dp"
         android:scaleType="centerInside"
-        android:visibility="gone"
+        android:visibility="visible"
         android:src="@drawable/em_ic_chat_send"
         android:text="send"
         />
-   <!-- <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/em_ic_chat_emoji"
-        />-->
+
     <ImageView
-        android:id="@+id/img_mic"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/chat_input_img_padding"
-        android:paddingRight="@dimen/chat_input_img_padding"
+        android:layout_weight="0"
+        android:paddingRight="10dp"
+        android:paddingLeft="5dp"
         android:background="?android:attr/selectableItemBackground"
-        android:src="@drawable/em_ic_chat_mic_selector"
+        android:scaleType="centerInside"
+        android:visibility="gone"
+        android:src="@drawable/em_ic_chat_expand"
+        android:text="send"
         />
+
 </LinearLayout>
