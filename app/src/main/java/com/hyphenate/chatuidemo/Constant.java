@@ -22,5 +22,4 @@ public class Constant extends EaseConstant{
     public static final String BROADCAST_ACTION_CONTACTS = "com.hyphenate.action.contacts";
     public static final String BROADCAST_ACTION_GROUP = "com.hyphenate.action.group";
     public static final String BROADCAST_ACTION_APPLY = "com.hyphenate.action.apply";
-
 }
