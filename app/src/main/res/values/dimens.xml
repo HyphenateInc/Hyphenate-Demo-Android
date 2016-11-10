@@ -75,7 +75,4 @@
 
     <dimen name="logo_margin">24dp</dimen>
 
-    <dimen name="chat_item_text_min_height">38dp</dimen>
-    <dimen name="chat_item_progress_margin">6dp</dimen>
-
 </resources>

@@ -10,6 +10,7 @@ import android.util.Log;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMMessageListener;
+import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
@@ -21,7 +22,11 @@ import com.hyphenate.chatuidemo.listener.CallStateChangeListener;
 import com.hyphenate.chatuidemo.listener.ContactsChangeListener;
 import com.hyphenate.chatuidemo.ui.user.UserDao;
 import com.hyphenate.chatuidemo.ui.user.UserEntity;
+import com.hyphenate.chatuidemo.ui.user.parse.UserProfileManager;
 import com.hyphenate.easeui.EaseUI;
+import com.hyphenate.easeui.model.EaseUser;
+import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +59,8 @@ public class DemoHelper {
 
     private DefaultGroupChangeListener mGroupListener = null;
 
+    private UserProfileManager userProManager;
+
     /**
      * save foreground Activity which registered message listeners
      */
@@ -85,6 +92,7 @@ public class DemoHelper {
             EMClient.getInstance().init(context, initOptions());
             //init EaseUI if you want to use it
             EaseUI.getInstance().init(context);
+            PreferenceManager.init(context);
 
             // set debug mode open:true, close:false
             EMClient.getInstance().setDebugMode(true);
@@ -93,6 +101,7 @@ public class DemoHelper {
             //set events listeners
             setGlobalListener();
             setNotificationType();
+            setEaseUIProviders();
 
             EMLog.d(TAG, "------- init hyphenate end --------------");
         }
@@ -227,9 +236,36 @@ public class DemoHelper {
         }
     }
 
-    /**
-     * Set call broadcast listener
-     */
+    protected void setEaseUIProviders() {
+        // set profile provider if you want easeUI to handle avatar and nickname
+        EaseUI.getInstance().setUserProfileProvider(new EaseUI.EaseUserProfileProvider() {
+
+            @Override public EaseUser getUser(String username) {
+                return getUserInfo(username);
+            }
+        });
+    }
+
+    private EaseUser getUserInfo(String username){
+        // To get instance of EaseUser, here we get it from the user list in memory
+        // You'd better cache it if you get it from your server
+        EaseUser user;
+        if(username.equals(EMClient.getInstance().getCurrentUser()))
+            return getUserProfileManager().getCurrentUserInfo();
+        user = getContactList().get(username);
+
+        // if user is not in your contacts, set inital letter for him/her
+        if(user == null){
+            user = new EaseUser(username);
+            EaseCommonUtils.setUserInitialLetter(user);
+        }
+        return user;
+    }
+
+
+        /**
+         * Set call broadcast listener
+         */
     private void setCallReceiverListener() {
         // Set the call broadcast listener to filter the action
         IntentFilter callFilter = new IntentFilter(
@@ -376,6 +412,10 @@ public class DemoHelper {
     }
 
     public void setContactList(List<UserEntity> entityList) {
+        entityMap.clear();
+        for (UserEntity userEntity : entityList) {
+            entityMap.put(userEntity.getUsername(), userEntity);
+        }
         UserDao.getInstance(mContext).saveContactList(entityList);
     }
 
@@ -387,15 +427,67 @@ public class DemoHelper {
         UserDao.getInstance(mContext).saveContact(userEntity);
     }
 
+    public UserProfileManager getUserProfileManager() {
+        if (userProManager == null) {
+            userProManager = new UserProfileManager();
+        }
+        return userProManager;
+    }
+
     /**
      * remove user from db
      */
+
     public void deleteContacts(UserEntity userEntity) {
         if (entityMap != null) {
             entityMap.remove(userEntity.getUsername());
         }
 
         UserDao.getInstance(mContext).deleteContact(userEntity);
+    }
+
+    public void asyncFetchContactsFromServer(final EMValueCallBack<List<UserEntity>> callback) {
+
+        new Thread() {
+            @Override public void run() {
+                List<String> hxIdList;
+                try {
+                    hxIdList = EMClient.getInstance().contactManager().getAllContactsFromServer();
+
+                    // save the contact list to cache
+                    getContactList().clear();
+                    List<UserEntity> entityList = new ArrayList<>();
+                    for (String userId : hxIdList) {
+                        UserEntity user = new UserEntity(userId);
+                        EaseCommonUtils.setUserInitialLetter(user);
+                        entityList.add(user);
+                    }
+
+                    // save the contact list to database
+                    setContactList(entityList);
+
+                    getUserProfileManager().asyncFetchContactInfoFromServer(hxIdList, new EMValueCallBack<List<UserEntity>>() {
+
+                        @Override public void onSuccess(List<UserEntity> uList) {
+                            if (callback != null) {
+                                callback.onSuccess(uList);
+                            }
+                        }
+
+                        @Override public void onError(int error, String errorMsg) {
+                            if (callback != null) {
+                                callback.onError(error, errorMsg);
+                            }
+                        }
+                    });
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                    if (callback != null) {
+                        callback.onError(e.getErrorCode(), e.toString());
+                    }
+                }
+            }
+        }.start();
     }
 
     /**
@@ -412,8 +504,8 @@ public class DemoHelper {
                 if (callback != null) {
                     callback.onSuccess();
                 }
-                entityMap.clear();
-                UserDao.getInstance(mContext).closeDB();
+
+                reset();
             }
 
             @Override public void onProgress(int progress, String status) {
@@ -429,6 +521,12 @@ public class DemoHelper {
                 }
             }
         });
+    }
+
+    private synchronized void reset() {
+        entityMap.clear();
+        getUserProfileManager().reset();
+        UserDao.getInstance(mContext).closeDB();
     }
 
     /**

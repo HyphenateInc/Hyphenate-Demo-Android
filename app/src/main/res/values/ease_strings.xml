@@ -20,8 +20,8 @@
     <string name="connect_failuer_toast">Please check the network or try again later</string>
     <string name="network_unavailable">The network connection is not available, please check the network</string>
     <string name="chat_edit_hint">Write a message</string>
-    <string name="not_download">Did not download:</string>
-    <string name="Have_downloaded">Already downloaded</string>
+    <string name="not_download">Not download:</string>
+    <string name="Have_downloaded">Downloaded</string>
     <string name="is_down_please_wait">Downloading video, please wait a moment</string>
     <string name="Did_not_download">Not downloaded</string>
     <string name="downwaiting">Downloading the file, please wait a moment</string>
@@ -40,4 +40,12 @@
     <string name="record_move_up_to_cancel">Release to send, swipe up to cancel</string>
     <string name="record_release_to_cancel">Release to cancel</string>
     <string name="record_recoding_fail">The recording failure, please try again！</string>
+    <string name="attach_smile">Emoticon</string>
+    <string name="attach_picture">Image</string>
+    <string name="attach_take_pic">Capture</string>
+    <string name="attach_location">Location</string>
+    <string name="attach_video">Video</string>
+    <string name="attach_file">File</string>
+    <string name="attach_voice_call">Voice call</string>
+    <string name="attach_video_call">Video call</string>
 </resources>

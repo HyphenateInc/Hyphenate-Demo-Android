@@ -11,4 +11,5 @@ public class UserEntity extends EaseUser {
     public UserEntity(String username) {
         super(username);
     }
+
 }

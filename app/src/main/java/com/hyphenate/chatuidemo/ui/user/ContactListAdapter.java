@@ -19,6 +19,8 @@ import com.hyphenate.chatuidemo.R;
 
 import com.hyphenate.chatuidemo.ui.group.InviteMembersActivity;
 import com.hyphenate.chatuidemo.ui.group.NewGroupActivity;
+import com.hyphenate.easeui.utils.EaseUserUtils;
+import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.exceptions.HyphenateException;
 import java.util.ArrayList;
@@ -41,8 +43,8 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     private boolean isOwner;
     private String groupId;
     private String[] newMembers;
-    ProgressDialog progressDialog;
-    List<String> selectedMembers = new ArrayList<>();
+    private ProgressDialog progressDialog;
+    private List<String> selectedMembers = new ArrayList<>();
 
     ContactListAdapter(Context context, List<UserEntity> list) {
 
@@ -81,7 +83,8 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     @Override public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final UserEntity user = userEntities.get(position);
-        holder.contactNameView.setText(user.getUsername());
+        EaseUserUtils.setUserAvatar(context, user.getUsername(), holder.avatarView);
+        EaseUserUtils.setUserNick(user.getUsername(), holder.contactNameView);
 
         if (isSelected) {
             holder.checkBoxView.setVisibility(View.VISIBLE);
@@ -173,7 +176,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
                                                         progressDialog.dismiss();
                                                         if (EMClient.getInstance().getOptions().isAutoAcceptGroupInvitation()) {
                                                             Intent intent = new Intent();
-                                                            intent.putExtra("selectedMembers", (ArrayList<String>)selectedMembers);
+                                                            intent.putExtra("selectedMembers", (ArrayList<String>) selectedMembers);
                                                             ((InviteMembersActivity) context).setResult(InviteMembersActivity.RESULT_OK, intent);
                                                         } else {
                                                             ((InviteMembersActivity) context).setResult(InviteMembersActivity.RESULT_OK);
@@ -215,6 +218,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         @BindView(R.id.txt_header) TextView headerView;
         @BindView(R.id.txt_base_line) TextView baseLineView;
         @BindView(R.id.checkbox) CheckBox checkBoxView;
+        @BindView(R.id.img_contact_avatar) EaseImageView avatarView;
 
         ViewHolder(View itemView) {
             super(itemView);

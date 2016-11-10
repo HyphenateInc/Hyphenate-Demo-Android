@@ -14,7 +14,6 @@
 package com.hyphenate.easeui.widget.chatrow;
 
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -40,7 +39,7 @@ public class EaseChatRowVoicePlayClickListener implements View.OnClickListener {
 	EMVoiceMessageBody voiceBody;
 	ImageView voiceIconView;
 
-	private AnimationDrawable voiceAnimation = null;
+	//private AnimationDrawable voiceAnimation = null;
 	MediaPlayer mediaPlayer = null;
 	ImageView iv_read_status;
 	Context context;
@@ -62,11 +61,11 @@ public class EaseChatRowVoicePlayClickListener implements View.OnClickListener {
 	}
 
 	public void stopPlayVoice() {
-		voiceAnimation.stop();
+		//voiceAnimation.stop();
 		if (message.direct() == EMMessage.Direct.RECEIVE) {
-			voiceIconView.setImageResource(R.drawable.ease_chatfrom_voice_playing);
+			voiceIconView.setImageResource(R.drawable.ease_ic_voice_from_stopped);
 		} else {
-			voiceIconView.setImageResource(R.drawable.ease_chatto_voice_playing);
+			voiceIconView.setImageResource(R.drawable.ease_ic_voice_to_stopped);
 		}
 		// stop play voice
 		if (mediaPlayer != null) {
@@ -139,12 +138,12 @@ public class EaseChatRowVoicePlayClickListener implements View.OnClickListener {
 	private void showAnimation() {
 		// play voice, and start animation
 		if (message.direct() == EMMessage.Direct.RECEIVE) {
-			voiceIconView.setImageResource(R.drawable.voice_from_icon);
+			voiceIconView.setImageResource(R.drawable.ease_ic_voice_from_playing);
 		} else {
-			voiceIconView.setImageResource(R.drawable.voice_to_icon);
+			voiceIconView.setImageResource(R.drawable.ease_ic_voice_to_playing);
 		}
-		voiceAnimation = (AnimationDrawable) voiceIconView.getDrawable();
-		voiceAnimation.start();
+		//voiceAnimation = (AnimationDrawable) voiceIconView.getDrawable();
+		//voiceAnimation.start();
 	}
 
 	@Override

@@ -12,6 +12,8 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.ui.user.UserEntity;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import java.util.List;
 
@@ -27,8 +29,7 @@ public class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.
     private int RECYCLER_ORIENTATION = 0;
     private boolean isOpenInvite;
 
-    public MembersListAdapter(Context context, List<String> objects, int orientation,
-            boolean isOpenInvite) {
+    public MembersListAdapter(Context context, List<String> objects, int orientation, boolean isOpenInvite) {
         this.context = context;
         this.membersList = objects;
         this.RECYCLER_ORIENTATION = orientation;
@@ -48,11 +49,9 @@ public class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         if (RECYCLER_ORIENTATION == LinearLayoutManager.VERTICAL) {
-            view = LayoutInflater.from(context)
-                    .inflate(R.layout.em_item_group_member_list_vertical, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.em_item_group_member_list_vertical, parent, false);
         } else {
-            view = LayoutInflater.from(context)
-                    .inflate(R.layout.em_item_group_memeber_list_horizontal, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.em_item_group_memeber_list_horizontal, parent, false);
         }
         return new ViewHolder(view);
     }
@@ -64,15 +63,16 @@ public class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.
                 if (position == 0) {
                     holder.memberAvatarView.setImageResource(R.drawable.add_member_icon);
                 } else {
-                    holder.memberNameView.setText(membersList.get(position - 1));
-                    holder.memberAvatarView.setImageResource(R.drawable.ease_default_avatar);
+                    EaseUserUtils.setUserNick(membersList.get(position), holder.memberNameView);
+                    EaseUserUtils.setUserAvatar(context, membersList.get(position), holder.memberAvatarView);
                 }
             } else {
-                holder.memberAvatarView.setImageResource(R.drawable.ease_default_avatar);
-                holder.memberNameView.setText(membersList.get(position));
+                EaseUserUtils.setUserNick(membersList.get(position), holder.memberNameView);
+                EaseUserUtils.setUserAvatar(context, membersList.get(position), holder.memberAvatarView);
             }
         } else {
-            holder.memberNameView.setText(membersList.get(position));
+            EaseUserUtils.setUserNick(membersList.get(position), holder.memberNameView);
+            EaseUserUtils.setUserAvatar(context, membersList.get(position), holder.memberAvatarView);
         }
 
         if (listener != null) {

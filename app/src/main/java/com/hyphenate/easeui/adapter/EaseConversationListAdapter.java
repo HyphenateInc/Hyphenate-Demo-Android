@@ -8,24 +8,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.util.DateUtils;
-
 import java.util.Comparator;
 import java.util.Date;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by wei on 2016/10/9.
@@ -51,7 +48,7 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
         EMConversation conversation = getItem(position);
         // get username or group id
         String username = conversation.getUserName();
-        if (conversation.getUserName().equals(EaseConstant.CONVERSATION_NAME_APPLY)) {
+        if (conversation.getUserName().equals(Constant.CONVERSATION_NAME_APPLY)) {
             holder.mNameView.setText(R.string.em_contacts_apply);
         } else {
             if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {
