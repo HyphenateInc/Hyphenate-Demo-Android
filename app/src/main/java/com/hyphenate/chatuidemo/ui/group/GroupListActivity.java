@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -132,6 +133,28 @@ public class GroupListActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.em_contacts_menu, menu);
         menu.findItem(R.id.menu_add_contacts).setVisible(false);
         item = menu.findItem(R.id.menu_search);
+
+        SearchView searchView = (SearchView) item.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override public boolean onQueryTextChange(String newText) {
+                List<EMGroup> groups = new ArrayList<EMGroup>();
+                for (EMGroup group:groupList){
+                    if (!group.getGroupName().contains(newText)){
+                        groups.add(group);
+                    }
+                }
+                groupList.clear();
+                groupList.addAll(groups);
+                adapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
         return true;
     }
 
