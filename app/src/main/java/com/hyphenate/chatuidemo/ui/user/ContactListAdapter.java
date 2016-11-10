@@ -19,6 +19,7 @@ import com.hyphenate.chatuidemo.R;
 
 import com.hyphenate.chatuidemo.ui.group.InviteMembersActivity;
 import com.hyphenate.chatuidemo.ui.group.NewGroupActivity;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.exceptions.HyphenateException;
@@ -82,8 +83,8 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     @Override public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         final UserEntity user = userEntities.get(position);
-        UserEntity.setUserAvatar(context, user.getUsername(), holder.avatarView);
-        UserEntity.setUserNick(user.getUsername(), holder.contactNameView);
+        EaseUserUtils.setUserAvatar(context, user.getUsername(), holder.avatarView);
+        EaseUserUtils.setUserNick(user.getUsername(), holder.contactNameView);
 
         if (isSelected) {
             holder.checkBoxView.setVisibility(View.VISIBLE);

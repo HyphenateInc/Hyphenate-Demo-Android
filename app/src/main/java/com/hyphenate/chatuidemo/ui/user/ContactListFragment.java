@@ -128,6 +128,7 @@ public class ContactListFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override public void run() {
                         dialog.dismiss();
+                        refresh();
                         Snackbar.make(recyclerView, "failure:" + s, Snackbar.LENGTH_SHORT).show();
                     }
                 });

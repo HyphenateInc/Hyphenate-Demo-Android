@@ -24,6 +24,7 @@ import com.hyphenate.chatuidemo.ui.user.UserDao;
 import com.hyphenate.chatuidemo.ui.user.UserEntity;
 import com.hyphenate.chatuidemo.ui.user.parse.UserProfileManager;
 import com.hyphenate.easeui.EaseUI;
+import com.hyphenate.easeui.model.EaseUser;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
@@ -100,6 +101,7 @@ public class DemoHelper {
             //set events listeners
             setGlobalListener();
             setNotificationType();
+            setEaseUIProviders();
 
             EMLog.d(TAG, "------- init hyphenate end --------------");
         }
@@ -234,9 +236,36 @@ public class DemoHelper {
         }
     }
 
-    /**
-     * Set call broadcast listener
-     */
+    protected void setEaseUIProviders() {
+        // set profile provider if you want easeUI to handle avatar and nickname
+        EaseUI.getInstance().setUserProfileProvider(new EaseUI.EaseUserProfileProvider() {
+
+            @Override public EaseUser getUser(String username) {
+                return getUserInfo(username);
+            }
+        });
+    }
+
+    private EaseUser getUserInfo(String username){
+        // To get instance of EaseUser, here we get it from the user list in memory
+        // You'd better cache it if you get it from your server
+        EaseUser user;
+        if(username.equals(EMClient.getInstance().getCurrentUser()))
+            return getUserProfileManager().getCurrentUserInfo();
+        user = getContactList().get(username);
+
+        // if user is not in your contacts, set inital letter for him/her
+        if(user == null){
+            user = new EaseUser(username);
+            EaseCommonUtils.setUserInitialLetter(user);
+        }
+        return user;
+    }
+
+
+        /**
+         * Set call broadcast listener
+         */
     private void setCallReceiverListener() {
         // Set the call broadcast listener to filter the action
         IntentFilter callFilter = new IntentFilter(

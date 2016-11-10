@@ -13,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.user.UserEntity;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import java.util.List;
 
@@ -62,16 +63,16 @@ public class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.
                 if (position == 0) {
                     holder.memberAvatarView.setImageResource(R.drawable.add_member_icon);
                 } else {
-                    UserEntity.setUserNick(membersList.get(position), holder.memberNameView);
-                    UserEntity.setUserAvatar(context, membersList.get(position), holder.memberAvatarView);
+                    EaseUserUtils.setUserNick(membersList.get(position), holder.memberNameView);
+                    EaseUserUtils.setUserAvatar(context, membersList.get(position), holder.memberAvatarView);
                 }
             } else {
-                UserEntity.setUserNick(membersList.get(position), holder.memberNameView);
-                UserEntity.setUserAvatar(context, membersList.get(position), holder.memberAvatarView);
+                EaseUserUtils.setUserNick(membersList.get(position), holder.memberNameView);
+                EaseUserUtils.setUserAvatar(context, membersList.get(position), holder.memberAvatarView);
             }
         } else {
-            UserEntity.setUserNick(membersList.get(position), holder.memberNameView);
-            UserEntity.setUserAvatar(context, membersList.get(position), holder.memberAvatarView);
+            EaseUserUtils.setUserNick(membersList.get(position), holder.memberNameView);
+            EaseUserUtils.setUserAvatar(context, membersList.get(position), holder.memberAvatarView);
         }
 
         if (listener != null) {
