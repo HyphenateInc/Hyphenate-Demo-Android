@@ -33,11 +33,22 @@ public class EaseChatRowFile extends EaseChatRow {
 		super(context, message, position, adapter);
 	}
 
-	@Override
-	protected void onInflateView() {
-	    inflater.inflate(message.direct() == EMMessage.Direct.RECEIVE ?
-	            R.layout.ease_row_received_file : R.layout.ease_row_sent_file, this);
-	}
+    /**
+     * The default child layout only needs to write ui in the bubble,
+     * If all the layout you want to write their own, return true.
+     */
+    @Override protected boolean overrideBaseLayout() {
+        return false;
+    }
+
+    /**
+     * get the layout res id
+     */
+    @Override protected int onGetLayoutId() {
+        return message.direct() == EMMessage.Direct.RECEIVE ?
+                R.layout.ease_row_received_file : R.layout.ease_row_sent_file;
+    }
+
 
 	@Override
 	protected void onFindViewById() {
@@ -130,4 +141,5 @@ public class EaseChatRowFile extends EaseChatRow {
         }
         
     }
+
 }

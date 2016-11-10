@@ -3,55 +3,36 @@
     android:id="@+id/layout_input_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    android:background="@color/em_white_100"
-    android:gravity="center_vertical"
-    android:minHeight="56dp"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     >
-
-    <ImageView
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:scaleType="centerInside"
-        android:src="@drawable/em_ic_chat_emoji"
-        />
-
-
-    <EditText
-        android:id="@+id/edt_msg_content"
-        android:layout_width="wrap_content"
+    <include layout="@layout/em_layout_chat_input_menu"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@null"
-        android:hint="@string/chat_edit_hint"
-        android:maxLines="3"
         />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#33000000" />
+    <FrameLayout
+        android:id="@+id/extend_menu_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:visibility="gone" >
 
-    <ImageView
-        android:id="@+id/img_send"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="0"
-        android:background="?android:attr/selectableItemBackground"
-        android:paddingLeft="@dimen/chat_input_img_padding"
-        android:paddingRight="@dimen/chat_input_img_padding"
-        android:scaleType="centerInside"
-        android:visibility="gone"
-        android:src="@drawable/em_ic_chat_send"
-        android:text="send"
-        />
+        <com.hyphenate.easeui.widget.EaseChatExtendMenu
+            android:id="@+id/extend_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="7dp"
+            android:layout_marginTop="9dp"
+            />
 
-    <ImageView
-        android:id="@+id/img_mic"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:paddingLeft="@dimen/chat_input_img_padding"
-        android:paddingRight="@dimen/chat_input_img_padding"
-        android:background="?android:attr/selectableItemBackground"
-        android:src="@drawable/em_ic_chat_mic_selector"
-        />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/emojicon_menu_container"
+            ></FrameLayout>
+    </FrameLayout>
+
 </LinearLayout>

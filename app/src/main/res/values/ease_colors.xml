@@ -3,6 +3,7 @@
     <color name="list_item_primary_text">#1b1d1d</color>
     <color name="list_item_secondary_text">#546e7a</color>
     <color name="ease_gray">#adb9c1</color>
+    <color name="ease_white">#ffffff</color>
+    <color name="ease_black">#000000</color>
 
-    <color name="chat_row_me_primary_text">#fff</color>
 </resources>

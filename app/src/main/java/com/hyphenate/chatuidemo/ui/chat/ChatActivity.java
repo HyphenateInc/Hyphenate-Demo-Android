@@ -27,6 +27,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
@@ -40,6 +41,7 @@ import com.hyphenate.chatuidemo.ui.widget.VoiceRecordView;
 import com.hyphenate.chatuidemo.ui.widget.chatrow.ChatRowCall;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.widget.EaseChatExtendMenu;
 import com.hyphenate.easeui.widget.EaseMessageListView;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
@@ -64,6 +66,19 @@ public class ChatActivity extends BaseActivity {
 
     protected static final int MESSAGE_TYPE_RECV_CALL = 1;
     protected static final int MESSAGE_TYPE_SENT_CALL = 2;
+
+
+    static final int ITEM_TAKE_PICTURE = 1;
+    static final int ITEM_PICTURE = 2;
+    static final int ITEM_LOCATION = 3;
+    static final int ITEM_FILE = 4;
+    static final int ITEM_VOICE_CALL = 5;
+    static final int ITEM_VIDEO_CALL = 6;
+
+    protected int[] itemStrings = { R.string.attach_take_pic, R.string.attach_picture, R.string.attach_location, R.string.attach_file };
+    protected int[] itemdrawables = { R.drawable.ease_chat_takepic_selector, R.drawable.ease_chat_image_selector,
+            R.drawable.ease_chat_location_selector, R.drawable.em_chat_file_selector };
+    protected int[] itemIds = { ITEM_TAKE_PICTURE, ITEM_PICTURE, ITEM_LOCATION, ITEM_FILE };
 
     protected File cameraFile;
 
@@ -102,7 +117,29 @@ public class ChatActivity extends BaseActivity {
                 finish();
             }
         });
+        initView();
 
+        // received messages code in onResume() method
+
+        //get the conversation
+        conversation = EMClient.getInstance().chatManager()
+                .getConversation(toChatUsername, EaseCommonUtils.getConversationType(chatType),
+                        true);
+        conversation.markAllMessagesAsRead();
+        // the number of messages loaded into conversation is getChatOptions().getNumberOfMessagesLoaded
+        // you can change this number
+        final List<EMMessage> msgs = conversation.getAllMessages();
+        int msgCount = msgs != null ? msgs.size() : 0;
+        if (msgCount < conversation.getAllMsgCount() && msgCount < pageSize) {
+            String msgId = null;
+            if (msgs != null && msgs.size() > 0) {
+                msgId = msgs.get(0).getMsgId();
+            }
+            conversation.loadMoreMsgFromDB(msgId, pageSize - msgCount);
+        }
+    }
+
+    private void initView() {
         // init message list view
         mMessageListView.init(toChatUsername, chatType, newCustomChatRowProvider());
         registerForContextMenu(mMessageListView);
@@ -130,6 +167,15 @@ public class ChatActivity extends BaseActivity {
                     }
                 });
 
+        MyItemClickListener extendMenuItemClickListener = new MyItemClickListener();
+        for(int i = 0; i < itemStrings.length; i++){
+            mInputView.registerExtendMenuItem(itemStrings[i], itemdrawables[i], itemIds[i], extendMenuItemClickListener);
+        }
+        if(chatType == Constant.CHATTYPE_SINGLE){
+            mInputView.registerExtendMenuItem(R.string.attach_voice_call, R.drawable.em_chat_voice_call_selector, ITEM_VOICE_CALL, extendMenuItemClickListener);
+            mInputView.registerExtendMenuItem(R.string.attach_video_call, R.drawable.em_chat_video_call_selector, ITEM_VIDEO_CALL, extendMenuItemClickListener);
+        }
+        mInputView.init();
         mInputView.setViewEventListener(new ChatInputView.ChatInputViewEventListener() {
             @Override public void onSendMessage(CharSequence content) {
                 if (!TextUtils.isEmpty(content)) {
@@ -156,24 +202,6 @@ public class ChatActivity extends BaseActivity {
 
             }
         });
-        // received messages code in onResume() method
-
-        //get the conversation
-        conversation = EMClient.getInstance().chatManager()
-                .getConversation(toChatUsername, EaseCommonUtils.getConversationType(chatType),
-                        true);
-        conversation.markAllMessagesAsRead();
-        // the number of messages loaded into conversation is getChatOptions().getNumberOfMessagesLoaded
-        // you can change this number
-        final List<EMMessage> msgs = conversation.getAllMessages();
-        int msgCount = msgs != null ? msgs.size() : 0;
-        if (msgCount < conversation.getAllMsgCount() && msgCount < pageSize) {
-            String msgId = null;
-            if (msgs != null && msgs.size() > 0) {
-                msgId = msgs.get(0).getMsgId();
-            }
-            conversation.loadMoreMsgFromDB(msgId, pageSize - msgCount);
-        }
     }
 
     private void setToolbarTitle() {
@@ -210,18 +238,6 @@ public class ChatActivity extends BaseActivity {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.menu_take_photo:
-                        selectPicFromCamera();
-                        break;
-                    case R.id.menu_gallery:
-                        selectPicFromLocal();
-                        break;
-                    case R.id.menu_location:
-                        selectLoaction();
-                        break;
-                    case R.id.menu_file:
-                        selectFileFromLocal();
-                        break;
                     case R.id.menu_video_call:
                         Intent videoIntent = new Intent();
                         videoIntent.setClass(ChatActivity.this, VideoCallActivity.class);
@@ -467,6 +483,73 @@ public class ChatActivity extends BaseActivity {
             }
         }
     }
+
+    /**
+     * handle the click event for extend menu
+     *
+     */
+    class MyItemClickListener implements EaseChatExtendMenu.EaseChatExtendMenuItemClickListener{
+
+        @Override
+        public void onClick(int itemId, View view) {
+            switch (itemId) {
+                case ITEM_TAKE_PICTURE:
+                    selectPicFromCamera();
+                    break;
+                case ITEM_PICTURE:
+                    selectPicFromLocal();
+                    break;
+                case ITEM_LOCATION:
+                   selectLoaction();
+                    break;
+                //case ITEM_VIDEO:
+                //    Intent intent = new Intent(chatType.this, ImageGridActivity.class);
+                //    startActivityForResult(intent, REQUEST_CODE_SELECT_VIDEO);
+                //    break;
+                case ITEM_FILE: //file
+                    selectFileFromLocal();
+                    break;
+                case ITEM_VOICE_CALL:
+                    startVoiceCall();
+                    break;
+                case ITEM_VIDEO_CALL:
+                    startVideoCall();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    }
+
+    private void startVoiceCall(){
+        if (!EMClient.getInstance().isConnected()) {
+            Toast.makeText(this, R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
+        }else {
+            Intent voiceCallIntent = new Intent();
+            voiceCallIntent.setClass(ChatActivity.this, VoiceCallActivity.class);
+            voiceCallIntent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
+            voiceCallIntent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
+            startActivity(voiceCallIntent);
+        }
+        mInputView.hideExtendMenuContainer();
+
+    }
+
+    private void startVideoCall(){
+        if (!EMClient.getInstance().isConnected()) {
+            Toast.makeText(this, R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
+        }else {
+            Intent videoCallIntent = new Intent();
+            videoCallIntent.setClass(ChatActivity.this, VideoCallActivity.class);
+            videoCallIntent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
+            videoCallIntent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
+            startActivity(videoCallIntent);
+        }
+        mInputView.hideExtendMenuContainer();
+
+    }
+
 
     /**
      * create a chat row provider

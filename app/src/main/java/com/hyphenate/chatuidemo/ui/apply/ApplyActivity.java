@@ -1,7 +1,12 @@
 package com.hyphenate.chatuidemo.ui.apply;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,11 +16,11 @@ import butterknife.ButterKnife;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
-import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.exceptions.HyphenateException;
-import java.util.Collections;
+import com.hyphenate.util.EMLog;
 
 /**
  * Created by lzan13 on 2016/10/26.
@@ -24,6 +29,7 @@ import java.util.Collections;
 
 public class ApplyActivity extends BaseActivity {
 
+    private static String TAG = ApplyActivity.class.getSimpleName();
     private BaseActivity mActivity;
 
     @BindView(R.id.recycler_view_apply) RecyclerView mRecyclerView;
@@ -31,6 +37,9 @@ public class ApplyActivity extends BaseActivity {
     private EMConversation mConversation;
 
     private ApplyAdapter mApplyAdapter;
+
+    private LocalBroadcastManager localBroadcastManager;
+    private ApplyBroadcastReceiver broadcastReceiver;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +66,7 @@ public class ApplyActivity extends BaseActivity {
         });
         mConversation = EMClient.getInstance()
                 .chatManager()
-                .getConversation(EaseConstant.CONVERSATION_NAME_APPLY, null, true);
+                .getConversation(Constant.CONVERSATION_NAME_APPLY, null, true);
         mConversation.markAllMessagesAsRead();
         int count = mConversation.getAllMessages().size();
         int mPageSize = 30;
@@ -111,36 +120,34 @@ public class ApplyActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMMessage message = mConversation.getMessage(msgId, false);
-                    if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_TYPE) == 1) {
-                        if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
+                    if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE) == 1) {
+                        if (message.getIntAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
 
                             EMClient.getInstance()
                                     .groupManager()
                                     .acceptInvitation(message.getStringAttribute(
-                                            EaseConstant.MESSAGE_ATTR_GROUPID),
+                                            Constant.MESSAGE_ATTR_GROUP_ID),
                                             message.getStringAttribute(
-                                                    EaseConstant.MESSAGE_ATTR_USERNAME));
+                                                    Constant.MESSAGE_ATTR_USERNAME));
                         } else {
                             EMClient.getInstance()
                                     .groupManager()
                                     .acceptApplication(message.getStringAttribute(
-                                            EaseConstant.MESSAGE_ATTR_USERNAME),
+                                            Constant.MESSAGE_ATTR_USERNAME),
                                             message.getStringAttribute(
-                                                    EaseConstant.MESSAGE_ATTR_GROUPID));
+                                                    Constant.MESSAGE_ATTR_GROUP_ID));
                         }
                     } else {
-
                         EMClient.getInstance()
                                 .contactManager()
                                 .acceptInvitation(message.getStringAttribute(
-                                        EaseConstant.MESSAGE_ATTR_USERNAME, ""));
+                                        Constant.MESSAGE_ATTR_USERNAME, ""));
                     }
 
                     // update contacts apply for message status
-                    message.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS,
+                    message.setAttribute(Constant.MESSAGE_ATTR_STATUS,
                             mActivity.getString(R.string.em_agreed));
                     EMClient.getInstance().chatManager().updateMessage(message);
-
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
                             Toast.makeText(mActivity, R.string.em_agreed, Toast.LENGTH_LONG).show();
@@ -172,32 +179,29 @@ public class ApplyActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMMessage message = mConversation.getMessage(msgId, false);
-                    if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_TYPE) == 1) {
-
-                        if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
-
+                    if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE) == 1) {
+                        if (message.getIntAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
                             EMClient.getInstance()
                                     .groupManager()
                                     .declineInvitation(message.getStringAttribute(
-                                            EaseConstant.MESSAGE_ATTR_GROUPID),
+                                            Constant.MESSAGE_ATTR_GROUP_ID),
                                             message.getStringAttribute(
-                                                    EaseConstant.MESSAGE_ATTR_USERNAME), "");
+                                                    Constant.MESSAGE_ATTR_USERNAME), "");
                         } else {
-
                             EMClient.getInstance()
                                     .groupManager()
                                     .declineApplication(message.getStringAttribute(
-                                            EaseConstant.MESSAGE_ATTR_GROUPID),
-                                            EaseConstant.MESSAGE_ATTR_USERNAME, "");
+                                            Constant.MESSAGE_ATTR_GROUP_ID),
+                                            Constant.MESSAGE_ATTR_USERNAME, "");
                         }
                     } else {
                         EMClient.getInstance()
                                 .contactManager()
                                 .declineInvitation(message.getStringAttribute(
-                                        EaseConstant.MESSAGE_ATTR_USERNAME, ""));
+                                        Constant.MESSAGE_ATTR_USERNAME, ""));
                     }
                     // update contacts apply for message status
-                    message.setAttribute(EaseConstant.MESSAGE_ATTR_STATUS,
+                    message.setAttribute(Constant.MESSAGE_ATTR_STATUS,
                             mActivity.getString(R.string.em_rejected));
                     EMClient.getInstance().chatManager().updateMessage(message);
 
@@ -229,5 +233,32 @@ public class ApplyActivity extends BaseActivity {
         if (mApplyAdapter != null) {
             mApplyAdapter.notifyDataSetChanged();
         }
+    }
+
+    /**
+     * Contacts broadcast receiver
+     */
+    private class ApplyBroadcastReceiver extends BroadcastReceiver {
+
+        @Override public void onReceive(Context context, Intent intent) {
+            EMLog.d(TAG, "contact action");
+            refresh();
+        }
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        // register broadcast register
+        localBroadcastManager = LocalBroadcastManager.getInstance(mActivity);
+        broadcastReceiver = new ApplyBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter(Constant.BROADCAST_ACTION_APPLY);
+        localBroadcastManager.registerReceiver(broadcastReceiver, intentFilter);
+        // refresh ui
+        refresh();
+    }
+
+    @Override protected void onStop() {
+        super.onStop();
+        localBroadcastManager.unregisterReceiver(broadcastReceiver);
     }
 }

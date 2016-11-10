@@ -5,14 +5,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
+import android.widget.Toast;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.exceptions.HyphenateException;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by lzan13 on 2016/10/27.
@@ -99,7 +98,14 @@ public class BlackListActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMClient.getInstance().contactManager().removeUserFromBlackList(username);
-                    refresh();
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            Toast.makeText(mActivity,
+                                    "The user has been removed from the blacklist",
+                                    Toast.LENGTH_LONG).show();
+                            refresh();
+                        }
+                    });
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }

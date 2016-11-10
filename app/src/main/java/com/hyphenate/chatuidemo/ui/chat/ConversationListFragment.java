@@ -14,10 +14,10 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.MainActivity;
 import com.hyphenate.chatuidemo.ui.apply.ApplyActivity;
-import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseConversationListView;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 
@@ -62,12 +62,12 @@ public class ConversationListFragment extends Fragment {
         mConversationListView.setOnItemClickListener(new EaseListItemClickListener() {
             @Override public void onItemClick(View view, int position) {
                 EMConversation conversation = mConversationListView.getItem(position);
-                if (conversation.getUserName().equals(EaseConstant.CONVERSATION_NAME_APPLY)) {
+                if (conversation.getUserName().equals(Constant.CONVERSATION_NAME_APPLY)) {
                     startActivity(new Intent(getActivity(), ApplyActivity.class));
                 } else {
                     //enter to chat activity
                     startActivity(new Intent(getActivity(), ChatActivity.class).putExtra(
-                            EaseConstant.EXTRA_USER_ID, conversation.getUserName()));
+                            Constant.EXTRA_USER_ID, conversation.getUserName()));
                 }
             }
 

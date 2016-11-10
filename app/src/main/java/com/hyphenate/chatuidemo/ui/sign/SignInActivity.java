@@ -62,10 +62,6 @@ public class SignInActivity extends BaseActivity {
      */
     private void initView() {
         mActivity = this;
-
-        //mAccountView.setText(mAccount);
-        //mPasswordView.setText(mPassword);
-
     }
 
     /**
@@ -119,6 +115,7 @@ public class SignInActivity extends BaseActivity {
         final Resources res = mActivity.getResources();
         mDialog = new ProgressDialog(mActivity);
         mDialog.setMessage(res.getString(R.string.em_sign_in_begin));
+        mDialog.setCanceledOnTouchOutside(false);
         mDialog.show();
 
         EMClient.getInstance().login(mAccount, mPassword, new EMCallBack() {

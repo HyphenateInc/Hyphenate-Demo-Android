@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,7 +34,7 @@ public abstract class EaseChatRow extends LinearLayout {
 
     protected TextView timeStampView;
     protected ImageView userAvatarView;
-    protected View bubbleLayout;
+    protected ViewGroup bubbleLayout;
     protected TextView usernickView;
 
     protected TextView percentageView;
@@ -66,11 +67,24 @@ public abstract class EaseChatRow extends LinearLayout {
     }
 
     private void initView() {
-        onInflateView();
+        if(overrideBaseLayout()){
+            inflater.inflate(onGetLayoutId(), this);
+        }else{
+            inflater.inflate(message.direct() == EMMessage.Direct.RECEIVE ?
+                    R.layout.ease_row_chat_received : R.layout.ease_row_chat_sent, this);
+            ViewGroup bubbleLayoutContainer = (ViewGroup) findViewById(R.id.bubble_container);
+            inflater.inflate(onGetLayoutId(), bubbleLayoutContainer);
+        }
+
         timeStampView = (TextView) findViewById(R.id.timestamp);
         userAvatarView = (ImageView) findViewById(R.id.iv_userhead);
-        bubbleLayout = findViewById(R.id.bubble);
+
         usernickView = (TextView) findViewById(R.id.tv_userid);
+        bubbleLayout = (ViewGroup) findViewById(R.id.bubble);
+        if(bubbleLayout != null){
+            bubbleLayout.setBackgroundResource(
+                    message.direct() == EMMessage.Direct.RECEIVE ? R.drawable.ease_msg_bubble_other : R.drawable.ease_msg_bubble_me);
+        }
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         statusView = (ImageView) findViewById(R.id.msg_status);
@@ -144,7 +158,7 @@ public abstract class EaseChatRow extends LinearLayout {
                 ackedView.setVisibility(View.INVISIBLE);
             }
         }
-        
+
 
         //if (adapter instanceof EaseMessageListAdapter) {
         //    if (((EaseMessageListAdapter) adapter).isShowAvatar())
@@ -327,10 +341,19 @@ public abstract class EaseChatRow extends LinearLayout {
 
     }
 
+
     /**
-     * infalte layout
+     * The default child layout only needs to write ui in the bubble,
+     * If all the layout you want to write their own, return true.
+     * @return
      */
-    protected abstract void onInflateView();
+    protected abstract boolean overrideBaseLayout();
+
+    /**
+     * get the layout res id
+     * @return
+     */
+    protected abstract int onGetLayoutId();
 
     /**
      * find view by id
@@ -352,5 +375,6 @@ public abstract class EaseChatRow extends LinearLayout {
      * on bubble clicked
      */
     protected abstract void onBubbleClick();
+
 
 }

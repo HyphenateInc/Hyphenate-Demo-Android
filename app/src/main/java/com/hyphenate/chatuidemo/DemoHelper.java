@@ -111,7 +111,8 @@ public class DemoHelper {
                 return null;
             }
 
-            @Override public String getLatestText(EMMessage message, int fromUsersNum, int messageNum) {
+            @Override
+            public String getLatestText(EMMessage message, int fromUsersNum, int messageNum) {
                 return null;
             }
 
@@ -238,7 +239,8 @@ public class DemoHelper {
      */
     private void setCallReceiverListener() {
         // Set the call broadcast listener to filter the action
-        IntentFilter callFilter = new IntentFilter(EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
+        IntentFilter callFilter = new IntentFilter(
+                EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
         if (mCallReceiver == null) {
             mCallReceiver = new CallReceiver();
         }
@@ -262,7 +264,9 @@ public class DemoHelper {
      */
     public void removeCallStateChangeListener() {
         if (mCallStateChangeListener != null) {
-            EMClient.getInstance().callManager().removeCallStateChangeListener(mCallStateChangeListener);
+            EMClient.getInstance()
+                    .callManager()
+                    .removeCallStateChangeListener(mCallStateChangeListener);
             mCallStateChangeListener = null;
         }
     }
@@ -319,7 +323,8 @@ public class DemoHelper {
 
                     //get extension attribute if you need
                     //message.getStringAttribute("");
-                    EMLog.d(TAG, String.format("CmdMessage：action:%s,message:%s", action, message.toString()));
+                    EMLog.d(TAG, String.format("CmdMessage：action:%s,message:%s", action,
+                            message.toString()));
                 }
             }
 
@@ -360,6 +365,10 @@ public class DemoHelper {
 
     public void popActivity(Activity activity) {
         activityList.remove(activity);
+    }
+
+    public List<Activity> getActivityList() {
+        return activityList;
     }
 
     public MessageNotifier getNotifier() {
@@ -525,10 +534,12 @@ public class DemoHelper {
         Iterator i = l.iterator();
         PackageManager pm = mContext.getPackageManager();
         while (i.hasNext()) {
-            ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
+            ActivityManager.RunningAppProcessInfo info =
+                    (ActivityManager.RunningAppProcessInfo) (i.next());
             try {
                 if (info.pid == pID) {
-                    CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
+                    CharSequence c = pm.getApplicationLabel(
+                            pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
                     // Log.d("Process", "Id: "+ info.pid +" ProcessName: "+
                     // info.processName +"  Label: "+c.toString());
                     // processName = c.toString();

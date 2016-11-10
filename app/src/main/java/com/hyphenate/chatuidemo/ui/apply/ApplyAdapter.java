@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.exceptions.HyphenateException;
 import java.util.Collections;
@@ -33,7 +33,9 @@ class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHolder> {
 
     ApplyAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
-        EMConversation mConversation = EMClient.getInstance().chatManager().getConversation(EaseConstant.CONVERSATION_NAME_APPLY, null, true);
+        EMConversation mConversation = EMClient.getInstance()
+                .chatManager()
+                .getConversation(Constant.CONVERSATION_NAME_APPLY, null, true);
         mMessages = mConversation.getAllMessages();
         // The list collection is sorted in reverse order
         Collections.reverse(mMessages);
@@ -48,25 +50,26 @@ class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHolder> {
         EMMessage message = mMessages.get(position);
         holder.imageViewAvatar.setImageResource(R.drawable.ease_default_avatar);
 
-        if (message.getIntAttribute(EaseConstant.MESSAGE_ATTR_TYPE, 0) == 1) {
+        if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE, 0) == 1) {
 
             try {
-                holder.textViewUsername.setText(message.getStringAttribute(EaseConstant.MESSAGE_ATTR_GROUPID));
+                holder.textViewUsername.setText(
+                        message.getStringAttribute(Constant.MESSAGE_ATTR_GROUP_ID));
             } catch (HyphenateException e) {
                 e.printStackTrace();
             }
         } else {
             // apply for username
-            String username = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_USERNAME, "");
+            String username = message.getStringAttribute(Constant.MESSAGE_ATTR_USERNAME, "");
             holder.textViewUsername.setText(username);
         }
 
         // apply for reason
-        String reason = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_REASON, "");
+        String reason = message.getStringAttribute(Constant.MESSAGE_ATTR_REASON, "");
         holder.textViewReason.setText(reason);
 
         // apply for status
-        String status = message.getStringAttribute(EaseConstant.MESSAGE_ATTR_STATUS, "");
+        String status = message.getStringAttribute(Constant.MESSAGE_ATTR_STATUS, "");
         if (!TextUtils.isEmpty(status)) {
             holder.textViewStatus.setText(status);
             holder.textViewStatus.setVisibility(View.VISIBLE);

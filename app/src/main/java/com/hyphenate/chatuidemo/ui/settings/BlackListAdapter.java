@@ -35,7 +35,7 @@ public class BlackListAdapter extends RecyclerView.Adapter<BlackListAdapter.Blac
     }
 
     @Override public BlackListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.em_item_apply, parent, false);
+        View view = mInflater.inflate(R.layout.em_item_blacklist, parent, false);
         BlackListViewHolder holder = new BlackListViewHolder(view);
         return holder;
     }
@@ -61,7 +61,7 @@ public class BlackListAdapter extends RecyclerView.Adapter<BlackListAdapter.Blac
         @Override public void onClick(View v) {
             String username = (String) v.getTag();
             switch (v.getId()) {
-                case R.id.btn_agree:
+                case R.id.btn_unblock:
                     mItemClickListener.onItemAction(username, 0);
                     break;
             }

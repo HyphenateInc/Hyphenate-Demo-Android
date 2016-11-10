@@ -1,11 +1,9 @@
 package com.hyphenate.easeui.widget.chatrow;
 
 import android.content.Context;
-import android.text.Spannable;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.TextView.BufferType;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessage.ChatType;
@@ -21,11 +19,14 @@ public class EaseChatRowText extends EaseChatRow {
 		super(context, message, position, adapter);
 	}
 
-	@Override
-	protected void onInflateView() {
-		inflater.inflate(message.direct() == EMMessage.Direct.RECEIVE ?
-				R.layout.ease_row_received_message : R.layout.ease_row_sent_message, this);
-	}
+    /**
+     * get the layout res id
+     */
+    @Override protected int onGetLayoutId() {
+        return message.direct() == EMMessage.Direct.RECEIVE ?
+                R.layout.ease_row_received_message : R.layout.ease_row_sent_message;
+    }
+
 
 	@Override
 	protected void onFindViewById() {
@@ -89,6 +90,12 @@ public class EaseChatRowText extends EaseChatRow {
         
     }
 
-
+    /**
+     * The default child layout only needs to write ui in the bubble,
+     * If all the layout you want to write their own, return true.
+     */
+    @Override protected boolean overrideBaseLayout() {
+        return false;
+    }
 
 }

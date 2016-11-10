@@ -1,5 +1,7 @@
 package com.hyphenate.chatuidemo.ui.settings;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -7,10 +9,15 @@ import android.view.View;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
+import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
 import com.hyphenate.easeui.widget.EaseImageView;
+import java.util.List;
 
 /**
  * Created by lzan13 on 2016/10/21.
@@ -42,6 +49,26 @@ public class AccountActivity extends BaseActivity {
         getActionBarToolbar().setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 finish();
+            }
+        });
+    }
+
+    @OnClick(R.id.btn_sign_out) void signOut() {
+        DemoHelper.getInstance().signOut(true, new EMCallBack() {
+            @Override public void onSuccess() {
+                List<Activity> list = DemoHelper.getInstance().getActivityList();
+                for (Activity activity : list) {
+                    activity.finish();
+                }
+                startActivity(new Intent(AccountActivity.this, SignInActivity.class));
+            }
+
+            @Override public void onError(int i, String s) {
+
+            }
+
+            @Override public void onProgress(int i, String s) {
+
             }
         });
     }
