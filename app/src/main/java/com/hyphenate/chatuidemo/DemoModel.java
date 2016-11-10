@@ -64,4 +64,5 @@ public class DemoModel {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         return sharedPref.getBoolean("adaptive_video_bitrate", false);
     }
+
 }

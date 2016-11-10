@@ -142,20 +142,14 @@ public class SignInActivity extends BaseActivity {
                 }
 
                 try {
-                    List<String> contacts =
-                            EMClient.getInstance().contactManager().getAllContactsFromServer();
-                    List<UserEntity> entityList = new ArrayList<>();
-                    for (String name : contacts) {
-                        UserEntity user = new UserEntity(name);
-                        user.setInitialLetter(name.subSequence(0, 1).toString().toUpperCase());
-                        entityList.add(user);
-                    }
                     // sync blacklist
                     EMClient.getInstance().contactManager().getBlackListFromServer();
-                    DemoHelper.getInstance().setContactList(entityList);
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                 }
+
+                // get user's info (this should be get from App's server or 3rd party service)
+                DemoHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
 
                 // 关闭登录进度弹出框
                 mDialog.dismiss();
