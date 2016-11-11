@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.receiver.BroadCastReceiverManager;
@@ -287,7 +288,7 @@ public class ContactListFragment extends Fragment {
         super.onResume();
 
         // broadcast register
-        BroadCastReceiverManager.getInstance(getActivity()).registerBroadCastReceiver(EaseConstant.BROADCAST_ACTION_CONTACTS);
+        BroadCastReceiverManager.getInstance(getActivity()).registerBroadCastReceiver(Constant.BROADCAST_ACTION_CONTACTS);
         // refresh ui
         refresh();
     }

@@ -458,7 +458,7 @@ public class ChatActivity extends BaseActivity {
             intent.setType("*/*");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
         } else {
-            //19 after this api is not available, demo here simply handle into the gallery to select the picture
+            //after version 19, this api is not available, demo here simply handle into the gallery to select the picture
             intent = new Intent(Intent.ACTION_PICK,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         }
@@ -678,5 +678,15 @@ public class ChatActivity extends BaseActivity {
         EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
         // remove activity from foreground activity list
         DemoHelper.getInstance().popActivity(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mInputView.onBackPressed()) {
+            finish();
+            if (chatType == EaseConstant.CHATTYPE_CHATROOM) {
+                EMClient.getInstance().chatroomManager().leaveChatRoom(toChatUsername);
+            }
+        }
     }
 }

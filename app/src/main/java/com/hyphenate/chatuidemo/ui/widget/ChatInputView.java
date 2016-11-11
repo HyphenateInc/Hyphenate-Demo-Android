@@ -154,6 +154,22 @@ public class ChatInputView extends LinearLayout {
     }
 
     /**
+     * when back key pressed
+     *
+     * @return false--extend menu is on, will hide it first
+     *         true --extend menu is off
+     */
+    public boolean onBackPressed() {
+        if (mExtendMenuContainer.getVisibility() == View.VISIBLE) {
+            hideExtendMenuContainer();
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    /**
      * hide extend menu container
      */
     public void hideExtendMenuContainer() {
