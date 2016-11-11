@@ -242,6 +242,7 @@ public class ChatActivity extends BaseActivity {
         getSupportActionBar().setTitle(nick);
     }
 
+    boolean isFirstLoad = true;
     /**
      *  message list on sroll listener
      */
@@ -259,7 +260,10 @@ public class ChatActivity extends BaseActivity {
                         && haveMoreData
                         && mConversation.getAllMessages().size() != 0) {
                     isLoading = true;
-                    mLoadingProgressBar.setVisibility(View.VISIBLE);
+
+                    if(!isFirstLoad)
+                        mLoadingProgressBar.setVisibility(View.VISIBLE);
+                    isFirstLoad = false;
                     // sdk初始化加载的聊天记录为20条，到顶时去db里获取更多
                     final List<EMMessage> messages;
                     EMMessage firstMsg = mConversation.getAllMessages().get(0);
