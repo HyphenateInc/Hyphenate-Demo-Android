@@ -22,7 +22,7 @@ import com.hyphenate.easeui.widget.EaseConversationListView;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 
 /**
- * A fragment which shows conversation list
+ * A fragment which shows mConversation list
  */
 public class ConversationListFragment extends Fragment {
 
@@ -103,7 +103,7 @@ public class ConversationListFragment extends Fragment {
     }
 
     /**
-     * filter conversation list with passed query string
+     * filter mConversation list with passed query string
      */
     public void filter(String str) {
         mConversationListView.filter(str);

@@ -124,6 +124,11 @@ public class ChatInputView extends LinearLayout {
     }
 
 
+    public EditText getEditText(){
+        return mEditText;
+    }
+
+
     /**
      * show or hide extend menu
      *

@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
+        android:src="@drawable/ease_default_image"
         app:imgRadius="3dp"
         app:imgShapeType="rectangle"
         />

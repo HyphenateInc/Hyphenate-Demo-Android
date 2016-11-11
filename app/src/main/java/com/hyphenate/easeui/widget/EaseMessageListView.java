@@ -13,6 +13,7 @@ import com.hyphenate.easeui.adapter.EaseMessageListAdapter;
 import com.hyphenate.easeui.model.styles.EaseMessageListItemStyle;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
+import com.hyphenate.util.DensityUtil;
 
 /**
  * Created by wei on 2016/10/11.
@@ -53,6 +54,11 @@ public class EaseMessageListView extends ListView {
 
     private void init(Context context){
         this.context = context;
+        setTranscriptMode(TRANSCRIPT_MODE_NORMAL);
+        setCacheColorHint(getResources().getColor(android.R.color.transparent));
+        setSelector(getResources().getDrawable(android.R.color.transparent));
+        setDivider(getResources().getDrawable(android.R.color.transparent));
+        setDividerHeight(DensityUtil.dip2px(context, 5.0f));
     }
 
     /**
@@ -72,7 +78,6 @@ public class EaseMessageListView extends ListView {
         messageAdapter.setCustomChatRowProvider(customChatRowProvider);
         // set message adapter
         setAdapter(messageAdapter);
-
 
         refreshSelectLast();
     }
