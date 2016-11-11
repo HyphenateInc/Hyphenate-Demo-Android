@@ -38,7 +38,7 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="5dp"
         android:background="?android:attr/selectableItemBackground"
         android:scaleType="centerInside"
@@ -47,7 +47,7 @@
 
     <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="0"
         android:paddingRight="10dp"
         android:paddingLeft="6dp"

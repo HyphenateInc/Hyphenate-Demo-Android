@@ -15,7 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +31,6 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
@@ -52,12 +53,15 @@ import com.hyphenate.util.PathUtil;
 import java.io.File;
 import java.util.List;
 
+import static com.hyphenate.easeui.EaseConstant.CHATTYPE_SINGLE;
+
 /**
  * Chat with someone in this activity
  */
 public class ChatActivity extends BaseActivity {
     @BindView(R.id.input_view) ChatInputView mInputView;
     @BindView(R.id.message_list) EaseMessageListView mMessageListView;
+    @BindView(R.id.pb_loading_message) ProgressBar mLoadingProgressBar;
 
     protected static final int REQUEST_CODE_MAP = 1;
     protected static final int REQUEST_CODE_CAMERA = 2;
@@ -83,7 +87,7 @@ public class ChatActivity extends BaseActivity {
             R.drawable.ease_chat_location_selector, R.drawable.em_chat_file_selector };
     protected int[] itemIds = { ITEM_TAKE_PICTURE, ITEM_PICTURE, ITEM_LOCATION, ITEM_FILE };
 
-    protected File cameraFile;
+    protected File mCameraFile;
 
     /**
      * to chat user id or group id
@@ -101,6 +105,8 @@ public class ChatActivity extends BaseActivity {
      * load 20 messages at one time
      */
     protected int pageSize = 20;
+    protected boolean isLoading;
+    protected boolean haveMoreData = true;
 
     public static ChatActivity activityInstance;
 
@@ -112,7 +118,7 @@ public class ChatActivity extends BaseActivity {
 
         toChatUsername = getIntent().getStringExtra(EaseConstant.EXTRA_USER_ID);
         chatType =
-                getIntent().getIntExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
+                getIntent().getIntExtra(EaseConstant.EXTRA_CHAT_TYPE, CHATTYPE_SINGLE);
 
         //get the mConversation
         mConversation = EMClient.getInstance().chatManager()
@@ -146,6 +152,7 @@ public class ChatActivity extends BaseActivity {
     private void initView() {
         // init message list view
         mMessageListView.init(toChatUsername, chatType, newCustomChatRowProvider());
+        mMessageListView.setOnScrollListener(new MsgListScrollListener());
         //register context menu for message listView
         registerForContextMenu(mMessageListView);
         mMessageListView.setItemClickListener(
@@ -186,7 +193,7 @@ public class ChatActivity extends BaseActivity {
         for(int i = 0; i < itemStrings.length; i++){
             mInputView.registerExtendMenuItem(itemStrings[i], itemdrawables[i], itemIds[i], extendMenuItemClickListener);
         }
-        if(chatType == Constant.CHATTYPE_SINGLE){
+        if(chatType == CHATTYPE_SINGLE){
             mInputView.registerExtendMenuItem(R.string.attach_voice_call, R.drawable.em_chat_voice_call_selector, ITEM_VOICE_CALL, extendMenuItemClickListener);
             mInputView.registerExtendMenuItem(R.string.attach_video_call, R.drawable.em_chat_video_call_selector, ITEM_VIDEO_CALL, extendMenuItemClickListener);
         }
@@ -221,7 +228,7 @@ public class ChatActivity extends BaseActivity {
 
     private void setToolbarTitle() {
         String nick = toChatUsername;
-        if(chatType == EaseConstant.CHATTYPE_SINGLE){ //p2p chat
+        if(chatType == CHATTYPE_SINGLE){ //p2p chat
             UserEntity user = DemoHelper.getInstance().getContactList().get(toChatUsername);
             if(user != null){
                 nick = user.getNickname();
@@ -233,6 +240,63 @@ public class ChatActivity extends BaseActivity {
             }
         }
         getSupportActionBar().setTitle(nick);
+    }
+
+    /**
+     *  message list on sroll listener
+     */
+    private class MsgListScrollListener implements AbsListView.OnScrollListener {
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            synchronized (mMessageListView) {
+                if (firstVisibleItem == 0
+                        && !isLoading
+                        && haveMoreData
+                        && mConversation.getAllMessages().size() != 0) {
+                    isLoading = true;
+                    mLoadingProgressBar.setVisibility(View.VISIBLE);
+                    // sdk初始化加载的聊天记录为20条，到顶时去db里获取更多
+                    final List<EMMessage> messages;
+                    EMMessage firstMsg = mConversation.getAllMessages().get(0);
+                    try {
+                        messages = mConversation.loadMoreMsgFromDB(firstMsg.getMsgId(), pageSize);
+                    } catch (Exception e1) {
+                        mLoadingProgressBar.setVisibility(View.INVISIBLE);
+                        return;
+                    }
+                    new Thread(new Runnable() {
+                        @Override public void run() {
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override public void run() {
+                                    if (messages.size() != 0) {
+                                        // 刷新ui
+                                        if (messages.size() > 0) {
+                                            mMessageListView.refreshSeekTo(messages.size() - 1);
+                                        }
+
+                                        if (messages.size() != pageSize) haveMoreData = false;
+                                    } else {
+                                        haveMoreData = false;
+                                    }
+                                    mLoadingProgressBar.setVisibility(View.INVISIBLE);
+                                    isLoading = false;
+                                }
+                            });
+                        }
+                    }).start();
+                }
+            }
+        }
+
     }
 
     @Override public void onCreateContextMenu(ContextMenu menu, View v,
@@ -425,12 +489,12 @@ public class ChatActivity extends BaseActivity {
             return;
         }
 
-        cameraFile = new File(PathUtil.getInstance().getImagePath(),
+        mCameraFile = new File(PathUtil.getInstance().getImagePath(),
                 EMClient.getInstance().getCurrentUser() + System.currentTimeMillis() + ".jpg");
-        cameraFile.getParentFile().mkdirs();
+        mCameraFile.getParentFile().mkdirs();
         startActivityForResult(
                 new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(cameraFile)), REQUEST_CODE_CAMERA);
+                        Uri.fromFile(mCameraFile)), REQUEST_CODE_CAMERA);
     }
 
     /**
@@ -483,8 +547,8 @@ public class ChatActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_CAMERA) { // capture new image
-                if (cameraFile != null && cameraFile.exists()) {
-                    sendImageMessage(cameraFile.getAbsolutePath());
+                if (mCameraFile != null && mCameraFile.exists()) {
+                    sendImageMessage(mCameraFile.getAbsolutePath());
                 }
             } else if (requestCode == REQUEST_CODE_LOCAL) { // send local image
                 if (data != null) {

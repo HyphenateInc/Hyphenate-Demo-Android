@@ -13,6 +13,10 @@
     <color name="voice_cancel_hint">#f52700</color>
     <color name="voice_recording_hint">#1b1d1d</color>
     <color name="group_name_color">#1b1d1d</color>
+    <color name="holo_blue_bright">#ff00ddff</color>
+    <color name="holo_green_light">#ff99cc00</color>
+    <color name="holo_orange_light">#ffffbb33</color>
+    <color name="holo_red_light">#ffff4444</color>
 
     <!--layout_background-->
     <color name="dark_background">#243e55</color>
