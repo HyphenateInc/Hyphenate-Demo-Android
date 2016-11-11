@@ -124,6 +124,11 @@ public class ChatInputView extends LinearLayout {
     }
 
 
+    public EditText getEditText(){
+        return mEditText;
+    }
+
+
     /**
      * show or hide extend menu
      *
@@ -146,6 +151,22 @@ public class ChatInputView extends LinearLayout {
             mExtendMenuContainer.setVisibility(View.GONE);
             //}
         }
+    }
+
+    /**
+     * when back key pressed
+     *
+     * @return false--extend menu is on, will hide it first
+     *         true --extend menu is off
+     */
+    public boolean onBackPressed() {
+        if (mExtendMenuContainer.getVisibility() == View.VISIBLE) {
+            hideExtendMenuContainer();
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
     /**

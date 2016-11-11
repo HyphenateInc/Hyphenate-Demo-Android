@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
@@ -39,6 +41,7 @@ import com.hyphenate.chatuidemo.ui.widget.ChatInputView;
 import com.hyphenate.chatuidemo.ui.widget.VoiceRecordDialog;
 import com.hyphenate.chatuidemo.ui.widget.VoiceRecordView;
 import com.hyphenate.chatuidemo.ui.widget.chatrow.ChatRowCall;
+import com.hyphenate.chatuidemo.utils.Utils;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.EaseChatExtendMenu;
@@ -92,7 +95,7 @@ public class ChatActivity extends BaseActivity {
      */
     protected int chatType;
 
-    protected EMConversation conversation;
+    protected EMConversation mConversation;
 
     /**
      * load 20 messages at one time
@@ -111,6 +114,23 @@ public class ChatActivity extends BaseActivity {
         chatType =
                 getIntent().getIntExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE);
 
+        //get the mConversation
+        mConversation = EMClient.getInstance().chatManager()
+                .getConversation(toChatUsername, EaseCommonUtils.getConversationType(chatType),
+                        true);
+        mConversation.markAllMessagesAsRead();
+        // the number of messages loaded into mConversation is getChatOptions().getNumberOfMessagesLoaded
+        // you can change this number
+        final List<EMMessage> msgs = mConversation.getAllMessages();
+        int msgCount = msgs != null ? msgs.size() : 0;
+        if (msgCount < mConversation.getAllMsgCount() && msgCount < pageSize) {
+            String msgId = null;
+            if (msgs != null && msgs.size() > 0) {
+                msgId = msgs.get(0).getMsgId();
+            }
+            mConversation.loadMoreMsgFromDB(msgId, pageSize - msgCount);
+        }
+
         setToolbarTitle();
         getActionBarToolbar().setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -120,28 +140,13 @@ public class ChatActivity extends BaseActivity {
         initView();
 
         // received messages code in onResume() method
-
-        //get the conversation
-        conversation = EMClient.getInstance().chatManager()
-                .getConversation(toChatUsername, EaseCommonUtils.getConversationType(chatType),
-                        true);
-        conversation.markAllMessagesAsRead();
-        // the number of messages loaded into conversation is getChatOptions().getNumberOfMessagesLoaded
-        // you can change this number
-        final List<EMMessage> msgs = conversation.getAllMessages();
-        int msgCount = msgs != null ? msgs.size() : 0;
-        if (msgCount < conversation.getAllMsgCount() && msgCount < pageSize) {
-            String msgId = null;
-            if (msgs != null && msgs.size() > 0) {
-                msgId = msgs.get(0).getMsgId();
-            }
-            conversation.loadMoreMsgFromDB(msgId, pageSize - msgCount);
-        }
     }
 
+    private EMMessage mToDeleteMessage;
     private void initView() {
         // init message list view
         mMessageListView.init(toChatUsername, chatType, newCustomChatRowProvider());
+        //register context menu for message listView
         registerForContextMenu(mMessageListView);
         mMessageListView.setItemClickListener(
                 new EaseMessageListView.MessageListItemClicksListener() {
@@ -155,7 +160,8 @@ public class ChatActivity extends BaseActivity {
                     }
 
                     @Override public void onBubbleLongClick(EMMessage message) {
-
+                        mToDeleteMessage = message;
+                        mMessageListView.showContextMenu();
                     }
 
                     @Override public void onUserAvatarClick(String username) {
@@ -166,6 +172,15 @@ public class ChatActivity extends BaseActivity {
 
                     }
                 });
+        mMessageListView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Utils.hideKeyboard(mInputView.getEditText());
+                mInputView.hideExtendMenuContainer();
+                return false;
+            }
+        });
 
         MyItemClickListener extendMenuItemClickListener = new MyItemClickListener();
         for(int i = 0; i < itemStrings.length; i++){
@@ -220,6 +235,23 @@ public class ChatActivity extends BaseActivity {
         getSupportActionBar().setTitle(nick);
     }
 
+    @Override public void onCreateContextMenu(ContextMenu menu, View v,
+            ContextMenu.ContextMenuInfo menuInfo) {
+        getMenuInflater().inflate(R.menu.em_delete_message, menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override public boolean onContextItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.delete_message){
+            if(mConversation != null){
+                //delete selected message
+                mConversation.removeMessage(mToDeleteMessage.getMsgId());
+                mMessageListView.refresh();
+            }
+            return true;
+        }
+        return super.onContextItemSelected(item);
+    }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -426,7 +458,7 @@ public class ChatActivity extends BaseActivity {
             intent.setType("*/*");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
         } else {
-            //19 after this api is not available, demo here simply handle into the gallery to select the picture
+            //after version 19, this api is not available, demo here simply handle into the gallery to select the picture
             intent = new Intent(Intent.ACTION_PICK,
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         }
@@ -603,7 +635,7 @@ public class ChatActivity extends BaseActivity {
                     username = message.getFrom();
                 }
 
-                // if the message is for current conversation
+                // if the message is for current mConversation
                 if (username.equals(toChatUsername)) {
                     mMessageListView.refreshSelectLast();
                     DemoHelper.getInstance().getNotifier().vibrateAndPlayTone(message);
@@ -646,5 +678,15 @@ public class ChatActivity extends BaseActivity {
         EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
         // remove activity from foreground activity list
         DemoHelper.getInstance().popActivity(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mInputView.onBackPressed()) {
+            finish();
+            if (chatType == EaseConstant.CHATTYPE_CHATROOM) {
+                EMClient.getInstance().chatroomManager().leaveChatRoom(toChatUsername);
+            }
+        }
     }
 }

@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity {
         if (EMClient.getInstance().isLoggedInBefore()) {
             // Load the group into memory
             EMClient.getInstance().groupManager().loadAllGroups();
-            // Load all conversation into memory
+            // Load all mConversation into memory
             EMClient.getInstance().chatManager().loadAllConversations();
         } else {
             // Go sign in

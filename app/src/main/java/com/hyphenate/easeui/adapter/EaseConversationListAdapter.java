@@ -63,7 +63,7 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
                         room != null && !TextUtils.isEmpty(room.getName()) ? room.getName()
                                 : username);
             } else {
-                //single chat conversation
+                //single chat mConversation
                 EaseUserUtils.setUserAvatar(mContext, username, holder.mAvatarView);
                 EaseUserUtils.setUserNick(username, holder.mNameView);
             }
