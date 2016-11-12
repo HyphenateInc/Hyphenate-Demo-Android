@@ -42,7 +42,7 @@ import com.hyphenate.chatuidemo.ui.widget.ChatInputView;
 import com.hyphenate.chatuidemo.ui.widget.VoiceRecordDialog;
 import com.hyphenate.chatuidemo.ui.widget.VoiceRecordView;
 import com.hyphenate.chatuidemo.ui.widget.chatrow.ChatRowCall;
-import com.hyphenate.chatuidemo.utils.Utils;
+import com.hyphenate.easeui.utils.Utils;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.EaseChatExtendMenu;
