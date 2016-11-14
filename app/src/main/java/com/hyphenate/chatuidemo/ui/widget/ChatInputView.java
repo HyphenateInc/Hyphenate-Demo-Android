@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -70,6 +71,8 @@ public class ChatInputView extends LinearLayout {
         LayoutInflater.from(context).inflate(R.layout.em_widget_chat_input, this);
         ButterKnife.bind(this);
 
+        mContext = context;
+
 
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -111,13 +114,16 @@ public class ChatInputView extends LinearLayout {
             @Override public void onExpressionClicked(EaseEmojicon emojicon) {
                 if(emojicon.getType() != EaseEmojicon.Type.BIG_EXPRESSION){
                     if(emojicon.getEmojiText() != null){
-                        mEditText.append(EaseSmileUtils.getSmiledText(mContext,emojicon.getEmojiText()));
+                        CharSequence str = EaseSmileUtils.getSmiledText(mContext,emojicon.getEmojiText());
+                        mEditText.append(str);
                     }
+                }else{
+                    //on big expression clicked
                 }
             }
 
             @Override public void onDeleteImageClicked() {
-
+                onEmojiconDeleteEvent();
             }
         });
     }
@@ -152,6 +158,15 @@ public class ChatInputView extends LinearLayout {
         toggleEmojicon();
     }
 
+    /**
+     * delete emojicon
+     */
+    public void onEmojiconDeleteEvent(){
+        if (!TextUtils.isEmpty(mEditText.getText())) {
+            KeyEvent event = new KeyEvent(0, 0, 0, KeyEvent.KEYCODE_DEL, 0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
+            mEditText.dispatchKeyEvent(event);
+        }
+    }
 
     private void showSendImage() {
         mSendView.setVisibility(View.VISIBLE);
@@ -253,9 +268,9 @@ public class ChatInputView extends LinearLayout {
      */
     public void hideExtendMenuContainer() {
         mExtendMenu.setVisibility(View.GONE);
-        //emojiconMenu.setVisibility(View.GONE);
+        mEmojiconMenu.setVisibility(View.GONE);
         mExtendMenuContainer.setVisibility(View.GONE);
-        //chatPrimaryMenu.onExtendMenuContainerHide();
+        mEmojiconToggleView.setSelected(false);
     }
 
     /**

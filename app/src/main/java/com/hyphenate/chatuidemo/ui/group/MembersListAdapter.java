@@ -63,8 +63,8 @@ public class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.
                 if (position == 0) {
                     holder.memberAvatarView.setImageResource(R.drawable.add_member_icon);
                 } else {
-                    EaseUserUtils.setUserNick(membersList.get(position), holder.memberNameView);
-                    EaseUserUtils.setUserAvatar(context, membersList.get(position), holder.memberAvatarView);
+                    EaseUserUtils.setUserNick(membersList.get(position-1), holder.memberNameView);
+                    EaseUserUtils.setUserAvatar(context, membersList.get(position-1), holder.memberAvatarView);
                 }
             } else {
                 EaseUserUtils.setUserNick(membersList.get(position), holder.memberNameView);

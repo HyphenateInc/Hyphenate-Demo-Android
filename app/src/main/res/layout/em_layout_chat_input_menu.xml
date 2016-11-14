@@ -32,7 +32,6 @@
         android:maxLines="3"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
-        android:imeOptions="actionSend"
         />
 
 
@@ -41,7 +40,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:padding="5dp"
-        android:background="?android:attr/selectableItemBackground"
         android:scaleType="centerInside"
         android:src="@drawable/em_chat_emoji_selector"
         />
@@ -50,27 +48,26 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="0"
-        android:paddingRight="10dp"
-        android:paddingLeft="6dp"
         >
         <ImageView
             android:id="@+id/img_send"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackground"
             android:scaleType="centerInside"
             android:visibility="invisible"
             android:src="@drawable/em_ic_chat_send"
-
+            android:paddingRight="10dp"
+            android:paddingLeft="6dp"
             />
 
         <ImageView
             android:id="@+id/img_expand"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="?android:attr/selectableItemBackground"
             android:scaleType="centerInside"
             android:src="@drawable/em_ic_chat_expand"
+            android:paddingRight="10dp"
+            android:paddingLeft="6dp"
             />
 
     </FrameLayout>

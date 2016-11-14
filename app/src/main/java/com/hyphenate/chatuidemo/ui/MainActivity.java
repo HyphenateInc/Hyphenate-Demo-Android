@@ -43,6 +43,8 @@ public class MainActivity extends BaseActivity {
     private int mCurrentPageIndex = 0;
 
     private ConversationListFragment mConversationListFragment;
+    private ContactListFragment mContactListFragment;
+    private SettingsFragment mSettingsFragment;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         // Set default setting values
@@ -59,9 +61,9 @@ public class MainActivity extends BaseActivity {
 
     private void setupViewPager() {
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
-        ContactListFragment mContactListFragment = ContactListFragment.newInstance();
+        mContactListFragment = ContactListFragment.newInstance();
         mConversationListFragment = ConversationListFragment.newInstance();
-        SettingsFragment mSettingsFragment = SettingsFragment.newInstance();
+        mSettingsFragment = SettingsFragment.newInstance();
         //add fragments to adapter
         adapter.addFragment(mContactListFragment, "Contacts");
         adapter.addFragment(mConversationListFragment, "Chats");
@@ -134,10 +136,21 @@ public class MainActivity extends BaseActivity {
 
     private void setSearchViewQueryListener() {
         Toolbar toolbar = getActionBarToolbar();
-        SearchView searchView = null;
-        if (mCurrentPageIndex == 0) {
 
-        } else if (mCurrentPageIndex == 1) {
+        SearchView searchView;
+        if(mCurrentPageIndex == 0){
+            searchView = (SearchView)toolbar.getMenu().findItem(R.id.menu_search).getActionView();
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override public boolean onQueryTextSubmit(String query) {
+                    return true;
+                }
+
+                @Override public boolean onQueryTextChange(String newText) {
+                    //ContactListFragment.newInstance().filter(newText);
+                    return true;
+                }
+            });
+        }else if(mCurrentPageIndex == 1){
             searchView = (SearchView) MenuItemCompat.getActionView(
                     toolbar.getMenu().findItem(R.id.menu_conversations_search));
             // search conversations list

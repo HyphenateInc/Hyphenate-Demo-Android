@@ -18,8 +18,11 @@ import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.MainActivity;
 import com.hyphenate.chatuidemo.ui.apply.ApplyActivity;
+import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseConversationListView;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
+
+import static com.hyphenate.easeui.EaseConstant.CHATTYPE_GROUP;
 
 /**
  * A fragment which shows mConversation list
@@ -66,8 +69,14 @@ public class ConversationListFragment extends Fragment {
                     startActivity(new Intent(getActivity(), ApplyActivity.class));
                 } else {
                     //enter to chat activity
-                    startActivity(new Intent(getActivity(), ChatActivity.class).putExtra(
-                            Constant.EXTRA_USER_ID, conversation.getUserName()));
+                    if(conversation.getType() == EMConversation.EMConversationType.GroupChat){
+                        startActivity(new Intent(getActivity(), ChatActivity.class)
+                                .putExtra(Constant.EXTRA_USER_ID, conversation.getUserName())
+                                .putExtra(EaseConstant.EXTRA_CHAT_TYPE, CHATTYPE_GROUP));
+                    }else if(conversation.getType() == EMConversation.EMConversationType.Chat){
+                        startActivity(new Intent(getActivity(), ChatActivity.class).putExtra(
+                                Constant.EXTRA_USER_ID, conversation.getUserName()));
+                    }
                 }
             }
 
@@ -103,7 +112,7 @@ public class ConversationListFragment extends Fragment {
     }
 
     /**
-     * filter mConversation list with passed query string
+     * filter Conversation list with passed query string
      */
     public void filter(String str) {
         mConversationListView.filter(str);

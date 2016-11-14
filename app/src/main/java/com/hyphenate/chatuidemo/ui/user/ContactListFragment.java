@@ -1,7 +1,6 @@
 package com.hyphenate.chatuidemo.ui.user;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,7 +33,6 @@ import com.hyphenate.chatuidemo.ui.group.GroupListActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -131,6 +129,23 @@ public class ContactListFragment extends Fragment {
                 });
             }
         });
+    }
+
+    public void filter(String newText){
+        List<UserEntity> list = new ArrayList<>();
+        if (entityList == null){
+            entityList = new ArrayList<>();
+        }
+        entityList.clear();
+        entityList.addAll(DemoHelper.getInstance().getContactList().values());
+        for (UserEntity userEntity : entityList){
+            if (userEntity.getNickname().contains(newText)){
+                list.add(userEntity);
+            }
+        }
+        entityList.clear();
+        entityList.addAll(list);
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -270,17 +285,6 @@ public class ContactListFragment extends Fragment {
                 return o1.getUsername().compareTo(o2.getUsername());
             }
         });
-    }
-
-    /**
-     * Contacts broadcast receiver
-     */
-    private class ContactsBroadcastReceiver extends BroadcastReceiver {
-
-        @Override public void onReceive(Context context, Intent intent) {
-            EMLog.d(TAG, "contact action");
-            refresh();
-        }
     }
 
     @Override public void onResume() {
