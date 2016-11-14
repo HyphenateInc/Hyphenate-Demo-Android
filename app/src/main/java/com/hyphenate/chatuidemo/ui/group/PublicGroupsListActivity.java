@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
@@ -13,6 +15,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupInfo;
+import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.exceptions.HyphenateException;
 import java.util.ArrayList;
@@ -30,10 +33,44 @@ public class PublicGroupsListActivity extends GroupListActivity {
     private boolean hasMoreData = true;
     private String cursor;
     private final int pageSize = 20;
+    List<EMGroupInfo> temp = new ArrayList<EMGroupInfo>();
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         toolbar.setTitle("Public Groups");
+
+    }
+
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.em_contacts_menu, menu);
+        menu.findItem(R.id.menu_add_contacts).setVisible(false);
+        item = menu.findItem(R.id.menu_search);
+
+        SearchView searchView = (SearchView) item.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override public boolean onQueryTextChange(String newText) {
+                List<EMGroupInfo> list = new ArrayList<EMGroupInfo>();
+
+                groups.clear();
+                groups.addAll(temp);
+                for (EMGroupInfo group : groups) {
+                    if (group.getGroupName().contains(newText)) {
+                        list.add(group);
+                    }
+                }
+                groups.clear();
+                groups.addAll(list);
+                adapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
+        return true;
     }
 
     @Override public void loadGroupList() {
@@ -41,16 +78,19 @@ public class PublicGroupsListActivity extends GroupListActivity {
     }
 
     private void loadAndShowData() {
-        final ProgressDialog progressDialog =
-                ProgressDialog.show(this, "load public group...", "waiting...", false);
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("load public group...");
+        progressDialog.setMessage("waiting...");
+        progressDialog.setCanceledOnTouchOutside(false);
+        if (isFirstLoading){
+            progressDialog.show();
+        }
         new Thread(new Runnable() {
 
             public void run() {
                 try {
                     isLoading = true;
-                    final EMCursorResult<EMGroupInfo> result = EMClient.getInstance()
-                            .groupManager()
-                            .getPublicGroupsFromServer(pageSize, cursor);
+                    final EMCursorResult<EMGroupInfo> result = EMClient.getInstance().groupManager().getPublicGroupsFromServer(pageSize, cursor);
                     final List<EMGroupInfo> returnGroups = result.getData();
                     runOnUiThread(new Runnable() {
 
@@ -59,16 +99,15 @@ public class PublicGroupsListActivity extends GroupListActivity {
                             if (returnGroups.size() != 0) {
                                 cursor = result.getCursor();
                             }
+
                             progressDialog.dismiss();
                             if (isFirstLoading) {
                                 isFirstLoading = false;
-                                adapter =
-                                        new GroupListAdapter(PublicGroupsListActivity.this, groups,
-                                                true);
+                                temp.addAll(groups);
+                                adapter = new GroupListAdapter(PublicGroupsListActivity.this, groups, true);
                                 recyclerView.setAdapter(adapter);
                                 adapter.setItemClickListener(new EaseListItemClickListener() {
-                                    @Override
-                                    public void onItemClick(final View view, final int position) {
+                                    @Override public void onItemClick(final View view, final int position) {
                                         progressDialog.show();
                                         progressDialog.setTitle("join the group");
                                         new Thread(new Runnable() {
@@ -76,19 +115,14 @@ public class PublicGroupsListActivity extends GroupListActivity {
                                                 try {
                                                     EMGroup group = EMClient.getInstance()
                                                             .groupManager()
-                                                            .getGroupFromServer(groups.get(position)
-                                                                    .getGroupId());
+                                                            .getGroupFromServer(groups.get(position).getGroupId());
                                                     if (group != null) {
                                                         if (group.isMemberOnly()) {
                                                             EMClient.getInstance()
                                                                     .groupManager()
-                                                                    .applyJoinToGroup(
-                                                                            group.getGroupId(),
-                                                                            "apply to join");
+                                                                    .applyJoinToGroup(group.getGroupId(), "apply to join");
                                                         } else {
-                                                            EMClient.getInstance()
-                                                                    .groupManager()
-                                                                    .joinGroup(group.getGroupId());
+                                                            EMClient.getInstance().groupManager().joinGroup(group.getGroupId());
                                                         }
                                                     }
                                                     runOnUiThread(new Runnable() {
@@ -98,10 +132,8 @@ public class PublicGroupsListActivity extends GroupListActivity {
                                                             ((Button) view).setText("REQUESTED");
                                                             view.setClickable(false);
                                                             view.setEnabled(false);
-                                                            ((Button) view).setTextColor(
-                                                                    Color.parseColor("#8798a4"));
-                                                            Snackbar.make(recyclerView,
-                                                                    "successful application,please waiting...",
+                                                            ((Button) view).setTextColor(Color.parseColor("#8798a4"));
+                                                            Snackbar.make(recyclerView, "successful application,please waiting...",
                                                                     Snackbar.LENGTH_SHORT).show();
                                                         }
                                                     });
@@ -110,9 +142,7 @@ public class PublicGroupsListActivity extends GroupListActivity {
                                                     runOnUiThread(new Runnable() {
                                                         @Override public void run() {
                                                             progressDialog.dismiss();
-                                                            Snackbar.make(recyclerView,
-                                                                    "join failure,please again",
-                                                                    Snackbar.LENGTH_SHORT).show();
+                                                            Snackbar.make(recyclerView, "join failure,please again", Snackbar.LENGTH_SHORT).show();
                                                         }
                                                     });
                                                 }
@@ -139,9 +169,7 @@ public class PublicGroupsListActivity extends GroupListActivity {
                         public void run() {
                             isLoading = false;
                             progressDialog.dismiss();
-                            Snackbar.make(recyclerView,
-                                    "load failed, please check your network or try it later",
-                                    Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(recyclerView, "load failed, please check your network or try it later", Snackbar.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -155,6 +183,9 @@ public class PublicGroupsListActivity extends GroupListActivity {
                     if (manager.getItemCount() != 0) {
                         int lasPos = manager.findLastVisibleItemPosition();
                         if (hasMoreData && !isLoading && lasPos == manager.getItemCount() - 1) {
+                            if (cursor != null) {
+                                adapter.notifyDataSetChanged();
+                            }
                             loadAndShowData();
                         }
                     }

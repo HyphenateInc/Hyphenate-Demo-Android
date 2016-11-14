@@ -21,7 +21,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +48,8 @@ public class GroupDetailsActivity extends BaseActivity {
     private EMGroup group;
     private MembersListAdapter adapter;
     private ProgressDialog progressDialog;
+    ProgressBar progressBar;
+    Toolbar toolbar;
 
     public static GroupDetailsActivity instance;
 
@@ -73,13 +77,20 @@ public class GroupDetailsActivity extends BaseActivity {
         groupId = getIntent().getStringExtra("groupId");
         updateGroup();
 
-        Toolbar toolbar = getActionBarToolbar();
+        progressBar = new ProgressBar(this);
+
+        toolbar = getActionBarToolbar();
         toolbar.setNavigationIcon(R.drawable.em_ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 finish();
             }
         });
+
+        Toolbar.LayoutParams params = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.RIGHT;
+        toolbar.addView(progressBar, params);
+
 
         listener = new DefaultGroupChangeListener();
         EMClient.getInstance().groupManager().addGroupChangeListener(listener);
@@ -209,7 +220,6 @@ public class GroupDetailsActivity extends BaseActivity {
     }
 
     protected void updateGroup() {
-        showDialog("update group....", "waiting...");
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -273,7 +283,7 @@ public class GroupDetailsActivity extends BaseActivity {
 
                                 }
                             });
-                            progressDialog.dismiss();
+                            toolbar.removeView(progressBar);
                         }
                     });
                 } catch (Exception e) {
