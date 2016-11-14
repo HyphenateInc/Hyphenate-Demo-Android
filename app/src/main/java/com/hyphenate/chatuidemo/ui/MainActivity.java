@@ -2,7 +2,6 @@ package com.hyphenate.chatuidemo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -44,7 +43,8 @@ public class MainActivity extends BaseActivity {
     private int mCurrentPageIndex = 0;
 
     private ConversationListFragment mConversationListFragment;
-    ContactListFragment mContactListFragment;
+    private ContactListFragment mContactListFragment;
+    private SettingsFragment mSettingsFragment;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         // Check that you are logged in
@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity {
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
         mContactListFragment = ContactListFragment.newInstance();
         mConversationListFragment = ConversationListFragment.newInstance();
-        SettingsFragment mSettingsFragment = SettingsFragment.newInstance();
+        mSettingsFragment = SettingsFragment.newInstance();
         //add fragments to adapter
         adapter.addFragment(mContactListFragment, "Contacts");
         adapter.addFragment(mConversationListFragment, "Chats");
@@ -92,7 +92,6 @@ public class MainActivity extends BaseActivity {
                 if (position == 0) { //Contacts
                     toolbar.inflateMenu(R.menu.em_contacts_menu);
                     mTabLayout.getTabAt(0).getCustomView().findViewById(R.id.img_tab_item);
-
                 } else if (position == 1) { //Chats
                     toolbar.inflateMenu(R.menu.em_conversations_menu);
                 }
