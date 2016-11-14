@@ -148,6 +148,7 @@ public class EaseConversationListView extends RecyclerView {
         while (iterator.hasNext()){
             EMConversation conversation = (EMConversation) iterator.next();
             if(conversation.getAllMessages().size() == 0){
+                //remove the conversation which messages size == 0
                 iterator.remove();
             }
         }
@@ -161,6 +162,7 @@ public class EaseConversationListView extends RecyclerView {
             EMConversation conversation = (EMConversation) iterator.next();
             String username = conversation.getUserName();
             EMGroup group = EMClient.getInstance().groupManager().getGroup(username);
+            //add group name or user nick
             if(group != null){
                 username = group.getGroupName();
             }else{

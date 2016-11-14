@@ -2,7 +2,6 @@ package com.hyphenate.chatuidemo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -84,29 +83,15 @@ public class MainActivity extends BaseActivity {
         adapter.addFragment(mSettingsFragment, "Settings");
         mViewPager.setAdapter(adapter);
         mViewPager.setOffscreenPageLimit(3);
-        mViewPager.setCurrentItem(1);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override public void onPageSelected(int position) {
                 mCurrentPageIndex = position;
                 Toolbar toolbar = getActionBarToolbar();
                 toolbar.setTitle(adapter.getPageTitle(position));
                 toolbar.getMenu().clear();
-                final SearchView searchView;
                 if (position == 0) { //Contacts
                     toolbar.inflateMenu(R.menu.em_contacts_menu);
                     mTabLayout.getTabAt(0).getCustomView().findViewById(R.id.img_tab_item);
-
-                    searchView = (SearchView)toolbar.getMenu().findItem(R.id.menu_search).getActionView();
-                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                        @Override public boolean onQueryTextSubmit(String query) {
-                            return true;
-                        }
-
-                        @Override public boolean onQueryTextChange(String newText) {
-                            //ContactListFragment.newInstance().filter(newText);
-                            return true;
-                        }
-                    });
                 } else if (position == 1) { //Chats
                     toolbar.inflateMenu(R.menu.em_conversations_menu);
                 }
@@ -161,9 +146,19 @@ public class MainActivity extends BaseActivity {
 
     private void setSearchViewQueryListener(){
         Toolbar toolbar = getActionBarToolbar();
-        SearchView searchView = null;
+        SearchView searchView;
         if(mCurrentPageIndex == 0){
+            searchView = (SearchView)toolbar.getMenu().findItem(R.id.menu_search).getActionView();
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override public boolean onQueryTextSubmit(String query) {
+                    return true;
+                }
 
+                @Override public boolean onQueryTextChange(String newText) {
+                    //ContactListFragment.newInstance().filter(newText);
+                    return true;
+                }
+            });
         }else if(mCurrentPageIndex == 1){
             searchView = (SearchView) MenuItemCompat.getActionView(
                     toolbar.getMenu().findItem(R.id.menu_conversations_search));

@@ -103,7 +103,7 @@ public class ConversationListFragment extends Fragment {
     }
 
     /**
-     * filter mConversation list with passed query string
+     * filter Conversation list with passed query string
      */
     public void filter(String str) {
         mConversationListView.filter(str);
