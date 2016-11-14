@@ -15,6 +15,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
+import com.hyphenate.chatuidemo.ui.MainActivity;
 import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
 import com.hyphenate.easeui.widget.EaseImageView;
 import java.util.List;
@@ -56,11 +57,8 @@ public class AccountActivity extends BaseActivity {
     @OnClick(R.id.btn_sign_out) void signOut() {
         DemoHelper.getInstance().signOut(true, new EMCallBack() {
             @Override public void onSuccess() {
-                List<Activity> list = DemoHelper.getInstance().getActivityList();
-                for (Activity activity : list) {
-                    activity.finish();
-                }
-                startActivity(new Intent(AccountActivity.this, SignInActivity.class));
+                startActivity(new Intent(AccountActivity.this, MainActivity.class).addFlags(
+                        Intent.FLAG_ACTIVITY_NEW_TASK));
             }
 
             @Override public void onError(int i, String s) {

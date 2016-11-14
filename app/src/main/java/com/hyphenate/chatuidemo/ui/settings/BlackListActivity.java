@@ -64,6 +64,7 @@ public class BlackListActivity extends BaseActivity {
      */
     private void refresh() {
         if (mAdapter != null) {
+            mAdapter.refreshBlackList();
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -98,6 +99,7 @@ public class BlackListActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMClient.getInstance().contactManager().removeUserFromBlackList(username);
+
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
                             Toast.makeText(mActivity,

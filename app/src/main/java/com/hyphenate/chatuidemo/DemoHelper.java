@@ -396,10 +396,6 @@ public class DemoHelper {
         activityList.remove(activity);
     }
 
-    public List<Activity> getActivityList() {
-        return activityList;
-    }
-
     public MessageNotifier getNotifier() {
         return mNotifier;
     }

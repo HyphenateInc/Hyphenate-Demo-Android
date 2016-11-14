@@ -45,19 +45,6 @@ public class MainActivity extends BaseActivity {
     private ConversationListFragment mConversationListFragment;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
-        // Check that you are logged in
-        if (EMClient.getInstance().isLoggedInBefore()) {
-            // Load the group into memory
-            EMClient.getInstance().groupManager().loadAllGroups();
-            // Load all mConversation into memory
-            EMClient.getInstance().chatManager().loadAllConversations();
-        } else {
-            // Go sign in
-            Intent intent = new Intent(this, SignInActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
         // Set default setting values
         //PreferenceManager.setDefaultValues(this, R.xml.preferences_default, false);
 
@@ -98,7 +85,8 @@ public class MainActivity extends BaseActivity {
                 }
             }
 
-            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            @Override public void onPageScrolled(int position, float positionOffset,
+                    int positionOffsetPixels) {
             }
 
             @Override public void onPageScrollStateChanged(int state) {
@@ -114,16 +102,18 @@ public class MainActivity extends BaseActivity {
             View customTab = LayoutInflater.from(this).inflate(R.layout.em_tab_layout_item, null);
             ImageView imageView = (ImageView) customTab.findViewById(R.id.img_tab_item);
             if (i == 0) {
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_contacts_selector));
+                imageView.setImageDrawable(
+                        getResources().getDrawable(R.drawable.em_tab_contacts_selector));
             } else if (i == 1) {
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_chats_selector));
+                imageView.setImageDrawable(
+                        getResources().getDrawable(R.drawable.em_tab_chats_selector));
             } else {
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_settings_selector));
+                imageView.setImageDrawable(
+                        getResources().getDrawable(R.drawable.em_tab_settings_selector));
             }
             //set the custom tabview
             mTabLayout.getTabAt(i).setCustomView(customTab);
         }
-
     }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -142,12 +132,12 @@ public class MainActivity extends BaseActivity {
         return true;
     }
 
-    private void setSearchViewQueryListener(){
+    private void setSearchViewQueryListener() {
         Toolbar toolbar = getActionBarToolbar();
         SearchView searchView = null;
-        if(mCurrentPageIndex == 0){
+        if (mCurrentPageIndex == 0) {
 
-        }else if(mCurrentPageIndex == 1){
+        } else if (mCurrentPageIndex == 1) {
             searchView = (SearchView) MenuItemCompat.getActionView(
                     toolbar.getMenu().findItem(R.id.menu_conversations_search));
             // search conversations list
@@ -205,7 +195,7 @@ public class MainActivity extends BaseActivity {
                 });
             }
             //refresh ConversationListFragment
-            fragment = ((PagerAdapter)mViewPager.getAdapter()).getItem(1);
+            fragment = ((PagerAdapter) mViewPager.getAdapter()).getItem(1);
             ((ConversationListFragment) fragment).refresh();
         }
 
@@ -234,6 +224,18 @@ public class MainActivity extends BaseActivity {
         EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
 
         updateUnreadMsgLabel();
+
+        // Check that you are logged in
+        if (EMClient.getInstance().isLoggedInBefore()) {
+            // Load the group into memory
+            EMClient.getInstance().groupManager().loadAllGroups();
+            // Load all mConversation into memory
+            EMClient.getInstance().chatManager().loadAllConversations();
+        } else {
+            // Go sign in
+            startActivity(new Intent(this, SignInActivity.class));
+            finish();
+        }
     }
 
     @Override protected void onStop() {
@@ -242,8 +244,7 @@ public class MainActivity extends BaseActivity {
         EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             moveTaskToBack(false);
             return true;
@@ -251,10 +252,10 @@ public class MainActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public void updateUnreadMsgLabel(){
+    public void updateUnreadMsgLabel() {
         if (EMClient.getInstance().chatManager().getUnreadMessageCount() > 0) {
             getTabUnreadStatusView(1).setVisibility(View.VISIBLE);
-        }else {
+        } else {
             getTabUnreadStatusView(1).setVisibility(View.INVISIBLE);
         }
     }
