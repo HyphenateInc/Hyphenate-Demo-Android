@@ -45,6 +45,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     private String[] newMembers;
     private ProgressDialog progressDialog;
     private List<String> selectedMembers = new ArrayList<>();
+    private  Snackbar snackbar;
 
     ContactListAdapter(Context context, List<UserEntity> list) {
 
@@ -134,6 +135,9 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
 
         holder.checkBoxView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
+                if (snackbar!= null && snackbar.isShown()){
+                    snackbar.dismiss();
+                }
                 if (isChecked) {
                     selectedMembers.add(user.getUsername());
                 } else {
@@ -142,6 +146,10 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
                     }
                 }
                 newMembers = selectedMembers.toArray(new String[0]);
+                if (snackbar != null && newMembers.length == 0) {
+                    snackbar.dismiss();
+                    return;
+                }
                 String content = "", action = "INVITE";
                 if (newMembers.length > 1) {
                     content = newMembers.length + "Members selected";
@@ -152,57 +160,54 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
                 if (isSelected && !isOwner) {
                     action = "NEXT";
                 }
+                snackbar = Snackbar.make(holder.contactItemLayout, content, Snackbar.LENGTH_INDEFINITE);
 
-                Snackbar snackbar =
-                        Snackbar.make(holder.contactItemLayout, content, Snackbar.LENGTH_SHORT).setAction(action, new View.OnClickListener() {
-                            @Override public void onClick(final View v) {
-                                if (isSelected && !isOwner) {
+                snackbar.setAction(action, new View.OnClickListener() {
+                    @Override public void onClick(final View v) {
+                        if (isSelected && !isOwner) {
 
-                                    context.startActivity(new Intent(context, NewGroupActivity.class).putStringArrayListExtra("newMembers",
-                                            (ArrayList<String>) selectedMembers));
-                                } else {
-                                    progressDialog = ProgressDialog.show(context, "invite members", "waiting...", false);
-                                    new Thread(new Runnable() {
-                                        @Override public void run() {
-                                            try {
-                                                if (isOwner) {
-                                                    EMClient.getInstance().groupManager().addUsersToGroup(groupId, newMembers);
-                                                } else {
-                                                    EMClient.getInstance().groupManager().inviteUser(groupId, newMembers, null);
-                                                }
-
-                                                ((InviteMembersActivity) context).runOnUiThread(new Runnable() {
-                                                    @Override public void run() {
-                                                        progressDialog.dismiss();
-                                                        if (EMClient.getInstance().getOptions().isAutoAcceptGroupInvitation()) {
-                                                            Intent intent = new Intent();
-                                                            intent.putExtra("selectedMembers", (ArrayList<String>) selectedMembers);
-                                                            ((InviteMembersActivity) context).setResult(InviteMembersActivity.RESULT_OK, intent);
-                                                        } else {
-                                                            ((InviteMembersActivity) context).setResult(InviteMembersActivity.RESULT_OK);
-                                                        }
-                                                        ((InviteMembersActivity) context).finish();
-                                                    }
-                                                });
-                                            } catch (final HyphenateException e) {
-                                                e.printStackTrace();
-                                                ((InviteMembersActivity) context).runOnUiThread(new Runnable() {
-                                                    @Override public void run() {
-                                                        progressDialog.dismiss();
-                                                        Snackbar.make(holder.contactItemLayout, "invite failure,please again" + e.getMessage(),
-                                                                Snackbar.LENGTH_SHORT).show();
-                                                    }
-                                                });
-                                            }
+                            context.startActivity(new Intent(context, NewGroupActivity.class).putStringArrayListExtra("newMembers",
+                                    (ArrayList<String>) selectedMembers));
+                        } else {
+                            progressDialog = ProgressDialog.show(context, "invite members", "waiting...", false);
+                            new Thread(new Runnable() {
+                                @Override public void run() {
+                                    try {
+                                        if (isOwner) {
+                                            EMClient.getInstance().groupManager().addUsersToGroup(groupId, newMembers);
+                                        } else {
+                                            EMClient.getInstance().groupManager().inviteUser(groupId, newMembers, null);
                                         }
-                                    }).start();
+
+                                        ((InviteMembersActivity) context).runOnUiThread(new Runnable() {
+                                            @Override public void run() {
+                                                progressDialog.dismiss();
+                                                if (EMClient.getInstance().getOptions().isAutoAcceptGroupInvitation()) {
+                                                    Intent intent = new Intent();
+                                                    intent.putExtra("selectedMembers", (ArrayList<String>) selectedMembers);
+                                                    ((InviteMembersActivity) context).setResult(InviteMembersActivity.RESULT_OK, intent);
+                                                } else {
+                                                    ((InviteMembersActivity) context).setResult(InviteMembersActivity.RESULT_OK);
+                                                }
+                                                ((InviteMembersActivity) context).finish();
+                                            }
+                                        });
+                                    } catch (final HyphenateException e) {
+                                        e.printStackTrace();
+                                        ((InviteMembersActivity) context).runOnUiThread(new Runnable() {
+                                            @Override public void run() {
+                                                progressDialog.dismiss();
+                                                Snackbar.make(holder.contactItemLayout, "invite failure,please again" + e.getMessage(),
+                                                        Snackbar.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
                                 }
-                            }
-                        });
+                            }).start();
+                        }
+                    }
+                });
                 snackbar.show();
-                if (newMembers.length == 0) {
-                    snackbar.dismiss();
-                }
             }
         });
     }

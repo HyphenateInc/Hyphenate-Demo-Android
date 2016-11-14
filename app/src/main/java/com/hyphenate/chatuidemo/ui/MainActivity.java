@@ -155,7 +155,7 @@ public class MainActivity extends BaseActivity {
                 }
 
                 @Override public boolean onQueryTextChange(String newText) {
-                    //ContactListFragment.newInstance().filter(newText);
+                    mContactListFragment.filter(newText);
                     return true;
                 }
             });

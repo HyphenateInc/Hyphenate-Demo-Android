@@ -204,30 +204,37 @@ public class DemoHelper {
 
         @Override public void onRequestToJoinReceived(String s, String s1, String s2, String s3) {
             super.onRequestToJoinReceived(s, s1, s2, s3);
+            getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onRequestToJoinAccepted(String s, String s1, String s2) {
             super.onRequestToJoinAccepted(s, s1, s2);
+            getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
             super.onRequestToJoinDeclined(s, s1, s2, s3);
+            getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onInvitationAccepted(String s, String s1, String s2) {
             super.onInvitationAccepted(s, s1, s2);
+            getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onInvitationDeclined(String s, String s1, String s2) {
             super.onInvitationDeclined(s, s1, s2);
+            getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onUserRemoved(String s, String s1) {
             super.onUserRemoved(s, s1);
+            getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onGroupDestroyed(String s, String s1) {
             super.onGroupDestroyed(s, s1);
+            getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
