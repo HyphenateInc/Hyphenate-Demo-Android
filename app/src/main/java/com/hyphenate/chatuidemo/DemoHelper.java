@@ -254,7 +254,7 @@ public class DemoHelper {
             return getUserProfileManager().getCurrentUserInfo();
         user = getContactList().get(username);
 
-        // if user is not in your contacts, set inital letter for him/her
+        // if user is not in your contacts, set initial letter for him/her
         if(user == null){
             user = new EaseUser(username);
             EaseCommonUtils.setUserInitialLetter(user);
