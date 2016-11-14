@@ -42,7 +42,7 @@
         android:padding="5dp"
         android:background="?android:attr/selectableItemBackground"
         android:scaleType="centerInside"
-        android:src="@drawable/em_ic_chat_emoji"
+        android:src="@drawable/em_chat_emoji_normal"
         />
 
     <ImageView

@@ -1,7 +1,5 @@
 package com.hyphenate.chatuidemo.ui;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -25,12 +23,12 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.chat.ConversationListFragment;
+import com.hyphenate.chatuidemo.ui.group.InviteMembersActivity;
+import com.hyphenate.chatuidemo.ui.group.PublicGroupsListActivity;
 import com.hyphenate.chatuidemo.ui.settings.SettingsFragment;
 import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
 import com.hyphenate.chatuidemo.ui.user.AddContactsActivity;
 import com.hyphenate.chatuidemo.ui.user.ContactListFragment;
-import com.hyphenate.chatuidemo.ui.group.InviteMembersActivity;
-import com.hyphenate.chatuidemo.ui.group.PublicGroupsListActivity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,32 +83,19 @@ public class MainActivity extends BaseActivity {
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override public void onPageSelected(int position) {
+                mCurrentPageIndex = position;
                 Toolbar toolbar = getActionBarToolbar();
                 toolbar.setTitle(adapter.getPageTitle(position));
                 toolbar.getMenu().clear();
                 if (position == 0) { //Contacts
-                    getActionBarToolbar().inflateMenu(R.menu.em_contacts_menu);
+                    toolbar.inflateMenu(R.menu.em_contacts_menu);
                     mTabLayout.getTabAt(0).getCustomView().findViewById(R.id.img_tab_item);
                 } else if (position == 1) { //Chats
-                    getActionBarToolbar().inflateMenu(R.menu.em_conversations_menu);
-                    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-                    final SearchView searchView =
-                            (SearchView) MenuItemCompat.getActionView(toolbar.getMenu().findItem(R.id.menu_conversations_search));
-                    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-                    // search conversations list
-                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                        @Override public boolean onQueryTextSubmit(String query) {
-                            mConversationListFragment.filter(searchView.getQuery().toString());
-                            return true;
-                        }
-
-                        @Override public boolean onQueryTextChange(String newText) {
-                            mConversationListFragment.filter(newText);
-                            return true;
-                        }
-                    });
+                    toolbar.inflateMenu(R.menu.em_conversations_menu);
                 }
-                mCurrentPageIndex = position;
+                if (position != 2) {
+                    setSearchViewQueryListener();
+                }
             }
 
             @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -138,6 +123,7 @@ public class MainActivity extends BaseActivity {
             //set the custom tabview
             mTabLayout.getTabAt(i).setCustomView(customTab);
         }
+
     }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -147,11 +133,36 @@ public class MainActivity extends BaseActivity {
         Toolbar toolbar = getActionBarToolbar();
         if (mViewPager.getCurrentItem() == 0) {
             toolbar.inflateMenu(R.menu.em_contacts_menu);
+            setSearchViewQueryListener();
         } else if (mViewPager.getCurrentItem() == 1) {
             toolbar.inflateMenu(R.menu.em_conversations_menu);
+            setSearchViewQueryListener();
         }
         toolbar.setOnMenuItemClickListener(new ToolBarMenuItemClickListener());
         return true;
+    }
+
+    private void setSearchViewQueryListener(){
+        Toolbar toolbar = getActionBarToolbar();
+        SearchView searchView = null;
+        if(mCurrentPageIndex == 0){
+
+        }else if(mCurrentPageIndex == 1){
+            searchView = (SearchView) MenuItemCompat.getActionView(
+                    toolbar.getMenu().findItem(R.id.menu_conversations_search));
+            // search conversations list
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override public boolean onQueryTextSubmit(String query) {
+                    mConversationListFragment.filter(query);
+                    return true;
+                }
+
+                @Override public boolean onQueryTextChange(String newText) {
+                    mConversationListFragment.filter(newText);
+                    return true;
+                }
+            });
+        }
     }
 
     /**

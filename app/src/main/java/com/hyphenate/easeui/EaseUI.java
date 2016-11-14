@@ -2,7 +2,9 @@ package com.hyphenate.easeui;
 
 import android.content.Context;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.easeui.model.EaseEmojicon;
 import com.hyphenate.easeui.model.EaseUser;
+import java.util.Map;
 
 /**
  * Created by wei on 2016/9/28.
@@ -77,6 +79,43 @@ public class EaseUI {
          * return EaseUser for input username
          */
         EaseUser getUser(String username);
+    }
+
+    /**
+     * Emojicon provider
+     *
+     */
+    public interface EaseEmojiconInfoProvider {
+        /**
+         * return EaseEmojicon for input emojiconIdentityCode
+         * @param emojiconIdentityCode
+         * @return
+         */
+        EaseEmojicon getEmojiconInfo(String emojiconIdentityCode);
+
+        /**
+         * get Emojicon map, key is the text of emoji, value is the resource id or local path of emoji icon(can't be URL on internet)
+         * @return
+         */
+        Map<String, Object> getTextEmojiconMapping();
+    }
+
+    private EaseEmojiconInfoProvider emojiconInfoProvider;
+
+    /**
+     * Emojicon provider
+     * @return
+     */
+    public EaseEmojiconInfoProvider getEmojiconInfoProvider(){
+        return emojiconInfoProvider;
+    }
+
+    /**
+     * set Emojicon provider
+     * @param emojiconInfoProvider
+     */
+    public void setEmojiconInfoProvider(EaseEmojiconInfoProvider emojiconInfoProvider){
+        this.emojiconInfoProvider = emojiconInfoProvider;
     }
 
     /**
