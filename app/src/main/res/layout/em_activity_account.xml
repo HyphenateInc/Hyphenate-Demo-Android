@@ -29,6 +29,11 @@
             android:padding="@dimen/activity_horizontal_margin"
             >
 
+            <RelativeLayout
+                android:id="@+id/layout_avatar_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
             <com.hyphenate.easeui.widget.EaseImageView
                 android:id="@+id/img_account_avatar"
                 android:layout_width="128dp"
@@ -46,6 +51,7 @@
                 android:src="@drawable/em_ic_mode_edit_white_24dp"
                 app:fabSize="mini"
                 />
+            </RelativeLayout>
         </RelativeLayout>
 
         <View
@@ -55,14 +61,16 @@
             />
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="56dp"
             android:gravity="center_vertical"
-            android:padding="16dp"
+            android:paddingLeft="@dimen/account_item_padding"
+            android:paddingRight="@dimen/account_item_padding"
+
             >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hyphenate ID:"
+                android:text="@string/account_item_name_id"
                 android:textColor="@color/em_black_87"
                 />
             <TextView
@@ -78,6 +86,35 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/em_black_12"
+            android:layout_marginLeft="@dimen/account_item_padding"
+            />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/account_item_padding"
+            android:paddingRight="@dimen/account_item_padding"
+
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/account_item_name_nick"
+                android:textColor="@color/em_black_87"
+                />
+            <TextView
+                android:id="@+id/text_user_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/em_black_54"
+                />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/em_black_12"
+            android:layout_marginLeft="@dimen/account_item_padding"
             />
         <RelativeLayout
             android:layout_width="match_parent"
@@ -89,10 +126,16 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/em_btn_rectangle_white"
                 android:gravity="left|center_vertical"
-                android:paddingLeft="16dp"
+                android:paddingLeft="@dimen/account_item_padding"
                 android:text="@string/em_sign_out"
                 android:textColor="@color/em_red_87"
                 />
         </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/em_black_12"
+            android:layout_marginLeft="@dimen/account_item_padding"
+            />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

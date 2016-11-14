@@ -93,6 +93,8 @@ public class DemoHelper {
             //init EaseUI if you want to use it
             EaseUI.getInstance().init(context);
             PreferenceManager.init(context);
+            //init user manager
+            getUserProfileManager().init(context);
 
             // set debug mode open:true, close:false
             EMClient.getInstance().setDebugMode(true);
@@ -131,23 +133,23 @@ public class DemoHelper {
             }
         });
 
-        EaseUI.getInstance().setSettingsProvider(new EaseUI.EaseSettingsProvider() {
-            @Override public boolean isMsgNotifyAllowed(EMMessage message) {
-                return false;
-            }
-
-            @Override public boolean isMsgSoundAllowed(EMMessage message) {
-                return false;
-            }
-
-            @Override public boolean isMsgVibrateAllowed(EMMessage message) {
-                return false;
-            }
-
-            @Override public boolean isSpeakerOpened() {
-                return false;
-            }
-        });
+        //EaseUI.getInstance().setSettingsProvider(new EaseUI.EaseSettingsProvider() {
+        //    @Override public boolean isMsgNotifyAllowed(EMMessage message) {
+        //        return false;
+        //    }
+        //
+        //    @Override public boolean isMsgSoundAllowed(EMMessage message) {
+        //        return false;
+        //    }
+        //
+        //    @Override public boolean isMsgVibrateAllowed(EMMessage message) {
+        //        return false;
+        //    }
+        //
+        //    @Override public boolean isSpeakerOpened() {
+        //        return false;
+        //    }
+        //});
     }
 
     /**
@@ -426,7 +428,7 @@ public class DemoHelper {
         UserDao.getInstance(mContext).saveContactList(entityList);
     }
 
-    public void addContacts(UserEntity userEntity) {
+    public void saveContact(UserEntity userEntity) {
         if (entityMap != null) {
             entityMap.put(userEntity.getUsername(), userEntity);
         }
@@ -454,8 +456,7 @@ public class DemoHelper {
     }
 
     public void asyncFetchContactsFromServer(final EMValueCallBack<List<UserEntity>> callback) {
-
-        new Thread() {
+        new Thread(new Runnable() {
             @Override public void run() {
                 List<String> hxIdList;
                 try {
@@ -473,9 +474,10 @@ public class DemoHelper {
                     // save the contact list to database
                     setContactList(entityList);
 
-                    getUserProfileManager().asyncFetchContactInfoFromServer(hxIdList, new EMValueCallBack<List<UserEntity>>() {
+                    getUserProfileManager().asyncFetchContactsInfoFromServer(hxIdList, new EMValueCallBack<List<UserEntity>>() {
 
                         @Override public void onSuccess(List<UserEntity> uList) {
+                            setContactList(uList);
                             if (callback != null) {
                                 callback.onSuccess(uList);
                             }
@@ -494,7 +496,7 @@ public class DemoHelper {
                     }
                 }
             }
-        }.start();
+        }).start();
     }
 
     /**

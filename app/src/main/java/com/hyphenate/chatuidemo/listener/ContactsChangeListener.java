@@ -34,7 +34,7 @@ public class ContactsChangeListener implements EMContactListener {
     @Override public void onContactAdded(String username) {
         UserEntity userEntity = new UserEntity(username);
 
-        DemoHelper.getInstance().addContacts(userEntity);
+        DemoHelper.getInstance().saveContact(userEntity);
         // send broadcast
         BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(Constant.BROADCAST_ACTION_APPLY);
     }

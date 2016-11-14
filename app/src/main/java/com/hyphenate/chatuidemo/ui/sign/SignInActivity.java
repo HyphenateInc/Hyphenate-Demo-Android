@@ -144,7 +144,6 @@ public class SignInActivity extends BaseActivity {
                 // get current user's info (this should be get from App's server or 3rd party service)
                 DemoHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
 
-                // 关闭登录进度弹出框
                 mDialog.dismiss();
                 runOnUiThread(new Runnable() {
                     @Override public void run() {

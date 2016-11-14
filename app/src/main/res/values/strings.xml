@@ -123,4 +123,15 @@
     <string name="chat_send">Send</string>
     <string name="not_connect_to_server">Not connect to server, please try again later</string>
 
+
+    <string name="account_item_name_id">Hyphenate ID</string>
+    <string name="account_item_name_nick">Nick</string>
+    <string name="account_title_upload_photo">Upload Photo</string>
+    <string name="account_msg_local_upload">Upload photo</string>
+    <string name="account_msg_take_photo">Take Photo</string>
+    <string name="account_update_nick">Update nickname</string>
+    <string name="account_update_photo">Update photo</string>
+    <string name="account_waiting">Waiting...</string>
+    <string name="toast_update_photo_success">update photo success!</string>
+    <string name="toast_update_photo_fail">update photo fail!</string>
 </resources>

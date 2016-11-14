@@ -72,7 +72,7 @@
     <!--Settings-->
     <dimen name="settings_fab_small_size">36dp</dimen>
     <dimen name="setting_header_height">220dp</dimen>
+    <dimen name="account_item_padding">16dp</dimen>
 
     <dimen name="logo_margin">24dp</dimen>
-
 </resources>
