@@ -1,7 +1,6 @@
 package com.hyphenate.chatuidemo.ui.user;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,6 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.receiver.BroadCastReceiverManager;
@@ -33,7 +33,6 @@ import com.hyphenate.chatuidemo.ui.group.GroupListActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -131,6 +130,23 @@ public class ContactListFragment extends Fragment {
                 });
             }
         });
+    }
+
+    public void filter(String newText){
+        List<UserEntity> list = new ArrayList<>();
+        if (entityList == null){
+            entityList = new ArrayList<>();
+        }
+        entityList.clear();
+        entityList.addAll(DemoHelper.getInstance().getContactList().values());
+        for (UserEntity userEntity : entityList){
+            if (userEntity.getNickname().contains(newText)){
+                list.add(userEntity);
+            }
+        }
+        entityList.clear();
+        entityList.addAll(list);
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -272,22 +288,11 @@ public class ContactListFragment extends Fragment {
         });
     }
 
-    /**
-     * Contacts broadcast receiver
-     */
-    private class ContactsBroadcastReceiver extends BroadcastReceiver {
-
-        @Override public void onReceive(Context context, Intent intent) {
-            EMLog.d(TAG, "contact action");
-            refresh();
-        }
-    }
-
     @Override public void onResume() {
         super.onResume();
 
         // broadcast register
-        BroadCastReceiverManager.getInstance(getActivity()).registerBroadCastReceiver(EaseConstant.BROADCAST_ACTION_CONTACTS);
+        BroadCastReceiverManager.getInstance(getActivity()).registerBroadCastReceiver(Constant.BROADCAST_ACTION_CONTACTS);
         // refresh ui
         refresh();
     }

@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -143,8 +144,10 @@ public class GroupListActivity extends BaseActivity {
 
             @Override public boolean onQueryTextChange(String newText) {
                 List<EMGroup> groups = new ArrayList<EMGroup>();
-                for (EMGroup group:groupList){
-                    if (!group.getGroupName().contains(newText)){
+                groupList.clear();
+                groupList.addAll(EMClient.getInstance().groupManager().getAllGroups());
+                for (EMGroup group : groupList) {
+                    if (group.getGroupName().contains(newText)) {
                         groups.add(group);
                     }
                 }

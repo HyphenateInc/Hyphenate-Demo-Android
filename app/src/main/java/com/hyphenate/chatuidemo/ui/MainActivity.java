@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -83,19 +84,33 @@ public class MainActivity extends BaseActivity {
         adapter.addFragment(mSettingsFragment, "Settings");
         mViewPager.setAdapter(adapter);
         mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setCurrentItem(1);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override public void onPageSelected(int position) {
                 Toolbar toolbar = getActionBarToolbar();
                 toolbar.setTitle(adapter.getPageTitle(position));
                 toolbar.getMenu().clear();
+                final SearchView searchView;
                 if (position == 0) { //Contacts
                     getActionBarToolbar().inflateMenu(R.menu.em_contacts_menu);
                     mTabLayout.getTabAt(0).getCustomView().findViewById(R.id.img_tab_item);
+
+                    searchView = (SearchView)toolbar.getMenu().findItem(R.id.menu_search).getActionView();
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override public boolean onQueryTextSubmit(String query) {
+                            return true;
+                        }
+
+                        @Override public boolean onQueryTextChange(String newText) {
+                            //ContactListFragment.newInstance().filter(newText);
+                            return true;
+                        }
+                    });
                 } else if (position == 1) { //Chats
                     getActionBarToolbar().inflateMenu(R.menu.em_conversations_menu);
+
                     SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-                    final SearchView searchView =
-                            (SearchView) MenuItemCompat.getActionView(toolbar.getMenu().findItem(R.id.menu_conversations_search));
+                    searchView = (SearchView) MenuItemCompat.getActionView(toolbar.getMenu().findItem(R.id.menu_conversations_search));
                     searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
                     // search conversations list
                     searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -194,7 +209,7 @@ public class MainActivity extends BaseActivity {
                 });
             }
             //refresh ConversationListFragment
-            fragment = ((PagerAdapter)mViewPager.getAdapter()).getItem(1);
+            fragment = ((PagerAdapter) mViewPager.getAdapter()).getItem(1);
             ((ConversationListFragment) fragment).refresh();
         }
 
@@ -231,8 +246,7 @@ public class MainActivity extends BaseActivity {
         EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             moveTaskToBack(false);
             return true;
@@ -240,10 +254,10 @@ public class MainActivity extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public void updateUnreadMsgLabel(){
+    public void updateUnreadMsgLabel() {
         if (EMClient.getInstance().chatManager().getUnreadMessageCount() > 0) {
             getTabUnreadStatusView(1).setVisibility(View.VISIBLE);
-        }else {
+        } else {
             getTabUnreadStatusView(1).setVisibility(View.INVISIBLE);
         }
     }
