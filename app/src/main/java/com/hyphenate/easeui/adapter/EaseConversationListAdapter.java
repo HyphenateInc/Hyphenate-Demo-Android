@@ -18,6 +18,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.utils.EaseSmileUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.util.DateUtils;
@@ -84,9 +85,8 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
             //if(cvsListHelper != null){
             //    content = cvsListHelper.onSetItemSecondaryText(lastMessage);
             //}
-            //holder.message.setText(SmileUtils.getSmiledText(getContext(), EaseCommonUtils.getMessageDigest(lastMessage, (this.getContext()))),
-            //        TextView.BufferType.SPANNABLE);
-            holder.mMessageView.setText(EaseCommonUtils.getMessageDigest(lastMessage, mContext));
+            holder.mMessageView.setText(EaseSmileUtils.getSmiledText(mContext, EaseCommonUtils.getMessageDigest(lastMessage, mContext)),
+                    TextView.BufferType.SPANNABLE);
             if (content != null) {
                 holder.mMessageView.setText(content);
             }

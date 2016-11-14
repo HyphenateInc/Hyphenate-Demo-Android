@@ -43,6 +43,8 @@ public class MainActivity extends BaseActivity {
     private int mCurrentPageIndex = 0;
 
     private ConversationListFragment mConversationListFragment;
+    private ContactListFragment mContactListFragment;
+    private SettingsFragment mSettingsFragment;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         // Check that you are logged in
@@ -72,9 +74,9 @@ public class MainActivity extends BaseActivity {
 
     private void setupViewPager() {
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
-        ContactListFragment mContactListFragment = ContactListFragment.newInstance();
+        mContactListFragment = ContactListFragment.newInstance();
         mConversationListFragment = ConversationListFragment.newInstance();
-        SettingsFragment mSettingsFragment = SettingsFragment.newInstance();
+        mSettingsFragment = SettingsFragment.newInstance();
         //add fragments to adapter
         adapter.addFragment(mContactListFragment, "Contacts");
         adapter.addFragment(mConversationListFragment, "Chats");

@@ -1,6 +1,7 @@
 package com.hyphenate.easeui.widget.chatrow;
 
 import android.content.Context;
+import android.text.Spannable;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
@@ -9,6 +10,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessage.ChatType;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.easeui.utils.EaseSmileUtils;
 import com.hyphenate.exceptions.HyphenateException;
 
 public class EaseChatRowText extends EaseChatRow {
@@ -36,11 +38,10 @@ public class EaseChatRowText extends EaseChatRow {
     @Override
     public void onSetUpView() {
         EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
-        //Spannable span = SmileUtils.getSmiledText(context, txtBody.getMessage());
+        Spannable span = EaseSmileUtils.getSmiledText(context, txtBody.getMessage());
         // 设置内容
-        //contentView.setText(span, BufferType.SPANNABLE);
+        contentView.setText(span, TextView.BufferType.SPANNABLE);
 
-        contentView.setText(txtBody.getMessage());
 
         handleTextMessage();
     }
