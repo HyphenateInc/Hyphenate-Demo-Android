@@ -44,6 +44,7 @@ public class MainActivity extends BaseActivity {
     private int mCurrentPageIndex = 0;
 
     private ConversationListFragment mConversationListFragment;
+    ContactListFragment mContactListFragment;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         // Check that you are logged in
@@ -73,7 +74,7 @@ public class MainActivity extends BaseActivity {
 
     private void setupViewPager() {
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
-        ContactListFragment mContactListFragment = ContactListFragment.newInstance();
+        mContactListFragment = ContactListFragment.newInstance();
         mConversationListFragment = ConversationListFragment.newInstance();
         SettingsFragment mSettingsFragment = SettingsFragment.newInstance();
         //add fragments to adapter
@@ -82,29 +83,16 @@ public class MainActivity extends BaseActivity {
         adapter.addFragment(mSettingsFragment, "Settings");
         mViewPager.setAdapter(adapter);
         mViewPager.setOffscreenPageLimit(3);
-        mViewPager.setCurrentItem(1);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override public void onPageSelected(int position) {
                 mCurrentPageIndex = position;
                 Toolbar toolbar = getActionBarToolbar();
                 toolbar.setTitle(adapter.getPageTitle(position));
                 toolbar.getMenu().clear();
-                final SearchView searchView;
                 if (position == 0) { //Contacts
                     toolbar.inflateMenu(R.menu.em_contacts_menu);
                     mTabLayout.getTabAt(0).getCustomView().findViewById(R.id.img_tab_item);
 
-                    searchView = (SearchView)toolbar.getMenu().findItem(R.id.menu_search).getActionView();
-                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                        @Override public boolean onQueryTextSubmit(String query) {
-                            return true;
-                        }
-
-                        @Override public boolean onQueryTextChange(String newText) {
-                            //ContactListFragment.newInstance().filter(newText);
-                            return true;
-                        }
-                    });
                 } else if (position == 1) { //Chats
                     toolbar.inflateMenu(R.menu.em_conversations_menu);
                 }
@@ -159,9 +147,19 @@ public class MainActivity extends BaseActivity {
 
     private void setSearchViewQueryListener(){
         Toolbar toolbar = getActionBarToolbar();
-        SearchView searchView = null;
+        SearchView searchView;
         if(mCurrentPageIndex == 0){
+            searchView = (SearchView)toolbar.getMenu().findItem(R.id.menu_search).getActionView();
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override public boolean onQueryTextSubmit(String query) {
+                    return true;
+                }
 
+                @Override public boolean onQueryTextChange(String newText) {
+                    mContactListFragment.filter(newText);
+                    return true;
+                }
+            });
         }else if(mCurrentPageIndex == 1){
             searchView = (SearchView) MenuItemCompat.getActionView(
                     toolbar.getMenu().findItem(R.id.menu_conversations_search));

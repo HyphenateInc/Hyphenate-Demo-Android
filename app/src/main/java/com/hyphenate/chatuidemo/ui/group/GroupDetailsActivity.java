@@ -334,8 +334,12 @@ public class GroupDetailsActivity extends BaseActivity {
         @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
             members.clear();
             members.addAll(EMClient.getInstance().groupManager().getGroup(s).getMembers());
-            memberSizeView.setText("(" + members.size() + ")");
-            adapter.notifyDataSetChanged();
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    memberSizeView.setText("(" + members.size() + ")");
+                    adapter.notifyDataSetChanged();
+                }
+            });
         }
     }
 }
