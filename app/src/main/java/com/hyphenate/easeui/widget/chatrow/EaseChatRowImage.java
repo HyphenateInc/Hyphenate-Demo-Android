@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,19 +20,25 @@ import com.hyphenate.easeui.model.EaseImageCache;
 import com.hyphenate.easeui.ui.EaseShowImageActivity;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseImageUtils;
+import com.hyphenate.util.DensityUtil;
 import java.io.File;
 
 public class EaseChatRowImage extends EaseChatRowFile{
 
     protected ImageView imageView;
-    private EMImageMessageBody imgBody;
+    protected EMImageMessageBody imgBody;
 
 
-    private static final int THUMBNAIL_WIDTH = 160;
-    private static final int THUMBNAIL_HEIGHT = 160;
+    protected static final int THUMBNAIL_WIDTH = 160;
+    protected static final int THUMBNAIL_HEIGHT = 160;
+
+    protected int toScaleMaxSize = 110;
+    protected int toScaleMinSize = 50;
 
     public EaseChatRowImage(Context context, EMMessage message, int position, BaseAdapter adapter) {
         super(context, message, position, adapter);
+        toScaleMaxSize = DensityUtil.dip2px(context, toScaleMaxSize);
+        toScaleMinSize = DensityUtil.dip2px(context, toScaleMinSize);
     }
 
     @Override protected boolean overrideBaseLayout() {
@@ -117,6 +124,7 @@ public class EaseChatRowImage extends EaseChatRowFile{
         // first check if the thumbnail image already loaded into cache
         Bitmap bitmap = EaseImageCache.getInstance().get(thumbernailPath);
         if (bitmap != null) {
+            scaleImageView(bitmap, iv);
             // thumbnail image is already loaded, reuse the drawable
             iv.setImageBitmap(bitmap);
             return true;
@@ -142,10 +150,11 @@ public class EaseChatRowImage extends EaseChatRowFile{
 
                 }
 
-                protected void onPostExecute(Bitmap image) {
-                    if (image != null) {
-                        iv.setImageBitmap(image);
-                        EaseImageCache.getInstance().put(thumbernailPath, image);
+                protected void onPostExecute(Bitmap bmp) {
+                    if (bmp != null) {
+                        scaleImageView(bmp, iv);
+                        iv.setImageBitmap(bmp);
+                        EaseImageCache.getInstance().put(thumbernailPath, bmp);
                     } else {
                         if (message.status() == EMMessage.Status.FAIL) {
                             if (EaseCommonUtils.isNetWorkConnected(context)) {
@@ -166,5 +175,50 @@ public class EaseChatRowImage extends EaseChatRowFile{
             return true;
         }
     }
+
+    /**
+     * used before setImageBitmap()
+     * @param bmp
+     * @param imageView
+     */
+    private void scaleImageView(Bitmap bmp, ImageView imageView){
+        int originWidth = imgBody.getWidth();
+        int originHeight = imgBody.getHeight();
+
+        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+        int bmpWidth = bmp.getWidth();
+        int bmpHeight = bmp.getHeight();
+        if (originWidth > toScaleMaxSize || originHeight > toScaleMaxSize) {
+
+            float scale = originWidth < originHeight ? (float) toScaleMaxSize
+                    /bmpWidth : (float) toScaleMaxSize /bmpHeight;
+            int scaledWidth = (int) (bmpWidth * scale);
+            int scaledHeight = (int) (bmpHeight * scale);
+            if(lp.width != scaledWidth || lp.height != scaledHeight) {
+                lp.width = scaledWidth;
+                lp.height = scaledHeight;
+                //avoid request layout twice
+                //imageView.setLayoutParams(lp);
+            }
+        } else {
+            if (originWidth < toScaleMinSize || originHeight < toScaleMinSize) {
+                float scale = originWidth < originHeight ? (float) toScaleMinSize
+                        /bmpWidth : (float) toScaleMinSize /bmpHeight;
+                int scaledWidth = (int) (bmpWidth * scale);
+                int scaledHeight = (int) (bmpHeight * scale);
+                if(lp.width != scaledWidth || lp.height != scaledHeight) {
+                    lp.width = scaledWidth;
+                    lp.height = scaledHeight;
+                }
+            }else{
+                if (lp.width != bmpWidth || lp.height != bmpHeight) {
+                    lp.width = bmpWidth;
+                    lp.height = bmpHeight;
+                }
+            }
+
+        }
+    }
+
 
 }

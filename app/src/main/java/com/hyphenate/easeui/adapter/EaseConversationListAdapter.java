@@ -63,7 +63,7 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
                         room != null && !TextUtils.isEmpty(room.getName()) ? room.getName()
                                 : username);
             } else {
-                //single chat conversation
+                //single chat mConversation
                 EaseUserUtils.setUserAvatar(mContext, username, holder.mAvatarView);
                 EaseUserUtils.setUserNick(username, holder.mNameView);
             }
@@ -84,7 +84,7 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
             //if(cvsListHelper != null){
             //    content = cvsListHelper.onSetItemSecondaryText(lastMessage);
             //}
-            //holder.message.setText(EaseSmileUtils.getSmiledText(getContext(), EaseCommonUtils.getMessageDigest(lastMessage, (this.getContext()))),
+            //holder.message.setText(SmileUtils.getSmiledText(getContext(), EaseCommonUtils.getMessageDigest(lastMessage, (this.getContext()))),
             //        TextView.BufferType.SPANNABLE);
             holder.mMessageView.setText(EaseCommonUtils.getMessageDigest(lastMessage, mContext));
             if (content != null) {

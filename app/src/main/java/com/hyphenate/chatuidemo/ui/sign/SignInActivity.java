@@ -123,7 +123,7 @@ public class SignInActivity extends BaseActivity {
                 // Sign in success save account to shared
                 //MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mAccount);
 
-                // Load conversation to memory
+                // Load mConversation to memory
                 EMClient.getInstance().chatManager().loadAllConversations();
                 // Load group to memory
                 EMClient.getInstance().groupManager().loadAllGroups();

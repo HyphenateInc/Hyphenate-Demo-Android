@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hyphenate.easeui.widget.EaseExpandGridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gridview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none"
+    android:verticalSpacing="4dp"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:layout_marginTop="8dp"
+    android:fadingEdge="none"
+    android:cacheColorHint="@android:color/transparent">
+    
+
+</com.hyphenate.easeui.widget.EaseExpandGridView>

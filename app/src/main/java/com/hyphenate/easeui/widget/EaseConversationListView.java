@@ -58,7 +58,7 @@ public class EaseConversationListView extends RecyclerView {
     }
 
     /**
-     * Init this view, which use a default sorted conversation list.
+     * Init this view, which use a default sorted mConversation list.
      * If you want to show list with your own sort, use {@link #init(Comparator)}
      */
     public void init() {
@@ -90,7 +90,7 @@ public class EaseConversationListView extends RecyclerView {
     }
 
     /**
-     * filter conversation list with passed string
+     * filter mConversation list with passed string
      * @param cs
      */
     public void filter(String cs) {
@@ -132,7 +132,7 @@ public class EaseConversationListView extends RecyclerView {
     }
 
     /**
-     * load conversation list
+     * load mConversation list
      * @return
      */
     protected synchronized List<EMConversation> loadConversationList() {

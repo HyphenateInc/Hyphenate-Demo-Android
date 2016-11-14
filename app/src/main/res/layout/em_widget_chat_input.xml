@@ -24,15 +24,15 @@
             android:id="@+id/extend_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="7dp"
-            android:layout_marginTop="9dp"
+            android:layout_marginBottom="11dp"
+            android:layout_marginTop="11dp"
             />
 
-        <FrameLayout
-            android:layout_width="match_parent"
+        <com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenu
+            android:id="@+id/emojicon_menu"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/emojicon_menu_container"
-            ></FrameLayout>
+            ></com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenu>
     </FrameLayout>
 
 </LinearLayout>

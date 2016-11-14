@@ -119,6 +119,7 @@
     <string name="unable_to_get_location">Unable to get to your location information!</string>
     <string name="hint_search">Search</string>
     <string name="delete_conversation">Delete conversation</string>
+    <string name="delete_message">Delete message</string>
     <string name="chat_send">Send</string>
     <string name="not_connect_to_server">Not connect to server, please try again later</string>
 

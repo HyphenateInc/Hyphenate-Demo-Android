@@ -16,8 +16,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.utils.Utils;
+import com.hyphenate.easeui.model.EaseDefaultEmojiconDatas;
+import com.hyphenate.easeui.model.EaseEmojicon;
+import com.hyphenate.easeui.model.EaseEmojiconGroupEntity;
+import com.hyphenate.easeui.utils.EaseSmileUtils;
+import com.hyphenate.easeui.utils.Utils;
 import com.hyphenate.easeui.widget.EaseChatExtendMenu;
+import com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenu;
+import com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenuBase;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by wei on 2016/10/14.
@@ -31,11 +40,14 @@ public class ChatInputView extends LinearLayout {
     @BindView(R.id.img_send) ImageView mSendView;
     @BindView(R.id.img_mic) ImageView mMicView;
     @BindView(R.id.img_expand) ImageView mExpandView;
+    @BindView(R.id.img_emojicon) ImageView mEmojiconToggleView;
     @BindView(R.id.extend_menu) EaseChatExtendMenu mExtendMenu;
+    @BindView(R.id.emojicon_menu) EaseEmojiconMenu mEmojiconMenu;
     @BindView(R.id.extend_menu_container) FrameLayout mExtendMenuContainer;
 
     private ChatInputViewEventListener mInputViewEventListener;
 
+    private Context mContext;
 
 
     private Handler handler = new Handler();
@@ -57,7 +69,6 @@ public class ChatInputView extends LinearLayout {
     protected void init(Context context, AttributeSet attrs) {
         LayoutInflater.from(context).inflate(R.layout.em_widget_chat_input, this);
         ButterKnife.bind(this);
-
 
 
         mEditText.addTextChangedListener(new TextWatcher() {
@@ -83,8 +94,36 @@ public class ChatInputView extends LinearLayout {
         });
     }
 
-    public void init(){
+    /**
+     *  init view
+     * @param emojiconGroupList --will use default if null
+     */
+    public void init(List<EaseEmojiconGroupEntity> emojiconGroupList){
+        if(emojiconGroupList == null){
+            emojiconGroupList = new ArrayList<EaseEmojiconGroupEntity>();
+            emojiconGroupList.add(new EaseEmojiconGroupEntity(R.drawable.ee_1,  Arrays.asList(
+                    EaseDefaultEmojiconDatas.getData())));
+        }
+        mEmojiconMenu.init(emojiconGroupList);
         mExtendMenu.init();
+
+        mEmojiconMenu.setEmojiconMenuListener(new EaseEmojiconMenuBase.EaseEmojiconMenuListener() {
+            @Override public void onExpressionClicked(EaseEmojicon emojicon) {
+                if(emojicon.getType() != EaseEmojicon.Type.BIG_EXPRESSION){
+                    if(emojicon.getEmojiText() != null){
+                        mEditText.append(EaseSmileUtils.getSmiledText(mContext,emojicon.getEmojiText()));
+                    }
+                }
+            }
+
+            @Override public void onDeleteImageClicked() {
+
+            }
+        });
+    }
+
+    public void init(){
+        init(null);
     }
 
     @OnClick(R.id.img_send) void onSendClick() {
@@ -100,7 +139,17 @@ public class ChatInputView extends LinearLayout {
     }
 
     @OnClick(R.id.img_expand) void onToggleMoreClick(){
+
         toggleMore();
+    }
+
+    @OnClick(R.id.img_emojicon) void OnEmojiconClick(){
+        if(mEmojiconToggleView.isSelected()){
+            mEmojiconToggleView.setSelected(false);
+        }else{
+            mEmojiconToggleView.setSelected(true);
+        }
+        toggleEmojicon();
     }
 
 
@@ -124,6 +173,11 @@ public class ChatInputView extends LinearLayout {
     }
 
 
+    public EditText getEditText(){
+        return mEditText;
+    }
+
+
     /**
      * show or hide extend menu
      *
@@ -135,17 +189,63 @@ public class ChatInputView extends LinearLayout {
                 public void run() {
                     mExtendMenuContainer.setVisibility(View.VISIBLE);
                     mExtendMenu.setVisibility(View.VISIBLE);
-                    //emojiconMenu.setVisibility(View.GONE);
+                    mEmojiconMenu.setVisibility(View.GONE);
                 }
             }, 50);
         } else {
-            //if (emojiconMenu.getVisibility() == View.VISIBLE) {
-            //    emojiconMenu.setVisibility(View.GONE);
-            //    chatExtendMenu.setVisibility(View.VISIBLE);
-            //} else {
-            mExtendMenuContainer.setVisibility(View.GONE);
-            //}
+            if (mEmojiconMenu.getVisibility() == View.VISIBLE) {
+                mEmojiconMenu.setVisibility(View.GONE);
+                mExtendMenu.setVisibility(View.VISIBLE);
+            } else {
+                mExtendMenuContainer.setVisibility(View.GONE);
+            }
         }
+        mEmojiconToggleView.setSelected(false);
+    }
+
+    /**
+     * show or hide emojicon
+     */
+    protected void toggleEmojicon() {
+        if (mExtendMenuContainer.getVisibility() == View.GONE) {
+            hideKeyboard();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    mExtendMenuContainer.setVisibility(View.VISIBLE);
+                    mExtendMenu.setVisibility(View.GONE);
+                    mEmojiconMenu.setVisibility(View.VISIBLE);
+                }
+            }, 50);
+        } else {
+            if (mEmojiconMenu.getVisibility() == View.VISIBLE) {
+                mExtendMenuContainer.setVisibility(View.GONE);
+                mEmojiconMenu.setVisibility(View.GONE);
+            } else {
+                mExtendMenu.setVisibility(View.GONE);
+                mEmojiconMenu.setVisibility(View.VISIBLE);
+            }
+
+        }
+    }
+
+    private void hideKeyboard(){
+        Utils.hideKeyboard(mEditText);
+    }
+
+    /**
+     * when back key pressed
+     *
+     * @return false--extend menu is on, will hide it first
+     *         true --extend menu is off
+     */
+    public boolean onBackPressed() {
+        if (mExtendMenuContainer.getVisibility() == View.VISIBLE) {
+            hideExtendMenuContainer();
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
     /**
