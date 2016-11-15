@@ -10,7 +10,7 @@
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:padding="@dimen/activity_padding"
-    tools:context=".ui.sign.SignInActivity"
+    tools:context=".sign.SignInActivity"
     >
 
     <!--Include communal Toolbar-->

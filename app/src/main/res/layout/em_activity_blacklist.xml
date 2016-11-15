@@ -9,7 +9,7 @@
     android:background="@color/gray_background"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
-    tools:context=".ui.user.AddContactsActivity"
+    tools:context=".user.AddContactsActivity"
     >
     <include layout="@layout/em_widget_toolbar_communal"/>
 
