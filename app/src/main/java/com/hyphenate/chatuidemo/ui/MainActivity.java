@@ -250,7 +250,7 @@ public class MainActivity extends BaseActivity {
         EMClient.getInstance().groupManager().addGroupChangeListener(mGroupListener);
 
         updateUnreadMsgLabel();
-        //refreshContacts();
+        refreshApply();
 
         // Check that you are logged in
         if (EMClient.getInstance().isLoggedInBefore()) {
@@ -324,6 +324,16 @@ public class MainActivity extends BaseActivity {
     private void refreshContacts() {
         runOnUiThread(new Runnable() {
             @Override public void run() {
+                //refresh ContactListFragment
+                Fragment fragment = ((PagerAdapter) mViewPager.getAdapter()).getItem(0);
+                ((ContactListFragment) fragment).refresh();
+            }
+        });
+    }
+
+    private void refreshApply() {
+        runOnUiThread(new Runnable() {
+            @Override public void run() {
                 EMConversation conversation = EMClient.getInstance()
                         .chatManager()
                         .getConversation(Constant.CONVERSATION_NAME_APPLY,
@@ -333,10 +343,6 @@ public class MainActivity extends BaseActivity {
                 } else {
                     getTabUnreadStatusView(0).setVisibility(View.INVISIBLE);
                 }
-
-                //refresh ContactListFragment
-                Fragment fragment = ((PagerAdapter) mViewPager.getAdapter()).getItem(0);
-                ((ContactListFragment) fragment).refresh();
             }
         });
     }
@@ -351,53 +357,53 @@ public class MainActivity extends BaseActivity {
         }
 
         @Override public void onContactInvited(String username, String reason) {
-            refreshContacts();
+            refreshApply();
         }
 
         @Override public void onFriendRequestAccepted(String username) {
-            refreshContacts();
+            refreshApply();
         }
 
         @Override public void onFriendRequestDeclined(String username) {
-            refreshContacts();
+            refreshApply();
         }
     }
 
     private class DefaultGroupChangeListener extends GroupChangeListener {
         @Override public void onInvitationReceived(String s, String s1, String s2, String s3) {
-            refreshContacts();
+            refreshApply();
         }
 
         @Override public void onRequestToJoinReceived(String s, String s1, String s2, String s3) {
-            refreshContacts();
+            refreshApply();
         }
 
         @Override public void onRequestToJoinAccepted(String s, String s1, String s2) {
-            refreshContacts();
+            refreshApply();
         }
 
         @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
-            refreshContacts();
+            refreshApply();
         }
 
         @Override public void onInvitationAccepted(String s, String s1, String s2) {
-            refreshContacts();
+            refreshApply();
         }
 
         @Override public void onInvitationDeclined(String s, String s1, String s2) {
-            refreshContacts();
+            refreshApply();
         }
 
         @Override public void onUserRemoved(String s, String s1) {
-            refreshContacts();
+            refreshApply();
         }
 
         @Override public void onGroupDestroyed(String s, String s1) {
-            refreshContacts();
+            refreshApply();
         }
 
         @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
-            refreshContacts();
+            refreshApply();
         }
     }
 }
