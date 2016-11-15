@@ -13,7 +13,11 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindView;
@@ -26,6 +30,7 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
 import com.hyphenate.easeui.utils.EaseUserUtils;
+import com.hyphenate.easeui.utils.Utils;
 import com.hyphenate.easeui.widget.EaseImageView;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -69,33 +74,72 @@ public class AccountActivity extends BaseActivity {
 
         EaseUserUtils.setUserNick(EMClient.getInstance().getCurrentUser(), mNickView);
         EaseUserUtils.setUserAvatar(this, EMClient.getInstance().getCurrentUser(), mAvatarView);
-
     }
 
-    @OnClick(R.id.layout_avatar_container) void changeAvatar(){
+    @OnClick(R.id.layout_avatar_container) void setAvatar() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.account_title_upload_photo);
-        builder.setItems(new String[] { getString(R.string.account_msg_take_photo), getString(R.string.account_msg_local_upload) },
-                new DialogInterface.OnClickListener() {
+        builder.setItems(new String[] {
+                getString(R.string.account_msg_take_photo),
+                getString(R.string.account_msg_local_upload)
+        }, new DialogInterface.OnClickListener() {
 
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        switch (which) {
-                            case 0:
-                                Toast.makeText(AccountActivity.this, "Not supported at this time",
-                                        Toast.LENGTH_SHORT).show();
-                                break;
-                            case 1:
-                                Intent pickIntent = new Intent(Intent.ACTION_PICK,null);
-                                pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                                startActivityForResult(pickIntent, REQUEST_CODE_PICK);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                });
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                switch (which) {
+                    case 0:
+                        Toast.makeText(AccountActivity.this, "Not supported at this time",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
+                        pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                "image/*");
+                        startActivityForResult(pickIntent, REQUEST_CODE_PICK);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
         builder.create().show();
+    }
+
+    @OnClick(R.id.layout_nick_container) void setNick() {
+        final EditText editText = new EditText(this);
+        final String nick =
+                DemoHelper.getInstance().getUserProfileManager().getCurrentUserInfo().getNickname();
+        editText.setText(nick);
+        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(R.string.account_set_nickname)
+                .setView(editText)
+                .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
+
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        String nickString = editText.getText().toString();
+                        if (TextUtils.isEmpty(nickString)) {
+                            Toast.makeText(AccountActivity.this,
+                                    getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT)
+                                    .show();
+                            return;
+                        }
+
+                        if (nickString.equals(nick)) {
+                            return;
+                        }
+                        updateRemoteNick(nickString);
+                    }
+                })
+                .setNegativeButton(R.string.common_cancel, null)
+                .create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override public void onShow(DialogInterface dialog) {
+                Editable editable = editText.getText();
+                Selection.setSelection(editable, editable.length());
+                Utils.showKeyboard(editText);
+            }
+        });
+        alertDialog.show();
+
     }
 
     @OnClick(R.id.btn_sign_out) void signOut() {
@@ -118,33 +162,7 @@ public class AccountActivity extends BaseActivity {
         });
     }
 
-    //public void asyncFetchUserInfo(String username){
-    //    DemoHelper.getInstance().getUserProfileManager().asyncGetUserInfo(username, new EMValueCallBack<UserEntity>() {
-    //
-    //        @Override
-    //        public void onSuccess(UserEntity user) {
-    //            if (user != null) {
-    //                DemoHelper.getInstance().saveContact(user);
-    //                if(isFinishing()){
-    //                    return;
-    //                }
-    //                mNickView.setText(user.getNickname());
-    //                if(!TextUtils.isEmpty(user.getAvatar())){
-    //                    Glide.with(AccountActivity.this).load(user.getAvatar()).placeholder(R.drawable.ease_default_avatar).into(mAvatarView);
-    //                }else{
-    //                    Glide.with(AccountActivity.this).load(R.drawable.ease_default_avatar).into(mAvatarView);
-    //                }
-    //            }
-    //        }
-    //
-    //        @Override
-    //        public void onError(int error, String errorMsg) {
-    //        }
-    //    });
-    //}
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_CODE_PICK:
                 if (data == null || data.getData() == null) {
@@ -178,8 +196,6 @@ public class AccountActivity extends BaseActivity {
 
     /**
      * save the picture data
-     *
-     * @param picdata
      */
     private void setPicToView(Intent picdata) {
         Bundle extras = picdata.getExtras();
@@ -189,38 +205,75 @@ public class AccountActivity extends BaseActivity {
             mAvatarView.setImageDrawable(drawable);
             uploadUserAvatar(Bitmap2Bytes(photo));
         }
+    }
 
+    private void updateRemoteNick(final String nickName) {
+        final ProgressDialog dialog =
+                ProgressDialog.show(this, getString(R.string.account_update_nick),
+                        getString(R.string.account_waiting));
+        new Thread(new Runnable() {
+
+            @Override public void run() {
+                boolean updatenick = DemoHelper.getInstance()
+                        .getUserProfileManager()
+                        .updateCurrentUserNickName(nickName);
+                if (AccountActivity.this.isFinishing()) {
+                    return;
+                }
+                if (!updatenick) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(AccountActivity.this,
+                                    getString(R.string.toast_updatenick_fail), Toast.LENGTH_SHORT)
+                                    .show();
+                            dialog.dismiss();
+                        }
+                    });
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            dialog.dismiss();
+                            Toast.makeText(AccountActivity.this,
+                                    getString(R.string.toast_updatenick_success),
+                                    Toast.LENGTH_SHORT).show();
+                            mNickView.setText(nickName);
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
     private void uploadUserAvatar(final byte[] data) {
-        final ProgressDialog dialog = ProgressDialog.show(this, getString(R.string.account_update_photo), getString(R.string.account_waiting));
+        final ProgressDialog dialog =
+                ProgressDialog.show(this, getString(R.string.account_update_photo),
+                        getString(R.string.account_waiting));
         new Thread(new Runnable() {
 
-            @Override
-            public void run() {
-                final String avatarUrl = DemoHelper.getInstance().getUserProfileManager().uploadUserAvatar(data);
+            @Override public void run() {
+                final String avatarUrl =
+                        DemoHelper.getInstance().getUserProfileManager().uploadUserAvatar(data);
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         dialog.dismiss();
                         if (avatarUrl != null) {
-                            Toast.makeText(AccountActivity.this, getString(R.string.toast_update_photo_success),
+                            Toast.makeText(AccountActivity.this,
+                                    getString(R.string.toast_update_photo_success),
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(AccountActivity.this, getString(R.string.toast_update_photo_fail),
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AccountActivity.this,
+                                    getString(R.string.toast_update_photo_fail), Toast.LENGTH_SHORT)
+                                    .show();
                         }
-
                     }
                 });
-
             }
         }).start();
 
         dialog.show();
     }
 
-    public byte[] Bitmap2Bytes(Bitmap bm){
+    public byte[] Bitmap2Bytes(Bitmap bm) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();
