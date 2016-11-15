@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import com.hyphenate.EMCallBack;
@@ -164,6 +165,11 @@ public class DemoHelper {
         // set if need delivery ack
         options.setRequireDeliveryAck(false);
         //options.setAutoAcceptGroupInvitation(false);
+
+        SharedPreferences preferences =
+                android.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
+        options.setAutoAcceptGroupInvitation(
+                preferences.getBoolean("accept_group_invite_automatically", false));
 
         //set gcm project number
         options.setGCMNumber("998166487724");

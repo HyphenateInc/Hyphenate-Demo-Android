@@ -69,10 +69,10 @@
             <!--Blocked Users-->
             <PreferenceScreen
                 android:summary=""
-                android:title="Blockd Users">
+                android:title="Blocked Users">
                 <intent
                     android:action="android.intent.action.MAIN"
-                    android:targetClass="com.hyphenate.chatuidemo.ui.settings.BlackListActivity"
+                    android:targetClass="com.hyphenate.chatuidemo.settings.BlackListActivity"
                     android:targetPackage="com.hyphenate.chatuidemo"/>
             </PreferenceScreen>
         </PreferenceScreen>
@@ -86,7 +86,7 @@
             android:title="Account">
             <intent
                 android:action="android.intent.action.MAIN"
-                android:targetClass="com.hyphenate.chatuidemo.ui.settings.AccountActivity"
+                android:targetClass="com.hyphenate.chatuidemo.settings.AccountActivity"
                 android:targetPackage="com.hyphenate.chatuidemo"/>
         </PreferenceScreen>
     </PreferenceCategory>
