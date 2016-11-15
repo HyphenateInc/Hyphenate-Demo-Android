@@ -1,10 +1,8 @@
 package com.hyphenate.chatuidemo.ui.user;
 
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,8 +40,8 @@ public class ShowDialogFragment extends DialogFragment {
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (listener != null) {
-            EaseUserUtils.setUserAvatar(getActivity(), listener.showNameView(), avatarView);
-            EaseUserUtils.setUserNick(listener.showNameView(), nameView);
+            EaseUserUtils.setUserAvatar(getActivity(), listener.getUserId(), avatarView);
+            EaseUserUtils.setUserNick(listener.getUserId(), nameView);
         }
     }
 
@@ -73,7 +71,7 @@ public class ShowDialogFragment extends DialogFragment {
 
     public interface OnShowDialogClickListener {
 
-        String showNameView();
+        String getUserId();
 
         void onVoiceCallClick();
 

@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -161,8 +160,8 @@ public class ContactListFragment extends Fragment {
 
         dialogFragment.setOnShowDialogClickListener(
                 new ShowDialogFragment.OnShowDialogClickListener() {
-                    @Override public String showNameView() {
-                        return user.getNickname();
+                    @Override public String getUserId() {
+                        return user.getUsername();
                     }
 
                     @Override public void onVoiceCallClick() {

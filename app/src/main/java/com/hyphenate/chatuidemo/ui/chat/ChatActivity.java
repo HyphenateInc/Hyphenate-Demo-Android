@@ -122,8 +122,7 @@ public class ChatActivity extends BaseActivity {
 
         //get the mConversation
         mConversation = EMClient.getInstance().chatManager()
-                .getConversation(toChatUsername, EaseCommonUtils.getConversationType(chatType),
-                        true);
+                .getConversation(toChatUsername, EaseCommonUtils.getConversationType(chatType), true);
         mConversation.markAllMessagesAsRead();
         // the number of messages loaded into mConversation is getChatOptions().getNumberOfMessagesLoaded
         // you can change this number
@@ -201,13 +200,7 @@ public class ChatActivity extends BaseActivity {
         mInputView.setViewEventListener(new ChatInputView.ChatInputViewEventListener() {
             @Override public void onSendMessage(CharSequence content) {
                 if (!TextUtils.isEmpty(content)) {
-                    // create a message
-                    EMMessage message =
-                            EMMessage.createTxtSendMessage(content.toString(), toChatUsername);
-                    // send message
-                    EMClient.getInstance().chatManager().sendMessage(message);
-                    // refresh ui
-                    mMessageListView.refreshSelectLast();
+                    sendTextMessage(content.toString());
                 }
             }
 
@@ -366,6 +359,14 @@ public class ChatActivity extends BaseActivity {
     }
 
     //methods of send various types message
+    protected void sendTextMessage(String content){
+        // create a message
+        EMMessage message =
+                EMMessage.createTxtSendMessage(content, toChatUsername);
+        // send message
+        sendMessage(message);
+    }
+
     protected void sendVoiceMessage(String filePath, int length) {
         EMMessage message = EMMessage.createVoiceSendMessage(filePath, length, toChatUsername);
         sendMessage(message);
