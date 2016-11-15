@@ -489,13 +489,12 @@ public class DemoHelper {
                         entityList.add(user);
                     }
 
-                    // save the contact list to database
-                    setContactList(entityList);
 
                     getUserProfileManager().asyncFetchContactsInfoFromServer(hxIdList,
                             new EMValueCallBack<List<UserEntity>>() {
 
                                 @Override public void onSuccess(List<UserEntity> uList) {
+                                    // save the contact list to database
                                     setContactList(uList);
                                     if (callback != null) {
                                         callback.onSuccess(uList);
