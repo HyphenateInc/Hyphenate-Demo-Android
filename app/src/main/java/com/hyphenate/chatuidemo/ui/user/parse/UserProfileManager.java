@@ -29,8 +29,8 @@ public class UserProfileManager {
         return true;
     }
 
-    public void asyncFetchContactInfoFromServer(List<String> hxIdList, final EMValueCallBack<List<UserEntity>> callback) {
-        ParseManager.getInstance().getContactInfo(hxIdList, new EMValueCallBack<List<UserEntity>>() {
+    public void asyncFetchContactsInfoFromServer(List<String> hxIdList, final EMValueCallBack<List<UserEntity>> callback) {
+        ParseManager.getInstance().getContactsInfo(hxIdList, new EMValueCallBack<List<UserEntity>>() {
 
             @Override public void onSuccess(List<UserEntity> value) {
                 // in case that logout already before server returns,we should

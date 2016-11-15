@@ -32,8 +32,8 @@ public class InviteMembersActivity extends BaseActivity {
 
     LinearLayoutManager manager;
     ContactListAdapter adapter;
-    List<UserEntity> entityList = new ArrayList<>();
-    List<String> membersList;
+    List<UserEntity> entityList = new ArrayList<>();//all of contacts
+    List<String> membersList;//all of the group members
     boolean isOwner = false;
     String groupId;
 

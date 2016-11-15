@@ -25,9 +25,6 @@ public class ParseManager {
     private static final String ParseAppID = "UUL8TxlHwKj7ZXEUr2brF3ydOxirCXdIj9LscvJs";
     private static final String ParseClientKey = "B1jH9bmxuYyTcpoFfpeVslhmLYsytWTxqYqKQhBJ";
 
-    //	private static final String ParseAppID = "task";
-    //	private static final String ParseClientKey = "123456789";
-
     private static final String CONFIG_TABLE_NAME = "hxuser";
     private static final String CONFIG_USERNAME = "username";
     private static final String CONFIG_NICK = "nickname";
@@ -47,8 +44,11 @@ public class ParseManager {
     public void onInit(Context context) {
         Context appContext = context.getApplicationContext();
         Parse.enableLocalDatastore(appContext);
-        //		Parse.initialize(context, ParseAppID, ParseClientKey);
-        Parse.initialize(new Parse.Configuration.Builder(appContext).applicationId(ParseAppID).server(parseServer).build());
+        //Parse.initialize(context, ParseAppID, ParseClientKey);
+        Parse.initialize(new Parse.Configuration.Builder(appContext)
+                .applicationId(ParseAppID)
+                .server(parseServer)
+                .build());
     }
 
     public boolean updateParseNickName(final String nickname) {
@@ -86,7 +86,7 @@ public class ParseManager {
         return false;
     }
 
-    public void getContactInfo(List<String> hxIdList, final EMValueCallBack<List<UserEntity>> callback) {
+    public void getContactsInfo(List<String> hxIdList, final EMValueCallBack<List<UserEntity>> callback) {
         ParseQuery<ParseObject> pQuery = ParseQuery.getQuery(CONFIG_TABLE_NAME);
         pQuery.whereContainedIn(CONFIG_USERNAME, hxIdList);
         pQuery.findInBackground(new FindCallback<ParseObject>() {
