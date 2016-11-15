@@ -9,9 +9,9 @@ import android.widget.Toast;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.ui.call.CallStatus;
-import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
-import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
+import com.hyphenate.chatuidemo.call.CallStatus;
+import com.hyphenate.chatuidemo.call.VideoCallActivity;
+import com.hyphenate.chatuidemo.call.VoiceCallActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
 

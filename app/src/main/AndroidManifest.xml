@@ -61,31 +61,31 @@
 
         <!--Sign in activity-->
         <activity
-            android:name=".ui.sign.SignInActivity"
+            android:name=".sign.SignInActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!--Sign up activity-->
         <activity
-            android:name=".ui.sign.SignUpActivity"
+            android:name=".sign.SignUpActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
         <!--Video call activity-->
         <activity
-            android:name=".ui.call.VideoCallActivity"
+            android:name=".call.VideoCallActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
         <!--Voice call activity-->
         <activity
-            android:name=".ui.call.VoiceCallActivity"
+            android:name=".call.VoiceCallActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 
-        <activity android:name=".ui.group.GroupListActivity"/>
+        <activity android:name=".group.GroupListActivity"/>
 
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
@@ -102,16 +102,16 @@
             android:name="com.hyphenate.easeui.ui.EaseMapActivity"
             android:screenOrientation="portrait"
             />
-        <activity android:name=".ui.group.GroupDetailsActivity"/>
-        <activity android:name=".ui.group.InviteMembersActivity"/>
-        <activity android:name=".ui.group.MembersListActivity"/>
-        <activity android:name=".ui.group.NewGroupActivity"/>
-        <activity android:name=".ui.group.PublicGroupsListActivity"/>
+        <activity android:name=".group.GroupDetailsActivity"/>
+        <activity android:name=".group.InviteMembersActivity"/>
+        <activity android:name=".group.MembersListActivity"/>
+        <activity android:name=".group.NewGroupActivity"/>
+        <activity android:name=".group.PublicGroupsListActivity"/>
 
 
         <!--Chat activity-->
         <activity
-            android:name=".ui.chat.ChatActivity"
+            android:name=".chat.ChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"
@@ -120,23 +120,23 @@
 
         <!--Account activity-->
         <activity
-            android:name=".ui.settings.AccountActivity"
+            android:name=".settings.AccountActivity"
             android:screenOrientation="portrait"/>
         <!--Add contacts-->
         <activity
-            android:name=".ui.user.AddContactsActivity"
+            android:name=".user.AddContactsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateVisible"/>
 
         <!--Apply for activity-->
         <activity
-            android:name=".ui.apply.ApplyActivity"
+            android:name=".apply.ApplyActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 
         <!--Blacklist activity-->
         <activity
-            android:name=".ui.settings.BlackListActivity"
+            android:name=".settings.BlackListActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 
