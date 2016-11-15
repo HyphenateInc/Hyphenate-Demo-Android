@@ -15,6 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 
 /**
  * Created by benson on 2016/10/20.
@@ -30,9 +31,7 @@ public class ShowDialogFragment extends DialogFragment {
 
     OnShowDialogClickListener listener;
 
-    @Nullable @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+    @Nullable @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         View view = inflater.inflate(R.layout.em_show_dialog, container, false);
@@ -43,16 +42,13 @@ public class ShowDialogFragment extends DialogFragment {
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (listener != null) {
-            if (!TextUtils.isEmpty(listener.showAvatarView())) {
-                avatarView.setImageBitmap(BitmapFactory.decodeFile(listener.showNameView()));
-            }
-            nameView.setText(listener.showNameView());
+            EaseUserUtils.setUserAvatar(getActivity(), listener.showNameView(), avatarView);
+            EaseUserUtils.setUserNick(listener.showNameView(), nameView);
         }
     }
 
     @OnClick({
-            R.id.img_contact_dialog_voice_call, R.id.img_contact_dialog_send_message,
-            R.id.img_contact_dialog_video_call
+            R.id.img_contact_dialog_voice_call, R.id.img_contact_dialog_send_message, R.id.img_contact_dialog_video_call
     }) public void submit(View view) {
         switch (view.getId()) {
             case R.id.img_contact_dialog_voice_call:
@@ -78,8 +74,6 @@ public class ShowDialogFragment extends DialogFragment {
     public interface OnShowDialogClickListener {
 
         String showNameView();
-
-        String showAvatarView();
 
         void onVoiceCallClick();
 

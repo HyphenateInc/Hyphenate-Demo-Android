@@ -16,15 +16,7 @@ import com.hyphenate.chatuidemo.ui.user.UserEntity;
  * Contacts change listener
  */
 
-public class ContactsChangeListener implements EMContactListener {
-
-    private LocalBroadcastManager localBroadcastManager;
-
-    private Context mContext;
-
-    public ContactsChangeListener(Context context) {
-        mContext = context;
-    }
+public abstract class ContactsChangeListener implements EMContactListener {
 
     /**
      * Added contacts
@@ -35,8 +27,6 @@ public class ContactsChangeListener implements EMContactListener {
         UserEntity userEntity = new UserEntity(username);
 
         DemoHelper.getInstance().saveContact(userEntity);
-        // send broadcast
-        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(Constant.BROADCAST_ACTION_APPLY);
     }
 
     /**
@@ -48,9 +38,6 @@ public class ContactsChangeListener implements EMContactListener {
         UserEntity userEntity = new UserEntity(username);
 
         DemoHelper.getInstance().deleteContacts(userEntity);
-
-        // send Broadcast
-        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(Constant.BROADCAST_ACTION_CONTACTS);
     }
 
     /**
@@ -73,8 +60,6 @@ public class ContactsChangeListener implements EMContactListener {
         message.setMsgId(msgId);
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);
-        // send broadcast
-        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(Constant.BROADCAST_ACTION_APPLY);
     }
 
     /**
@@ -97,8 +82,6 @@ public class ContactsChangeListener implements EMContactListener {
         message.setMsgId(msgId);
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);
-        // send broadcast
-        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(Constant.BROADCAST_ACTION_APPLY);
     }
 
     /**
@@ -122,7 +105,5 @@ public class ContactsChangeListener implements EMContactListener {
         message.setMsgId(msgId);
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);
-        // send broadcast
-        BroadCastReceiverManager.getInstance(mContext).sendBroadCastReceiver(Constant.BROADCAST_ACTION_APPLY);
     }
 }

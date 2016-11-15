@@ -255,26 +255,26 @@ public class DemoHelper {
         });
     }
 
-    private EaseUser getUserInfo(String username){
+    private EaseUser getUserInfo(String username) {
         // To get instance of EaseUser, here we get it from the user list in memory
         // You'd better cache it if you get it from your server
         EaseUser user;
-        if(username.equals(EMClient.getInstance().getCurrentUser()))
+        if (username.equals(EMClient.getInstance().getCurrentUser())) {
             return getUserProfileManager().getCurrentUserInfo();
+        }
         user = getContactList().get(username);
 
         // if user is not in your contacts, set initial letter for him/her
-        if(user == null){
+        if (user == null) {
             user = new EaseUser(username);
             EaseCommonUtils.setUserInitialLetter(user);
         }
         return user;
     }
 
-
-        /**
-         * Set call broadcast listener
-         */
+    /**
+     * Set call broadcast listener
+     */
     private void setCallReceiverListener() {
         // Set the call broadcast listener to filter the action
         IntentFilter callFilter = new IntentFilter(
@@ -386,9 +386,31 @@ public class DemoHelper {
      */
     private void registerContactsListener() {
         if (mContactListener == null) {
-            mContactListener = new ContactsChangeListener(mContext);
+            mContactListener = new DefaultContactsChangeListener();
         }
         EMClient.getInstance().contactManager().setContactListener(mContactListener);
+    }
+
+    private class DefaultContactsChangeListener extends ContactsChangeListener {
+        @Override public void onContactAdded(String username) {
+            super.onContactAdded(username);
+        }
+
+        @Override public void onContactDeleted(String username) {
+            super.onContactDeleted(username);
+        }
+
+        @Override public void onContactInvited(String username, String reason) {
+            super.onContactInvited(username, reason);
+        }
+
+        @Override public void onFriendRequestAccepted(String username) {
+            super.onFriendRequestAccepted(username);
+        }
+
+        @Override public void onFriendRequestDeclined(String username) {
+            super.onFriendRequestDeclined(username);
+        }
     }
 
     private boolean hasForegroundActivities() {
@@ -403,10 +425,6 @@ public class DemoHelper {
 
     public void popActivity(Activity activity) {
         activityList.remove(activity);
-    }
-
-    public List<Activity> getActivityList() {
-        return activityList;
     }
 
     public MessageNotifier getNotifier() {
@@ -474,21 +492,22 @@ public class DemoHelper {
                     // save the contact list to database
                     setContactList(entityList);
 
-                    getUserProfileManager().asyncFetchContactsInfoFromServer(hxIdList, new EMValueCallBack<List<UserEntity>>() {
+                    getUserProfileManager().asyncFetchContactsInfoFromServer(hxIdList,
+                            new EMValueCallBack<List<UserEntity>>() {
 
-                        @Override public void onSuccess(List<UserEntity> uList) {
-                            setContactList(uList);
-                            if (callback != null) {
-                                callback.onSuccess(uList);
-                            }
-                        }
+                                @Override public void onSuccess(List<UserEntity> uList) {
+                                    setContactList(uList);
+                                    if (callback != null) {
+                                        callback.onSuccess(uList);
+                                    }
+                                }
 
-                        @Override public void onError(int error, String errorMsg) {
-                            if (callback != null) {
-                                callback.onError(error, errorMsg);
-                            }
-                        }
-                    });
+                                @Override public void onError(int error, String errorMsg) {
+                                    if (callback != null) {
+                                        callback.onError(error, errorMsg);
+                                    }
+                                }
+                            });
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                     if (callback != null) {

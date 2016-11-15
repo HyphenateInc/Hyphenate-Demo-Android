@@ -35,9 +35,10 @@
 
         <com.hyphenate.media.EMLocalSurfaceView
             android:id="@+id/surface_view_local"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="@dimen/call_small_width"
+            android:layout_height="@dimen/call_small_height"
             android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/call_small_width"
             />
     </RelativeLayout>
 

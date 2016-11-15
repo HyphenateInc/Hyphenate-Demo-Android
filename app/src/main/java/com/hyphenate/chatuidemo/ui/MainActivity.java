@@ -20,8 +20,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.listener.ContactsChangeListener;
+import com.hyphenate.chatuidemo.listener.GroupChangeListener;
 import com.hyphenate.chatuidemo.ui.chat.ConversationListFragment;
 import com.hyphenate.chatuidemo.ui.group.InviteMembersActivity;
 import com.hyphenate.chatuidemo.ui.group.PublicGroupsListActivity;
@@ -46,25 +50,19 @@ public class MainActivity extends BaseActivity {
     private ContactListFragment mContactListFragment;
     private SettingsFragment mSettingsFragment;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
-        // Check that you are logged in
-        if (EMClient.getInstance().isLoggedInBefore()) {
-            // Load the group into memory
-            EMClient.getInstance().groupManager().loadAllGroups();
-            // Load all mConversation into memory
-            EMClient.getInstance().chatManager().loadAllConversations();
-        } else {
-            // Go sign in
-            Intent intent = new Intent(this, SignInActivity.class);
-            startActivity(intent);
-            finish();
-        }
+    private DefaultContactsChangeListener mContactListener;
+    private DefaultGroupChangeListener mGroupListener;
 
+    @Override protected void onCreate(Bundle savedInstanceState) {
         // Set default setting values
         //PreferenceManager.setDefaultValues(this, R.xml.preferences_default, false);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_main);
+
+        mContactListener = new DefaultContactsChangeListener();
+        mGroupListener = new DefaultGroupChangeListener();
+
         ButterKnife.bind(this);
         //setup viewpager
         setupViewPager();
@@ -100,7 +98,8 @@ public class MainActivity extends BaseActivity {
                 }
             }
 
-            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            @Override public void onPageScrolled(int position, float positionOffset,
+                    int positionOffsetPixels) {
             }
 
             @Override public void onPageScrollStateChanged(int state) {
@@ -116,16 +115,18 @@ public class MainActivity extends BaseActivity {
             View customTab = LayoutInflater.from(this).inflate(R.layout.em_tab_layout_item, null);
             ImageView imageView = (ImageView) customTab.findViewById(R.id.img_tab_item);
             if (i == 0) {
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_contacts_selector));
+                imageView.setImageDrawable(
+                        getResources().getDrawable(R.drawable.em_tab_contacts_selector));
             } else if (i == 1) {
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_chats_selector));
+                imageView.setImageDrawable(
+                        getResources().getDrawable(R.drawable.em_tab_chats_selector));
             } else {
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_settings_selector));
+                imageView.setImageDrawable(
+                        getResources().getDrawable(R.drawable.em_tab_settings_selector));
             }
             //set the custom tabview
             mTabLayout.getTabAt(i).setCustomView(customTab);
         }
-
     }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -144,11 +145,12 @@ public class MainActivity extends BaseActivity {
         return true;
     }
 
-    private void setSearchViewQueryListener(){
+    private void setSearchViewQueryListener() {
         Toolbar toolbar = getActionBarToolbar();
+
         SearchView searchView;
-        if(mCurrentPageIndex == 0){
-            searchView = (SearchView)toolbar.getMenu().findItem(R.id.menu_search).getActionView();
+        if (mCurrentPageIndex == 0) {
+            searchView = (SearchView) toolbar.getMenu().findItem(R.id.menu_search).getActionView();
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override public boolean onQueryTextSubmit(String query) {
                     return true;
@@ -159,7 +161,7 @@ public class MainActivity extends BaseActivity {
                     return true;
                 }
             });
-        }else if(mCurrentPageIndex == 1){
+        } else if (mCurrentPageIndex == 1) {
             searchView = (SearchView) MenuItemCompat.getActionView(
                     toolbar.getMenu().findItem(R.id.menu_conversations_search));
             // search conversations list
@@ -244,14 +246,31 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         //register message listener
         EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
+        EMClient.getInstance().contactManager().setContactListener(mContactListener);
+        EMClient.getInstance().groupManager().addGroupChangeListener(mGroupListener);
 
         updateUnreadMsgLabel();
+        //refreshContacts();
+
+        // Check that you are logged in
+        if (EMClient.getInstance().isLoggedInBefore()) {
+            // Load the group into memory
+            EMClient.getInstance().groupManager().loadAllGroups();
+            // Load all mConversation into memory
+            EMClient.getInstance().chatManager().loadAllConversations();
+        } else {
+            // Go sign in
+            startActivity(new Intent(this, SignInActivity.class));
+            finish();
+        }
     }
 
     @Override protected void onStop() {
         super.onStop();
         //unregister message listener on stop
         EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
+        EMClient.getInstance().contactManager().removeContactListener(mContactListener);
+        EMClient.getInstance().groupManager().removeGroupChangeListener(mGroupListener);
     }
 
     @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -296,6 +315,89 @@ public class MainActivity extends BaseActivity {
 
         @Override public CharSequence getPageTitle(int position) {
             return mFragmentTitles.get(position);
+        }
+    }
+
+    /**
+     * refresh the contacts view
+     */
+    private void refreshContacts() {
+        runOnUiThread(new Runnable() {
+            @Override public void run() {
+                EMConversation conversation = EMClient.getInstance()
+                        .chatManager()
+                        .getConversation(Constant.CONVERSATION_NAME_APPLY,
+                                EMConversation.EMConversationType.Chat, true);
+                if (conversation.getUnreadMsgCount() > 0) {
+                    getTabUnreadStatusView(0).setVisibility(View.VISIBLE);
+                } else {
+                    getTabUnreadStatusView(0).setVisibility(View.INVISIBLE);
+                }
+
+                //refresh ContactListFragment
+                Fragment fragment = ((PagerAdapter) mViewPager.getAdapter()).getItem(0);
+                ((ContactListFragment) fragment).refresh();
+            }
+        });
+    }
+
+    private class DefaultContactsChangeListener extends ContactsChangeListener {
+        @Override public void onContactAdded(String username) {
+            refreshContacts();
+        }
+
+        @Override public void onContactDeleted(String username) {
+            refreshContacts();
+        }
+
+        @Override public void onContactInvited(String username, String reason) {
+            refreshContacts();
+        }
+
+        @Override public void onFriendRequestAccepted(String username) {
+            refreshContacts();
+        }
+
+        @Override public void onFriendRequestDeclined(String username) {
+            refreshContacts();
+        }
+    }
+
+    private class DefaultGroupChangeListener extends GroupChangeListener {
+        @Override public void onInvitationReceived(String s, String s1, String s2, String s3) {
+            refreshContacts();
+        }
+
+        @Override public void onRequestToJoinReceived(String s, String s1, String s2, String s3) {
+            refreshContacts();
+        }
+
+        @Override public void onRequestToJoinAccepted(String s, String s1, String s2) {
+            refreshContacts();
+        }
+
+        @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
+            refreshContacts();
+        }
+
+        @Override public void onInvitationAccepted(String s, String s1, String s2) {
+            refreshContacts();
+        }
+
+        @Override public void onInvitationDeclined(String s, String s1, String s2) {
+            refreshContacts();
+        }
+
+        @Override public void onUserRemoved(String s, String s1) {
+            refreshContacts();
+        }
+
+        @Override public void onGroupDestroyed(String s, String s1) {
+            refreshContacts();
+        }
+
+        @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
+            refreshContacts();
         }
     }
 }

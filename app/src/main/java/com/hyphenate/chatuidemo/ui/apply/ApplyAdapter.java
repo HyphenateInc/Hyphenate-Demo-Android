@@ -27,13 +27,14 @@ class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHolder> {
 
     private LayoutInflater mInflater;
 
+    private EMConversation mConversation;
     private List<EMMessage> mMessages;
 
     private ItemClickListener mItemClickListener;
 
     ApplyAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
-        EMConversation mConversation = EMClient.getInstance()
+        mConversation = EMClient.getInstance()
                 .chatManager()
                 .getConversation(Constant.CONVERSATION_NAME_APPLY, null, true);
         mMessages = mConversation.getAllMessages();
@@ -51,7 +52,6 @@ class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHolder> {
         holder.imageViewAvatar.setImageResource(R.drawable.ease_default_avatar);
 
         if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE, 0) == 1) {
-
             try {
                 holder.textViewUsername.setText(
                         message.getStringAttribute(Constant.MESSAGE_ATTR_GROUP_ID));
@@ -73,9 +73,12 @@ class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHolder> {
         if (!TextUtils.isEmpty(status)) {
             holder.textViewStatus.setText(status);
             holder.textViewStatus.setVisibility(View.VISIBLE);
-
             holder.agreeBtn.setVisibility(View.GONE);
             holder.rejectBtn.setVisibility(View.GONE);
+        } else {
+            holder.textViewStatus.setVisibility(View.GONE);
+            holder.agreeBtn.setVisibility(View.VISIBLE);
+            holder.rejectBtn.setVisibility(View.VISIBLE);
         }
 
         holder.agreeBtn.setTag(message.getMsgId());
@@ -125,6 +128,17 @@ class ApplyAdapter extends RecyclerView.Adapter<ApplyAdapter.ApplyViewHolder> {
      */
     public void setItemClickListener(ItemClickListener listener) {
         mItemClickListener = listener;
+    }
+
+    public void refresh() {
+        if (mMessages == null) {
+            mMessages = mConversation.getAllMessages();
+        } else {
+            mMessages.clear();
+            mMessages.addAll(mConversation.getAllMessages());
+        }
+        // The list collection is sorted in reverse order
+        Collections.reverse(mMessages);
     }
 
     /**
