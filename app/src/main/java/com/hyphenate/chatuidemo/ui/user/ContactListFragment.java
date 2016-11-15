@@ -46,9 +46,6 @@ public class ContactListFragment extends Fragment {
 
     private static String TAG = ContactListFragment.class.getSimpleName();
 
-    private AlertDialog.Builder alertDialogBuilder;
-    private AlertDialog contactsMenuDialog;
-
     @BindView(R.id.rv_contacts) RecyclerView recyclerView;
     ShowDialogFragment dialogFragment;
 
@@ -99,7 +96,6 @@ public class ContactListFragment extends Fragment {
             @Override public void onItemLongClick(View view, int position) {
                 UserEntity user = entityList.get(position);
                 itemLongClick(user);
-                deleteContacts(user);
             }
         });
     }
@@ -132,15 +128,15 @@ public class ContactListFragment extends Fragment {
         });
     }
 
-    public void filter(String newText){
+    public void filter(String newText) {
         List<UserEntity> list = new ArrayList<>();
-        if (entityList == null){
+        if (entityList == null) {
             entityList = new ArrayList<>();
         }
         entityList.clear();
         entityList.addAll(DemoHelper.getInstance().getContactList().values());
-        for (UserEntity userEntity : entityList){
-            if (userEntity.getNickname().contains(newText)){
+        for (UserEntity userEntity : entityList) {
+            if (userEntity.getNickname().contains(newText)) {
                 list.add(userEntity);
             }
         }
@@ -161,15 +157,7 @@ public class ContactListFragment extends Fragment {
 
         dialogFragment.setOnShowDialogClickListener(new ShowDialogFragment.OnShowDialogClickListener() {
             @Override public String showNameView() {
-                if (!TextUtils.isEmpty(user.getNickname())) {
-                    return user.getNickname();
-                } else {
-                    return user.getUsername();
-                }
-            }
-
-            @Override public String showAvatarView() {
-                return user.getAvatar();
+                return user.getNickname();
             }
 
             @Override public void onVoiceCallClick() {
@@ -200,7 +188,7 @@ public class ContactListFragment extends Fragment {
 
         String[] menus = { "Delete Contact", "Add Blacklist" };
 
-        alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
@@ -213,7 +201,7 @@ public class ContactListFragment extends Fragment {
                 }
             }
         });
-        contactsMenuDialog = alertDialogBuilder.create();
+        AlertDialog contactsMenuDialog = alertDialogBuilder.create();
         contactsMenuDialog.show();
     }
 
