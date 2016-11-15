@@ -101,7 +101,7 @@ public class BlackListActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMClient.getInstance().contactManager().removeUserFromBlackList(username);
-                    DemoHelper.getInstance().addContacts(new UserEntity(username));
+                    DemoHelper.getInstance().saveContact(new UserEntity(username));
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
                             Toast.makeText(mActivity,
