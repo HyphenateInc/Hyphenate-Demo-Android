@@ -19,11 +19,11 @@ public class DemoApplication extends Application {
         return instance;
     }
 
-    @Override public void onCreate() {
+    @Override
+        public void onCreate() {
         MultiDex.install(this);
         super.onCreate();
-        //Fabric.with(this, new Crashlytics());
-        //Fabric.with(this, new Crashlytics());
+//        Fabric.with(this, new Crashlytics());
         instance = this;
         applicationContext = this;
 
