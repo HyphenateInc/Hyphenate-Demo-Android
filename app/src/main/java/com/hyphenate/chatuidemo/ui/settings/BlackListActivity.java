@@ -9,8 +9,10 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
+import com.hyphenate.chatuidemo.ui.user.UserEntity;
 import com.hyphenate.exceptions.HyphenateException;
 
 /**
@@ -64,6 +66,7 @@ public class BlackListActivity extends BaseActivity {
      */
     private void refresh() {
         if (mAdapter != null) {
+            mAdapter.refreshBlackList();
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -98,6 +101,7 @@ public class BlackListActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMClient.getInstance().contactManager().removeUserFromBlackList(username);
+                    DemoHelper.getInstance().addContacts(new UserEntity(username));
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
                             Toast.makeText(mActivity,

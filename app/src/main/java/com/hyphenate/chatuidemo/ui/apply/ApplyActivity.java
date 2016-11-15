@@ -1,12 +1,7 @@
 package com.hyphenate.chatuidemo.ui.apply;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -18,9 +13,9 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.listener.ContactsChangeListener;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.util.EMLog;
 
 /**
  * Created by lzan13 on 2016/10/26.
@@ -36,10 +31,9 @@ public class ApplyActivity extends BaseActivity {
 
     private EMConversation mConversation;
 
-    private ApplyAdapter mApplyAdapter;
+    private ApplyAdapter mAdapter;
 
-    private LocalBroadcastManager localBroadcastManager;
-    private ApplyBroadcastReceiver broadcastReceiver;
+    private DefaultContactsChangeListener listener;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +41,9 @@ public class ApplyActivity extends BaseActivity {
         setContentView(R.layout.em_activity_apply);
 
         ButterKnife.bind(this);
+
+        listener = new DefaultContactsChangeListener();
+        EMClient.getInstance().contactManager().setContactListener(listener);
 
         initView();
     }
@@ -68,6 +65,7 @@ public class ApplyActivity extends BaseActivity {
                 .chatManager()
                 .getConversation(Constant.CONVERSATION_NAME_APPLY, null, true);
         mConversation.markAllMessagesAsRead();
+        
         int count = mConversation.getAllMessages().size();
         int mPageSize = 30;
         if (count < mConversation.getAllMsgCount() && count < mPageSize) {
@@ -75,11 +73,11 @@ public class ApplyActivity extends BaseActivity {
             mConversation.loadMoreMsgFromDB(msgId, mPageSize - count);
         }
 
-        mApplyAdapter = new ApplyAdapter(mActivity);
+        mAdapter = new ApplyAdapter(mActivity);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 
-        mRecyclerView.setAdapter(mApplyAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 
         setItemClickListener();
     }
@@ -88,7 +86,7 @@ public class ApplyActivity extends BaseActivity {
      * Set item click listener
      */
     private void setItemClickListener() {
-        mApplyAdapter.setItemClickListener(new ApplyAdapter.ItemClickListener() {
+        mAdapter.setItemClickListener(new ApplyAdapter.ItemClickListener() {
             /**
              * Item action event
              *
@@ -140,8 +138,9 @@ public class ApplyActivity extends BaseActivity {
                     } else {
                         EMClient.getInstance()
                                 .contactManager()
-                                .acceptInvitation(message.getStringAttribute(
-                                        Constant.MESSAGE_ATTR_USERNAME, ""));
+                                .acceptInvitation(
+                                        message.getStringAttribute(Constant.MESSAGE_ATTR_USERNAME,
+                                                ""));
                     }
 
                     // update contacts apply for message status
@@ -197,8 +196,9 @@ public class ApplyActivity extends BaseActivity {
                     } else {
                         EMClient.getInstance()
                                 .contactManager()
-                                .declineInvitation(message.getStringAttribute(
-                                        Constant.MESSAGE_ATTR_USERNAME, ""));
+                                .declineInvitation(
+                                        message.getStringAttribute(Constant.MESSAGE_ATTR_USERNAME,
+                                                ""));
                     }
                     // update contacts apply for message status
                     message.setAttribute(Constant.MESSAGE_ATTR_STATUS,
@@ -230,35 +230,50 @@ public class ApplyActivity extends BaseActivity {
      * Refresh ui
      */
     private void refresh() {
-        if (mApplyAdapter != null) {
-            mApplyAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
-     * Contacts broadcast receiver
-     */
-    private class ApplyBroadcastReceiver extends BroadcastReceiver {
-
-        @Override public void onReceive(Context context, Intent intent) {
-            EMLog.d(TAG, "contact action");
-            refresh();
+        if (mAdapter != null) {
+            mAdapter.refresh();
+            mAdapter.notifyDataSetChanged();
         }
     }
 
     @Override protected void onResume() {
         super.onResume();
-        // register broadcast register
-        localBroadcastManager = LocalBroadcastManager.getInstance(mActivity);
-        broadcastReceiver = new ApplyBroadcastReceiver();
-        IntentFilter intentFilter = new IntentFilter(Constant.BROADCAST_ACTION_APPLY);
-        localBroadcastManager.registerReceiver(broadcastReceiver, intentFilter);
         // refresh ui
         refresh();
     }
 
     @Override protected void onStop() {
         super.onStop();
-        localBroadcastManager.unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        EMClient.getInstance().contactManager().removeContactListener(listener);
+    }
+
+    private class DefaultContactsChangeListener extends ContactsChangeListener {
+        @Override public void onContactInvited(String username, String reason) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override public void onFriendRequestAccepted(String username) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override public void onFriendRequestDeclined(String username) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
     }
 }

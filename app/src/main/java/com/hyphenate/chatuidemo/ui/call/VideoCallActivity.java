@@ -106,8 +106,8 @@ public class VideoCallActivity extends CallActivity {
         // Setting the video call bit rate defaults to (150)
         mVideoCallHelper.setVideoBitrate(300);
         // Set the local preview image displayed on the top floor, be sure to set as soon as possible, otherwise invalid
-        //mLocalSurfaceView.setZOrderMediaOverlay(true);
-        //mLocalSurfaceView.setZOrderOnTop(true);
+        mLocalSurfaceView.setZOrderMediaOverlay(true);
+        mLocalSurfaceView.setZOrderOnTop(true);
 
         try {
             // By default, the front camera is used
@@ -283,50 +283,51 @@ public class VideoCallActivity extends CallActivity {
      * Change surfaceView size
      */
     private void changeSurfaceViewSize() {
-        RelativeLayout.LayoutParams localLayoutParams =
-                (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
-        RelativeLayout.LayoutParams oppositeLayoutParams =
-                (RelativeLayout.LayoutParams) mOppositeSurfaceView.getLayoutParams();
-        if (surfaceViewState == 1) {
-            surfaceViewState = 0;
-            localLayoutParams.width =
-                    mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_width);
-            localLayoutParams.height =
-                    mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_height);
-            localLayoutParams.setMargins(0,
-                    mActivity.getResources().getDimensionPixelOffset(R.dimen.call_small_width), 0,
-                    0);
-
-            oppositeLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-            oppositeLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-            oppositeLayoutParams.setMargins(0, 0, 0, 0);
-
-            mLocalSurfaceView.setZOrderMediaOverlay(true);
-            mLocalSurfaceView.setZOrderOnTop(true);
-            mOppositeSurfaceView.setZOrderMediaOverlay(false);
-            mOppositeSurfaceView.setZOrderOnTop(false);
-        } else {
-            surfaceViewState = 1;
-            localLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-            localLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-            localLayoutParams.setMargins(0, 0, 0, 0);
-
-            oppositeLayoutParams.width =
-                    mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_width);
-            oppositeLayoutParams.height =
-                    mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_height);
-            oppositeLayoutParams.setMargins(0,
-                    mActivity.getResources().getDimensionPixelOffset(R.dimen.call_small_width), 0,
-                    0);
-
-            mLocalSurfaceView.setZOrderMediaOverlay(false);
-            mLocalSurfaceView.setZOrderOnTop(false);
-            mOppositeSurfaceView.setZOrderMediaOverlay(true);
-            mOppositeSurfaceView.setZOrderOnTop(true);
-        }
-
-        mLocalSurfaceView.setLayoutParams(localLayoutParams);
-        mOppositeSurfaceView.setLayoutParams(oppositeLayoutParams);
+        //RelativeLayout.LayoutParams localLayoutParams =
+        //        (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
+        //RelativeLayout.LayoutParams oppositeLayoutParams =
+        //        (RelativeLayout.LayoutParams) mOppositeSurfaceView.getLayoutParams();
+        //if (surfaceViewState == 1) {
+        //    surfaceViewState = 0;
+        //    localLayoutParams.width =
+        //            mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_width);
+        //    localLayoutParams.height =
+        //            mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_height);
+        //    localLayoutParams.setMargins(0,
+        //            mActivity.getResources().getDimensionPixelOffset(R.dimen.call_small_width), 0,
+        //            0);
+        //
+        //    oppositeLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        //    oppositeLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        //    oppositeLayoutParams.setMargins(0, 0, 0, 0);
+        //
+        //    mLocalSurfaceView.setZOrderMediaOverlay(true);
+        //    mLocalSurfaceView.setZOrderOnTop(true);
+        //    mOppositeSurfaceView.setZOrderMediaOverlay(false);
+        //    mOppositeSurfaceView.setZOrderOnTop(false);
+        //} else {
+        //    surfaceViewState = 1;
+        //    localLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        //    localLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        //    localLayoutParams.setMargins(0, 0, 0, 0);
+        //
+        //    oppositeLayoutParams.width =
+        //            mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_width);
+        //    oppositeLayoutParams.height =
+        //            mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_height);
+        //    oppositeLayoutParams.setMargins(0,
+        //            mActivity.getResources().getDimensionPixelOffset(R.dimen.call_small_width), 0,
+        //            0);
+        //
+        //    mLocalSurfaceView.setZOrderMediaOverlay(false);
+        //    mLocalSurfaceView.setZOrderOnTop(false);
+        //    mOppositeSurfaceView.setZOrderMediaOverlay(true);
+        //    mOppositeSurfaceView.setZOrderOnTop(true);
+        //}
+        //
+        //mLocalSurfaceView.setLayoutParams(localLayoutParams);
+        //mOppositeSurfaceView.setLayoutParams(oppositeLayoutParams);
+        Toast.makeText(mActivity, "Screen Change unrealized", Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -499,13 +500,13 @@ public class VideoCallActivity extends CallActivity {
         // 设置显示对方图像控件显示
         mOppositeSurfaceView.setVisibility(View.VISIBLE);
 
-        RelativeLayout.LayoutParams lp =
-                (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
-        lp.width = mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_width);
-        lp.height = mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_height);
-        lp.setMargins(0, mActivity.getResources().getDimensionPixelOffset(R.dimen.call_small_width),
-                0, 0);
-        mLocalSurfaceView.setLayoutParams(lp);
+        //RelativeLayout.LayoutParams lp =
+        //        (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
+        //lp.width = mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_width);
+        //lp.height = mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_height);
+        //lp.setMargins(0, mActivity.getResources().getDimensionPixelOffset(R.dimen.call_small_width),
+        //        0, 0);
+        //mLocalSurfaceView.setLayoutParams(lp);
     }
 
     /**

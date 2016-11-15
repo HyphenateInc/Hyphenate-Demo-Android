@@ -69,6 +69,18 @@ public class BlackListAdapter extends RecyclerView.Adapter<BlackListAdapter.Blac
     };
 
     /**
+     * refresh blacklist
+     */
+    public void refreshBlackList() {
+        if (mBlackList == null) {
+            mBlackList = EMClient.getInstance().contactManager().getBlackListUsernames();
+        } else {
+            mBlackList.clear();
+            mBlackList.addAll(EMClient.getInstance().contactManager().getBlackListUsernames());
+        }
+    }
+
+    /**
      * item click on the callback interface
      */
     protected interface ItemClickListener {
