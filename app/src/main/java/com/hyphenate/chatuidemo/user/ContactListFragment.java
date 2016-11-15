@@ -223,7 +223,7 @@ public class ContactListFragment extends Fragment {
      */
     private void loadContacts() {
         if (entityList == null) {
-            entityList = new ArrayList<UserEntity>();
+            entityList = new ArrayList<>();
         }
         entityList.clear();
         entityList.addAll(DemoHelper.getInstance().getContactList().values());

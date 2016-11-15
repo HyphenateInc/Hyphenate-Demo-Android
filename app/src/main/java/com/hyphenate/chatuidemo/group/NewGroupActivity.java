@@ -9,10 +9,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -48,6 +53,7 @@ public class NewGroupActivity extends BaseActivity {
     LinearLayoutManager manager;
     private List<String> newMembers;
     private boolean freely;
+    private Button button;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,37 +64,46 @@ public class NewGroupActivity extends BaseActivity {
         membersSizeView.setText(newMembers.size() + "/2000");
         initToolbar();
         initRecyclerView();
+
+        groupNameView.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if (!TextUtils.isEmpty(s)){
+                    button.setBackgroundResource(R.color.em_green_100);
+                }else {
+                    button.setBackgroundResource(R.color.color_gray);
+                }
+            }
+
+            @Override public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void initToolbar() {
         Toolbar toolbar = getActionBarToolbar();
+        button = new Button(this);
+        button.setText("CREATE");
+        button.setTextColor(Color.WHITE);
+        button.setBackgroundResource(R.color.color_gray);
+        Toolbar.LayoutParams params =
+                new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.RIGHT);
+        params.rightMargin = 30;
+        params.height =120;
+        toolbar.addView(button, params);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 finish();
             }
         });
-    }
 
-    private void initRecyclerView() {
-
-        manager = new LinearLayoutManager(this);
-        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(manager);
-
-        MembersListAdapter adapter = new MembersListAdapter(this, newMembers, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setAdapter(adapter);
-    }
-
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.em_contacts_menu, menu);
-        MenuItem item = menu.findItem(R.id.menu_search);
-        menu.findItem(R.id.menu_add_contacts).setVisible(false);
-        item.setIcon(null);
-        item.setActionView(null);
-        item.setTitle("CREATE");
-
-        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override public boolean onMenuItemClick(MenuItem item) {
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
                 if (!TextUtils.isEmpty(groupNameView.getText().toString())) {
                     final ProgressDialog progressDialog = ProgressDialog.show(NewGroupActivity.this, "creating group", "waiting...", false);
 
@@ -98,9 +113,9 @@ public class NewGroupActivity extends BaseActivity {
                             EMGroupManager.EMGroupOptions options = new EMGroupManager.EMGroupOptions();
                             options.maxUsers = 200;
                             if (groupTypeSwitch.isChecked()) {
-                                if (freely){
+                                if (freely) {
                                     options.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicOpenJoin;
-                                }else {
+                                } else {
                                     options.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicJoinNeedApproval;
                                 }
                             } else {
@@ -134,10 +149,18 @@ public class NewGroupActivity extends BaseActivity {
                 } else {
                     Snackbar.make(recyclerView, "please input group name", Snackbar.LENGTH_SHORT).show();
                 }
-                return true;
             }
         });
-        return true;
+    }
+
+    private void initRecyclerView() {
+
+        manager = new LinearLayoutManager(this);
+        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(manager);
+
+        MembersListAdapter adapter = new MembersListAdapter(this, newMembers, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setAdapter(adapter);
     }
 
     @OnClick({ R.id.layout_allow_members_to_invite, R.id.layout_appear_in_group_search }) void onClick(View view) {
