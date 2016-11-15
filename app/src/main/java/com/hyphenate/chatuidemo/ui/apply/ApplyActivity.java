@@ -14,6 +14,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.listener.ContactsChangeListener;
+import com.hyphenate.chatuidemo.listener.GroupChangeListener;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.exceptions.HyphenateException;
 
@@ -33,7 +34,8 @@ public class ApplyActivity extends BaseActivity {
 
     private ApplyAdapter mAdapter;
 
-    private DefaultContactsChangeListener listener;
+    private DefaultContactsChangeListener contactsListener;
+    private DefaultGroupChangeListener groupListener;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +44,10 @@ public class ApplyActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        listener = new DefaultContactsChangeListener();
-        EMClient.getInstance().contactManager().setContactListener(listener);
+        contactsListener = new DefaultContactsChangeListener();
+        EMClient.getInstance().contactManager().setContactListener(contactsListener);
+        groupListener = new DefaultGroupChangeListener();
+        EMClient.getInstance().groupManager().addGroupChangeListener(groupListener);
 
         initView();
     }
@@ -65,7 +69,7 @@ public class ApplyActivity extends BaseActivity {
                 .chatManager()
                 .getConversation(Constant.CONVERSATION_NAME_APPLY, null, true);
         mConversation.markAllMessagesAsRead();
-        
+
         int count = mConversation.getAllMessages().size();
         int mPageSize = 30;
         if (count < mConversation.getAllMsgCount() && count < mPageSize) {
@@ -248,7 +252,8 @@ public class ApplyActivity extends BaseActivity {
 
     @Override protected void onDestroy() {
         super.onDestroy();
-        EMClient.getInstance().contactManager().removeContactListener(listener);
+        EMClient.getInstance().contactManager().removeContactListener(contactsListener);
+        EMClient.getInstance().groupManager().removeGroupChangeListener(groupListener);
     }
 
     private class DefaultContactsChangeListener extends ContactsChangeListener {
@@ -269,6 +274,80 @@ public class ApplyActivity extends BaseActivity {
         }
 
         @Override public void onFriendRequestDeclined(String username) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+    }
+
+    private class DefaultGroupChangeListener extends GroupChangeListener {
+        @Override public void onInvitationReceived(String s, String s1, String s2, String s3) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override public void onRequestToJoinReceived(String s, String s1, String s2, String s3) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override public void onRequestToJoinAccepted(String s, String s1, String s2) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override public void onInvitationAccepted(String s, String s1, String s2) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override public void onInvitationDeclined(String s, String s1, String s2) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override public void onUserRemoved(String s, String s1) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override public void onGroupDestroyed(String s, String s1) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
             runOnUiThread(new Runnable() {
                 @Override public void run() {
                     refresh();
