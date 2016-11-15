@@ -1,6 +1,5 @@
 package com.hyphenate.chatuidemo.user;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,13 +16,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chatuidemo.DemoConstant;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.apply.ApplyActivity;
 import com.hyphenate.chatuidemo.chat.ChatActivity;
 import com.hyphenate.chatuidemo.group.GroupListActivity;
-import com.hyphenate.chatuidemo.receiver.BroadCastReceiverManager;
 import com.hyphenate.chatuidemo.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.user.model.UserEntity;
@@ -58,14 +55,6 @@ public class ContactListFragment extends Fragment {
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setRecyclerView();
-
-        //Contacts broadcast receiver
-        BroadCastReceiverManager.getInstance(getActivity())
-                .setDefaultLocalBroadCastReceiver(new BroadCastReceiverManager.DefaultLocalBroadCastReceiver() {
-                    @Override public void defaultOnReceive(Context context, Intent intent) {
-                        refresh();
-                    }
-                });
     }
 
     @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -248,17 +237,12 @@ public class ContactListFragment extends Fragment {
 
     @Override public void onResume() {
         super.onResume();
-
-        // broadcast register
-        BroadCastReceiverManager.getInstance(getActivity()).registerBroadCastReceiver(DemoConstant.BROADCAST_ACTION_CONTACTS);
         // refresh ui
         refresh();
     }
 
     @Override public void onStop() {
         super.onStop();
-        // unregister broadcast receiver
-        BroadCastReceiverManager.getInstance(getActivity()).unRegisterBroadCastReceiver();
     }
 
     @OnClick({ R.id.layout_group_entry, R.id.layout_apply_entry }) void onclick(View v) {
