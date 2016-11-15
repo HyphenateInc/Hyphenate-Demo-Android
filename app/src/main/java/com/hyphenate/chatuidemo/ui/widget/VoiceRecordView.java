@@ -18,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.EMError;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.model.VoiceRecorder;
+import com.hyphenate.chatuidemo.chat.VoiceRecorder;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRowVoicePlayClickListener;
 

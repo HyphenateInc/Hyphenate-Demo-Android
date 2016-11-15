@@ -22,17 +22,17 @@ import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chatuidemo.Constant;
+import com.hyphenate.chatuidemo.DemoConstant;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.listener.ContactsChangeListener;
-import com.hyphenate.chatuidemo.listener.GroupChangeListener;
-import com.hyphenate.chatuidemo.ui.chat.ConversationListFragment;
-import com.hyphenate.chatuidemo.ui.group.InviteMembersActivity;
-import com.hyphenate.chatuidemo.ui.group.PublicGroupsListActivity;
-import com.hyphenate.chatuidemo.ui.settings.SettingsFragment;
-import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
-import com.hyphenate.chatuidemo.ui.user.AddContactsActivity;
-import com.hyphenate.chatuidemo.ui.user.ContactListFragment;
+import com.hyphenate.chatuidemo.user.ContactsChangeListener;
+import com.hyphenate.chatuidemo.group.GroupChangeListener;
+import com.hyphenate.chatuidemo.chat.ConversationListFragment;
+import com.hyphenate.chatuidemo.group.InviteMembersActivity;
+import com.hyphenate.chatuidemo.group.PublicGroupsListActivity;
+import com.hyphenate.chatuidemo.settings.SettingsFragment;
+import com.hyphenate.chatuidemo.sign.SignInActivity;
+import com.hyphenate.chatuidemo.user.AddContactsActivity;
+import com.hyphenate.chatuidemo.user.ContactListFragment;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -336,7 +336,7 @@ public class MainActivity extends BaseActivity {
             @Override public void run() {
                 EMConversation conversation = EMClient.getInstance()
                         .chatManager()
-                        .getConversation(Constant.CONVERSATION_NAME_APPLY,
+                        .getConversation(DemoConstant.CONVERSATION_NAME_APPLY,
                                 EMConversation.EMConversationType.Chat, true);
                 if (conversation.getUnreadMsgCount() > 0) {
                     getTabUnreadStatusView(0).setVisibility(View.VISIBLE);

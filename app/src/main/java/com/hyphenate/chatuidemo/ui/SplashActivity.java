@@ -3,9 +3,9 @@ package com.hyphenate.chatuidemo.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chatuidemo.ui.call.VideoCallActivity;
-import com.hyphenate.chatuidemo.ui.call.VoiceCallActivity;
-import com.hyphenate.chatuidemo.ui.sign.SignInActivity;
+import com.hyphenate.chatuidemo.call.VideoCallActivity;
+import com.hyphenate.chatuidemo.call.VoiceCallActivity;
+import com.hyphenate.chatuidemo.sign.SignInActivity;
 import com.hyphenate.util.EasyUtils;
 
 /**

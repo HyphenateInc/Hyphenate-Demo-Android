@@ -86,6 +86,7 @@ public class EaseMessageListAdapter extends BaseAdapter {
             // you should not call getAllMessages() in UI thread
             // otherwise there is problem when refreshing UI and there is new message arrive
             messages = (EMMessage[]) conversation.getAllMessages().toArray(new EMMessage[0]);
+            conversation.markAllMessagesAsRead();
             notifyDataSetChanged();
         }
 
