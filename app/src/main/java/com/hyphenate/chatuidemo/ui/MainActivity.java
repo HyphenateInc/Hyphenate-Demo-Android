@@ -1,7 +1,9 @@
 package com.hyphenate.chatuidemo.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,10 +21,12 @@ import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.EMMessageListener;
+import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.DemoConstant;
+import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.user.ContactsChangeListener;
 import com.hyphenate.chatuidemo.group.GroupChangeListener;
@@ -33,6 +37,7 @@ import com.hyphenate.chatuidemo.settings.SettingsFragment;
 import com.hyphenate.chatuidemo.sign.SignInActivity;
 import com.hyphenate.chatuidemo.user.AddContactsActivity;
 import com.hyphenate.chatuidemo.user.ContactListFragment;
+import com.hyphenate.chatuidemo.user.model.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +73,8 @@ public class MainActivity extends BaseActivity {
         setupViewPager();
         //setup tabLayout with viewpager
         setupTabLayout();
+
+        getContactsFromServer();
     }
 
     private void setupViewPager() {
@@ -98,11 +105,38 @@ public class MainActivity extends BaseActivity {
                 }
             }
 
-            @Override public void onPageScrolled(int position, float positionOffset,
-                    int positionOffsetPixels) {
+            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
             @Override public void onPageScrollStateChanged(int state) {
+            }
+        });
+    }
+
+    private void getContactsFromServer() {
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setTitle("Load Contact...");
+        dialog.setMessage("waiting...");
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        DemoHelper.getInstance().asyncFetchContactsFromServer(new EMValueCallBack<List<UserEntity>>() {
+            @Override public void onSuccess(List<UserEntity> userEntities) {
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        dialog.dismiss();
+                        mContactListFragment.refresh();
+                    }
+                });
+            }
+
+            @Override public void onError(int i, final String s) {
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        dialog.dismiss();
+                        mContactListFragment.refresh();
+                        Snackbar.make(mTabLayout, "failure:" + s, Snackbar.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
@@ -115,14 +149,11 @@ public class MainActivity extends BaseActivity {
             View customTab = LayoutInflater.from(this).inflate(R.layout.em_tab_layout_item, null);
             ImageView imageView = (ImageView) customTab.findViewById(R.id.img_tab_item);
             if (i == 0) {
-                imageView.setImageDrawable(
-                        getResources().getDrawable(R.drawable.em_tab_contacts_selector));
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_contacts_selector));
             } else if (i == 1) {
-                imageView.setImageDrawable(
-                        getResources().getDrawable(R.drawable.em_tab_chats_selector));
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_chats_selector));
             } else {
-                imageView.setImageDrawable(
-                        getResources().getDrawable(R.drawable.em_tab_settings_selector));
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_settings_selector));
             }
             //set the custom tabview
             mTabLayout.getTabAt(i).setCustomView(customTab);
@@ -162,8 +193,7 @@ public class MainActivity extends BaseActivity {
                 }
             });
         } else if (mCurrentPageIndex == 1) {
-            searchView = (SearchView) MenuItemCompat.getActionView(
-                    toolbar.getMenu().findItem(R.id.menu_conversations_search));
+            searchView = (SearchView) MenuItemCompat.getActionView(toolbar.getMenu().findItem(R.id.menu_conversations_search));
             // search conversations list
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override public boolean onQueryTextSubmit(String query) {
@@ -336,8 +366,7 @@ public class MainActivity extends BaseActivity {
             @Override public void run() {
                 EMConversation conversation = EMClient.getInstance()
                         .chatManager()
-                        .getConversation(DemoConstant.CONVERSATION_NAME_APPLY,
-                                EMConversation.EMConversationType.Chat, true);
+                        .getConversation(DemoConstant.CONVERSATION_NAME_APPLY, EMConversation.EMConversationType.Chat, true);
                 if (conversation.getUnreadMsgCount() > 0) {
                     getTabUnreadStatusView(0).setVisibility(View.VISIBLE);
                 } else {
