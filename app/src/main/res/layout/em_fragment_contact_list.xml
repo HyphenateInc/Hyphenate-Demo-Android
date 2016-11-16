@@ -35,12 +35,27 @@
             android:textSize="@dimen/group_text_size"
             />
         <ImageView
+            android:id="@+id/img_cell_chevron_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:paddingRight="@dimen/group_arrow_right_icon"
             android:src="@drawable/cell_chevron_right"
+            />
+
+        <TextView
+            android:id="@+id/text_unread_notifications_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/txt_message"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@id/img_cell_chevron_right"
+            android:background="@drawable/ease_unread_count_bg"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
             />
     </RelativeLayout>
     <RelativeLayout
