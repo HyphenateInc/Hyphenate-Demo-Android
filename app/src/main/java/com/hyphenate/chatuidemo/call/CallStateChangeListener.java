@@ -5,10 +5,6 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chatuidemo.DemoConstant;
-import com.hyphenate.chatuidemo.call.CallEvent;
-import com.hyphenate.chatuidemo.call.CallStatus;
-import com.hyphenate.chatuidemo.call.VideoCallActivity;
-import com.hyphenate.chatuidemo.call.VoiceCallActivity;
 import com.hyphenate.util.EMLog;
 import org.greenrobot.eventbus.EventBus;
 
@@ -57,7 +53,7 @@ public class CallStateChangeListener implements EMCallStateChangeListener {
                 // Set call state accepted
                 CallStatus.getInstance().setCallState(CallStatus.CALL_STATUS_ACCEPTED);
                 break;
-            case DISCONNNECTED:
+            case DISCONNECTED:
                 /**
                  * End call, Reset call status, No processing is performed here.
                  *  {@link VideoCallActivity#onEventBus(CallEvent)}

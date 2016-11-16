@@ -366,12 +366,20 @@ public class VideoCallActivity extends CallActivity {
         vibrate();
         if (mMicSwitch.isActivated()) {
             // Pause voice transfer
-            EMClient.getInstance().callManager().pauseVoiceTransfer();
+            try {
+                EMClient.getInstance().callManager().pauseVoiceTransfer();
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
             mMicSwitch.setActivated(false);
             CallStatus.getInstance().setMic(false);
         } else {
             // Resume voice transfer
-            EMClient.getInstance().callManager().resumeVoiceTransfer();
+            try {
+                EMClient.getInstance().callManager().resumeVoiceTransfer();
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
             mMicSwitch.setActivated(true);
             CallStatus.getInstance().setMic(true);
         }
@@ -385,12 +393,20 @@ public class VideoCallActivity extends CallActivity {
         vibrate();
         if (mCameraSwitch.isActivated()) {
             // Pause video streaming
-            EMClient.getInstance().callManager().pauseVideoStreaming();
+            try {
+                EMClient.getInstance().callManager().pauseVideoTransfer();
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
             mCameraSwitch.setActivated(false);
             CallStatus.getInstance().setCamera(false);
         } else {
             // Resume video streaming
-            EMClient.getInstance().callManager().resumeVideoStreaming();
+            try {
+                EMClient.getInstance().callManager().resumeVideoTransfer();
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
             mCameraSwitch.setActivated(true);
             CallStatus.getInstance().setCamera(true);
         }
@@ -577,7 +593,7 @@ public class VideoCallActivity extends CallActivity {
                 mChronometer.start();
                 startMonitor();
                 break;
-            case DISCONNNECTED:
+            case DISCONNECTED:
                 mChronometer.stop();
                 // Set call state view show content
                 mCallStatusView.setText(R.string.em_call_disconnected);
@@ -705,7 +721,11 @@ public class VideoCallActivity extends CallActivity {
     @Override protected void onUserLeaveHint() {
         if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_ACCEPTED) {
             // The activity is not visible, Pause video streaming
-            EMClient.getInstance().callManager().pauseVideoStreaming();
+            try {
+                EMClient.getInstance().callManager().pauseVideoTransfer();
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
         }
         super.onUserLeaveHint();
     }
@@ -717,7 +737,11 @@ public class VideoCallActivity extends CallActivity {
         super.onResume();
         if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_ACCEPTED) {
             // The activity is resume, Resume video streaming
-            EMClient.getInstance().callManager().resumeVideoStreaming();
+            try {
+                EMClient.getInstance().callManager().resumeVideoTransfer();
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
         }
     }
 
