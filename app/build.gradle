@@ -46,7 +46,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
 
-    // Deisgn support Already included v4 and appcompat-v7, So here on the introduction of 'design'
+    // Design support already included v4 and appcompat-v7, So here on the introduction of 'design'
     compile 'com.android.support:design:24.2.1'
 
     compile 'org.greenrobot:eventbus:3.0.0'

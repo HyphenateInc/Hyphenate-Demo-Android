@@ -1,12 +1,9 @@
 package com.hyphenate.chatuidemo.user;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +16,6 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chatuidemo.DemoConstant;
@@ -28,7 +24,6 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.apply.ApplyActivity;
 import com.hyphenate.chatuidemo.chat.ChatActivity;
 import com.hyphenate.chatuidemo.group.GroupListActivity;
-import com.hyphenate.chatuidemo.receiver.BroadCastReceiverManager;
 import com.hyphenate.chatuidemo.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.user.model.UserEntity;
@@ -64,22 +59,9 @@ public class ContactListFragment extends Fragment {
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setRecyclerView();
-        if (entityList.size() == 0) {
-            getContactsFromServer();
-        }
-
-        //Contacts broadcast receiver
-        BroadCastReceiverManager.getInstance(getActivity())
-                .setDefaultLocalBroadCastReceiver(
-                        new BroadCastReceiverManager.DefaultLocalBroadCastReceiver() {
-                            @Override public void defaultOnReceive(Context context, Intent intent) {
-                                refresh();
-                            }
-                        });
     }
 
-    @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.em_fragment_contact_list, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -103,36 +85,6 @@ public class ContactListFragment extends Fragment {
                 itemLongClick(user);
             }
         });
-    }
-
-    private void getContactsFromServer() {
-        final ProgressDialog dialog = new ProgressDialog(getActivity());
-        dialog.setTitle("Load Contact...");
-        dialog.setMessage("waiting...");
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
-        DemoHelper.getInstance()
-                .asyncFetchContactsFromServer(new EMValueCallBack<List<UserEntity>>() {
-                    @Override public void onSuccess(List<UserEntity> userEntities) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override public void run() {
-                                dialog.dismiss();
-                                refresh();
-                            }
-                        });
-                    }
-
-                    @Override public void onError(int i, final String s) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override public void run() {
-                                dialog.dismiss();
-                                refresh();
-                                Snackbar.make(recyclerView, "failure:" + s, Snackbar.LENGTH_SHORT)
-                                        .show();
-                            }
-                        });
-                    }
-                });
     }
 
     public void filter(String newText) {
@@ -162,32 +114,28 @@ public class ContactListFragment extends Fragment {
         dialogFragment = new ShowDialogFragment();
         dialogFragment.show(getFragmentManager(), "dialog");
 
-        dialogFragment.setOnShowDialogClickListener(
-                new ShowDialogFragment.OnShowDialogClickListener() {
-                    @Override public String getUserId() {
-                        return user.getUsername();
-                    }
+        dialogFragment.setOnShowDialogClickListener(new ShowDialogFragment.OnShowDialogClickListener() {
+            @Override public String getUserId() {
+                return user.getUsername();
+            }
 
-                    @Override public void onVoiceCallClick() {
-                        startActivity(new Intent(getActivity(), VoiceCallActivity.class).putExtra(
-                                EaseConstant.EXTRA_USER_ID, user.getUsername())
-                                .putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false));
-                        dialogFragment.dismiss();
-                    }
+            @Override public void onVoiceCallClick() {
+                startActivity(new Intent(getActivity(), VoiceCallActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, user.getUsername())
+                        .putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false));
+                dialogFragment.dismiss();
+            }
 
-                    @Override public void onSendMessageClick() {
-                        startActivity(new Intent(getActivity(), ChatActivity.class).putExtra(
-                                EaseConstant.EXTRA_USER_ID, user.getUsername()));
-                        dialogFragment.dismiss();
-                    }
+            @Override public void onSendMessageClick() {
+                startActivity(new Intent(getActivity(), ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, user.getUsername()));
+                dialogFragment.dismiss();
+            }
 
-                    @Override public void onVideoCallClick() {
-                        startActivity(new Intent(getActivity(), VideoCallActivity.class).putExtra(
-                                EaseConstant.EXTRA_USER_ID, user.getUsername())
-                                .putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false));
-                        dialogFragment.dismiss();
-                    }
-                });
+            @Override public void onVideoCallClick() {
+                startActivity(new Intent(getActivity(), VideoCallActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, user.getUsername())
+                        .putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false));
+                dialogFragment.dismiss();
+            }
+        });
     }
 
     /**
@@ -228,8 +176,7 @@ public class ContactListFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override public void run() {
                             refresh();
-                            Toast.makeText(getActivity(), "contacts is deleted", Toast.LENGTH_LONG)
-                                    .show();
+                            Toast.makeText(getActivity(), "contacts is deleted", Toast.LENGTH_LONG).show();
                         }
                     });
                 } catch (HyphenateException e) {
@@ -246,14 +193,11 @@ public class ContactListFragment extends Fragment {
         new Thread(new Runnable() {
             @Override public void run() {
                 try {
-                    EMClient.getInstance()
-                            .contactManager()
-                            .addUserToBlackList(userEntity.getUsername(), true);
+                    EMClient.getInstance().contactManager().addUserToBlackList(userEntity.getUsername(), true);
                     DemoHelper.getInstance().deleteContacts(userEntity);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override public void run() {
-                            Toast.makeText(getActivity(), "Contacts is add blacklist",
-                                    Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Contacts is add blacklist", Toast.LENGTH_LONG).show();
                             refresh();
                         }
                     });
@@ -297,7 +241,7 @@ public class ContactListFragment extends Fragment {
      */
     private void loadContacts() {
         if (entityList == null) {
-            entityList = new ArrayList<UserEntity>();
+            entityList = new ArrayList<>();
         }
         entityList.clear();
         entityList.addAll(DemoHelper.getInstance().getContactList().values());
@@ -311,18 +255,12 @@ public class ContactListFragment extends Fragment {
 
     @Override public void onResume() {
         super.onResume();
-
-        // broadcast register
-        BroadCastReceiverManager.getInstance(getActivity())
-                .registerBroadCastReceiver(DemoConstant.BROADCAST_ACTION_CONTACTS);
         // refresh ui
         refresh();
     }
 
     @Override public void onStop() {
         super.onStop();
-        // unregister broadcast receiver
-        BroadCastReceiverManager.getInstance(getActivity()).unRegisterBroadCastReceiver();
     }
 
     @OnClick({ R.id.layout_group_entry, R.id.layout_apply_entry }) void onclick(View v) {
