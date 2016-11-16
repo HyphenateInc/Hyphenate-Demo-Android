@@ -75,7 +75,7 @@
     <string name="em_contacts_add">Add contacts</string>
     <string name="em_contacts_apply_send_success">Contacts apply for sent successfully</string>
     <string name="em_contacts_apply_send_failed">Contacts apply for failed to send</string>
-    <string name="em_contacts_apply">Notification</string>
+    <string name="em_contacts_apply">Notifications</string>
     <string name="em_contacts_apply_agree">Agree</string>
     <string name="em_contacts_apply_reject">Reject</string>
     <string name="em_wait">Wait...</string>

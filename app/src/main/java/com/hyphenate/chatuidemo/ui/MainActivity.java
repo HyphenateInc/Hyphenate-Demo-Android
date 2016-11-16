@@ -387,52 +387,64 @@ public class MainActivity extends BaseActivity {
 
         @Override public void onContactInvited(String username, String reason) {
             refreshApply();
+            refreshContacts();
         }
 
         @Override public void onFriendRequestAccepted(String username) {
             refreshApply();
+            refreshContacts();
         }
 
         @Override public void onFriendRequestDeclined(String username) {
             refreshApply();
+            refreshContacts();
         }
     }
 
     private class DefaultGroupChangeListener extends GroupChangeListener {
         @Override public void onInvitationReceived(String s, String s1, String s2, String s3) {
             refreshApply();
+            refreshContacts();
         }
 
         @Override public void onRequestToJoinReceived(String s, String s1, String s2, String s3) {
             refreshApply();
+            refreshContacts();
         }
 
         @Override public void onRequestToJoinAccepted(String s, String s1, String s2) {
             refreshApply();
+            refreshContacts();
         }
 
         @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
             refreshApply();
+            refreshContacts();
         }
 
         @Override public void onInvitationAccepted(String s, String s1, String s2) {
             refreshApply();
+            refreshContacts();
         }
 
         @Override public void onInvitationDeclined(String s, String s1, String s2) {
             refreshApply();
+            refreshContacts();
         }
 
         @Override public void onUserRemoved(String s, String s1) {
             refreshApply();
+            refreshContacts();
         }
 
         @Override public void onGroupDestroyed(String s, String s1) {
             refreshApply();
+            refreshContacts();
         }
 
         @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
             refreshApply();
+            refreshContacts();
         }
     }
 }
