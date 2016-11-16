@@ -86,7 +86,7 @@
             android:title="Account">
             <intent
                 android:action="android.intent.action.MAIN"
-                android:targetClass="com.hyphenate.chatuidemo.ui.settings.AccountActivity"
+                android:targetClass="com.hyphenate.chatuidemo.settings.AccountActivity"
                 android:targetPackage="com.hyphenate.chatuidemo"/>
         </PreferenceScreen>
     </PreferenceCategory>

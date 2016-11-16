@@ -108,11 +108,9 @@
     <string name="em_pref_notification_vibrate">Notification Vibrate</string>
     <string name="em_pref_notification_display_name">Display name</string>
 
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="groups">Groups</string>
 
-
+    <!-- chat -->
     <string name="chat_voice_call">Voice call</string>
     <string name="chat_video_call">Video call</string>
     <string name="chat_expand_more">More</string>
@@ -124,7 +122,7 @@
     <string name="chat_send">Send</string>
     <string name="not_connect_to_server">Not connect to server, please try again later</string>
 
-
+    <!-- account -->
     <string name="account_item_name_id">Hyphenate ID</string>
     <string name="account_item_name_nick">Nick</string>
     <string name="account_title_upload_photo">Upload Photo</string>
@@ -139,6 +137,10 @@
     <string name="toast_update_photo_fail">Update photo fail!</string>
     <string name="toast_updatenick_success">update nickname success!</string>
     <string name="toast_updatenick_fail">update nickname fail!</string>
+
+    <!-- commons-->
+    <string name="Logoff_notification">Logoff notification</string>
+    <string name="connect_conflict">The same account was logged in other device</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_ok">Ok</string>
 </resources>

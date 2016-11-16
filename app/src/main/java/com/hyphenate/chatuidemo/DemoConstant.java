@@ -17,6 +17,9 @@ public class DemoConstant extends EaseConstant{
     //0 : private group,1:public group
     public static final String MESSAGE_ATTR_GROUP_TYPE = "em_group_type";
 
+
+    public static final String ACCOUNT_CONFLICT = "conflict";
+
     // Broadcast action
     public static final String BROADCAST_ACTION_CALL = "com.hyphenate.action.call";
     public static final String BROADCAST_ACTION_CONTACTS = "com.hyphenate.action.contacts";

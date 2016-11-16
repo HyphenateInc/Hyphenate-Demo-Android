@@ -9,16 +9,18 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMError;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMOptions;
-import com.hyphenate.chatuidemo.group.GroupChangeListener;
-import com.hyphenate.chatuidemo.chat.MessageNotifier;
 import com.hyphenate.chatuidemo.call.CallReceiver;
 import com.hyphenate.chatuidemo.call.CallStateChangeListener;
+import com.hyphenate.chatuidemo.chat.MessageNotifier;
+import com.hyphenate.chatuidemo.group.GroupChangeListener;
+import com.hyphenate.chatuidemo.ui.MainActivity;
 import com.hyphenate.chatuidemo.user.ContactsChangeListener;
 import com.hyphenate.chatuidemo.user.model.UserDao;
 import com.hyphenate.chatuidemo.user.model.UserEntity;
@@ -327,8 +329,11 @@ public class DemoHelper {
              *
              * @param errorCode Disconnected error code
              */
-            @Override public void onDisconnected(final int errorCode) {
+            @Override public void onDisconnected(int errorCode) {
                 EMLog.d(TAG, "onDisconnected: " + errorCode);
+                if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                    onConnectionConflict();
+                }
             }
         };
         EMClient.getInstance().addConnectionListener(mConnectionListener);
@@ -550,6 +555,17 @@ public class DemoHelper {
             }
         });
     }
+
+    /**
+     * user has logged into another device
+     */
+    protected void onConnectionConflict(){
+        Intent intent = new Intent(mContext, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(DemoConstant.ACCOUNT_CONFLICT, true);
+        mContext.startActivity(intent);
+    }
+
 
     private synchronized void reset() {
         entityMap.clear();

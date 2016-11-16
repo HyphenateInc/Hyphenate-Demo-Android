@@ -731,6 +731,19 @@ public class ChatActivity extends BaseActivity {
         }
     };
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        //Ensure that only a chat activity
+        String username = intent.getStringExtra(EaseConstant.EXTRA_USER_ID);
+        if (toChatUsername.equals(username))
+            super.onNewIntent(intent);
+        else {
+            finish();
+            startActivity(intent);
+        }
+
+    }
+
     @Override protected void onResume() {
         super.onResume();
         DemoHelper.getInstance().pushActivity(this);
