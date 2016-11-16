@@ -16,9 +16,13 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessage.ChatType;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chatuidemo.call.CallReceiver;
 import com.hyphenate.chatuidemo.call.CallStateChangeListener;
+import com.hyphenate.chatuidemo.call.VideoCallActivity;
+import com.hyphenate.chatuidemo.call.VoiceCallActivity;
+import com.hyphenate.chatuidemo.chat.ChatActivity;
 import com.hyphenate.chatuidemo.chat.MessageNotifier;
 import com.hyphenate.chatuidemo.group.GroupChangeListener;
 import com.hyphenate.chatuidemo.ui.MainActivity;
@@ -64,6 +68,10 @@ public class DemoHelper {
 
     private UserProfileManager userProManager;
 
+    //whether in calling
+    public boolean isVoiceCalling;
+    public boolean isVideoCalling;
+
     /**
      * save foreground Activity which registered message listeners
      */
@@ -93,66 +101,24 @@ public class DemoHelper {
             EMLog.d(TAG, "------- init hyphenate start --------------");
             //init hyphenate sdk with options
             EMClient.getInstance().init(context, initOptions());
+            // set debug mode open:true, close:false
+            EMClient.getInstance().setDebugMode(true);
             //init EaseUI if you want to use it
             EaseUI.getInstance().init(context);
             PreferenceManager.init(context);
             //init user manager
             getUserProfileManager().init(context);
 
-            // set debug mode open:true, close:false
-            EMClient.getInstance().setDebugMode(true);
             //init message notifier
             mNotifier.init(context);
             //set events listeners
             setGlobalListener();
-            setNotificationType();
             setEaseUIProviders();
 
             EMLog.d(TAG, "------- init hyphenate end --------------");
         }
     }
 
-    private void setNotificationType() {
-        mNotifier.setNotificationInfoProvider(new MessageNotifier.EaseNotificationInfoProvider() {
-            @Override public String getDisplayedText(EMMessage message) {
-                return null;
-            }
-
-            @Override public String getLatestText(EMMessage message, int fromUsersNum, int messageNum) {
-                return null;
-            }
-
-            @Override public String getTitle(EMMessage message) {
-                return null;
-            }
-
-            @Override public int getSmallIcon(EMMessage message) {
-                return 0;
-            }
-
-            @Override public Intent getLaunchIntent(EMMessage message) {
-                return null;
-            }
-        });
-
-        //EaseUI.getInstance().setSettingsProvider(new EaseUI.EaseSettingsProvider() {
-        //    @Override public boolean isMsgNotifyAllowed(EMMessage message) {
-        //        return false;
-        //    }
-        //
-        //    @Override public boolean isMsgSoundAllowed(EMMessage message) {
-        //        return false;
-        //    }
-        //
-        //    @Override public boolean isMsgVibrateAllowed(EMMessage message) {
-        //        return false;
-        //    }
-        //
-        //    @Override public boolean isSpeakerOpened() {
-        //        return false;
-        //    }
-        //});
-    }
 
     /**
      * init sdk options
@@ -260,16 +226,99 @@ public class DemoHelper {
                 return getUserInfo(username);
             }
         });
+        //set notification options, will use default if you don't set it
+        getNotifier().setNotificationInfoProvider(new MessageNotifier.EaseNotificationInfoProvider() {
+
+            @Override
+            public String getTitle(EMMessage message) {
+                //you can update title here
+                return null;
+            }
+
+            @Override
+            public int getSmallIcon(EMMessage message) {
+                //you can update icon here
+                return 0;
+            }
+
+            @Override
+            public String getDisplayedText(EMMessage message) {
+                // be used on notification bar, different text according the message type.
+                String ticker = EaseCommonUtils.getMessageDigest(message, mContext);
+                if(message.getType() == EMMessage.Type.TXT){
+                    ticker = ticker.replaceAll("\\[.{2,3}\\]", "[Emoticon]");
+                }
+                EaseUser user = getUserInfo(message.getFrom());
+                if(user != null){
+                    return user.getNickname() + ": " + ticker;
+                }else{
+                    return message.getFrom() + ": " + ticker;
+                }
+            }
+
+            @Override
+            public String getLatestText(EMMessage message, int fromUsersNum, int messageNum) {
+                // here you can customize the text.
+                // return fromUsersNum + "contacts send " + messageNum + "messages to you";
+                return null;
+            }
+
+            @Override
+            public Intent getLaunchIntent(EMMessage message) {
+                // you can set what activity you want display when user click the notification
+                Intent intent = new Intent(mContext, ChatActivity.class);
+                // open calling activity if there is call
+                if(isVideoCalling){
+                    intent = new Intent(mContext, VideoCallActivity.class);
+                }else if(isVoiceCalling){
+                    intent = new Intent(mContext, VoiceCallActivity.class);
+                }else{
+                    ChatType chatType = message.getChatType();
+                    if (chatType == ChatType.Chat) { // single chat message
+                        intent.putExtra("userId", message.getFrom());
+                        intent.putExtra("chatType", Constant.CHATTYPE_SINGLE);
+                    } else { // group chat message
+                        // message.getTo() is the group id
+                        intent.putExtra("userId", message.getTo());
+                        if(chatType == ChatType.GroupChat){
+                            intent.putExtra("chatType", Constant.CHATTYPE_GROUP);
+                        }else{
+                            intent.putExtra("chatType", Constant.CHATTYPE_CHATROOM);
+                        }
+
+                    }
+                }
+                return intent;
+            }
+        });
+
+        //EaseUI.getInstance().setSettingsProvider(new EaseUI.EaseSettingsProvider() {
+        //    @Override public boolean isMsgNotifyAllowed(EMMessage message) {
+        //        return false;
+        //    }
+        //
+        //    @Override public boolean isMsgSoundAllowed(EMMessage message) {
+        //        return false;
+        //    }
+        //
+        //    @Override public boolean isMsgVibrateAllowed(EMMessage message) {
+        //        return false;
+        //    }
+        //
+        //    @Override public boolean isSpeakerOpened() {
+        //        return false;
+        //    }
+        //});
     }
 
     private EaseUser getUserInfo(String username) {
-        // To get instance of EaseUser, here we get it from the user list in memory
-        // You'd better cache it if you get it from your server
         EaseUser user;
         if (username.equals(EMClient.getInstance().getCurrentUser())) {
             return getUserProfileManager().getCurrentUserInfo();
         }
         user = getContactList().get(username);
+
+        //TODO Get not in the buddy list of group members in the specific information, that stranger information, demo not implemented
 
         // if user is not in your contacts, set initial letter for him/her
         if (user == null) {
@@ -561,7 +610,7 @@ public class DemoHelper {
     protected void onConnectionConflict(){
         Intent intent = new Intent(mContext, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(DemoConstant.ACCOUNT_CONFLICT, true);
+        intent.putExtra(Constant.ACCOUNT_CONFLICT, true);
         mContext.startActivity(intent);
     }
 

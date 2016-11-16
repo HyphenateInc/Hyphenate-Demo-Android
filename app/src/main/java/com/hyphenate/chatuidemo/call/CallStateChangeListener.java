@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import com.hyphenate.chat.EMCallStateChangeListener;
-import com.hyphenate.chatuidemo.DemoConstant;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.util.EMLog;
 import org.greenrobot.eventbus.EventBus;
 
@@ -34,7 +34,7 @@ public class CallStateChangeListener implements EMCallStateChangeListener {
         EventBus.getDefault().post(event);
 
         // send broadcast
-        Intent intent = new Intent(DemoConstant.BROADCAST_ACTION_CALL);
+        Intent intent = new Intent(Constant.BROADCAST_ACTION_CALL);
         intent.putExtra("callState", callState);
         intent.putExtra("callError", callError);
         localBroadcastManager = LocalBroadcastManager.getInstance(mContext);

@@ -15,7 +15,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chatuidemo.DemoConstant;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseSmileUtils;
@@ -49,7 +49,7 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
         EMConversation conversation = getItem(position);
         // get username or group id
         String username = conversation.getUserName();
-        if (conversation.getUserName().equals(DemoConstant.CONVERSATION_NAME_APPLY)) {
+        if (conversation.getUserName().equals(Constant.CONVERSATION_NAME_APPLY)) {
             holder.mNameView.setText(R.string.em_contacts_apply);
         } else {
             if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {

@@ -6,7 +6,7 @@ import com.hyphenate.easeui.EaseConstant;
  * Created by wei on 2016/11/9.
  */
 
-public class DemoConstant extends EaseConstant{
+public class Constant extends EaseConstant{
     public static final String CONVERSATION_NAME_APPLY = "em_conversation_apply";
     //0:chat,1:groupChat
     public static final String MESSAGE_ATTR_TYPE = "em_type";

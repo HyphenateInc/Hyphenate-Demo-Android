@@ -47,6 +47,8 @@ public class VoiceCallActivity extends CallActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_voice_call);
 
+        DemoHelper.getInstance().isVoiceCalling = true;
+
         // init ButterKnife
         ButterKnife.bind(this);
 
@@ -450,5 +452,6 @@ public class VoiceCallActivity extends CallActivity {
 
     @Override protected void onDestroy() {
         super.onDestroy();
+        DemoHelper.getInstance().isVoiceCalling = false;
     }
 }

@@ -75,6 +75,7 @@ public class VideoCallActivity extends CallActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_video_call);
 
+        DemoHelper.getInstance().isVideoCalling = true;
         // init ButterKnife
         ButterKnife.bind(this);
 
@@ -747,5 +748,6 @@ public class VideoCallActivity extends CallActivity {
 
     @Override protected void onDestroy() {
         super.onDestroy();
+        DemoHelper.getInstance().isVideoCalling = false;
     }
 }

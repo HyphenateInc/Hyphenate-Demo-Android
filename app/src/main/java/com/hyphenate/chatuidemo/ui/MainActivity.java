@@ -22,14 +22,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chatuidemo.DemoConstant;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.chat.ConversationListFragment;
@@ -314,7 +313,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (intent.getBooleanExtra(DemoConstant.ACCOUNT_CONFLICT, false) && !isConflictDialogShow) {
+        if (intent.getBooleanExtra(Constant.ACCOUNT_CONFLICT, false) && !isConflictDialogShow) {
             showConflictDialog();
         }
     }
@@ -383,7 +382,7 @@ public class MainActivity extends BaseActivity {
             @Override public void run() {
                 EMConversation conversation = EMClient.getInstance()
                         .chatManager()
-                        .getConversation(DemoConstant.CONVERSATION_NAME_APPLY, EMConversation.EMConversationType.Chat, true);
+                        .getConversation(Constant.CONVERSATION_NAME_APPLY, EMConversation.EMConversationType.Chat, true);
                 if (conversation.getUnreadMsgCount() > 0) {
                     getTabUnreadStatusView(0).setVisibility(View.VISIBLE);
                 } else {
