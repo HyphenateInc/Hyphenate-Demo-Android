@@ -24,12 +24,12 @@
         android:id="@+id/img_new_group_avatar"
         android:layout_width="@dimen/group_item_avatar_size"
         android:layout_height="@dimen/group_item_avatar_size"
-        android:src="@drawable/ease_default_avatar"
+        android:src="@drawable/ease_ic_group_default"
         />
 
     <EditText
         android:id="@+id/edit_new_group_name"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/group_name_margin_left"
         android:textColor="#8798a4"
@@ -107,6 +107,7 @@
       android:background="?android:attr/selectableItemBackground"
       >
     <TextView
+        android:id="@+id/text_allow_member_to_invite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

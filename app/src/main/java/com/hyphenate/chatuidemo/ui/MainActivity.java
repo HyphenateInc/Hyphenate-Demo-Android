@@ -1,9 +1,13 @@
 package com.hyphenate.chatuidemo.ui;
 
+import butterknife.BindView;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +25,7 @@ import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.EMMessageListener;
+import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
@@ -37,6 +42,7 @@ import com.hyphenate.chatuidemo.user.AddContactsActivity;
 import com.hyphenate.chatuidemo.user.ContactListFragment;
 import com.hyphenate.chatuidemo.user.ContactsChangeListener;
 import com.hyphenate.util.EMLog;
+import com.hyphenate.chatuidemo.user.model.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +79,8 @@ public class MainActivity extends BaseActivity {
         setupViewPager();
         //setup tabLayout with viewpager
         setupTabLayout();
+
+        getContactsFromServer();
     }
 
     private void setupViewPager() {
@@ -103,11 +111,38 @@ public class MainActivity extends BaseActivity {
                 }
             }
 
-            @Override public void onPageScrolled(int position, float positionOffset,
-                    int positionOffsetPixels) {
+            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
 
             @Override public void onPageScrollStateChanged(int state) {
+            }
+        });
+    }
+
+    private void getContactsFromServer() {
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setTitle("Load Contact...");
+        dialog.setMessage("waiting...");
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        DemoHelper.getInstance().asyncFetchContactsFromServer(new EMValueCallBack<List<UserEntity>>() {
+            @Override public void onSuccess(List<UserEntity> userEntities) {
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        dialog.dismiss();
+                        mContactListFragment.refresh();
+                    }
+                });
+            }
+
+            @Override public void onError(int i, final String s) {
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        dialog.dismiss();
+                        mContactListFragment.refresh();
+                        Snackbar.make(mTabLayout, "failure:" + s, Snackbar.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
@@ -120,14 +155,11 @@ public class MainActivity extends BaseActivity {
             View customTab = LayoutInflater.from(this).inflate(R.layout.em_tab_layout_item, null);
             ImageView imageView = (ImageView) customTab.findViewById(R.id.img_tab_item);
             if (i == 0) {
-                imageView.setImageDrawable(
-                        getResources().getDrawable(R.drawable.em_tab_contacts_selector));
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_contacts_selector));
             } else if (i == 1) {
-                imageView.setImageDrawable(
-                        getResources().getDrawable(R.drawable.em_tab_chats_selector));
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_chats_selector));
             } else {
-                imageView.setImageDrawable(
-                        getResources().getDrawable(R.drawable.em_tab_settings_selector));
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_settings_selector));
             }
             //set the custom tabview
             mTabLayout.getTabAt(i).setCustomView(customTab);
@@ -167,8 +199,7 @@ public class MainActivity extends BaseActivity {
                 }
             });
         } else if (mCurrentPageIndex == 1) {
-            searchView = (SearchView) MenuItemCompat.getActionView(
-                    toolbar.getMenu().findItem(R.id.menu_conversations_search));
+            searchView = (SearchView) MenuItemCompat.getActionView(toolbar.getMenu().findItem(R.id.menu_conversations_search));
             // search conversations list
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override public boolean onQueryTextSubmit(String query) {
@@ -249,6 +280,11 @@ public class MainActivity extends BaseActivity {
 
     @Override protected void onResume() {
         super.onResume();
+        //register message listener
+        EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
+        EMClient.getInstance().contactManager().setContactListener(mContactListener);
+        EMClient.getInstance().groupManager().addGroupChangeListener(mGroupListener);
+
         // Check that you are logged in
         if (EMClient.getInstance().isLoggedInBefore()) {
             // Load the group into memory
@@ -262,6 +298,7 @@ public class MainActivity extends BaseActivity {
             EMClient.getInstance().groupManager().addGroupChangeListener(mGroupListener);
 
             updateUnreadMsgLabel();
+            refreshApply();
             //refreshContacts();
         }
     }
@@ -334,19 +371,24 @@ public class MainActivity extends BaseActivity {
     private void refreshContacts() {
         runOnUiThread(new Runnable() {
             @Override public void run() {
+                //refresh ContactListFragment
+                Fragment fragment = ((PagerAdapter) mViewPager.getAdapter()).getItem(0);
+                ((ContactListFragment) fragment).refresh();
+            }
+        });
+    }
+
+    private void refreshApply() {
+        runOnUiThread(new Runnable() {
+            @Override public void run() {
                 EMConversation conversation = EMClient.getInstance()
                         .chatManager()
-                        .getConversation(DemoConstant.CONVERSATION_NAME_APPLY,
-                                EMConversation.EMConversationType.Chat, true);
+                        .getConversation(DemoConstant.CONVERSATION_NAME_APPLY, EMConversation.EMConversationType.Chat, true);
                 if (conversation.getUnreadMsgCount() > 0) {
                     getTabUnreadStatusView(0).setVisibility(View.VISIBLE);
                 } else {
                     getTabUnreadStatusView(0).setVisibility(View.INVISIBLE);
                 }
-
-                //refresh ContactListFragment
-                Fragment fragment = ((PagerAdapter) mViewPager.getAdapter()).getItem(0);
-                ((ContactListFragment) fragment).refresh();
             }
         });
     }
@@ -398,52 +440,64 @@ public class MainActivity extends BaseActivity {
         }
 
         @Override public void onContactInvited(String username, String reason) {
+            refreshApply();
             refreshContacts();
         }
 
         @Override public void onFriendRequestAccepted(String username) {
+            refreshApply();
             refreshContacts();
         }
 
         @Override public void onFriendRequestDeclined(String username) {
+            refreshApply();
             refreshContacts();
         }
     }
 
     private class DefaultGroupChangeListener extends GroupChangeListener {
         @Override public void onInvitationReceived(String s, String s1, String s2, String s3) {
+            refreshApply();
             refreshContacts();
         }
 
         @Override public void onRequestToJoinReceived(String s, String s1, String s2, String s3) {
+            refreshApply();
             refreshContacts();
         }
 
         @Override public void onRequestToJoinAccepted(String s, String s1, String s2) {
+            refreshApply();
             refreshContacts();
         }
 
         @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
+            refreshApply();
             refreshContacts();
         }
 
         @Override public void onInvitationAccepted(String s, String s1, String s2) {
+            refreshApply();
             refreshContacts();
         }
 
         @Override public void onInvitationDeclined(String s, String s1, String s2) {
+            refreshApply();
             refreshContacts();
         }
 
         @Override public void onUserRemoved(String s, String s1) {
+            refreshApply();
             refreshContacts();
         }
 
         @Override public void onGroupDestroyed(String s, String s1) {
+            refreshApply();
             refreshContacts();
         }
 
         @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
+            refreshApply();
             refreshContacts();
         }
     }
