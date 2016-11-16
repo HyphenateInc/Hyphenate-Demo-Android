@@ -14,12 +14,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chatuidemo.DemoConstant;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
@@ -46,6 +48,7 @@ public class ContactListFragment extends Fragment {
 
     private static String TAG = ContactListFragment.class.getSimpleName();
 
+    @BindView(R.id.text_unread_notifications_number) TextView unreadNumberView;
     @BindView(R.id.rv_contacts) RecyclerView recyclerView;
     ShowDialogFragment dialogFragment;
 
@@ -264,6 +267,20 @@ public class ContactListFragment extends Fragment {
     public void refresh() {
 
         loadContacts();
+
+        if (unreadNumberView != null) {
+            EMConversation conversation = EMClient.getInstance()
+                    .chatManager()
+                    .getConversation(DemoConstant.CONVERSATION_NAME_APPLY,
+                            EMConversation.EMConversationType.Chat, true);
+            int count = conversation.getUnreadMsgCount();
+            if (count != 0) {
+                unreadNumberView.setText(String.valueOf(count));
+                unreadNumberView.setVisibility(View.VISIBLE);
+            } else {
+                unreadNumberView.setVisibility(View.GONE);
+            }
+        }
 
         if (adapter == null) {
             adapter = new ContactListAdapter(getActivity(), entityList);

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.Selection;
@@ -40,6 +41,8 @@ import java.io.ByteArrayOutputStream;
 
 public class AccountActivity extends BaseActivity {
 
+    private BaseActivity mActivity;
+
     private static final int REQUEST_CODE_PICK = 1;
     private static final int REQUEST_CODE_CUTTING = 2;
 
@@ -53,7 +56,7 @@ public class AccountActivity extends BaseActivity {
         setContentView(R.layout.em_activity_account);
 
         ButterKnife.bind(this);
-
+        mActivity = this;
         init();
     }
 
@@ -108,27 +111,30 @@ public class AccountActivity extends BaseActivity {
         final String nick =
                 DemoHelper.getInstance().getUserProfileManager().getCurrentUserInfo().getNickname();
         editText.setText(nick);
-        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle(R.string.account_set_nickname)
-                .setView(editText)
-                .setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
+        AlertDialog alertDialog =
+                new AlertDialog.Builder(this).setTitle(R.string.account_set_nickname)
+                        .setView(editText)
+                        .setPositiveButton(R.string.common_ok,
+                                new DialogInterface.OnClickListener() {
 
-                    @Override public void onClick(DialogInterface dialog, int which) {
-                        String nickString = editText.getText().toString();
-                        if (TextUtils.isEmpty(nickString)) {
-                            Toast.makeText(AccountActivity.this,
-                                    getString(R.string.toast_nick_not_isnull), Toast.LENGTH_SHORT)
-                                    .show();
-                            return;
-                        }
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String nickString = editText.getText().toString();
+                                        if (TextUtils.isEmpty(nickString)) {
+                                            Toast.makeText(AccountActivity.this,
+                                                    getString(R.string.toast_nick_not_isnull),
+                                                    Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
 
-                        if (nickString.equals(nick)) {
-                            return;
-                        }
-                        updateRemoteNick(nickString);
-                    }
-                })
-                .setNegativeButton(R.string.common_cancel, null)
-                .create();
+                                        if (nickString.equals(nick)) {
+                                            return;
+                                        }
+                                        updateRemoteNick(nickString);
+                                    }
+                                })
+                        .setNegativeButton(R.string.common_cancel, null)
+                        .create();
         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override public void onShow(DialogInterface dialog) {
                 Editable editable = editText.getText();
@@ -137,18 +143,34 @@ public class AccountActivity extends BaseActivity {
             }
         });
         alertDialog.show();
-
     }
 
     @OnClick(R.id.btn_sign_out) void signOut() {
+
+        final ProgressDialog dialog = new ProgressDialog(mActivity);
+        dialog.setMessage(mActivity.getString(R.string.em_hint_loading));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
         DemoHelper.getInstance().signOut(true, new EMCallBack() {
             @Override public void onSuccess() {
-                startActivity(new Intent(AccountActivity.this, MainActivity.class).addFlags(
-                        Intent.FLAG_ACTIVITY_NEW_TASK));
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        dialog.dismiss();
+                        startActivity(new Intent(AccountActivity.this, MainActivity.class).addFlags(
+                                Intent.FLAG_ACTIVITY_NEW_TASK));
+                    }
+                });
             }
 
-            @Override public void onError(int i, String s) {
-
+            @Override public void onError(final int i, final String s) {
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        dialog.dismiss();
+                        Toast.makeText(mActivity, "Sign out failed " + i + ", " + s,
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
             }
 
             @Override public void onProgress(int i, String s) {
