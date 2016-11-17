@@ -101,7 +101,6 @@ public class ParseManager {
                             user.setAvatar(parseFile.getUrl());
                         }
                         user.setNickname(pObject.getString(CONFIG_NICK));
-                        EaseCommonUtils.setUserInitialLetter(user);
                         mList.add(user);
                     }
                     callback.onSuccess(mList);

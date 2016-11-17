@@ -24,11 +24,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.EaseConstant;
-import com.hyphenate.easeui.model.EaseUser;
 import com.hyphenate.util.EMLog;
-import com.hyphenate.util.HanziToPinyin;
-import com.hyphenate.util.HanziToPinyin.Token;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EaseCommonUtils {
@@ -147,50 +143,6 @@ public class EaseCommonUtils {
 			return "";
 	}
 	
-	/**
-     * set initial letter of according user's nickname( username if no nickname)
-     * 
-     * @param user
-     */
-    public static void setUserInitialLetter(EaseUser user) {
-        final String DefaultLetter = "#";
-        String letter = DefaultLetter;
-        
-        final class GetInitialLetter {
-            String getLetter(String name) {
-                if (TextUtils.isEmpty(name)) {
-                    return DefaultLetter;
-                }
-                char char0 = name.toLowerCase().charAt(0);
-                if (Character.isDigit(char0)) {
-                    return DefaultLetter;
-                }
-                ArrayList<Token> l = HanziToPinyin.getInstance().get(name.substring(0, 1));
-                if (l != null && l.size() > 0 && l.get(0).target.length() > 0)
-                {
-                    Token token = l.get(0);
-                    String letter = token.target.substring(0, 1).toUpperCase();
-                    char c = letter.charAt(0);
-                    if (c < 'A' || c > 'Z') {
-                        return DefaultLetter;
-                    }
-                    return letter;
-                }
-                return DefaultLetter;
-            }
-        }
-        
-        if ( !TextUtils.isEmpty(user.getNickname()) ) {
-            letter = new GetInitialLetter().getLetter(user.getNickname());
-            user.setInitialLetter(letter);
-            return;
-        } 
-        if (letter == DefaultLetter && !TextUtils.isEmpty(user.getUsername())) {
-            letter = new GetInitialLetter().getLetter(user.getUsername());
-        }
-        user.setInitialLetter(letter);
-    }
-    
     /**
      * change the chat type to EMConversationType
      * @param chatType

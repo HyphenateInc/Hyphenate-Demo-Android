@@ -38,13 +38,13 @@ public class EaseUserUtils {
      */
     public static void setUserAvatar(Context context, String username, ImageView imageView){
         EaseUser user = getUserInfo(username);
-        if(user != null && user.getAvatar() != null){
+        if(user != null && user.getEaseAvatar() != null){
             try {
-                int avatarResId = Integer.parseInt(user.getAvatar());
+                int avatarResId = Integer.parseInt(user.getEaseAvatar());
                 Glide.with(context).load(avatarResId).into(imageView);
             } catch (Exception e) {
                 //use default avatar
-                Glide.with(context).load(user.getAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(
+                Glide.with(context).load(user.getEaseAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(
                         R.drawable.ease_default_avatar).into(imageView);
             }
         }else{
@@ -58,8 +58,8 @@ public class EaseUserUtils {
     public static void setUserNick(String username,TextView textView){
         if(textView != null){
             EaseUser user = getUserInfo(username);
-            if(user != null && user.getNickname() != null){
-                textView.setText(user.getNickname());
+            if(user != null && user.getEaseNickname() != null){
+                textView.setText(user.getEaseNickname());
             }else{
                 textView.setText(username);
             }

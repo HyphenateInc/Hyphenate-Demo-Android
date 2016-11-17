@@ -250,7 +250,7 @@ public class DemoHelper {
                 }
                 EaseUser user = getUserInfo(message.getFrom());
                 if(user != null){
-                    return user.getNickname() + ": " + ticker;
+                    return user.getEaseNickname() + ": " + ticker;
                 }else{
                     return message.getFrom() + ": " + ticker;
                 }
@@ -322,8 +322,7 @@ public class DemoHelper {
 
         // if user is not in your contacts, set initial letter for him/her
         if (user == null) {
-            user = new EaseUser(username);
-            EaseCommonUtils.setUserInitialLetter(user);
+            user = new UserEntity(username);
         }
         return user;
     }
@@ -540,7 +539,6 @@ public class DemoHelper {
                     final List<UserEntity> entityList = new ArrayList<>();
                     for (String userId : hxIdList) {
                         UserEntity user = new UserEntity(userId);
-                        EaseCommonUtils.setUserInitialLetter(user);
                         entityList.add(user);
                     }
 
