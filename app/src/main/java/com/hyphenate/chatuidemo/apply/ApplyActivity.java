@@ -115,7 +115,7 @@ public class ApplyActivity extends BaseActivity {
      */
     private void agreeApply(final String msgId) {
         final ProgressDialog dialog = new ProgressDialog(mActivity);
-        dialog.setMessage(mActivity.getResources().getString(R.string.em_wait));
+        dialog.setMessage(getString(R.string.em_wait));
         dialog.show();
 
         new Thread(new Runnable() {
@@ -142,9 +142,8 @@ public class ApplyActivity extends BaseActivity {
                     } else {
                         EMClient.getInstance()
                                 .contactManager()
-                                .acceptInvitation(
-                                        message.getStringAttribute(DemoConstant.MESSAGE_ATTR_USERNAME,
-                                                ""));
+                                .acceptInvitation(message.getStringAttribute(
+                                        DemoConstant.MESSAGE_ATTR_USERNAME, ""));
                     }
 
                     // update contacts apply for message status
@@ -176,7 +175,7 @@ public class ApplyActivity extends BaseActivity {
      */
     private void rejectApply(final String msgId) {
         final ProgressDialog dialog = new ProgressDialog(mActivity);
-        dialog.setMessage(mActivity.getResources().getString(R.string.em_wait));
+        dialog.setMessage(getString(R.string.em_wait));
         dialog.show();
         new Thread(new Runnable() {
             @Override public void run() {
@@ -200,9 +199,8 @@ public class ApplyActivity extends BaseActivity {
                     } else {
                         EMClient.getInstance()
                                 .contactManager()
-                                .declineInvitation(
-                                        message.getStringAttribute(DemoConstant.MESSAGE_ATTR_USERNAME,
-                                                ""));
+                                .declineInvitation(message.getStringAttribute(
+                                        DemoConstant.MESSAGE_ATTR_USERNAME, ""));
                     }
                     // update contacts apply for message status
                     message.setAttribute(DemoConstant.MESSAGE_ATTR_STATUS,

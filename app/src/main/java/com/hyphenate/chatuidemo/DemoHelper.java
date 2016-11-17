@@ -116,7 +116,8 @@ public class DemoHelper {
                 return null;
             }
 
-            @Override public String getLatestText(EMMessage message, int fromUsersNum, int messageNum) {
+            @Override
+            public String getLatestText(EMMessage message, int fromUsersNum, int messageNum) {
                 return null;
             }
 
@@ -164,12 +165,12 @@ public class DemoHelper {
         options.setRequireAck(true);
         // set if need delivery ack
         options.setRequireDeliveryAck(false);
-        //options.setAutoAcceptGroupInvitation(false);
 
+        // set auto accept group invitation
         SharedPreferences preferences =
                 android.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
-        options.setAutoAcceptGroupInvitation(
-                preferences.getBoolean("accept_group_invite_automatically", false));
+        options.setAutoAcceptGroupInvitation(preferences.getBoolean(
+                mContext.getString(R.string.em_pref_key_accept_group_invite_automatically), false));
 
         //set gcm project number
         options.setGCMNumber("998166487724");
@@ -282,7 +283,8 @@ public class DemoHelper {
      */
     private void setCallReceiverListener() {
         // Set the call broadcast listener to filter the action
-        IntentFilter callFilter = new IntentFilter(EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
+        IntentFilter callFilter = new IntentFilter(
+                EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
         if (mCallReceiver == null) {
             mCallReceiver = new CallReceiver();
         }
@@ -306,7 +308,9 @@ public class DemoHelper {
      */
     public void removeCallStateChangeListener() {
         if (mCallStateChangeListener != null) {
-            EMClient.getInstance().callManager().removeCallStateChangeListener(mCallStateChangeListener);
+            EMClient.getInstance()
+                    .callManager()
+                    .removeCallStateChangeListener(mCallStateChangeListener);
             mCallStateChangeListener = null;
         }
     }
@@ -363,7 +367,8 @@ public class DemoHelper {
 
                     //get extension attribute if you need
                     //message.getStringAttribute("");
-                    EMLog.d(TAG, String.format("CmdMessage：action:%s,message:%s", action, message.toString()));
+                    EMLog.d(TAG, String.format("CmdMessage：action:%s,message:%s", action,
+                            message.toString()));
                 }
             }
 
@@ -490,23 +495,24 @@ public class DemoHelper {
                         entityList.add(user);
                     }
 
-                    getUserProfileManager().asyncFetchContactsInfoFromServer(hxIdList, new EMValueCallBack<List<UserEntity>>() {
+                    getUserProfileManager().asyncFetchContactsInfoFromServer(hxIdList,
+                            new EMValueCallBack<List<UserEntity>>() {
 
-                        @Override public void onSuccess(List<UserEntity> uList) {
-                            // save the contact list to database
-                            setContactList(uList);
-                            if (callback != null) {
-                                callback.onSuccess(uList);
-                            }
-                        }
+                                @Override public void onSuccess(List<UserEntity> uList) {
+                                    // save the contact list to database
+                                    setContactList(uList);
+                                    if (callback != null) {
+                                        callback.onSuccess(uList);
+                                    }
+                                }
 
-                        @Override public void onError(int error, String errorMsg) {
-                            setContactList(entityList);
-                            if (callback != null) {
-                                callback.onError(error, errorMsg);
-                            }
-                        }
-                    });
+                                @Override public void onError(int error, String errorMsg) {
+                                    setContactList(entityList);
+                                    if (callback != null) {
+                                        callback.onError(error, errorMsg);
+                                    }
+                                }
+                            });
                 } catch (HyphenateException e) {
                     e.printStackTrace();
                     if (callback != null) {
@@ -590,10 +596,12 @@ public class DemoHelper {
         Iterator i = l.iterator();
         PackageManager pm = mContext.getPackageManager();
         while (i.hasNext()) {
-            ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
+            ActivityManager.RunningAppProcessInfo info =
+                    (ActivityManager.RunningAppProcessInfo) (i.next());
             try {
                 if (info.pid == pID) {
-                    CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
+                    CharSequence c = pm.getApplicationLabel(
+                            pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
                     // Log.d("Process", "Id: "+ info.pid +" ProcessName: "+
                     // info.processName +"  Label: "+c.toString());
                     // processName = c.toString();
