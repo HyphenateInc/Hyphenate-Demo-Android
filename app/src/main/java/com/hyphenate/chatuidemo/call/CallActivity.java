@@ -236,10 +236,10 @@ public class CallActivity extends BaseActivity {
     /**
      * finish activity
      */
-    @Override protected void onFinish() {
+    protected void onFinish() {
         // 关闭音效并释放资源
         stopCallSound();
-        super.onFinish();
+        finish();
     }
 
     /**

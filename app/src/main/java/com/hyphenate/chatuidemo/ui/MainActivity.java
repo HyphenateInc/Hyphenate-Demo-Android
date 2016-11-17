@@ -88,9 +88,9 @@ public class MainActivity extends BaseActivity {
         mConversationListFragment = ConversationListFragment.newInstance();
         mSettingsFragment = SettingsFragment.newInstance();
         //add fragments to adapter
-        adapter.addFragment(mContactListFragment, "Contacts");
-        adapter.addFragment(mConversationListFragment, "Chats");
-        adapter.addFragment(mSettingsFragment, "Settings");
+        adapter.addFragment(mContactListFragment, getString(R.string.title_contacts));
+        adapter.addFragment(mConversationListFragment, getString(R.string.title_chats));
+        adapter.addFragment(mSettingsFragment, getString(R.string.title_settings));
         mViewPager.setAdapter(adapter);
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
