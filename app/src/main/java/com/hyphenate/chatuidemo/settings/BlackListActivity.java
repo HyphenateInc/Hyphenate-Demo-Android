@@ -1,5 +1,6 @@
 package com.hyphenate.chatuidemo.settings;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,10 +10,8 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
-import com.hyphenate.chatuidemo.user.model.UserEntity;
 import com.hyphenate.exceptions.HyphenateException;
 
 /**
@@ -96,23 +95,30 @@ public class BlackListActivity extends BaseActivity {
      * unblock user
      */
     private void unblockUser(final String username) {
-
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage(getString(R.string.be_removing));
+        pd.setCanceledOnTouchOutside(false);
+        pd.show();
         new Thread(new Runnable() {
             @Override public void run() {
+                boolean success = true;
                 try {
                     EMClient.getInstance().contactManager().removeUserFromBlackList(username);
-                    DemoHelper.getInstance().getUserManager().saveContact(new UserEntity(username));
-                    runOnUiThread(new Runnable() {
-                        @Override public void run() {
-                            Toast.makeText(mActivity,
-                                    "The user has been removed from the blacklist",
-                                    Toast.LENGTH_LONG).show();
-                            refresh();
-                        }
-                    });
                 } catch (HyphenateException e) {
                     e.printStackTrace();
+                    success = false;
                 }
+                final boolean finalSuccess = success;
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        pd.dismiss();
+                        if(finalSuccess) {
+                            refresh();
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.removed_from_blacklist_fail, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         }).start();
     }

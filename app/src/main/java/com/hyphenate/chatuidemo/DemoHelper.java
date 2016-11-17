@@ -102,7 +102,6 @@ public class DemoHelper {
             PreferenceManager.init(context);
             //init user manager
             getUserManager().init(context);
-
             //init message notifier
             mNotifier.init(context);
             //set events listeners
