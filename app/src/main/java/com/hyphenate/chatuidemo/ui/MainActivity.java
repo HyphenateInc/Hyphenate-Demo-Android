@@ -1,10 +1,8 @@
 package com.hyphenate.chatuidemo.ui;
 
-import butterknife.BindView;
-
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -22,9 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.hyphenate.EMCallBack;
 import com.hyphenate.EMMessageListener;
-import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
@@ -41,7 +40,6 @@ import com.hyphenate.chatuidemo.user.AddContactsActivity;
 import com.hyphenate.chatuidemo.user.ContactListFragment;
 import com.hyphenate.chatuidemo.user.ContactsChangeListener;
 import com.hyphenate.util.EMLog;
-import com.hyphenate.chatuidemo.user.model.UserEntity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,8 +122,8 @@ public class MainActivity extends BaseActivity {
         dialog.setMessage("waiting...");
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
-        DemoHelper.getInstance().asyncFetchContactsFromServer(new EMValueCallBack<List<UserEntity>>() {
-            @Override public void onSuccess(List<UserEntity> userEntities) {
+        DemoHelper.getInstance().getUserManager().fetchContactsFromServer(new EMCallBack() {
+            @Override public void onSuccess() {
                 runOnUiThread(new Runnable() {
                     @Override public void run() {
                         dialog.dismiss();
@@ -142,6 +140,9 @@ public class MainActivity extends BaseActivity {
                         Snackbar.make(mTabLayout, "failure:" + s, Snackbar.LENGTH_SHORT).show();
                     }
                 });
+            }
+
+            @Override public void onProgress(int i, String s) {
             }
         });
     }

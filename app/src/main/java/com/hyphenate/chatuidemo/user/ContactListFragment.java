@@ -27,6 +27,7 @@ import com.hyphenate.chatuidemo.group.GroupListActivity;
 import com.hyphenate.chatuidemo.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.user.model.UserEntity;
+import com.hyphenate.chatuidemo.user.model.UserProfileManager;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.exceptions.HyphenateException;
@@ -52,12 +53,15 @@ public class ContactListFragment extends Fragment {
 
     private List<UserEntity> entityList;
 
+    private UserProfileManager mUserManager;
+
     public static ContactListFragment newInstance() {
         return new ContactListFragment();
     }
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mUserManager = DemoHelper.getInstance().getUserManager();
         setRecyclerView();
     }
 
@@ -93,7 +97,7 @@ public class ContactListFragment extends Fragment {
             entityList = new ArrayList<>();
         }
         entityList.clear();
-        entityList.addAll(DemoHelper.getInstance().getContactList().values());
+        entityList.addAll(mUserManager.getContactList().values());
         for (UserEntity userEntity : entityList) {
             if (userEntity.getNickname().contains(newText)) {
                 list.add(userEntity);
@@ -172,7 +176,7 @@ public class ContactListFragment extends Fragment {
             @Override public void run() {
                 try {
                     EMClient.getInstance().contactManager().deleteContact(userEntity.getUsername());
-                    DemoHelper.getInstance().deleteContacts(userEntity);
+                    mUserManager.deleteContact(userEntity);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override public void run() {
                             refresh();
@@ -194,7 +198,7 @@ public class ContactListFragment extends Fragment {
             @Override public void run() {
                 try {
                     EMClient.getInstance().contactManager().addUserToBlackList(userEntity.getUsername(), true);
-                    DemoHelper.getInstance().deleteContacts(userEntity);
+                    mUserManager.deleteContact(userEntity);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override public void run() {
                             Toast.makeText(getActivity(), "Contacts is add blacklist", Toast.LENGTH_LONG).show();
@@ -244,7 +248,7 @@ public class ContactListFragment extends Fragment {
             entityList = new ArrayList<>();
         }
         entityList.clear();
-        entityList.addAll(DemoHelper.getInstance().getContactList().values());
+        entityList.addAll(mUserManager.getContactList().values());
         // sort
         Collections.sort(entityList, new Comparator<UserEntity>() {
             @Override public int compare(UserEntity o1, UserEntity o2) {

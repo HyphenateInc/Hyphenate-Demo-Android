@@ -23,7 +23,7 @@ public abstract class ContactsChangeListener implements EMContactListener {
     @Override public void onContactAdded(String username) {
         UserEntity userEntity = new UserEntity(username);
 
-        DemoHelper.getInstance().saveContact(userEntity);
+        DemoHelper.getInstance().getUserManager().saveContact(userEntity);
     }
 
     /**
@@ -34,7 +34,7 @@ public abstract class ContactsChangeListener implements EMContactListener {
     @Override public void onContactDeleted(String username) {
         UserEntity userEntity = new UserEntity(username);
 
-        DemoHelper.getInstance().deleteContacts(userEntity);
+        DemoHelper.getInstance().getUserManager().deleteContact(userEntity);
     }
 
     /**

@@ -222,7 +222,7 @@ public class ChatActivity extends BaseActivity {
     private void setToolbarTitle() {
         String nick = toChatUsername;
         if(chatType == CHATTYPE_SINGLE){ //p2p chat
-            UserEntity user = DemoHelper.getInstance().getContactList().get(toChatUsername);
+            UserEntity user = DemoHelper.getInstance().getUserManager().getContactList().get(toChatUsername);
             if(user != null){
                 nick = user.getNickname();
             }

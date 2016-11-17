@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.Selection;
@@ -109,7 +108,7 @@ public class AccountActivity extends BaseActivity {
     @OnClick(R.id.layout_nick_container) void setNick() {
         final EditText editText = new EditText(this);
         final String nick =
-                DemoHelper.getInstance().getUserProfileManager().getCurrentUserInfo().getNickname();
+                DemoHelper.getInstance().getUserManager().getCurrentUserInfo().getNickname();
         editText.setText(nick);
         AlertDialog alertDialog =
                 new AlertDialog.Builder(this).setTitle(R.string.account_set_nickname)
@@ -228,7 +227,7 @@ public class AccountActivity extends BaseActivity {
 
             @Override public void run() {
                 boolean updatenick = DemoHelper.getInstance()
-                        .getUserProfileManager()
+                        .getUserManager()
                         .updateCurrentUserNickName(nickName);
                 if (AccountActivity.this.isFinishing()) {
                     return;
@@ -265,7 +264,7 @@ public class AccountActivity extends BaseActivity {
 
             @Override public void run() {
                 final String avatarUrl =
-                        DemoHelper.getInstance().getUserProfileManager().uploadUserAvatar(data);
+                        DemoHelper.getInstance().getUserManager().uploadUserAvatar(data);
                 runOnUiThread(new Runnable() {
                     @Override public void run() {
                         dialog.dismiss();
