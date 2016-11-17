@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,11 +12,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chatuidemo.DemoConstant;
@@ -45,6 +48,7 @@ public class ContactListFragment extends Fragment {
 
     @BindView(R.id.text_unread_notifications_number) TextView unreadNumberView;
     @BindView(R.id.rv_contacts) RecyclerView recyclerView;
+    @BindView(R.id.progressbar) ProgressBar progressBar;
     ShowDialogFragment dialogFragment;
 
     LinearLayoutManager layoutManager;
@@ -59,6 +63,7 @@ public class ContactListFragment extends Fragment {
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setRecyclerView();
+        getContactsFromServer();
     }
 
     @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,6 +88,30 @@ public class ContactListFragment extends Fragment {
             @Override public void onItemLongClick(View view, int position) {
                 UserEntity user = entityList.get(position);
                 itemLongClick(user);
+            }
+        });
+    }
+
+    private void getContactsFromServer() {
+        progressBar.setVisibility(View.VISIBLE);
+        DemoHelper.getInstance().asyncFetchContactsFromServer(new EMValueCallBack<List<UserEntity>>() {
+            @Override public void onSuccess(List<UserEntity> userEntities) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        progressBar.setVisibility(View.GONE);
+                        refresh();
+                    }
+                });
+            }
+
+            @Override public void onError(int i, final String s) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        progressBar.setVisibility(View.GONE);
+                        refresh();
+                        Snackbar.make(recyclerView, "failure:" + s, Snackbar.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
@@ -145,7 +174,7 @@ public class ContactListFragment extends Fragment {
      */
     private void itemLongClick(final UserEntity userEntity) {
 
-        String[] menus = { "Delete Contact", "Add Blacklist" };
+        String[] menus = { getString(R.string.em_delete_contact) , getString(R.string.em_add_to_blacklist) };
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
@@ -176,7 +205,7 @@ public class ContactListFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override public void run() {
                             refresh();
-                            Toast.makeText(getActivity(), "contacts is deleted", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getString(R.string.em_delete_contact), Toast.LENGTH_LONG).show();
                         }
                     });
                 } catch (HyphenateException e) {
@@ -197,7 +226,7 @@ public class ContactListFragment extends Fragment {
                     DemoHelper.getInstance().deleteContacts(userEntity);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override public void run() {
-                            Toast.makeText(getActivity(), "Contacts is add blacklist", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "contact have been added to the blacklist", Toast.LENGTH_LONG).show();
                             refresh();
                         }
                     });

@@ -77,15 +77,6 @@ public class GroupListAdapter extends RecyclerView.Adapter {
                 ((ViewHolder) holder).guideArrowView.setVisibility(View.GONE);
                 EMGroupInfo group = publicGroupList.get(position);
                 ((ViewHolder) holder).nameView.setText(group.getGroupName());
-                //for (EMGroupInfo info : publicGroupList) {
-                //    if (EMClient.getInstance().groupManager().getGroup(info.getGroupId()) != null) {
-                //        holder.groupJoinView.setTextColor(Color.parseColor("#8798a4"));
-                //        holder.groupJoinView.setText("REQUESTED");
-                //        holder.groupJoinView.setClickable(false);
-                //        holder.groupJoinView.setEnabled(false);
-                //        holder.groupJoinView.setBackgroundResource(0);
-                //    }
-                //}
             } else {
                 ((ViewHolder) holder).groupItem.setBackgroundResource(0);
                 ((ViewHolder) holder).guideArrowView.setImageResource(R.drawable.cell_chevron_right);
@@ -112,18 +103,20 @@ public class GroupListAdapter extends RecyclerView.Adapter {
                                     ((ViewHolder) holder).groupItem.setBackgroundResource(0);
                                     ((ViewHolder) holder).guideArrowView.setImageResource(R.drawable.cell_chevron_right);
                                     selected.remove(groupList.get(position));
-                                    GroupListActivity.toolbar.setTitle("Delete (" + selected.size() + ")");
+                                    GroupListActivity.toolbar.setTitle(
+                                            context.getResources().getString(R.string.em_delete) + "(" + selected.size() + ")");
                                     if (selected != null && selected.size() == 0) {
                                         isLongClickable = false;
-                                        GroupListActivity.item.setActionView(LayoutInflater.from(context).inflate(R.layout.em_search_view,null));
+                                        GroupListActivity.item.setActionView(GroupListActivity.searchView);
                                         GroupListActivity.item.setIcon(R.drawable.em_ic_action_light_search);
-                                        GroupListActivity.toolbar.setTitle("Groups");
+                                        GroupListActivity.toolbar.setTitle(context.getResources().getString(R.string.em_groups));
                                     }
                                 } else {
                                     ((ViewHolder) holder).groupItem.setBackgroundResource(R.color.em_gray);
                                     ((ViewHolder) holder).guideArrowView.setImageResource(R.drawable.cell_check);
                                     selected.add(groupList.get(position));
-                                    GroupListActivity.toolbar.setTitle("Delete (" + selected.size() + ")");
+                                    GroupListActivity.toolbar.setTitle(
+                                            context.getResources().getString(R.string.em_delete) + "(" + selected.size() + ")");
                                 }
                             } else {
                                 listener.onItemClick(v, position);
@@ -140,7 +133,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
                             selected.add(groupList.get(position));
                             GroupListActivity.item.setActionView(null);
                             GroupListActivity.item.setIcon(R.drawable.delete);
-                            GroupListActivity.toolbar.setTitle("Delete (" + selected.size() + ")");
+                            GroupListActivity.toolbar.setTitle(context.getResources().getString(R.string.em_delete) + "(" + selected.size() + ")");
                             listener.onItemLongClick(v, position);
                             return true;
                         }
