@@ -12,9 +12,12 @@ apply plugin: 'com.android.application'
 //apply plugin: 'io.fabric'
 apply plugin: 'com.neenbedankt.android-apt'
 
-//repositories {
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
 //    maven { url 'https://maven.fabric.io/public' }
-//}
+}
 
 
 android {
@@ -27,8 +30,8 @@ android {
         applicationId "com.hyphenate.chatuidemo"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 38
-        versionName '3.2.5'
+        versionCode 39
+        versionName '3.2.1'
         multiDexEnabled true
     }
     buildTypes {
@@ -59,7 +62,8 @@ dependencies {
 
     compile 'com.parse:parse-android:1.13.1'
 
-    compile 'com.hyphenate:hyphenate-sdk:3.1.5'
+//    compile(name:'hyphenate-sdk-3.2.1',ext:'aar')
+        compile 'com.hyphenate:hyphenate-sdk:3.2.1'
 //    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
 //        transitive = true;
 //    }

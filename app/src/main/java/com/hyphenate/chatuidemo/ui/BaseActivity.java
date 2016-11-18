@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 
 /**
@@ -53,10 +54,9 @@ public class BaseActivity extends AppCompatActivity {
         return mActionBarToolbar;
     }
 
-    /**
-     * finish activity
-     */
-    protected void onFinish() {
-        finish();
+    @Override protected void onResume() {
+        super.onResume();
+        DemoHelper.getInstance().getNotifier().reset();
     }
+
 }

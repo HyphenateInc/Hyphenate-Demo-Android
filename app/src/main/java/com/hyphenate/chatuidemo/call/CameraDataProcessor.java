@@ -17,8 +17,7 @@ public class CameraDataProcessor implements EMCallManager.EMCameraDataProcessor 
     // data size is width*height*2
     // the first width*height is Y, second part is UV
     // the storage layout detailed please refer 2.x demo CameraHelper.onPreviewFrame
-    @Override
-    public synchronized void onProcessData(byte[] data, Camera camera, int width, int height) {
+    @Override public void onProcessData(byte[] data, Camera camera, int width, int height, int i2) {
         int wh = width * height;
         for (int i = 0; i < wh; i++) {
             int d = (data[i] & 0xFF) + yDelta;
@@ -27,5 +26,4 @@ public class CameraDataProcessor implements EMCallManager.EMCameraDataProcessor 
             data[i] = (byte) d;
         }
     }
-
 }

@@ -18,22 +18,25 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
-import com.hyphenate.chatuidemo.DemoConstant;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.apply.ApplyActivity;
-import com.hyphenate.chatuidemo.chat.ChatActivity;
-import com.hyphenate.chatuidemo.group.GroupListActivity;
 import com.hyphenate.chatuidemo.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.call.VoiceCallActivity;
+import com.hyphenate.chatuidemo.chat.ChatActivity;
+import com.hyphenate.chatuidemo.group.GroupListActivity;
 import com.hyphenate.chatuidemo.user.model.UserEntity;
+import com.hyphenate.chatuidemo.user.model.UserProfileManager;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.exceptions.HyphenateException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by benson on 2016/10/8.
@@ -50,7 +53,9 @@ public class ContactListFragment extends Fragment {
     LinearLayoutManager layoutManager;
     ContactListAdapter adapter;
 
-    private List<UserEntity> entityList;
+    private List<UserEntity> userList;
+
+    private UserProfileManager mUserManager;
 
     public static ContactListFragment newInstance() {
         return new ContactListFragment();
@@ -58,6 +63,7 @@ public class ContactListFragment extends Fragment {
 
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mUserManager = DemoHelper.getInstance().getUserManager();
         setRecyclerView();
     }
 
@@ -76,12 +82,12 @@ public class ContactListFragment extends Fragment {
 
         adapter.setOnItemClickListener(new EaseListItemClickListener() {
             @Override public void onItemClick(View view, int position) {
-                UserEntity user = entityList.get(position);
+                UserEntity user = userList.get(position);
                 itemClick(user);
             }
 
             @Override public void onItemLongClick(View view, int position) {
-                UserEntity user = entityList.get(position);
+                UserEntity user = userList.get(position);
                 itemLongClick(user);
             }
         });
@@ -89,18 +95,18 @@ public class ContactListFragment extends Fragment {
 
     public void filter(String newText) {
         List<UserEntity> list = new ArrayList<>();
-        if (entityList == null) {
-            entityList = new ArrayList<>();
+        if (userList == null) {
+            userList = new ArrayList<>();
         }
-        entityList.clear();
-        entityList.addAll(DemoHelper.getInstance().getContactList().values());
-        for (UserEntity userEntity : entityList) {
+        userList.clear();
+        userList.addAll(mUserManager.getContactList().values());
+        for (UserEntity userEntity : userList) {
             if (userEntity.getNickname().contains(newText)) {
                 list.add(userEntity);
             }
         }
-        entityList.clear();
-        entityList.addAll(list);
+        userList.clear();
+        userList.addAll(list);
         adapter.notifyDataSetChanged();
     }
 
@@ -145,7 +151,7 @@ public class ContactListFragment extends Fragment {
      */
     private void itemLongClick(final UserEntity userEntity) {
 
-        String[] menus = { "Delete Contact", "Add Blacklist" };
+        String[] menus = { "Delete Contact", "Add to Blacklist" };
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
@@ -155,7 +161,7 @@ public class ContactListFragment extends Fragment {
                         deleteContacts(userEntity);
                         break;
                     case 1:
-                        addBlackUser(userEntity);
+                        moveToBlacklist(userEntity);
                         break;
                 }
             }
@@ -172,7 +178,7 @@ public class ContactListFragment extends Fragment {
             @Override public void run() {
                 try {
                     EMClient.getInstance().contactManager().deleteContact(userEntity.getUsername());
-                    DemoHelper.getInstance().deleteContacts(userEntity);
+                    mUserManager.deleteContact(userEntity);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override public void run() {
                             refresh();
@@ -189,20 +195,24 @@ public class ContactListFragment extends Fragment {
     /**
      * Add user to Blacklist
      */
-    private void addBlackUser(final UserEntity userEntity) {
+    private void moveToBlacklist(final UserEntity userEntity) {
         new Thread(new Runnable() {
             @Override public void run() {
                 try {
                     EMClient.getInstance().contactManager().addUserToBlackList(userEntity.getUsername(), true);
-                    DemoHelper.getInstance().deleteContacts(userEntity);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override public void run() {
-                            Toast.makeText(getActivity(), "Contacts is add blacklist", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.move_into_blacklist_success, Toast.LENGTH_SHORT).show();
                             refresh();
                         }
                     });
                 } catch (HyphenateException e) {
                     e.printStackTrace();
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getActivity(), R.string.move_into_blacklist_failure, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         }).start();
@@ -215,7 +225,7 @@ public class ContactListFragment extends Fragment {
         if (unreadNumberView != null) {
             EMConversation conversation = EMClient.getInstance()
                     .chatManager()
-                    .getConversation(DemoConstant.CONVERSATION_NAME_APPLY,
+                    .getConversation(Constant.CONVERSATION_NAME_APPLY,
                             EMConversation.EMConversationType.Chat, true);
             int count = conversation.getUnreadMsgCount();
             if (count != 0) {
@@ -227,7 +237,7 @@ public class ContactListFragment extends Fragment {
         }
 
         if (adapter == null) {
-            adapter = new ContactListAdapter(getActivity(), entityList);
+            adapter = new ContactListAdapter(getActivity(), userList);
             if (recyclerView != null) {
                 recyclerView.setAdapter(adapter);
             }
@@ -240,13 +250,24 @@ public class ContactListFragment extends Fragment {
      * Load contacts
      */
     private void loadContacts() {
-        if (entityList == null) {
-            entityList = new ArrayList<>();
+        if (userList == null) {
+            userList = new ArrayList<>();
         }
-        entityList.clear();
-        entityList.addAll(DemoHelper.getInstance().getContactList().values());
+        synchronized (userList){
+            userList.clear();
+            Iterator<Map.Entry<String, UserEntity>> iterator = mUserManager.getContactList().entrySet().iterator();
+            List<String> blackList = EMClient.getInstance().contactManager().getBlackListUsernames();
+            while (iterator.hasNext()) {
+                Map.Entry<String, UserEntity> entry = iterator.next();
+                if(!blackList.contains(entry.getKey())){
+                    //filter out users in blacklist
+                    UserEntity user = entry.getValue();
+                    userList.add(user);
+                }
+            }
+        }
         // sort
-        Collections.sort(entityList, new Comparator<UserEntity>() {
+        Collections.sort(userList, new Comparator<UserEntity>() {
             @Override public int compare(UserEntity o1, UserEntity o2) {
                 return o1.getUsername().compareTo(o2.getUsername());
             }

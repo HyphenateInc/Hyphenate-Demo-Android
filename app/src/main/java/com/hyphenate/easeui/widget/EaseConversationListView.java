@@ -167,8 +167,8 @@ public class EaseConversationListView extends RecyclerView {
                 username = group.getGroupName();
             }else{
                 EaseUser user = EaseUserUtils.getUserInfo(username);
-                if(user != null && user.getNickname() != null)
-                    username = user.getNickname();
+                if(user != null && user.getEaseNickname() != null)
+                    username = user.getEaseNickname();
             }
 
             if(username.contains(query)){

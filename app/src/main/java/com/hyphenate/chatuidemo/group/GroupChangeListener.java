@@ -4,7 +4,7 @@ import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
-import com.hyphenate.chatuidemo.DemoConstant;
+import com.hyphenate.chatuidemo.Constant;
 import java.util.UUID;
 
 /**
@@ -27,12 +27,13 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(" receive invitation to join the group：" + s1);
         message.addBody(body);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_GROUP_ID,s);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_USERNAME, s2);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_REASON, " receive invitation to join the group：" + s1);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_TYPE, 1);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_GROUP_TYPE, 0);
-        message.setFrom(DemoConstant.CONVERSATION_NAME_APPLY);
+        message.setAttribute(Constant.MESSAGE_ATTR_GROUP_ID,s);
+        message.setAttribute(Constant.MESSAGE_ATTR_USERNAME, s2);
+        message.setAttribute(
+                Constant.MESSAGE_ATTR_REASON, " receive invitation to join the group：" + s1);
+        message.setAttribute(Constant.MESSAGE_ATTR_TYPE, 1);
+        message.setAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE, 0);
+        message.setFrom(Constant.CONVERSATION_NAME_APPLY);
         message.setMsgId(msgId);
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);
@@ -52,12 +53,12 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(s2 + " Apply to join group：" + s1);
         message.addBody(body);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_GROUP_ID,s);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_USERNAME, s2);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_REASON, s2 + " Apply to join public group：" + s1);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_TYPE, 1);
-        message.setFrom(DemoConstant.CONVERSATION_NAME_APPLY);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_GROUP_TYPE, 1);
+        message.setAttribute(Constant.MESSAGE_ATTR_GROUP_ID,s);
+        message.setAttribute(Constant.MESSAGE_ATTR_USERNAME, s2);
+        message.setAttribute(Constant.MESSAGE_ATTR_REASON, s2 + " Apply to join public group：" + s1);
+        message.setAttribute(Constant.MESSAGE_ATTR_TYPE, 1);
+        message.setFrom(Constant.CONVERSATION_NAME_APPLY);
+        message.setAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE, 1);
         message.setMsgId(msgId);
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);
@@ -75,14 +76,14 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
 
         EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(" Accepted your group application ");
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_GROUP_ID, s);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_USERNAME, s1);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_REASON, s2 + " Accepted your group application ");
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_TYPE, 1);
-        msg.setFrom(DemoConstant.CONVERSATION_NAME_APPLY);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_GROUP_TYPE, 1);
+        msg.setAttribute(Constant.MESSAGE_ATTR_GROUP_ID, s);
+        msg.setAttribute(Constant.MESSAGE_ATTR_USERNAME, s1);
+        msg.setAttribute(Constant.MESSAGE_ATTR_REASON, s2 + " Accepted your group application ");
+        msg.setAttribute(Constant.MESSAGE_ATTR_TYPE, 1);
+        msg.setFrom(Constant.CONVERSATION_NAME_APPLY);
+        msg.setAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE, 1);
         msg.setMsgId(s1 + System.currentTimeMillis());
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_STATUS, s2 + " Accepted your group application ");
+        msg.setAttribute(Constant.MESSAGE_ATTR_STATUS, s2 + " Accepted your group application ");
         msg.addBody(body);
         msg.setStatus(EMMessage.Status.SUCCESS);
         // save accept message
@@ -99,14 +100,14 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
     @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
         EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(" Declined your group application ");
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_GROUP_ID, s);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_USERNAME, s1);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_REASON, s3);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_TYPE, 1);
-        msg.setFrom(DemoConstant.CONVERSATION_NAME_APPLY);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_GROUP_TYPE, 1);
+        msg.setAttribute(Constant.MESSAGE_ATTR_GROUP_ID, s);
+        msg.setAttribute(Constant.MESSAGE_ATTR_USERNAME, s1);
+        msg.setAttribute(Constant.MESSAGE_ATTR_REASON, s3);
+        msg.setAttribute(Constant.MESSAGE_ATTR_TYPE, 1);
+        msg.setFrom(Constant.CONVERSATION_NAME_APPLY);
+        msg.setAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE, 1);
         msg.setMsgId(s1 + System.currentTimeMillis());
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_STATUS, s1 + " Declined your group application ");
+        msg.setAttribute(Constant.MESSAGE_ATTR_STATUS, s1 + " Declined your group application ");
         msg.addBody(body);
         msg.setStatus(EMMessage.Status.SUCCESS);
         // save accept message
@@ -125,14 +126,14 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
 
         EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(s1 + " Accepted your group invite ");
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_GROUP_ID, s);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_USERNAME, s1);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_REASON, s2);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_TYPE, 1);
-        msg.setFrom(DemoConstant.CONVERSATION_NAME_APPLY);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_GROUP_TYPE, 0);
+        msg.setAttribute(Constant.MESSAGE_ATTR_GROUP_ID, s);
+        msg.setAttribute(Constant.MESSAGE_ATTR_USERNAME, s1);
+        msg.setAttribute(Constant.MESSAGE_ATTR_REASON, s2);
+        msg.setAttribute(Constant.MESSAGE_ATTR_TYPE, 1);
+        msg.setFrom(Constant.CONVERSATION_NAME_APPLY);
+        msg.setAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE, 0);
         msg.setMsgId(s1 + System.currentTimeMillis());
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_STATUS, s1 + " Accepted your group invite ");
+        msg.setAttribute(Constant.MESSAGE_ATTR_STATUS, s1 + " Accepted your group invite ");
         msg.addBody(body);
         msg.setStatus(EMMessage.Status.SUCCESS);
         // save accept message
@@ -151,13 +152,13 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
         EMTextMessageBody body = new EMTextMessageBody(s1 + " Declined your group invite ");
         msg.setMsgId(s1 + System.currentTimeMillis());
         msg.addBody(body);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_GROUP_ID, s);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_USERNAME, s1);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_REASON, s2);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_TYPE, 1);
-        msg.setFrom(DemoConstant.CONVERSATION_NAME_APPLY);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_GROUP_TYPE, 0);
-        msg.setAttribute(DemoConstant.MESSAGE_ATTR_STATUS, s1 + " Declined your group invite ");
+        msg.setAttribute(Constant.MESSAGE_ATTR_GROUP_ID, s);
+        msg.setAttribute(Constant.MESSAGE_ATTR_USERNAME, s1);
+        msg.setAttribute(Constant.MESSAGE_ATTR_REASON, s2);
+        msg.setAttribute(Constant.MESSAGE_ATTR_TYPE, 1);
+        msg.setFrom(Constant.CONVERSATION_NAME_APPLY);
+        msg.setAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE, 0);
+        msg.setAttribute(Constant.MESSAGE_ATTR_STATUS, s1 + " Declined your group invite ");
         msg.setStatus(EMMessage.Status.SUCCESS);
         // save accept message
         EMClient.getInstance().chatManager().saveMessage(msg);

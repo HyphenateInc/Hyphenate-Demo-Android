@@ -115,6 +115,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
                                     GroupListActivity.toolbar.setTitle("Delete (" + selected.size() + ")");
                                     if (selected != null && selected.size() == 0) {
                                         isLongClickable = false;
+                                        GroupListActivity.item.setActionView(LayoutInflater.from(context).inflate(R.layout.em_search_view,null));
                                         GroupListActivity.item.setIcon(R.drawable.em_ic_action_light_search);
                                         GroupListActivity.toolbar.setTitle("Groups");
                                     }
@@ -124,6 +125,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
                                     selected.add(groupList.get(position));
                                     GroupListActivity.toolbar.setTitle("Delete (" + selected.size() + ")");
                                 }
+
                             } else {
                                 listener.onItemClick(v, position);
                             }
@@ -137,9 +139,11 @@ public class GroupListAdapter extends RecyclerView.Adapter {
                             ((ViewHolder) holder).guideArrowView.setImageResource(R.drawable.cell_check);
                             isLongClickable = true;
                             selected.add(groupList.get(position));
+                            GroupListActivity.item.setActionView(null);
                             GroupListActivity.item.setIcon(R.drawable.delete);
                             GroupListActivity.toolbar.setTitle("Delete (" + selected.size() + ")");
                             listener.onItemLongClick(v, position);
+
                             return true;
                         }
                     });

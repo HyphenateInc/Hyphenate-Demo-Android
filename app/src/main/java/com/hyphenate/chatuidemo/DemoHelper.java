@@ -10,30 +10,31 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMError;
 import com.hyphenate.EMMessageListener;
-import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessage.ChatType;
 import com.hyphenate.chat.EMOptions;
-import com.hyphenate.chatuidemo.group.GroupChangeListener;
-import com.hyphenate.chatuidemo.chat.MessageNotifier;
 import com.hyphenate.chatuidemo.call.CallReceiver;
 import com.hyphenate.chatuidemo.call.CallStateChangeListener;
+import com.hyphenate.chatuidemo.call.VideoCallActivity;
+import com.hyphenate.chatuidemo.call.VoiceCallActivity;
+import com.hyphenate.chatuidemo.chat.ChatActivity;
+import com.hyphenate.chatuidemo.chat.MessageNotifier;
+import com.hyphenate.chatuidemo.group.GroupChangeListener;
+import com.hyphenate.chatuidemo.ui.MainActivity;
 import com.hyphenate.chatuidemo.user.ContactsChangeListener;
-import com.hyphenate.chatuidemo.user.model.UserDao;
 import com.hyphenate.chatuidemo.user.model.UserEntity;
 import com.hyphenate.chatuidemo.user.model.UserProfileManager;
 import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.easeui.model.EaseUser;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
-import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by wei on 2016/10/11.
@@ -47,9 +48,6 @@ public class DemoHelper {
     // context
     private Context mContext;
 
-    // Contacts map
-    private Map<String, UserEntity> entityMap = new HashMap<>();
-
     // Call broadcast receiver
     private CallReceiver mCallReceiver = null;
     // Call state listener
@@ -60,7 +58,11 @@ public class DemoHelper {
 
     private DefaultGroupChangeListener mGroupListener = null;
 
-    private UserProfileManager userProManager;
+    private UserProfileManager mUserManager;
+
+    //whether in calling
+    public boolean isVoiceCalling;
+    public boolean isVideoCalling;
 
     /**
      * save foreground Activity which registered message listeners
@@ -91,66 +93,21 @@ public class DemoHelper {
             EMLog.d(TAG, "------- init hyphenate start --------------");
             //init hyphenate sdk with options
             EMClient.getInstance().init(context, initOptions());
+            // set debug mode open:true, close:false
+            EMClient.getInstance().setDebugMode(true);
             //init EaseUI if you want to use it
             EaseUI.getInstance().init(context);
             PreferenceManager.init(context);
             //init user manager
-            getUserProfileManager().init(context);
-
-            // set debug mode open:true, close:false
-            EMClient.getInstance().setDebugMode(true);
+            getUserManager().init(context);
             //init message notifier
             mNotifier.init(context);
             //set events listeners
             setGlobalListener();
-            setNotificationType();
             setEaseUIProviders();
 
             EMLog.d(TAG, "------- init hyphenate end --------------");
         }
-    }
-
-    private void setNotificationType() {
-        mNotifier.setNotificationInfoProvider(new MessageNotifier.EaseNotificationInfoProvider() {
-            @Override public String getDisplayedText(EMMessage message) {
-                return null;
-            }
-
-            @Override
-            public String getLatestText(EMMessage message, int fromUsersNum, int messageNum) {
-                return null;
-            }
-
-            @Override public String getTitle(EMMessage message) {
-                return null;
-            }
-
-            @Override public int getSmallIcon(EMMessage message) {
-                return 0;
-            }
-
-            @Override public Intent getLaunchIntent(EMMessage message) {
-                return null;
-            }
-        });
-
-        //EaseUI.getInstance().setSettingsProvider(new EaseUI.EaseSettingsProvider() {
-        //    @Override public boolean isMsgNotifyAllowed(EMMessage message) {
-        //        return false;
-        //    }
-        //
-        //    @Override public boolean isMsgSoundAllowed(EMMessage message) {
-        //        return false;
-        //    }
-        //
-        //    @Override public boolean isMsgVibrateAllowed(EMMessage message) {
-        //        return false;
-        //    }
-        //
-        //    @Override public boolean isSpeakerOpened() {
-        //        return false;
-        //    }
-        //});
     }
 
     /**
@@ -259,21 +216,99 @@ public class DemoHelper {
                 return getUserInfo(username);
             }
         });
+        //set notification options, will use default if you don't set it
+        getNotifier().setNotificationInfoProvider(
+                new MessageNotifier.EaseNotificationInfoProvider() {
+
+                    @Override public String getTitle(EMMessage message) {
+                        //you can update title here
+                        return null;
+                    }
+
+                    @Override public int getSmallIcon(EMMessage message) {
+                        //you can update icon here
+                        return 0;
+                    }
+
+                    @Override public String getDisplayedText(EMMessage message) {
+                        // be used on notification bar, different text according the message type.
+                        String ticker = EaseCommonUtils.getMessageDigest(message, mContext);
+                        if (message.getType() == EMMessage.Type.TXT) {
+                            ticker = ticker.replaceAll("\\[.{2,3}\\]", "[Emoticon]");
+                        }
+                        EaseUser user = getUserInfo(message.getFrom());
+                        if (user != null) {
+                            return user.getEaseNickname() + ": " + ticker;
+                        } else {
+                            return message.getFrom() + ": " + ticker;
+                        }
+                    }
+
+                    @Override public String getLatestText(EMMessage message, int fromUsersNum,
+                            int messageNum) {
+                        // here you can customize the text.
+                        // return fromUsersNum + "contacts send " + messageNum + "messages to you";
+                        return null;
+                    }
+
+                    @Override public Intent getLaunchIntent(EMMessage message) {
+                        // you can set what activity you want display when user click the notification
+                        Intent intent = new Intent(mContext, ChatActivity.class);
+                        // open calling activity if there is call
+                        if (isVideoCalling) {
+                            intent = new Intent(mContext, VideoCallActivity.class);
+                        } else if (isVoiceCalling) {
+                            intent = new Intent(mContext, VoiceCallActivity.class);
+                        } else {
+                            ChatType chatType = message.getChatType();
+                            if (chatType == ChatType.Chat) { // single chat message
+                                intent.putExtra("userId", message.getFrom());
+                                intent.putExtra("chatType", Constant.CHATTYPE_SINGLE);
+                            } else { // group chat message
+                                // message.getTo() is the group id
+                                intent.putExtra("userId", message.getTo());
+                                if (chatType == ChatType.GroupChat) {
+                                    intent.putExtra("chatType", Constant.CHATTYPE_GROUP);
+                                } else {
+                                    intent.putExtra("chatType", Constant.CHATTYPE_CHATROOM);
+                                }
+                            }
+                        }
+                        return intent;
+                    }
+                });
+
+        //EaseUI.getInstance().setSettingsProvider(new EaseUI.EaseSettingsProvider() {
+        //    @Override public boolean isMsgNotifyAllowed(EMMessage message) {
+        //        return false;
+        //    }
+        //
+        //    @Override public boolean isMsgSoundAllowed(EMMessage message) {
+        //        return false;
+        //    }
+        //
+        //    @Override public boolean isMsgVibrateAllowed(EMMessage message) {
+        //        return false;
+        //    }
+        //
+        //    @Override public boolean isSpeakerOpened() {
+        //        return false;
+        //    }
+        //});
     }
 
     private EaseUser getUserInfo(String username) {
-        // To get instance of EaseUser, here we get it from the user list in memory
-        // You'd better cache it if you get it from your server
         EaseUser user;
         if (username.equals(EMClient.getInstance().getCurrentUser())) {
-            return getUserProfileManager().getCurrentUserInfo();
+            return getUserManager().getCurrentUserInfo();
         }
-        user = getContactList().get(username);
+        user = mUserManager.getContactList().get(username);
+
+        //TODO Get not in the buddy list of group members in the specific information, that stranger information, demo not implemented
 
         // if user is not in your contacts, set initial letter for him/her
         if (user == null) {
-            user = new EaseUser(username);
-            EaseCommonUtils.setUserInitialLetter(user);
+            user = new UserEntity(username);
         }
         return user;
     }
@@ -333,8 +368,11 @@ public class DemoHelper {
              *
              * @param errorCode Disconnected error code
              */
-            @Override public void onDisconnected(final int errorCode) {
+            @Override public void onDisconnected(int errorCode) {
                 EMLog.d(TAG, "onDisconnected: " + errorCode);
+                if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                    onConnectionConflict();
+                }
             }
         };
         EMClient.getInstance().addConnectionListener(mConnectionListener);
@@ -437,90 +475,11 @@ public class DemoHelper {
         return mNotifier;
     }
 
-    public Map<String, UserEntity> getContactList() {
-        if (entityMap.isEmpty()) {
-            entityMap = UserDao.getInstance(mContext).getContactList();
+    public UserProfileManager getUserManager() {
+        if (mUserManager == null) {
+            mUserManager = new UserProfileManager();
         }
-        return entityMap;
-    }
-
-    public void setContactList(List<UserEntity> entityList) {
-        entityMap.clear();
-        for (UserEntity userEntity : entityList) {
-            entityMap.put(userEntity.getUsername(), userEntity);
-        }
-        UserDao.getInstance(mContext).saveContactList(entityList);
-    }
-
-    public void saveContact(UserEntity userEntity) {
-        if (entityMap != null) {
-            entityMap.put(userEntity.getUsername(), userEntity);
-        }
-
-        UserDao.getInstance(mContext).saveContact(userEntity);
-    }
-
-    public UserProfileManager getUserProfileManager() {
-        if (userProManager == null) {
-            userProManager = new UserProfileManager();
-        }
-        return userProManager;
-    }
-
-    /**
-     * remove user from db
-     */
-
-    public void deleteContacts(UserEntity userEntity) {
-        if (entityMap != null) {
-            entityMap.remove(userEntity.getUsername());
-        }
-
-        UserDao.getInstance(mContext).deleteContact(userEntity);
-    }
-
-    public void asyncFetchContactsFromServer(final EMValueCallBack<List<UserEntity>> callback) {
-        new Thread(new Runnable() {
-            @Override public void run() {
-                List<String> hxIdList;
-                try {
-                    hxIdList = EMClient.getInstance().contactManager().getAllContactsFromServer();
-
-                    // save the contact list to cache
-                    getContactList().clear();
-                    final List<UserEntity> entityList = new ArrayList<>();
-                    for (String userId : hxIdList) {
-                        UserEntity user = new UserEntity(userId);
-                        EaseCommonUtils.setUserInitialLetter(user);
-                        entityList.add(user);
-                    }
-
-                    getUserProfileManager().asyncFetchContactsInfoFromServer(hxIdList,
-                            new EMValueCallBack<List<UserEntity>>() {
-
-                                @Override public void onSuccess(List<UserEntity> uList) {
-                                    // save the contact list to database
-                                    setContactList(uList);
-                                    if (callback != null) {
-                                        callback.onSuccess(uList);
-                                    }
-                                }
-
-                                @Override public void onError(int error, String errorMsg) {
-                                    setContactList(entityList);
-                                    if (callback != null) {
-                                        callback.onError(error, errorMsg);
-                                    }
-                                }
-                            });
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                    if (callback != null) {
-                        callback.onError(e.getErrorCode(), e.toString());
-                    }
-                }
-            }
-        }).start();
+        return mUserManager;
     }
 
     /**
@@ -556,10 +515,18 @@ public class DemoHelper {
         });
     }
 
+    /**
+     * user has logged into another device
+     */
+    protected void onConnectionConflict() {
+        Intent intent = new Intent(mContext, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(Constant.ACCOUNT_CONFLICT, true);
+        mContext.startActivity(intent);
+    }
+
     private synchronized void reset() {
-        entityMap.clear();
-        getUserProfileManager().reset();
-        UserDao.getInstance(mContext).closeDB();
+        getUserManager().reset();
     }
 
     /**

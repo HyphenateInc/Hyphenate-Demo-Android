@@ -25,6 +25,7 @@ import com.hyphenate.exceptions.EMServiceNotReadyException;
 import com.hyphenate.util.EMLog;
 import java.util.Timer;
 import java.util.TimerTask;
+import com.hyphenate.exceptions.HyphenateException;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -50,6 +51,8 @@ public class VoiceCallActivity extends CallActivity {
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_voice_call);
+
+        DemoHelper.getInstance().isVoiceCalling = true;
 
         // init ButterKnife
         ButterKnife.bind(this);
@@ -455,5 +458,6 @@ public class VoiceCallActivity extends CallActivity {
 
     @Override protected void onDestroy() {
         super.onDestroy();
+        DemoHelper.getInstance().isVoiceCalling = false;
     }
 }

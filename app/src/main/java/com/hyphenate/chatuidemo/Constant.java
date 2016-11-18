@@ -6,7 +6,7 @@ import com.hyphenate.easeui.EaseConstant;
  * Created by wei on 2016/11/9.
  */
 
-public class DemoConstant extends EaseConstant{
+public class Constant extends EaseConstant{
     public static final String CONVERSATION_NAME_APPLY = "em_conversation_apply";
     //0:chat,1:groupChat
     public static final String MESSAGE_ATTR_TYPE = "em_type";
@@ -16,6 +16,9 @@ public class DemoConstant extends EaseConstant{
     public static final String MESSAGE_ATTR_STATUS = "em_status";
     //0 : private group,1:public group
     public static final String MESSAGE_ATTR_GROUP_TYPE = "em_group_type";
+
+
+    public static final String ACCOUNT_CONFLICT = "conflict";
 
     // Broadcast action
     public static final String BROADCAST_ACTION_CALL = "com.hyphenate.action.call";

@@ -113,7 +113,7 @@ public class MessageNotifier {
         if(!settingsProvider.isMsgNotifyAllowed(message)){
             return;
         }
-        
+
         // check if app running background
         if (!EasyUtils.isAppRunningForeground(appContext)) {
             EMLog.d(TAG, "app is running in background");
@@ -122,7 +122,7 @@ public class MessageNotifier {
             sendNotification(message, true);
 
         }
-        
+
         vibrateAndPlayTone(message);
     }
     
@@ -142,6 +142,11 @@ public class MessageNotifier {
             sendNotification(messages, true);
         }
         vibrateAndPlayTone(messages.get(messages.size()-1));
+    }
+
+    public synchronized void onNewMsg(String alert){
+        notify(false, alert, null, null, alert, 0);
+        vibrateAndPlayTone(null);
     }
 
     /**
@@ -210,17 +215,10 @@ public class MessageNotifier {
                 }   
             }
 
-            // create and send notification
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(appContext)
-                                                                        .setSmallIcon(appContext.getApplicationInfo().icon)
-                                                                        .setWhen(System.currentTimeMillis())
-                                                                        .setAutoCancel(true);
-
             Intent msgIntent = appContext.getPackageManager().getLaunchIntentForPackage(packageName);
             if (notificationInfoProvider != null) {
                 msgIntent = notificationInfoProvider.getLaunchIntent(message);
             }
-
             PendingIntent pendingIntent = PendingIntent.getActivity(appContext, notifyID, msgIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -235,7 +233,8 @@ public class MessageNotifier {
             int fromUsersNum = fromUsers.size();
             String summaryBody = msgs[6].replaceFirst("%1", Integer.toString(fromUsersNum)).replaceFirst("%2",
                     Integer.toString(notificationNum));
-            
+
+            int smallIcon = 0;
             if (notificationInfoProvider != null) {
                 // latest text
                 String customSummaryBody = notificationInfoProvider.getLatestText(message, fromUsersNum,notificationNum);
@@ -244,29 +243,49 @@ public class MessageNotifier {
                 }
                 
                 // small icon
-                int smallIcon = notificationInfoProvider.getSmallIcon(message);
-                if (smallIcon != 0){
-                    mBuilder.setSmallIcon(smallIcon);
-                }
+                smallIcon = notificationInfoProvider.getSmallIcon(message);
             }
-
-            mBuilder.setContentTitle(contentTitle);
-            mBuilder.setTicker(notifyText);
-            mBuilder.setContentText(summaryBody);
-            mBuilder.setContentIntent(pendingIntent);
-            // mBuilder.setNumber(notificationNum);
-            Notification notification = mBuilder.build();
-
-            if (isForeground) {
-                int foregroundNotifyID = 0555;
-                notificationManager.notify(foregroundNotifyID, notification);
-                notificationManager.cancel(foregroundNotifyID);
-            } else {
-                notificationManager.notify(notifyID, notification);
-            }
-
+            notify(isForeground, notifyText, contentTitle, pendingIntent, summaryBody, smallIcon);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void notify(boolean isForeground, String notifyText, String contentTitle,
+            PendingIntent pendingIntent, String summaryBody, int smallIcon) {
+        PackageManager packageManager = appContext.getPackageManager();
+
+        if(contentTitle == null){
+            contentTitle = (String) packageManager.getApplicationLabel(appContext.getApplicationInfo());
+        }
+        if(pendingIntent == null) {
+            Intent msgIntent = appContext.getPackageManager().getLaunchIntentForPackage(packageName);
+            pendingIntent = PendingIntent.getActivity(appContext, notifyID, msgIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+
+        // create and send notification
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(appContext)
+                .setSmallIcon(appContext.getApplicationInfo().icon)
+                .setWhen(System.currentTimeMillis())
+                .setAutoCancel(true);
+
+        mBuilder.setContentTitle(contentTitle);
+        mBuilder.setTicker(notifyText);
+        mBuilder.setContentText(summaryBody);
+        mBuilder.setContentIntent(pendingIntent);
+        if (smallIcon != 0){
+            mBuilder.setSmallIcon(smallIcon);
+        }
+        // mBuilder.setNumber(notificationNum);
+        Notification notification = mBuilder.build();
+
+        if (isForeground) {
+            int foregroundNotifyID = 0555;
+            notificationManager.notify(foregroundNotifyID, notification);
+            notificationManager.cancel(foregroundNotifyID);
+        } else {
+            notificationManager.notify(notifyID, notification);
         }
     }
 
