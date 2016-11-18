@@ -33,6 +33,8 @@ public class VoiceCallActivity extends CallActivity {
 
     private final String TAG = VoiceCallActivity.class.getSimpleName();
 
+    private Timer mTimer;
+
     // Use ButterKnife define view
     @BindView(R.id.img_call_background) ImageView mCallBackgroundView;
     @BindView(R.id.text_call_status) TextView mCallStatusView;
@@ -141,19 +143,23 @@ public class VoiceCallActivity extends CallActivity {
         try {
             EMClient.getInstance().callManager().makeVoiceCall(mCallId);
             // Set call timeout
-            Timer timer = new Timer();
+            mTimer = new Timer();
             TimerTask task = new TimerTask() {
                 @Override public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override public void run() {
-                            EMLog.i(TAG, "call timeout");
-                            endCall();
-                        }
-                    });
+                    if (CallStatus.getInstance().getCallState() == CallStatus.CALL_CANCEL) {
+                        runOnUiThread(new Runnable() {
+                            @Override public void run() {
+                                EMLog.i(TAG, "call timeout");
+                                endCall();
+                            }
+                        });
+                    } else {
+                        mTimer.cancel();
+                    }
                 }
             };
             // set timeout 60s after
-            timer.schedule(task, 60 * 1000);
+            mTimer.schedule(task, 60 * 1000);
         } catch (EMServiceNotReadyException e) {
             e.printStackTrace();
         }
@@ -384,6 +390,9 @@ public class VoiceCallActivity extends CallActivity {
                         String.format(getString(R.string.em_call_connected), mCallId));
                 break;
             case ACCEPTED:
+                if (mTimer != null) {
+                    mTimer.cancel();
+                }
                 stopCallSound();
                 closeSpeaker();
                 // Set call state view show content
@@ -460,6 +469,15 @@ public class VoiceCallActivity extends CallActivity {
         }
     }
 
+    /**
+     * Call end finish activity
+     */
+    @Override protected void onFinish() {
+        // Call end release SurfaceView
+        mAudioManager.setMode(AudioManager.MODE_NORMAL);
+        super.onFinish();
+    }
+
     @Override protected void onResume() {
         super.onResume();
     }
@@ -467,5 +485,6 @@ public class VoiceCallActivity extends CallActivity {
     @Override protected void onDestroy() {
         super.onDestroy();
         DemoHelper.getInstance().isVoiceCalling = false;
+        mAudioManager.setMode(AudioManager.MODE_NORMAL);
     }
 }
