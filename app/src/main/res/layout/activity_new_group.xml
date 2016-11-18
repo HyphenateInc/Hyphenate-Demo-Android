@@ -9,7 +9,7 @@
   <android.support.v7.widget.Toolbar
       android:id="@+id/toolbar_actionbar"
       app:navigationIcon="@drawable/em_ic_back"
-      app:title="New Group"
+      app:title="@string/em_new_group"
       style="@style/ToolbarNormalTheme"
       />
 
@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="16dp"
-        android:text="Appear in group search"
+        android:text="@string/em_appear_in_group_search"
         android:textColor="#212121"
         android:textSize="16sp"
         />
@@ -112,7 +112,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="16dp"
-        android:text="Allow members to invite"
+        android:text="@string/em_allow"
         android:textColor="#212121"
         android:textSize="16sp"
         />

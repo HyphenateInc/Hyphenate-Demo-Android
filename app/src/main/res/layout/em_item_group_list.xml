@@ -63,7 +63,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="@color/colorAccent"
-        android:text="JOIN"
+        android:text="@string/em_join"
         android:textColor="@color/colorTextPrimary"
         android:visibility="gone"
         />
