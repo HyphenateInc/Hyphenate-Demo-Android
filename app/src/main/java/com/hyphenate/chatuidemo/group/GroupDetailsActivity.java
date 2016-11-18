@@ -73,10 +73,10 @@ public class GroupDetailsActivity extends BaseActivity {
         ButterKnife.bind(this);
         instance = this;
 
+        progressBar = new ProgressBar(this);
         groupId = getIntent().getStringExtra("groupId");
         updateGroup();
 
-        progressBar = new ProgressBar(this);
 
         toolbar = getActionBarToolbar();
         toolbar.setNavigationIcon(R.drawable.em_ic_back);
@@ -89,7 +89,6 @@ public class GroupDetailsActivity extends BaseActivity {
         Toolbar.LayoutParams params = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.RIGHT;
         toolbar.addView(progressBar, params);
-
 
         listener = new DefaultGroupChangeListener();
         EMClient.getInstance().groupManager().addGroupChangeListener(listener);
@@ -114,7 +113,7 @@ public class GroupDetailsActivity extends BaseActivity {
         }
     }
 
-    @OnClick({ R.id.text_exit_group, R.id.layout_member_list, R.id.layout_push_notification }) void onClick(View view) {
+    @OnClick({ R.id.text_exit_group, R.id.layout_member_list, R.id.layout_push_notification }) void onclick(View view) {
         switch (view.getId()) {
             case R.id.text_exit_group:
                 exitGroup();
@@ -137,9 +136,9 @@ public class GroupDetailsActivity extends BaseActivity {
     }
 
     public void exitGroup() {
-        new AlertDialog.Builder(GroupDetailsActivity.this).setTitle("group")
-                .setMessage("exit group")
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(GroupDetailsActivity.this).setTitle(getString(R.string.em_group))
+                .setMessage(getString(R.string.em_exit_group))
+                .setPositiveButton(getString(R.string.em_ok), new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
 
                         if (isOwner) {
@@ -150,7 +149,7 @@ public class GroupDetailsActivity extends BaseActivity {
                         dialog.dismiss();
                     }
                 })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.em_cancel), new DialogInterface.OnClickListener() {
                     @Override public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
@@ -162,7 +161,7 @@ public class GroupDetailsActivity extends BaseActivity {
      * leave group
      */
     private void leaveGroup() {
-        showDialog("leave group", "waiting...");
+        showDialog(getString(R.string.em_leave_group), getString(R.string.em_waiting));
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -192,7 +191,7 @@ public class GroupDetailsActivity extends BaseActivity {
      * delete group
      */
     private void deleteGroup() {
-        showDialog("delete group", "waiting...");
+        showDialog(getString(R.string.em_delete_group), getString(R.string.em_waiting));
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -237,22 +236,22 @@ public class GroupDetailsActivity extends BaseActivity {
 
                             if (EMClient.getInstance().getCurrentUser().equals(group.getOwner())) {
                                 isOwner = true;
-                                exitGroupView.setText("Delete group");
+                                exitGroupView.setText(getString(R.string.em_delete_group));
                             } else {
                                 isOwner = false;
-                                exitGroupView.setText("leave group");
+                                exitGroupView.setText(getString(R.string.em_leave_group));
                             }
 
                             if (group.isMemberAllowToInvite()) {
-                                inviteView.setText("Enable");
+                                inviteView.setText(getString(R.string.em_enable));
                             } else {
-                                inviteView.setText("Disabled");
+                                inviteView.setText(getString(R.string.em_disabled));
                             }
 
-                            if (group.isPublic()){
-                                groupTypeView.setText("Public");
-                            }else {
-                                groupTypeView.setText("Private");
+                            if (group.isPublic()) {
+                                groupTypeView.setText(getString(R.string.em_public));
+                            } else {
+                                groupTypeView.setText(getString(R.string.em_private));
                             }
 
                             members.clear();
@@ -289,7 +288,7 @@ public class GroupDetailsActivity extends BaseActivity {
 
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
-                            progressDialog.dismiss();
+                            toolbar.removeView(progressBar);
                         }
                     });
                 }

@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +41,7 @@ public class GroupListActivity extends BaseActivity {
     static Toolbar toolbar;
     static MenuItem item;
     boolean isDelete;
+    static SearchView searchView;
 
     private DefaultGroupChangeListener listener;
 
@@ -49,7 +51,6 @@ public class GroupListActivity extends BaseActivity {
         ButterKnife.bind(this);
         initToolbar();
         initRecyclerView();
-        loadGroupList();
 
         listener = new DefaultGroupChangeListener();
         EMClient.getInstance().groupManager().addGroupChangeListener(listener);
@@ -66,15 +67,15 @@ public class GroupListActivity extends BaseActivity {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override public boolean onMenuItemClick(MenuItem item) {
                 if (isDelete) {
-                    String content = "delete group";
+                    String content = getString(R.string.em_delete_group);
 
-                    new AlertDialog.Builder(GroupListActivity.this).setTitle("group")
+                    new AlertDialog.Builder(GroupListActivity.this).setTitle(getString(R.string.em_group))
                             .setMessage(content)
-                            .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getString(R.string.em_ok), new DialogInterface.OnClickListener() {
                                 @Override public void onClick(DialogInterface dialog, int which) {
                                     if (progressDialog == null) {
                                         progressDialog = new ProgressDialog(GroupListActivity.this);
-                                        progressDialog.setMessage("group");
+                                        progressDialog.setMessage(getResources().getString(R.string.em_group));
                                         progressDialog.setCanceledOnTouchOutside(false);
                                     }
 
@@ -88,7 +89,7 @@ public class GroupListActivity extends BaseActivity {
                                     dialog.dismiss();
                                 }
                             })
-                            .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(getString(R.string.em_cancel), new DialogInterface.OnClickListener() {
                                 @Override public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                 }
@@ -106,9 +107,7 @@ public class GroupListActivity extends BaseActivity {
         manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
-    }
 
-    public void loadGroupList() {
         groupList.clear();
         groupList.addAll(EMClient.getInstance().groupManager().getAllGroups());
         adapter = new GroupListAdapter(GroupListActivity.this, groupList);
@@ -133,7 +132,7 @@ public class GroupListActivity extends BaseActivity {
         menu.findItem(R.id.menu_add_contacts).setVisible(false);
         item = menu.findItem(R.id.menu_search);
 
-        SearchView searchView = (SearchView) item.getActionView();
+        searchView = (SearchView) item.getActionView();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override public boolean onQueryTextSubmit(String query) {
@@ -141,7 +140,7 @@ public class GroupListActivity extends BaseActivity {
             }
 
             @Override public boolean onQueryTextChange(String newText) {
-                List<EMGroup> groups = new ArrayList<EMGroup>();
+                List<EMGroup> groups = new ArrayList<>();
                 groupList.clear();
                 groupList.addAll(EMClient.getInstance().groupManager().getAllGroups());
                 for (EMGroup group : groupList) {
@@ -169,12 +168,18 @@ public class GroupListActivity extends BaseActivity {
                             groupList.remove(group);
                             adapter.notifyDataSetChanged();
                             progressDialog.dismiss();
+                            item.setIcon(R.drawable.em_ic_action_light_search);
+                            item.setActionView(searchView);
+                            toolbar.setTitle(getString(R.string.em_groups));
                         }
                     });
                 } catch (final Exception e) {
                     runOnUiThread(new Runnable() {
                         public void run() {
                             progressDialog.dismiss();
+                            item.setIcon(R.drawable.em_ic_action_light_search);
+                            toolbar.setTitle(getString(R.string.em_groups));
+                            item.setActionView(searchView);
                             Toast.makeText(getApplicationContext(), "exit failure " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     });
@@ -193,6 +198,9 @@ public class GroupListActivity extends BaseActivity {
                             groupList.remove(group);
                             adapter.notifyDataSetChanged();
                             progressDialog.dismiss();
+                            item.setIcon(R.drawable.em_ic_action_light_search);
+                            item.setActionView(searchView);
+                            toolbar.setTitle(getString(R.string.em_groups));
                         }
                     });
                 } catch (final Exception e) {
@@ -200,6 +208,9 @@ public class GroupListActivity extends BaseActivity {
                         public void run() {
                             progressDialog.dismiss();
                             Toast.makeText(getApplicationContext(), "delete failure" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            item.setIcon(R.drawable.em_ic_action_light_search);
+                            item.setActionView(searchView);
+                            toolbar.setTitle(getString(R.string.em_groups));
                         }
                     });
                 }
@@ -227,7 +238,8 @@ public class GroupListActivity extends BaseActivity {
             if (adapter.selected != null && adapter.selected.size() != 0) {
                 adapter.notifyDataSetChanged();
                 item.setIcon(R.drawable.em_ic_action_light_search);
-                toolbar.setTitle("Groups");
+                item.setActionView(searchView);
+                toolbar.setTitle(getString(R.string.em_groups));
                 adapter.selected.clear();
             } else {
                 super.onBackPressed();
@@ -235,37 +247,29 @@ public class GroupListActivity extends BaseActivity {
         }
     }
 
+    private void refresh() {
+        groupList.clear();
+        groupList.addAll(EMClient.getInstance().groupManager().getAllGroups());
+        runOnUiThread(new Runnable() {
+            @Override public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
     private class DefaultGroupChangeListener extends GroupChangeListener {
         @Override public void onUserRemoved(String s, String s1) {
             super.onUserRemoved(s, s1);
-            groupList.clear();
-            groupList.addAll(EMClient.getInstance().groupManager().getAllGroups());
-            runOnUiThread(new Runnable() {
-                @Override public void run() {
-                    adapter.notifyDataSetChanged();
-                }
-            });
+            refresh();
         }
 
         @Override public void onGroupDestroyed(String s, String s1) {
             super.onGroupDestroyed(s, s1);
-            groupList.clear();
-            groupList.addAll(EMClient.getInstance().groupManager().getAllGroups());
-            runOnUiThread(new Runnable() {
-                @Override public void run() {
-                    adapter.notifyDataSetChanged();
-                }
-            });
+            refresh();
         }
 
         @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
-            groupList.clear();
-            groupList.addAll(EMClient.getInstance().groupManager().getAllGroups());
-            runOnUiThread(new Runnable() {
-                @Override public void run() {
-                    adapter.notifyDataSetChanged();
-                }
-            });
+            refresh();
         }
     }
 }

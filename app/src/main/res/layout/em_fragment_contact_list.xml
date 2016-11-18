@@ -79,7 +79,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/group_text_margin_left"
             android:layout_toRightOf="@id/img_group_icon"
-            android:text="@string/groups"
+            android:text="@string/em_groups"
             android:textColor="@android:color/black"
             android:textSize="@dimen/group_text_size"
             />
@@ -92,6 +92,14 @@
             android:src="@drawable/cell_chevron_right"
             />
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_contacts"

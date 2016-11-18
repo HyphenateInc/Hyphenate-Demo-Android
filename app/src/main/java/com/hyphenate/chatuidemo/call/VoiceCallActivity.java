@@ -22,11 +22,16 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.exceptions.EMNoActiveCallException;
 import com.hyphenate.exceptions.EMServiceNotReadyException;
+import com.hyphenate.util.EMLog;
+import java.util.Timer;
+import java.util.TimerTask;
 import com.hyphenate.exceptions.HyphenateException;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class VoiceCallActivity extends CallActivity {
+
+    private final String TAG = VoiceCallActivity.class.getSimpleName();
 
     // Use ButterKnife define view
     @BindView(R.id.img_call_background) ImageView mCallBackgroundView;
@@ -90,8 +95,8 @@ public class VoiceCallActivity extends CallActivity {
                 // Set call state connecting
                 CallStatus.getInstance().setCallState(CallStatus.CALL_STATUS_CONNECTING);
                 // Set call state view show content
-                mCallStatusView.setText(String.format(
-                        mActivity.getResources().getString(R.string.em_call_connecting), mCallId));
+                mCallStatusView.setText(
+                        String.format(getString(R.string.em_call_connecting), mCallId));
                 // Set button statue
                 mRejectCallFab.setVisibility(View.GONE);
                 mEndCallFab.setVisibility(View.VISIBLE);
@@ -102,9 +107,7 @@ public class VoiceCallActivity extends CallActivity {
         } else if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_CONNECTING) {
             isInComingCall = CallStatus.getInstance().isInComing();
             // Set call state view show content
-            mCallStatusView.setText(
-                    String.format(mActivity.getResources().getString(R.string.em_call_connecting),
-                            mCallId));
+            mCallStatusView.setText(String.format(getString(R.string.em_call_connecting), mCallId));
             // Set button statue
             mRejectCallFab.setVisibility(View.GONE);
             mEndCallFab.setVisibility(View.VISIBLE);
@@ -113,9 +116,8 @@ public class VoiceCallActivity extends CallActivity {
                 == CallStatus.CALL_STATUS_CONNECTING_INCOMING) {
             isInComingCall = CallStatus.getInstance().isInComing();
             // Set call state view show content
-            mCallStatusView.setText(String.format(
-                    mActivity.getResources().getString(R.string.em_call_connected_incoming_call),
-                    mCallId));
+            mCallStatusView.setText(
+                    String.format(getString(R.string.em_call_connected_incoming_call), mCallId));
             // Set button statue
             mRejectCallFab.setVisibility(View.VISIBLE);
             mEndCallFab.setVisibility(View.GONE);
@@ -138,6 +140,20 @@ public class VoiceCallActivity extends CallActivity {
     private void makeCall() {
         try {
             EMClient.getInstance().callManager().makeVoiceCall(mCallId);
+            // Set call timeout
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            EMLog.i(TAG, "call timeout");
+                            endCall();
+                        }
+                    });
+                }
+            };
+            // set timeout 60s after
+            timer.schedule(task, 60 * 1000);
         } catch (EMServiceNotReadyException e) {
             e.printStackTrace();
         }
@@ -359,18 +375,19 @@ public class VoiceCallActivity extends CallActivity {
         switch (callState) {
             case CONNECTING:
                 // Set call state view show content
-                mCallStatusView.setText(String.format(
-                        mActivity.getResources().getString(R.string.em_call_connecting), mCallId));
+                mCallStatusView.setText(
+                        String.format(getString(R.string.em_call_connecting), mCallId));
                 break;
             case CONNECTED:
                 // Set call state view show content
-                mCallStatusView.setText(String.format(
-                        mActivity.getResources().getString(R.string.em_call_connected), mCallId));
+                mCallStatusView.setText(
+                        String.format(getString(R.string.em_call_connected), mCallId));
                 break;
             case ACCEPTED:
+                stopCallSound();
+                closeSpeaker();
                 // Set call state view show content
                 mCallStatusView.setText(R.string.em_call_accepted);
-                stopCallSound();
                 // Set call state
                 mCallStatus = CallStatus.CALL_ACCEPTED;
                 // Start time
@@ -385,23 +402,20 @@ public class VoiceCallActivity extends CallActivity {
                 // Check call error
                 if (callError == CallError.ERROR_UNAVAILABLE) {
                     mCallStatus = CallStatus.CALL_OFFLINE;
-                    mCallStatusView.setText(String.format(
-                            mActivity.getResources().getString(R.string.em_call_not_online),
-                            mCallId));
+                    mCallStatusView.setText(
+                            String.format(getString(R.string.em_call_not_online), mCallId));
                 } else if (callError == CallError.ERROR_BUSY) {
                     mCallStatus = CallStatus.CALL_BUSY;
                     mCallStatusView.setText(
-                            String.format(mActivity.getResources().getString(R.string.em_call_busy),
-                                    mCallId));
+                            String.format(getString(R.string.em_call_busy), mCallId));
                 } else if (callError == CallError.REJECTED) {
                     mCallStatus = CallStatus.CALL_REJECT;
-                    mCallStatusView.setText(String.format(
-                            mActivity.getResources().getString(R.string.em_call_reject), mCallId));
+                    mCallStatusView.setText(
+                            String.format(getString(R.string.em_call_reject), mCallId));
                 } else if (callError == CallError.ERROR_NORESPONSE) {
                     mCallStatus = CallStatus.CALL_NO_RESPONSE;
-                    mCallStatusView.setText(String.format(
-                            mActivity.getResources().getString(R.string.em_call_no_response),
-                            mCallId));
+                    mCallStatusView.setText(
+                            String.format(getString(R.string.em_call_no_response), mCallId));
                 } else if (callError == CallError.ERROR_TRANSPORT) {
                     mCallStatus = CallStatus.CALL_TRANSPORT;
                     mCallStatusView.setText(R.string.em_call_connection_fail);

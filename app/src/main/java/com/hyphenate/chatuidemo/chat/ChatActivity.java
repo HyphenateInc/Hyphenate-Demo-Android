@@ -33,6 +33,7 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.group.GroupChangeListener;
 import com.hyphenate.chatuidemo.group.GroupDetailsActivity;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.call.VideoCallActivity;
@@ -63,6 +64,8 @@ public class ChatActivity extends BaseActivity {
     @BindView(R.id.message_list) EaseMessageListView mMessageListView;
     @BindView(R.id.pb_loading_message) ProgressBar mLoadingProgressBar;
 
+    private DefaultGroupChangeListener listener;
+
     protected static final int REQUEST_CODE_MAP = 1;
     protected static final int REQUEST_CODE_CAMERA = 2;
     protected static final int REQUEST_CODE_LOCAL = 3;
@@ -74,7 +77,6 @@ public class ChatActivity extends BaseActivity {
     protected static final int MESSAGE_TYPE_RECV_CALL = 1;
     protected static final int MESSAGE_TYPE_SENT_CALL = 2;
 
-
     static final int ITEM_TAKE_PICTURE = 1;
     static final int ITEM_PICTURE = 2;
     static final int ITEM_LOCATION = 3;
@@ -82,9 +84,14 @@ public class ChatActivity extends BaseActivity {
     static final int ITEM_VOICE_CALL = 5;
     static final int ITEM_VIDEO_CALL = 6;
 
-    protected int[] itemStrings = { R.string.attach_take_pic, R.string.attach_picture, R.string.attach_location, R.string.attach_file };
-    protected int[] itemdrawables = { R.drawable.ease_chat_takepic_selector, R.drawable.ease_chat_image_selector,
-            R.drawable.ease_chat_location_selector, R.drawable.em_chat_file_selector };
+    protected int[] itemStrings = {
+            R.string.attach_take_pic, R.string.attach_picture, R.string.attach_location,
+            R.string.attach_file
+    };
+    protected int[] itemdrawables = {
+            R.drawable.ease_chat_takepic_selector, R.drawable.ease_chat_image_selector,
+            R.drawable.ease_chat_location_selector, R.drawable.em_chat_file_selector
+    };
     protected int[] itemIds = { ITEM_TAKE_PICTURE, ITEM_PICTURE, ITEM_LOCATION, ITEM_FILE };
 
     protected File mCameraFile;
@@ -117,12 +124,13 @@ public class ChatActivity extends BaseActivity {
         activityInstance = this;
 
         toChatUsername = getIntent().getStringExtra(EaseConstant.EXTRA_USER_ID);
-        chatType =
-                getIntent().getIntExtra(EaseConstant.EXTRA_CHAT_TYPE, CHATTYPE_SINGLE);
+        chatType = getIntent().getIntExtra(EaseConstant.EXTRA_CHAT_TYPE, CHATTYPE_SINGLE);
 
         //get the mConversation
-        mConversation = EMClient.getInstance().chatManager()
-                .getConversation(toChatUsername, EaseCommonUtils.getConversationType(chatType), true);
+        mConversation = EMClient.getInstance()
+                .chatManager()
+                .getConversation(toChatUsername, EaseCommonUtils.getConversationType(chatType),
+                        true);
         mConversation.markAllMessagesAsRead();
         // the number of messages loaded into mConversation is getChatOptions().getNumberOfMessagesLoaded
         // you can change this number
@@ -144,10 +152,14 @@ public class ChatActivity extends BaseActivity {
         });
         initView();
 
+        listener = new DefaultGroupChangeListener();
+        EMClient.getInstance().groupManager().addGroupChangeListener(listener);
+
         // received messages code in onResume() method
     }
 
     private EMMessage mToDeleteMessage;
+
     private void initView() {
         // init message list view
         mMessageListView.init(toChatUsername, chatType, newCustomChatRowProvider());
@@ -180,8 +192,7 @@ public class ChatActivity extends BaseActivity {
                 });
         mMessageListView.setOnTouchListener(new View.OnTouchListener() {
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            @Override public boolean onTouch(View v, MotionEvent event) {
                 Utils.hideKeyboard(mInputView.getEditText());
                 mInputView.hideExtendMenuContainer();
                 return false;
@@ -189,12 +200,17 @@ public class ChatActivity extends BaseActivity {
         });
 
         MyItemClickListener extendMenuItemClickListener = new MyItemClickListener();
-        for(int i = 0; i < itemStrings.length; i++){
-            mInputView.registerExtendMenuItem(itemStrings[i], itemdrawables[i], itemIds[i], extendMenuItemClickListener);
+        for (int i = 0; i < itemStrings.length; i++) {
+            mInputView.registerExtendMenuItem(itemStrings[i], itemdrawables[i], itemIds[i],
+                    extendMenuItemClickListener);
         }
-        if(chatType == CHATTYPE_SINGLE){
-            mInputView.registerExtendMenuItem(R.string.attach_voice_call, R.drawable.em_chat_voice_call_selector, ITEM_VOICE_CALL, extendMenuItemClickListener);
-            mInputView.registerExtendMenuItem(R.string.attach_video_call, R.drawable.em_chat_video_call_selector, ITEM_VIDEO_CALL, extendMenuItemClickListener);
+        if (chatType == CHATTYPE_SINGLE) {
+            mInputView.registerExtendMenuItem(R.string.attach_voice_call,
+                    R.drawable.em_chat_voice_call_selector, ITEM_VOICE_CALL,
+                    extendMenuItemClickListener);
+            mInputView.registerExtendMenuItem(R.string.attach_video_call,
+                    R.drawable.em_chat_video_call_selector, ITEM_VIDEO_CALL,
+                    extendMenuItemClickListener);
         }
         mInputView.init();
         mInputView.setViewEventListener(new ChatInputView.ChatInputViewEventListener() {
@@ -214,21 +230,21 @@ public class ChatActivity extends BaseActivity {
                     }
                 });
                 dialog.show();
-
             }
         });
     }
 
     private void setToolbarTitle() {
         String nick = toChatUsername;
-        if(chatType == CHATTYPE_SINGLE){ //p2p chat
-            UserEntity user = DemoHelper.getInstance().getUserManager().getContactList().get(toChatUsername);
-            if(user != null){
+        if (chatType == CHATTYPE_SINGLE) { //p2p chat
+            UserEntity user =
+                    DemoHelper.getInstance().getUserManager().getContactList().get(toChatUsername);
+            if (user != null) {
                 nick = user.getNickname();
             }
-        }else if(chatType == EaseConstant.CHATTYPE_GROUP){ //group chat
+        } else if (chatType == EaseConstant.CHATTYPE_GROUP) { //group chat
             EMGroup group = EMClient.getInstance().groupManager().getGroup(toChatUsername);
-            if(group != null){
+            if (group != null) {
                 nick = group.getGroupName();
             }
         }
@@ -236,17 +252,17 @@ public class ChatActivity extends BaseActivity {
     }
 
     boolean isFirstLoad = true;
+
     /**
-     *  message list on sroll listener
+     * message list on sroll listener
      */
     private class MsgListScrollListener implements AbsListView.OnScrollListener {
 
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
+        @Override public void onScrollStateChanged(AbsListView view, int scrollState) {
         }
 
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        @Override public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                int totalItemCount) {
             synchronized (mMessageListView) {
                 if (firstVisibleItem == 0
                         && !isLoading
@@ -254,8 +270,7 @@ public class ChatActivity extends BaseActivity {
                         && mConversation.getAllMessages().size() != 0) {
                     isLoading = true;
 
-                    if(!isFirstLoad)
-                        mLoadingProgressBar.setVisibility(View.VISIBLE);
+                    if (!isFirstLoad) mLoadingProgressBar.setVisibility(View.VISIBLE);
                     isFirstLoad = false;
                     // sdk初始化加载的聊天记录为20条，到顶时去db里获取更多
                     final List<EMMessage> messages;
@@ -293,7 +308,6 @@ public class ChatActivity extends BaseActivity {
                 }
             }
         }
-
     }
 
     @Override public void onCreateContextMenu(ContextMenu menu, View v,
@@ -303,8 +317,8 @@ public class ChatActivity extends BaseActivity {
     }
 
     @Override public boolean onContextItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.delete_message){
-            if(mConversation != null){
+        if (item.getItemId() == R.id.delete_message) {
+            if (mConversation != null) {
                 //delete selected message
                 mConversation.removeMessage(mToDeleteMessage.getMsgId());
                 mMessageListView.refresh();
@@ -347,7 +361,9 @@ public class ChatActivity extends BaseActivity {
                         break;
 
                     case R.id.menu_group_detail:
-                        startActivity(new Intent(ChatActivity.this, GroupDetailsActivity.class).putExtra("groupId",toChatUsername));
+                        startActivity(
+                                new Intent(ChatActivity.this, GroupDetailsActivity.class).putExtra(
+                                        "groupId", toChatUsername));
                         break;
                 }
 
@@ -359,10 +375,9 @@ public class ChatActivity extends BaseActivity {
     }
 
     //methods of send various types message
-    protected void sendTextMessage(String content){
+    protected void sendTextMessage(String content) {
         // create a message
-        EMMessage message =
-                EMMessage.createTxtSendMessage(content, toChatUsername);
+        EMMessage message = EMMessage.createTxtSendMessage(content, toChatUsername);
         // send message
         sendMessage(message);
     }
@@ -587,12 +602,10 @@ public class ChatActivity extends BaseActivity {
 
     /**
      * handle the click event for extend menu
-     *
      */
-    class MyItemClickListener implements EaseChatExtendMenu.EaseChatExtendMenuItemClickListener{
+    class MyItemClickListener implements EaseChatExtendMenu.EaseChatExtendMenuItemClickListener {
 
-        @Override
-        public void onClick(int itemId, View view) {
+        @Override public void onClick(int itemId, View view) {
             switch (itemId) {
                 case ITEM_TAKE_PICTURE:
                     selectPicFromCamera();
@@ -601,7 +614,7 @@ public class ChatActivity extends BaseActivity {
                     selectPicFromLocal();
                     break;
                 case ITEM_LOCATION:
-                   selectLoaction();
+                    selectLoaction();
                     break;
                 //case ITEM_VIDEO:
                 //    Intent intent = new Intent(chatType.this, ImageGridActivity.class);
@@ -620,13 +633,12 @@ public class ChatActivity extends BaseActivity {
                     break;
             }
         }
-
     }
 
-    private void startVoiceCall(){
+    private void startVoiceCall() {
         if (!EMClient.getInstance().isConnected()) {
             Toast.makeText(this, R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             Intent voiceCallIntent = new Intent();
             voiceCallIntent.setClass(ChatActivity.this, VoiceCallActivity.class);
             voiceCallIntent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
@@ -634,13 +646,12 @@ public class ChatActivity extends BaseActivity {
             startActivity(voiceCallIntent);
         }
         mInputView.hideExtendMenuContainer();
-
     }
 
-    private void startVideoCall(){
+    private void startVideoCall() {
         if (!EMClient.getInstance().isConnected()) {
             Toast.makeText(this, R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             Intent videoCallIntent = new Intent();
             videoCallIntent.setClass(ChatActivity.this, VideoCallActivity.class);
             videoCallIntent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
@@ -648,13 +659,10 @@ public class ChatActivity extends BaseActivity {
             startActivity(videoCallIntent);
         }
         mInputView.hideExtendMenuContainer();
-
     }
-
 
     /**
      * create a chat row provider
-     * @return
      */
     private EaseCustomChatRowProvider newCustomChatRowProvider() {
         return new EaseCustomChatRowProvider() {
@@ -731,17 +739,15 @@ public class ChatActivity extends BaseActivity {
         }
     };
 
-    @Override
-    protected void onNewIntent(Intent intent) {
+    @Override protected void onNewIntent(Intent intent) {
         //Ensure that only a chat activity
         String username = intent.getStringExtra(EaseConstant.EXTRA_USER_ID);
-        if (toChatUsername.equals(username))
+        if (toChatUsername.equals(username)) {
             super.onNewIntent(intent);
-        else {
+        } else {
             finish();
             startActivity(intent);
         }
-
     }
 
     @Override protected void onResume() {
@@ -762,13 +768,29 @@ public class ChatActivity extends BaseActivity {
         DemoHelper.getInstance().popActivity(this);
     }
 
-    @Override
-    public void onBackPressed() {
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        EMClient.getInstance().groupManager().removeGroupChangeListener(listener);
+    }
+
+    @Override public void onBackPressed() {
         if (mInputView.onBackPressed()) {
             finish();
             if (chatType == EaseConstant.CHATTYPE_CHATROOM) {
                 EMClient.getInstance().chatroomManager().leaveChatRoom(toChatUsername);
             }
+        }
+    }
+
+    private class DefaultGroupChangeListener extends GroupChangeListener {
+        @Override public void onUserRemoved(String s, String s1) {
+            super.onUserRemoved(s, s1);
+            finish();
+        }
+
+        @Override public void onGroupDestroyed(String s, String s1) {
+            super.onGroupDestroyed(s, s1);
+            finish();
         }
     }
 }

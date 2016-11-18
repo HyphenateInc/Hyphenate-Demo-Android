@@ -1,12 +1,10 @@
 package com.hyphenate.chatuidemo.ui;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,7 +21,6 @@ import android.view.View;
 import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import com.hyphenate.EMCallBack;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
@@ -78,8 +75,6 @@ public class MainActivity extends BaseActivity {
         setupViewPager();
         //setup tabLayout with viewpager
         setupTabLayout();
-
-        getContactsFromServer();
     }
 
     private void setupViewPager() {
@@ -114,37 +109,6 @@ public class MainActivity extends BaseActivity {
             }
 
             @Override public void onPageScrollStateChanged(int state) {
-            }
-        });
-    }
-
-    private void getContactsFromServer() {
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setTitle("Load Contact...");
-        dialog.setMessage("waiting...");
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
-        DemoHelper.getInstance().getUserManager().fetchContactsFromServer(new EMCallBack() {
-            @Override public void onSuccess() {
-                runOnUiThread(new Runnable() {
-                    @Override public void run() {
-                        dialog.dismiss();
-                        mContactListFragment.refresh();
-                    }
-                });
-            }
-
-            @Override public void onError(int i, final String s) {
-                runOnUiThread(new Runnable() {
-                    @Override public void run() {
-                        dialog.dismiss();
-                        mContactListFragment.refresh();
-                        Snackbar.make(mTabLayout, "failure:" + s, Snackbar.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override public void onProgress(int i, String s) {
             }
         });
     }

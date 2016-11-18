@@ -115,7 +115,7 @@ public class ApplyActivity extends BaseActivity {
      */
     private void agreeApply(final String msgId) {
         final ProgressDialog dialog = new ProgressDialog(mActivity);
-        dialog.setMessage(mActivity.getResources().getString(R.string.em_wait));
+        dialog.setMessage(getString(R.string.em_wait));
         dialog.show();
 
         new Thread(new Runnable() {
@@ -176,7 +176,7 @@ public class ApplyActivity extends BaseActivity {
      */
     private void rejectApply(final String msgId) {
         final ProgressDialog dialog = new ProgressDialog(mActivity);
-        dialog.setMessage(mActivity.getResources().getString(R.string.em_wait));
+        dialog.setMessage(getString(R.string.em_wait));
         dialog.show();
         new Thread(new Runnable() {
             @Override public void run() {

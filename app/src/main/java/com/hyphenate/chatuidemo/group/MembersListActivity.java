@@ -54,7 +54,7 @@ public class MembersListActivity extends BaseActivity {
         recyclerView.setAdapter(adapter);
 
         final Toolbar toolbar = getActionBarToolbar();
-        toolbar.setTitle("Members(" + membersList.size() + ")");
+        toolbar.setTitle(getString(R.string.em_group_members) + "(" + membersList.size() + ")");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 onBackPressed();
@@ -75,11 +75,11 @@ public class MembersListActivity extends BaseActivity {
             @Override public void onItemLongClick(View view, final int position) {
 
                 if (isOwner) {
-                    new AlertDialog.Builder(MembersListActivity.this).setTitle("member")
-                            .setMessage("delete member")
-                            .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    new AlertDialog.Builder(MembersListActivity.this).setTitle(getString(R.string.em_group_member))
+                            .setMessage(getString(R.string.em_group_delete_member))
+                            .setPositiveButton(getString(R.string.em_ok), new DialogInterface.OnClickListener() {
                                 @Override public void onClick(final DialogInterface dialog, int which) {
-                                    progressDialog = ProgressDialog.show(MembersListActivity.this, "delete member", "waiting...", false);
+                                    progressDialog = ProgressDialog.show(MembersListActivity.this, getResources().getString(R.string.em_group_delete_member), getString(R.string.em_waiting), false);
                                     final String member = membersList.get(position);
 
                                     if (!EMClient.getInstance().getCurrentUser().equals(member)) {
@@ -93,7 +93,7 @@ public class MembersListActivity extends BaseActivity {
                                                             membersList.remove(member);
                                                             isChange = true;
                                                             adapter.notifyDataSetChanged();
-                                                            toolbar.setTitle("Members(" + membersList.size() + ")");
+                                                            toolbar.setTitle(getResources().getString(R.string.em_group_members) + "(" + membersList.size() + ")");
                                                         }
                                                     });
                                                 } catch (final HyphenateException e) {
@@ -108,14 +108,14 @@ public class MembersListActivity extends BaseActivity {
                                             }
                                         }).start();
                                     } else {
-                                        Snackbar.make(toolbar, "you can not remove yourself", Snackbar.LENGTH_SHORT).show();
+                                        Snackbar.make(toolbar, "you can not delete yourself", Snackbar.LENGTH_SHORT).show();
                                         progressDialog.dismiss();
                                     }
 
                                     dialog.dismiss();
                                 }
                             })
-                            .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(getString(R.string.em_cancel), new DialogInterface.OnClickListener() {
                                 @Override public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                 }
