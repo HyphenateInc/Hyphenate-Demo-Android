@@ -168,6 +168,10 @@
     <string name="toast_update_photo_fail">Update photo fail!</string>
     <string name="toast_updatenick_success">update nickname success!</string>
     <string name="toast_updatenick_fail">update nickname fail!</string>
+    <string name="move_into_blacklist_success">Move into blacklist success</string>
+    <string name="move_into_blacklist_failure">Move into blacklist failure</string>
+    <string name="be_removing">Be removing</string>
+    <string name="removed_from_blacklist_fail">Removed fail</string>
 
     <!-- commons-->
     <string name="Logoff_notification">Logoff notification</string>
