@@ -6,6 +6,7 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chatuidemo.R;
 
 /**
@@ -20,6 +21,7 @@ public class SettingsPreference extends PreferenceFragment
 
     private String aboutKey;
     private String displayNameKey;
+    private String autoAcceptKey;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +29,8 @@ public class SettingsPreference extends PreferenceFragment
 
         aboutKey = getActivity().getString(R.string.em_pref_key_about);
         displayNameKey = getActivity().getString(R.string.em_pref_key_notification_display_name);
+        autoAcceptKey =
+                getActivity().getString(R.string.em_pref_key_accept_group_invite_automatically);
 
         mAboutVersionPreference = getPreferenceScreen().findPreference(aboutKey);
         mDisplayNamePreference =
@@ -39,6 +43,8 @@ public class SettingsPreference extends PreferenceFragment
             checkVersion();
         } else if (key.equals(displayNameKey)) {
             checkDisplayName();
+        } else if (key.equals(autoAcceptKey)) {
+            setAutoAcceptGroupInvites();
         }
     }
 
@@ -59,6 +65,14 @@ public class SettingsPreference extends PreferenceFragment
         } else {
             mDisplayNamePreference.setSummary(mDisplayNamePreference.getText());
         }
+    }
+
+    /**
+     * change auto accept group invites
+     */
+    private void setAutoAcceptGroupInvites() {
+        EMOptions options = EMClient.getInstance().getOptions();
+        options.setAutoAcceptGroupInvitation(!options.isAutoAcceptGroupInvitation());
     }
 
     @Override public void onResume() {

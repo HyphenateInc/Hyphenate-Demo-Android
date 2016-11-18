@@ -97,7 +97,8 @@
     <string name="em_pref_key_notification_sound">em_pref_notification_sound</string>
     <string name="em_pref_key_notification_vibrate">em_pref_notification_vibrate</string>
     <string name="em_pref_key_notification_display_name">em_pref_notification_name</string>
-
+    <string name="em_pref_key_accept_group_invite_automatically">em_pref_accept_group_invite_automatically</string>
+    <string name="em_pref_key_adaptive_video_bitrate">em_pref_adaptive_video_bitrate</string>
     <!--Status-->
     <string name="em_pref_on">Open</string>
     <string name="em_pref_off">Close</string>
@@ -114,7 +115,15 @@
     <string name="em_pref_notification_vibrate">Notification Vibrate</string>
     <string name="em_pref_notification_display_name">Display name</string>
 
+    <string name="em_pref_chat_call">Chat And Call</string>
+    <string name="em_pref_chat_call_summary">Setting chat and call info</string>
+    <string name="em_pref_group_invites">Group invites</string>
+    <string name="em_pref_group_invites_summary">accept group invites automatically</string>
+    <string name="em_pref_adaptive_video_bitrate">Adaptive video bitrate</string>
+    <string name="em_pref_blocked_users">Blocked Users</string>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="groups">Groups</string>
 
     <!--group-->
     <string name="em_groups">Groups</string>

@@ -7,9 +7,9 @@
     <PreferenceCategory
         android:title="@string/em_pref_about">
         <Preference
+            android:id="@+id/preference"
             android:key="@string/em_pref_key_about"
-            android:title="@string/em_pref_about_version"
-            android:id="@+id/preference"/>
+            android:title="@string/em_pref_about_version"/>
     </PreferenceCategory>
 
     <!-- Notifications -->
@@ -51,25 +51,23 @@
 
     <!--Chat&Call-->
     <PreferenceCategory
-        android:title="Chat And Call">
+        android:title="@string/em_pref_chat_call">
         <PreferenceScreen
             android:key="chat_call_screen"
-            android:summary="Setting chat and call info"
-            android:title="Chat And call">
+            android:summary="@string/em_pref_chat_call_summary"
+            android:title="@string/em_pref_chat_call">
             <!--Group invite switch-->
             <SwitchPreference
-                android:key="accept_group_invite_automatically"
-                android:summary="accept group invites automatically"
-                android:title="Group invites"/>
+                android:key="@string/em_pref_key_accept_group_invite_automatically"
+                android:summary="@string/em_pref_group_invites_summary"
+                android:title="@string/em_pref_group_invites"/>
             <!--Adaptive video bitrate-->
             <SwitchPreference
-                android:key="adaptive_video_bitrate"
-                android:summary=""
-                android:title="Adaptive video bitrate"/>
+                android:key="@string/em_pref_key_adaptive_video_bitrate"
+                android:title="@string/em_pref_adaptive_video_bitrate"/>
             <!--Blocked Users-->
             <PreferenceScreen
-                android:summary=""
-                android:title="Blocked Users">
+                android:title="@string/em_pref_blocked_users">
                 <intent
                     android:action="android.intent.action.MAIN"
                     android:targetClass="com.hyphenate.chatuidemo.settings.BlackListActivity"

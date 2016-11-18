@@ -48,8 +48,6 @@ public class DemoHelper {
     // context
     private Context mContext;
 
-
-
     // Call broadcast receiver
     private CallReceiver mCallReceiver = null;
     // Call state listener
@@ -112,7 +110,6 @@ public class DemoHelper {
         }
     }
 
-
     /**
      * init sdk options
      */
@@ -125,12 +122,12 @@ public class DemoHelper {
         options.setRequireAck(true);
         // set if need delivery ack
         options.setRequireDeliveryAck(false);
-        //options.setAutoAcceptGroupInvitation(false);
 
+        // set auto accept group invitation
         SharedPreferences preferences =
                 android.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
-        options.setAutoAcceptGroupInvitation(
-                preferences.getBoolean("accept_group_invite_automatically", false));
+        options.setAutoAcceptGroupInvitation(preferences.getBoolean(
+                mContext.getString(R.string.em_pref_key_accept_group_invite_automatically), false));
 
         //set gcm project number
         options.setGCMNumber("998166487724");
@@ -284,7 +281,6 @@ public class DemoHelper {
                 return intent;
             }
         });
-
         //EaseUI.getInstance().setSettingsProvider(new EaseUI.EaseSettingsProvider() {
         //    @Override public boolean isMsgNotifyAllowed(EMMessage message) {
         //        return false;
@@ -325,7 +321,8 @@ public class DemoHelper {
      */
     private void setCallReceiverListener() {
         // Set the call broadcast listener to filter the action
-        IntentFilter callFilter = new IntentFilter(EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
+        IntentFilter callFilter = new IntentFilter(
+                EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
         if (mCallReceiver == null) {
             mCallReceiver = new CallReceiver();
         }
@@ -349,7 +346,9 @@ public class DemoHelper {
      */
     public void removeCallStateChangeListener() {
         if (mCallStateChangeListener != null) {
-            EMClient.getInstance().callManager().removeCallStateChangeListener(mCallStateChangeListener);
+            EMClient.getInstance()
+                    .callManager()
+                    .removeCallStateChangeListener(mCallStateChangeListener);
             mCallStateChangeListener = null;
         }
     }
@@ -409,7 +408,8 @@ public class DemoHelper {
 
                     //get extension attribute if you need
                     //message.getStringAttribute("");
-                    EMLog.d(TAG, String.format("CmdMessage：action:%s,message:%s", action, message.toString()));
+                    EMLog.d(TAG, String.format("CmdMessage：action:%s,message:%s", action,
+                            message.toString()));
                 }
             }
 
@@ -478,14 +478,12 @@ public class DemoHelper {
         return mNotifier;
     }
 
-
     public UserProfileManager getUserManager() {
         if (mUserManager == null) {
             mUserManager = new UserProfileManager();
         }
         return mUserManager;
     }
-
 
     /**
      * Sign out account
@@ -523,13 +521,12 @@ public class DemoHelper {
     /**
      * user has logged into another device
      */
-    protected void onConnectionConflict(){
+    protected void onConnectionConflict() {
         Intent intent = new Intent(mContext, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Constant.ACCOUNT_CONFLICT, true);
         mContext.startActivity(intent);
     }
-
 
     private synchronized void reset() {
         getUserManager().reset();
@@ -569,10 +566,12 @@ public class DemoHelper {
         Iterator i = l.iterator();
         PackageManager pm = mContext.getPackageManager();
         while (i.hasNext()) {
-            ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
+            ActivityManager.RunningAppProcessInfo info =
+                    (ActivityManager.RunningAppProcessInfo) (i.next());
             try {
                 if (info.pid == pID) {
-                    CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
+                    CharSequence c = pm.getApplicationLabel(
+                            pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
                     // Log.d("Process", "Id: "+ info.pid +" ProcessName: "+
                     // info.processName +"  Label: "+c.toString());
                     // processName = c.toString();
