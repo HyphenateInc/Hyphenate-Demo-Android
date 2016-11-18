@@ -7,7 +7,7 @@
     >
   <android.support.v7.widget.Toolbar
       android:id="@+id/toolbar_actionbar"
-      app:title="Group Info"
+      app:title="@string/em_group_info"
       style="@style/ToolbarNormalTheme"
       />
 
@@ -119,7 +119,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:paddingLeft="16dp"
-            android:text="Appear in group search"
+            android:text="@string/em_appear_in_group_search"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:typeface="serif"
@@ -132,7 +132,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="19dp"
-            android:text="Private"
+            android:text="@string/em_private"
             android:textColor="#8798a4"
             android:textSize="16sp"
             />
@@ -154,7 +154,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:paddingLeft="16dp"
-            android:text="Allow member to invite"
+            android:text="@string/em_allow"
             android:textColor="#212121"
             android:textSize="16sp"
             android:typeface="serif"
@@ -167,7 +167,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="19dp"
-            android:text="Disabled"
+            android:text="@string/em_disabled"
             android:textColor="#8798a4"
             android:textSize="16sp"
             />
@@ -191,7 +191,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:paddingLeft="16dp"
-            android:text="Push Notification"
+            android:text="@string/em_push_notification"
             android:textColor="#212121"
             android:textSize="16sp"
             android:typeface="serif"
@@ -219,7 +219,7 @@
           android:layout_height="56dp"
           android:gravity="center_vertical"
           android:paddingLeft="16dp"
-          android:text="Delete group"
+          android:text="@string/em_delete_group"
           android:textColor="#f52700"
           android:textSize="16sp"
           android:typeface="serif"
