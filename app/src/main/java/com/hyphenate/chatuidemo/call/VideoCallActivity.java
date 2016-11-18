@@ -48,6 +48,8 @@ public class VideoCallActivity extends CallActivity {
     // Update video call info
     private boolean mMonitor = true;
 
+    private Timer mTimer;
+
     // SurfaceView state, 0 local is small, 1 opposite is small
     private int surfaceViewState = 0;
 
@@ -197,19 +199,23 @@ public class VideoCallActivity extends CallActivity {
         try {
             EMClient.getInstance().callManager().makeVideoCall(mCallId);
             // Set call timeout
-            Timer timer = new Timer();
+            mTimer = new Timer();
             TimerTask task = new TimerTask() {
                 @Override public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override public void run() {
-                            EMLog.i(TAG, "call timeout");
-                            endCall();
-                        }
-                    });
+                    if (CallStatus.getInstance().getCallState() == CallStatus.CALL_CANCEL) {
+                        runOnUiThread(new Runnable() {
+                            @Override public void run() {
+                                EMLog.i(TAG, "call timeout");
+                                endCall();
+                            }
+                        });
+                    } else {
+                        mTimer.cancel();
+                    }
                 }
             };
             // set timeout 60s after
-            timer.schedule(task, 60 * 1000);
+            mTimer.schedule(task, 60 * 1000);
         } catch (EMServiceNotReadyException e) {
             e.printStackTrace();
         }
@@ -598,6 +604,9 @@ public class VideoCallActivity extends CallActivity {
                         String.format(getString(R.string.em_call_connected), mCallId));
                 break;
             case ACCEPTED:
+                if (mTimer != null) {
+                    mTimer.cancel();
+                }
                 stopCallSound();
                 openSpeaker();
                 // Set call state view show content
@@ -727,6 +736,7 @@ public class VideoCallActivity extends CallActivity {
         // Call end release SurfaceView
         mLocalSurfaceView = null;
         mOppositeSurfaceView = null;
+        mAudioManager.setMode(AudioManager.MODE_NORMAL);
         super.onFinish();
     }
 
@@ -763,5 +773,6 @@ public class VideoCallActivity extends CallActivity {
     @Override protected void onDestroy() {
         super.onDestroy();
         DemoHelper.getInstance().isVideoCalling = false;
+        mAudioManager.setMode(AudioManager.MODE_NORMAL);
     }
 }
