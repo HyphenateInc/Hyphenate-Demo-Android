@@ -6,6 +6,29 @@
     tools:context="com.hyphenate.chatuidemo.chat.ConversationListFragment"
     >
 
+    <LinearLayout
+        android:id="@+id/layout_disconnected_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#8798A4"
+        android:gravity="center_vertical" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dp"
+            android:src="@drawable/em_ic_disconnected" />
+
+        <TextView
+            android:id="@+id/tv_connect_errormsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="@string/unable_to_connect"
+            android:textColor="@color/em_white_100" />
+
+    </LinearLayout>
+
     <com.hyphenate.easeui.widget.EaseConversationListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
