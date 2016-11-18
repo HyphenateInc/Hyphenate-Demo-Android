@@ -73,10 +73,10 @@ public class GroupDetailsActivity extends BaseActivity {
         ButterKnife.bind(this);
         instance = this;
 
+        progressBar = new ProgressBar(this);
         groupId = getIntent().getStringExtra("groupId");
         updateGroup();
 
-        progressBar = new ProgressBar(this);
 
         toolbar = getActionBarToolbar();
         toolbar.setNavigationIcon(R.drawable.em_ic_back);
@@ -288,7 +288,7 @@ public class GroupDetailsActivity extends BaseActivity {
 
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
-                            progressDialog.dismiss();
+                            toolbar.removeView(progressBar);
                         }
                     });
                 }

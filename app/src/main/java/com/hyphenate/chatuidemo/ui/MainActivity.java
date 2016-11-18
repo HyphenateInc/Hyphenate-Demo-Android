@@ -1,5 +1,7 @@
 package com.hyphenate.chatuidemo.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -22,17 +24,19 @@ import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chatuidemo.DemoConstant;
+import com.hyphenate.chatuidemo.Constant;
+import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.user.ContactsChangeListener;
-import com.hyphenate.chatuidemo.group.GroupChangeListener;
 import com.hyphenate.chatuidemo.chat.ConversationListFragment;
+import com.hyphenate.chatuidemo.group.GroupChangeListener;
 import com.hyphenate.chatuidemo.group.InviteMembersActivity;
 import com.hyphenate.chatuidemo.group.PublicGroupsListActivity;
 import com.hyphenate.chatuidemo.settings.SettingsFragment;
 import com.hyphenate.chatuidemo.sign.SignInActivity;
 import com.hyphenate.chatuidemo.user.AddContactsActivity;
 import com.hyphenate.chatuidemo.user.ContactListFragment;
+import com.hyphenate.chatuidemo.user.ContactsChangeListener;
+import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +45,7 @@ import java.util.List;
  * The main activity of demo app
  */
 public class MainActivity extends BaseActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
     @BindView(R.id.tab_layout) TabLayout mTabLayout;
     @BindView(R.id.view_pager) ViewPager mViewPager;
 
@@ -76,9 +81,9 @@ public class MainActivity extends BaseActivity {
         mConversationListFragment = ConversationListFragment.newInstance();
         mSettingsFragment = SettingsFragment.newInstance();
         //add fragments to adapter
-        adapter.addFragment(mContactListFragment, "Contacts");
-        adapter.addFragment(mConversationListFragment, "Chats");
-        adapter.addFragment(mSettingsFragment, "Settings");
+        adapter.addFragment(mContactListFragment, getString(R.string.title_contacts));
+        adapter.addFragment(mConversationListFragment, getString(R.string.title_chats));
+        adapter.addFragment(mSettingsFragment, getString(R.string.title_settings));
         mViewPager.setAdapter(adapter);
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -244,19 +249,21 @@ public class MainActivity extends BaseActivity {
         EMClient.getInstance().contactManager().setContactListener(mContactListener);
         EMClient.getInstance().groupManager().addGroupChangeListener(mGroupListener);
 
-        updateUnreadMsgLabel();
-        refreshApply();
-
         // Check that you are logged in
         if (EMClient.getInstance().isLoggedInBefore()) {
             // Load the group into memory
             EMClient.getInstance().groupManager().loadAllGroups();
             // Load all mConversation into memory
             EMClient.getInstance().chatManager().loadAllConversations();
-        } else {
-            // Go sign in
-            startActivity(new Intent(this, SignInActivity.class));
-            finish();
+
+            //register message listener
+            EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
+            EMClient.getInstance().contactManager().setContactListener(mContactListener);
+            EMClient.getInstance().groupManager().addGroupChangeListener(mGroupListener);
+
+            updateUnreadMsgLabel();
+            refreshApply();
+            //refreshContacts();
         }
     }
 
@@ -268,7 +275,16 @@ public class MainActivity extends BaseActivity {
         EMClient.getInstance().groupManager().removeGroupChangeListener(mGroupListener);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.getBooleanExtra(Constant.ACCOUNT_CONFLICT, false) && !isConflictDialogShow) {
+            showConflictDialog();
+        }
+    }
+
     @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //will not finish when back key is down
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             moveTaskToBack(false);
             return true;
@@ -331,7 +347,7 @@ public class MainActivity extends BaseActivity {
             @Override public void run() {
                 EMConversation conversation = EMClient.getInstance()
                         .chatManager()
-                        .getConversation(DemoConstant.CONVERSATION_NAME_APPLY, EMConversation.EMConversationType.Chat, true);
+                        .getConversation(Constant.CONVERSATION_NAME_APPLY, EMConversation.EMConversationType.Chat, true);
                 if (conversation.getUnreadMsgCount() > 0) {
                     getTabUnreadStatusView(0).setVisibility(View.VISIBLE);
                 } else {
@@ -339,6 +355,43 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    //private boolean isConflict;
+    private boolean isConflictDialogShow;
+    /**
+     * show the dialog when user logged into another device
+     */
+    private void showConflictDialog() {
+        isConflictDialogShow = true;
+        DemoHelper.getInstance().signOut(false,null);
+        String st = getResources().getString(R.string.Logoff_notification);
+        if (!isFinishing()) {
+            // clear up global variables
+            try {
+                AlertDialog.Builder conflictBuilder = new AlertDialog.Builder(this);
+                conflictBuilder.setTitle(st);
+                conflictBuilder.setMessage(R.string.connect_conflict);
+                conflictBuilder.setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        finish();
+                        Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                });
+                conflictBuilder.setCancelable(false);
+                conflictBuilder.show();
+                //isConflict = true;
+            } catch (Exception e) {
+                EMLog.e(TAG, "---------conflictBuilder error" + e.getMessage());
+            }
+
+        }
+
     }
 
     private class DefaultContactsChangeListener extends ContactsChangeListener {

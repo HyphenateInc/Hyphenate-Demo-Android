@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.Selection;
@@ -27,8 +26,8 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.sign.SignInActivity;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
-import com.hyphenate.chatuidemo.ui.MainActivity;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.utils.Utils;
 import com.hyphenate.easeui.widget.EaseImageView;
@@ -109,7 +108,7 @@ public class AccountActivity extends BaseActivity {
     @OnClick(R.id.layout_nick_container) void setNick() {
         final EditText editText = new EditText(this);
         final String nick =
-                DemoHelper.getInstance().getUserProfileManager().getCurrentUserInfo().getNickname();
+                DemoHelper.getInstance().getUserManager().getCurrentUserInfo().getNickname();
         editText.setText(nick);
         AlertDialog alertDialog =
                 new AlertDialog.Builder(this).setTitle(R.string.account_set_nickname)
@@ -154,13 +153,9 @@ public class AccountActivity extends BaseActivity {
 
         DemoHelper.getInstance().signOut(true, new EMCallBack() {
             @Override public void onSuccess() {
-                runOnUiThread(new Runnable() {
-                    @Override public void run() {
-                        dialog.dismiss();
-                        startActivity(new Intent(AccountActivity.this, MainActivity.class).addFlags(
-                                Intent.FLAG_ACTIVITY_NEW_TASK));
-                    }
-                });
+                Intent intent = new Intent(AccountActivity.this, SignInActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
 
             @Override public void onError(final int i, final String s) {
@@ -232,7 +227,7 @@ public class AccountActivity extends BaseActivity {
 
             @Override public void run() {
                 boolean updatenick = DemoHelper.getInstance()
-                        .getUserProfileManager()
+                        .getUserManager()
                         .updateCurrentUserNickName(nickName);
                 if (AccountActivity.this.isFinishing()) {
                     return;
@@ -269,7 +264,7 @@ public class AccountActivity extends BaseActivity {
 
             @Override public void run() {
                 final String avatarUrl =
-                        DemoHelper.getInstance().getUserProfileManager().uploadUserAvatar(data);
+                        DemoHelper.getInstance().getUserManager().uploadUserAvatar(data);
                 runOnUiThread(new Runnable() {
                     @Override public void run() {
                         dialog.dismiss();

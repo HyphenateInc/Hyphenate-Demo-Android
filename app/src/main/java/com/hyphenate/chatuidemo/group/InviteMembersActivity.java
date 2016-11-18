@@ -138,7 +138,7 @@ public class InviteMembersActivity extends BaseActivity {
                     entityList = new ArrayList<>();
                 }
                 entityList.clear();
-                entityList.addAll(DemoHelper.getInstance().getContactList().values());
+                entityList.addAll(DemoHelper.getInstance().getUserManager().getContactList().values());
                 for (UserEntity userEntity : entityList) {
                     if (userEntity.getNickname().contains(newText)) {
                         list.add(userEntity);
@@ -164,7 +164,7 @@ public class InviteMembersActivity extends BaseActivity {
     public void refresh() {
 
         entityList.clear();
-        for (UserEntity userEntity : DemoHelper.getInstance().getContactList().values()) {
+        for (UserEntity userEntity : DemoHelper.getInstance().getUserManager().getContactList().values()) {
             entityList.add(userEntity);
         }
 

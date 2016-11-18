@@ -5,7 +5,6 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.user.model.UserEntity;
-import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.util.EMLog;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -101,7 +100,6 @@ public class ParseManager {
                             user.setAvatar(parseFile.getUrl());
                         }
                         user.setNickname(pObject.getString(CONFIG_NICK));
-                        EaseCommonUtils.setUserInitialLetter(user);
                         mList.add(user);
                     }
                     callback.onSuccess(mList);
@@ -149,7 +147,7 @@ public class ParseManager {
                     String nick = pUser.getString(CONFIG_NICK);
                     ParseFile pFile = pUser.getParseFile(CONFIG_AVATAR);
                     if (callback != null) {
-                        UserEntity user = DemoHelper.getInstance().getContactList().get(username);
+                        UserEntity user = DemoHelper.getInstance().getUserManager().getContactList().get(username);
                         if (user != null) {
                             user.setNickname(nick);
                             if (pFile != null && pFile.getUrl() != null) {

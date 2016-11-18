@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
-import com.hyphenate.chatuidemo.DemoConstant;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.apply.ApplyActivity;
 import com.hyphenate.chatuidemo.ui.MainActivity;
@@ -65,17 +65,17 @@ public class ConversationListFragment extends Fragment {
         mConversationListView.setOnItemClickListener(new EaseListItemClickListener() {
             @Override public void onItemClick(View view, int position) {
                 EMConversation conversation = mConversationListView.getItem(position);
-                if (conversation.getUserName().equals(DemoConstant.CONVERSATION_NAME_APPLY)) {
+                if (conversation.getUserName().equals(Constant.CONVERSATION_NAME_APPLY)) {
                     startActivity(new Intent(getActivity(), ApplyActivity.class));
                 } else {
                     //enter to chat activity
                     if(conversation.getType() == EMConversation.EMConversationType.GroupChat){
                         startActivity(new Intent(getActivity(), ChatActivity.class)
-                                .putExtra(DemoConstant.EXTRA_USER_ID, conversation.getUserName())
+                                .putExtra(Constant.EXTRA_USER_ID, conversation.getUserName())
                                 .putExtra(EaseConstant.EXTRA_CHAT_TYPE, CHATTYPE_GROUP));
                     }else if(conversation.getType() == EMConversation.EMConversationType.Chat){
                         startActivity(new Intent(getActivity(), ChatActivity.class).putExtra(
-                                DemoConstant.EXTRA_USER_ID, conversation.getUserName()));
+                                Constant.EXTRA_USER_ID, conversation.getUserName()));
                     }
                 }
             }

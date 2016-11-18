@@ -22,6 +22,7 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.widget.EaseImageView;
 import com.hyphenate.exceptions.EMNoActiveCallException;
 import com.hyphenate.exceptions.EMServiceNotReadyException;
+import com.hyphenate.exceptions.HyphenateException;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -45,6 +46,8 @@ public class VoiceCallActivity extends CallActivity {
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_voice_call);
+
+        DemoHelper.getInstance().isVoiceCalling = true;
 
         // init ButterKnife
         ButterKnife.bind(this);
@@ -194,12 +197,20 @@ public class VoiceCallActivity extends CallActivity {
         vibrate();
         if (mMicSwitch.isActivated()) {
             // Pause voice transfer
-            EMClient.getInstance().callManager().pauseVoiceTransfer();
+            try {
+                EMClient.getInstance().callManager().pauseVoiceTransfer();
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
             mMicSwitch.setActivated(false);
             CallStatus.getInstance().setMic(false);
         } else {
             // Resume voice transfer
-            EMClient.getInstance().callManager().resumeVoiceTransfer();
+            try {
+                EMClient.getInstance().callManager().resumeVoiceTransfer();
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
             mMicSwitch.setActivated(true);
             CallStatus.getInstance().setMic(true);
         }
@@ -366,7 +377,7 @@ public class VoiceCallActivity extends CallActivity {
                 mChronometer.setBase(SystemClock.elapsedRealtime());
                 mChronometer.start();
                 break;
-            case DISCONNNECTED:
+            case DISCONNECTED:
                 // Stop time
                 mChronometer.stop();
                 // Set call state view show content
@@ -441,5 +452,6 @@ public class VoiceCallActivity extends CallActivity {
 
     @Override protected void onDestroy() {
         super.onDestroy();
+        DemoHelper.getInstance().isVoiceCalling = false;
     }
 }

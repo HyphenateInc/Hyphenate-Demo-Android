@@ -4,7 +4,7 @@ import com.hyphenate.EMContactListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
-import com.hyphenate.chatuidemo.DemoConstant;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.user.model.UserEntity;
 
@@ -23,7 +23,7 @@ public abstract class ContactsChangeListener implements EMContactListener {
     @Override public void onContactAdded(String username) {
         UserEntity userEntity = new UserEntity(username);
 
-        DemoHelper.getInstance().saveContact(userEntity);
+        DemoHelper.getInstance().getUserManager().saveContact(userEntity);
     }
 
     /**
@@ -34,7 +34,7 @@ public abstract class ContactsChangeListener implements EMContactListener {
     @Override public void onContactDeleted(String username) {
         UserEntity userEntity = new UserEntity(username);
 
-        DemoHelper.getInstance().deleteContacts(userEntity);
+        DemoHelper.getInstance().getUserManager().deleteContact(userEntity);
     }
 
     /**
@@ -50,10 +50,10 @@ public abstract class ContactsChangeListener implements EMContactListener {
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(username + " Apply to become friends");
         message.addBody(body);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_USERNAME, username);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_REASON, reason);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_TYPE, 0);
-        message.setFrom(DemoConstant.CONVERSATION_NAME_APPLY);
+        message.setAttribute(Constant.MESSAGE_ATTR_USERNAME, username);
+        message.setAttribute(Constant.MESSAGE_ATTR_REASON, reason);
+        message.setAttribute(Constant.MESSAGE_ATTR_TYPE, 0);
+        message.setFrom(Constant.CONVERSATION_NAME_APPLY);
         message.setMsgId(msgId);
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);
@@ -71,11 +71,11 @@ public abstract class ContactsChangeListener implements EMContactListener {
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(username + " agrees with your apply");
         message.addBody(body);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_USERNAME, username);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_REASON, username + " agrees with your apply");
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_TYPE, 0);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_STATUS, "Agreed");
-        message.setFrom(DemoConstant.CONVERSATION_NAME_APPLY);
+        message.setAttribute(Constant.MESSAGE_ATTR_USERNAME, username);
+        message.setAttribute(Constant.MESSAGE_ATTR_REASON, username + " agrees with your apply");
+        message.setAttribute(Constant.MESSAGE_ATTR_TYPE, 0);
+        message.setAttribute(Constant.MESSAGE_ATTR_STATUS, "Agreed");
+        message.setFrom(Constant.CONVERSATION_NAME_APPLY);
         message.setMsgId(msgId);
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);
@@ -94,11 +94,11 @@ public abstract class ContactsChangeListener implements EMContactListener {
         EMMessage message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
         EMTextMessageBody body = new EMTextMessageBody(username + " declined your apply");
         message.addBody(body);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_USERNAME, username);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_REASON, username + "  declined your apply");
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_TYPE, 0);
-        message.setAttribute(DemoConstant.MESSAGE_ATTR_STATUS, "Rejected");
-        message.setFrom(DemoConstant.CONVERSATION_NAME_APPLY);
+        message.setAttribute(Constant.MESSAGE_ATTR_USERNAME, username);
+        message.setAttribute(Constant.MESSAGE_ATTR_REASON, username + "  declined your apply");
+        message.setAttribute(Constant.MESSAGE_ATTR_TYPE, 0);
+        message.setAttribute(Constant.MESSAGE_ATTR_STATUS, "Rejected");
+        message.setFrom(Constant.CONVERSATION_NAME_APPLY);
         message.setMsgId(msgId);
         // save message to db
         EMClient.getInstance().chatManager().saveMessage(message);

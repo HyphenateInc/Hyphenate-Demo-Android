@@ -51,6 +51,10 @@ public class CallActivity extends BaseActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null){
+            finish();
+            return;
+        }
         // eep the screen lit, close the input method, and unlock the device
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
@@ -232,10 +236,10 @@ public class CallActivity extends BaseActivity {
     /**
      * finish activity
      */
-    @Override protected void onFinish() {
+    protected void onFinish() {
         // 关闭音效并释放资源
         stopCallSound();
-        super.onFinish();
+        finish();
     }
 
     /**
