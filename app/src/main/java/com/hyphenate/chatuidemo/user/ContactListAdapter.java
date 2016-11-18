@@ -39,14 +39,8 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     private Context context;
     private List<UserEntity> userEntities;
     private EaseListItemClickListener listener;
-    private boolean isSelected;
+    private boolean showCheckBox;
     private List<String> membersList;
-    private boolean isOwner;
-    private String groupId;
-    private String[] newMembers;
-    private ProgressDialog progressDialog;
-    private List<String> selectedMembers = new ArrayList<>();
-    private  Snackbar snackbar;
 
     ContactListAdapter(Context context, List<UserEntity> list) {
 
@@ -54,23 +48,21 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         userEntities = list;
     }
 
-    public ContactListAdapter(Context context, List<UserEntity> list, boolean isSelected) {
+    public ContactListAdapter(Context context, List<UserEntity> list, boolean showCheckBox) {
 
         this.context = context;
         userEntities = list;
-        this.isSelected = isSelected;
+        this.showCheckBox = showCheckBox;
     }
 
-    public ContactListAdapter(Context context, List<UserEntity> list, boolean isSelected, List<String> membersList, boolean isOwner, String groupId) {
+    public ContactListAdapter(Context context, List<UserEntity> list, boolean showCheckBox, List<String> membersList) {
 
         this.context = context;
         userEntities = list;
-        this.isSelected = isSelected;
-        if (isSelected) {
+        this.showCheckBox = showCheckBox;
+        if (showCheckBox) {
             this.membersList = membersList;
         }
-        this.isOwner = isOwner;
-        this.groupId = groupId;
     }
 
     public void setOnItemClickListener(EaseListItemClickListener listener) {
@@ -88,7 +80,9 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         EaseUserUtils.setUserAvatar(context, user.getUsername(), holder.avatarView);
         EaseUserUtils.setUserNick(user.getUsername(), holder.contactNameView);
 
-        if (isSelected) {
+        if (showCheckBox) {
+            //set checkbox listener
+            ((InviteMembersActivity)context).checkBoxListener(holder.checkBoxView,user);
             holder.checkBoxView.setVisibility(View.VISIBLE);
             if (membersList != null && membersList.contains(user.getUsername())) {
                 holder.checkBoxView.setChecked(true);
@@ -118,7 +112,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         if (listener != null) {
             holder.contactItemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
-                    if (isSelected) {
+                    if (showCheckBox) {
                         listener.onItemClick(holder.checkBoxView, position);
                     } else {
                         listener.onItemClick(v, position);
@@ -133,84 +127,6 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
                 }
             });
         }
-
-        holder.checkBoxView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-                if (snackbar!= null && snackbar.isShown()){
-                    snackbar.dismiss();
-                }
-                if (isChecked) {
-                    selectedMembers.add(user.getUsername());
-                } else {
-                    if (selectedMembers.contains(user.getUsername())) {
-                        selectedMembers.remove(user.getUsername());
-                    }
-                }
-                newMembers = selectedMembers.toArray(new String[0]);
-                if (snackbar != null && newMembers.length == 0) {
-                    snackbar.dismiss();
-                    return;
-                }
-                String content = "", action = "INVITE";
-                if (newMembers.length > 1) {
-                    content = newMembers.length + "Members selected";
-                } else if (newMembers.length == 1) {
-                    content = newMembers[0];
-                }
-
-                if (isSelected && !isOwner) {
-                    action = "NEXT";
-                }
-                snackbar = Snackbar.make(holder.contactItemLayout, content, Snackbar.LENGTH_INDEFINITE);
-
-                snackbar.setAction(action, new View.OnClickListener() {
-                    @Override public void onClick(final View v) {
-                        if (isSelected && !isOwner) {
-
-                            context.startActivity(new Intent(context, NewGroupActivity.class).putStringArrayListExtra("newMembers",
-                                    (ArrayList<String>) selectedMembers));
-                        } else {
-                            progressDialog = ProgressDialog.show(context, "invite members", "waiting...", false);
-                            new Thread(new Runnable() {
-                                @Override public void run() {
-                                    try {
-                                        if (isOwner) {
-                                            EMClient.getInstance().groupManager().addUsersToGroup(groupId, newMembers);
-                                        } else {
-                                            EMClient.getInstance().groupManager().inviteUser(groupId, newMembers, null);
-                                        }
-
-                                        ((InviteMembersActivity) context).runOnUiThread(new Runnable() {
-                                            @Override public void run() {
-                                                progressDialog.dismiss();
-                                                if (EMClient.getInstance().getOptions().isAutoAcceptGroupInvitation()) {
-                                                    Intent intent = new Intent();
-                                                    intent.putExtra("selectedMembers", (ArrayList<String>) selectedMembers);
-                                                    ((InviteMembersActivity) context).setResult(InviteMembersActivity.RESULT_OK, intent);
-                                                } else {
-                                                    ((InviteMembersActivity) context).setResult(InviteMembersActivity.RESULT_OK);
-                                                }
-                                                ((InviteMembersActivity) context).finish();
-                                            }
-                                        });
-                                    } catch (final HyphenateException e) {
-                                        e.printStackTrace();
-                                        ((InviteMembersActivity) context).runOnUiThread(new Runnable() {
-                                            @Override public void run() {
-                                                progressDialog.dismiss();
-                                                Snackbar.make(holder.contactItemLayout, "invite failure,please again" + e.getMessage(),
-                                                        Snackbar.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    }
-                                }
-                            }).start();
-                        }
-                    }
-                });
-                snackbar.show();
-            }
-        });
     }
 
     @Override public int getItemCount() {

@@ -37,7 +37,8 @@ public class PublicGroupsListActivity extends GroupListActivity {
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        toolbar.setTitle("Public Groups");
+        toolbar.setTitle(R.string.em_public_group);
+        loadAndShowData();
 
     }
 
@@ -73,14 +74,10 @@ public class PublicGroupsListActivity extends GroupListActivity {
         return true;
     }
 
-    @Override public void loadGroupList() {
-        loadAndShowData();
-    }
-
     private void loadAndShowData() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("load public group...");
-        progressDialog.setMessage("waiting...");
+        progressDialog.setTitle(getString(R.string.em_load_public_group));
+        progressDialog.setMessage(getString(R.string.em_waiting));
         progressDialog.setCanceledOnTouchOutside(false);
         if (isFirstLoading){
             progressDialog.show();

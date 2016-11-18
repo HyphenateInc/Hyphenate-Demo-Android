@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -72,9 +73,9 @@ public class NewGroupActivity extends BaseActivity {
 
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if (!TextUtils.isEmpty(s)){
+                if (!TextUtils.isEmpty(s)) {
                     button.setBackgroundResource(R.color.em_green_100);
-                }else {
+                } else {
                     button.setBackgroundResource(R.color.color_gray);
                 }
             }
@@ -83,18 +84,30 @@ public class NewGroupActivity extends BaseActivity {
 
             }
         });
+
+        groupTypeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    inviteTextView.setText(getString(R.string.em_freely));
+                    freely = false;
+                } else {
+                    inviteTextView.setText(getString(R.string.em_allow));
+                    freely = true;
+                }
+            }
+        });
     }
 
     private void initToolbar() {
         Toolbar toolbar = getActionBarToolbar();
         button = new Button(this);
-        button.setText("CREATE");
+        button.setText(getString(R.string.em_create));
         button.setTextColor(Color.WHITE);
         button.setBackgroundResource(R.color.color_gray);
         Toolbar.LayoutParams params =
                 new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.RIGHT);
         params.rightMargin = 30;
-        params.height =120;
+        params.height = 120;
         toolbar.addView(button, params);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -105,7 +118,8 @@ public class NewGroupActivity extends BaseActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 if (!TextUtils.isEmpty(groupNameView.getText().toString())) {
-                    final ProgressDialog progressDialog = ProgressDialog.show(NewGroupActivity.this, "creating group", "waiting...", false);
+                    final ProgressDialog progressDialog = ProgressDialog.show(NewGroupActivity.this, getString(R.string.em_creating),
+                            getString(R.string.em_waiting), false);
 
                     new Thread(new Runnable() {
                         @Override public void run() {
@@ -130,6 +144,9 @@ public class NewGroupActivity extends BaseActivity {
                                 runOnUiThread(new Runnable() {
                                     public void run() {
                                         progressDialog.dismiss();
+                                        if (InviteMembersActivity.instance != null){
+                                            InviteMembersActivity.instance.finish();
+                                        }
                                         finish();
                                         startActivity(new Intent(NewGroupActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_CHAT_TYPE,
                                                 EaseConstant.CHATTYPE_GROUP).putExtra(EaseConstant.EXTRA_USER_ID, group.getGroupId()));
@@ -176,11 +193,11 @@ public class NewGroupActivity extends BaseActivity {
             case R.id.layout_appear_in_group_search:
                 if (groupTypeSwitch.isChecked()) {
                     groupTypeSwitch.setChecked(false);
-                    inviteTextView.setText("Allow members to invite");
+                    inviteTextView.setText(getString(R.string.em_allow));
                     freely = false;
                 } else {
                     groupTypeSwitch.setChecked(true);
-                    inviteTextView.setText("Join the group freely");
+                    inviteTextView.setText(getString(R.string.em_freely));
                     freely = true;
                 }
                 break;
