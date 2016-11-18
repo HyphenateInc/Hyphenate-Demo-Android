@@ -213,12 +213,20 @@ public class VoiceCallActivity extends CallActivity {
         vibrate();
         if (mMicSwitch.isActivated()) {
             // Pause voice transfer
-            EMClient.getInstance().callManager().pauseVoiceTransfer();
+            try {
+                EMClient.getInstance().callManager().pauseVoiceTransfer();
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
             mMicSwitch.setActivated(false);
             CallStatus.getInstance().setMic(false);
         } else {
             // Resume voice transfer
-            EMClient.getInstance().callManager().resumeVoiceTransfer();
+            try {
+                EMClient.getInstance().callManager().resumeVoiceTransfer();
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
             mMicSwitch.setActivated(true);
             CallStatus.getInstance().setMic(true);
         }
@@ -386,7 +394,7 @@ public class VoiceCallActivity extends CallActivity {
                 mChronometer.setBase(SystemClock.elapsedRealtime());
                 mChronometer.start();
                 break;
-            case DISCONNNECTED:
+            case DISCONNECTED:
                 // Stop time
                 mChronometer.stop();
                 // Set call state view show content
