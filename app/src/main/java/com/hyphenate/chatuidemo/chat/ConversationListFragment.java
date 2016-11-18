@@ -9,9 +9,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chatuidemo.Constant;
@@ -21,6 +25,7 @@ import com.hyphenate.chatuidemo.ui.MainActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseConversationListView;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
+import com.hyphenate.util.NetUtils;
 
 import static com.hyphenate.easeui.EaseConstant.CHATTYPE_GROUP;
 
@@ -33,6 +38,8 @@ public class ConversationListFragment extends Fragment {
     private int mItemLongClickPos;
 
     @BindView(R.id.list_view) EaseConversationListView mConversationListView;
+    @BindView(R.id.layout_disconnected_indicator) LinearLayout mIndicatorLayout;
+    @BindView(R.id.tv_connect_errormsg) TextView mDisconnectErrorView;
 
     public ConversationListFragment() {
         // Required empty public constructor
@@ -52,6 +59,9 @@ public class ConversationListFragment extends Fragment {
 
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        EMClient.getInstance().addConnectionListener(connectionListener);
+
         // init ConversationListView
         mConversationListView.init();
 
@@ -101,6 +111,38 @@ public class ConversationListFragment extends Fragment {
         return true;
     }
 
+    protected EMConnectionListener connectionListener = new EMConnectionListener() {
+
+        @Override
+        public void onDisconnected(final int error) {
+            if (error == EMError.USER_REMOVED || error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+
+            } else {
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        mIndicatorLayout.setVisibility(View.VISIBLE);
+                        if (NetUtils.hasNetwork(getActivity())){
+                            mDisconnectErrorView.setText(R.string.can_not_connect_chat_server_connection);
+                        } else {
+                            mDisconnectErrorView.setText(R.string.current_network_unavailable);
+                        }
+                    }
+
+                });
+            }
+        }
+
+        @Override
+        public void onConnected() {
+            getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    mIndicatorLayout.setVisibility(View.GONE);
+                }
+
+            });
+        }
+    };
+
     @Override public void onResume() {
         super.onResume();
         //refresh list
@@ -120,6 +162,7 @@ public class ConversationListFragment extends Fragment {
 
     @Override public void onDestroy() {
         super.onDestroy();
+        EMClient.getInstance().removeConnectionListener(connectionListener);
         mUnbinder.unbind();
     }
 }

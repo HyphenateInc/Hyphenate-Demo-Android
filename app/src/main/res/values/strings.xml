@@ -145,6 +145,9 @@
     <!-- commons-->
     <string name="Logoff_notification">Logoff notification</string>
     <string name="connect_conflict">The same account was logged in other device</string>
+    <string name="can_not_connect_chat_server_connection">Cannot connect to server</string>
+    <string name="current_network_unavailable">The current network is not available, please check the network Settings</string>
+    <string name="unable_to_connect">Unable to connect to the server</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_ok">Ok</string>
     <string name="title_contacts">Contacts</string>
