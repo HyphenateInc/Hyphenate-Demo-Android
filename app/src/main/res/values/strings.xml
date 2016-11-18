@@ -73,6 +73,7 @@
 
     <!--Contacts-->
     <string name="em_contacts_add">Add contacts</string>
+    <string name="em_delete_contact">Delete contact</string>
     <string name="em_contacts_apply_send_success">Contacts apply for sent successfully</string>
     <string name="em_contacts_apply_send_failed">Contacts apply for failed to send</string>
     <string name="em_contacts_apply">Notifications</string>
@@ -82,8 +83,13 @@
     <string name="em_agreed">Agreed</string>
     <string name="em_rejected">Rejected</string>
 
+    <string name="em_add_to_blacklist">Add To Blacklist</string>
     <string name="em_blacklist">Black List</string>
     <string name="em_blacklist_unblock">Unblock</string>
+
+    <string name="em_contact_invite">INVITE</string>
+    <string name="em_contact_next">NEXT</string>
+    <string name="em_contact_selected">Members selected</string>
 
     <!--Setting Preference-->
     <string name="em_pref_key_about">em_pref_about</string>
@@ -108,7 +114,32 @@
     <string name="em_pref_notification_vibrate">Notification Vibrate</string>
     <string name="em_pref_notification_display_name">Display name</string>
 
-    <string name="groups">Groups</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--group-->
+    <string name="em_groups">Groups</string>
+    <string name="em_group">group</string>
+    <string name="em_exit_group">exit group</string>
+    <string name="em_ok">ok</string>
+    <string name="em_cancel">cancel</string>
+    <string name="em_leave_group">leave group</string>
+    <string name="em_waiting">waiting...</string>
+    <string name="em_delete_group">delete group</string>
+    <string name="em_enable">ENABLE</string>
+    <string name="em_disabled">DISABLED</string>
+    <string name="em_public">public</string>
+    <string name="em_private">private</string>
+    <string name="em_delete">Delete</string>
+    <string name="em_group_members">Members</string>
+    <string name="em_group_member">member</string>
+    <string name="em_group_delete_member">delete member</string>
+    <string name="em_create">CREATE</string>
+    <string name="em_creating">creating group</string>
+    <string name="em_allow">Allow members to invite</string>
+    <string name="em_freely">Join the group freely</string>
+    <string name="em_public_group">Public Groups</string>
+    <string name="em_invite_members">invite members</string>
+    <string name="em_load_public_group">load public group</string>
 
     <!-- chat -->
     <string name="chat_voice_call">Voice call</string>
