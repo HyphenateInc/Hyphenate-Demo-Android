@@ -484,6 +484,7 @@ public class VoiceCallActivity extends CallActivity {
 
     @Override protected void onDestroy() {
         super.onDestroy();
+        mTimer.cancel();
         DemoHelper.getInstance().isVoiceCalling = false;
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
     }
