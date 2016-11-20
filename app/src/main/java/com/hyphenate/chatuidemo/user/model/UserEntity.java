@@ -28,7 +28,10 @@ public class UserEntity implements EaseUser {
     }
 
     public String getNickname() {
-        return nickname;
+        if (nickname != null){
+            return nickname;
+        }
+        return username;
     }
 
     public void setNickname(String nickname) {

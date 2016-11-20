@@ -227,6 +227,17 @@ public class InviteMembersActivity extends BaseActivity {
                 startActivity(new Intent(InviteMembersActivity.this, NewGroupActivity.class).putStringArrayListExtra("newMembers",
                         (ArrayList<String>) selectedMembers));
             } else {
+
+                if (newMembers == null || newMembers.length == 0){
+                    content = "member is null";
+                    snackbar = Snackbar.make(recyclerView, content, Snackbar.LENGTH_INDEFINITE);
+                    snackbar.show();
+                    return;
+                }
+                content = "0" + getString(R.string.em_contact_selected);
+                snackbar = Snackbar.make(recyclerView, content, Snackbar.LENGTH_INDEFINITE);
+                snackbar.setAction(action, listener);
+                snackbar.show();
                 //add contacts to existing group
                 progressDialog =
                         ProgressDialog.show(InviteMembersActivity.this, getString(R.string.em_invite_members), getString(R.string.em_waiting), false);
