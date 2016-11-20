@@ -1,10 +1,16 @@
 package com.hyphenate.chatuidemo.call;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
@@ -108,10 +114,6 @@ public class VideoCallActivity extends CallActivity {
 
         // SDK call helper
         mVideoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
-        // Set the default video call resolution, default to (320, 240)
-        mVideoCallHelper.setResolution(640, 480);
-        // Setting the video call bit rate defaults to (150)
-        mVideoCallHelper.setVideoBitrate(300);
         // Set the local preview image displayed on the top floor, be sure to set as soon as possible, otherwise invalid
         mLocalSurfaceView.setZOrderMediaOverlay(true);
         mLocalSurfaceView.setZOrderOnTop(true);
@@ -752,7 +754,37 @@ public class VideoCallActivity extends CallActivity {
                 e.printStackTrace();
             }
         }
+        sendCallNotification();
         super.onUserLeaveHint();
+    }
+
+    private NotificationManager mNotificationManager;
+    private int callNotificationId = 0526;
+
+    /**
+     * send call notification
+     */
+    private void sendCallNotification() {
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mActivity);
+
+        builder.setSmallIcon(R.mipmap.em_logo_uidemo);
+        builder.setPriority(Notification.PRIORITY_HIGH);
+        builder.setAutoCancel(true);
+        builder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
+
+        builder.setContentText("While the video call is in progress, tap Resume");
+
+        builder.setContentTitle(getString(R.string.app_name));
+        Intent intent = new Intent(mActivity, VideoCallActivity.class);
+        PendingIntent pIntent =
+                PendingIntent.getActivity(mActivity, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.setContentIntent(pIntent);
+        builder.setOngoing(true);
+
+        builder.setWhen(System.currentTimeMillis());
+
+        mNotificationManager.notify(callNotificationId, builder.build());
     }
 
     /**
@@ -761,6 +793,7 @@ public class VideoCallActivity extends CallActivity {
     @Override protected void onResume() {
         super.onResume();
         if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_ACCEPTED) {
+            mCallStatusView.setText(R.string.em_call_accepted);
             // The activity is resume, Resume video streaming
             try {
                 EMClient.getInstance().callManager().resumeVideoTransfer();
@@ -768,10 +801,16 @@ public class VideoCallActivity extends CallActivity {
                 e.printStackTrace();
             }
         }
+        if (mNotificationManager != null) {
+            mNotificationManager.cancel(callNotificationId);
+        }
     }
 
     @Override protected void onDestroy() {
         super.onDestroy();
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
         DemoHelper.getInstance().isVideoCalling = false;
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
     }

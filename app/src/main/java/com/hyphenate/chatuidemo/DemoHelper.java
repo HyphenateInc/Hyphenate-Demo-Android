@@ -93,6 +93,8 @@ public class DemoHelper {
             EMLog.d(TAG, "------- init hyphenate start --------------");
             //init hyphenate sdk with options
             EMClient.getInstance().init(context, initOptions());
+            // init call options
+            initCallOptions();
             // set debug mode open:true, close:false
             EMClient.getInstance().setDebugMode(true);
             //init EaseUI if you want to use it
@@ -133,6 +135,17 @@ public class DemoHelper {
         options.setGCMNumber("998166487724");
 
         return options;
+    }
+
+    /**
+     * init call options
+     */
+    private void initCallOptions() {
+        // set video call bitrate, default(150)
+        EMClient.getInstance().callManager().getCallOptions().setVideoKbps(800);
+        // set video call resolution, default(320, 240)
+        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
+        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
     }
 
     /**
@@ -217,70 +230,66 @@ public class DemoHelper {
             }
         });
         //set notification options, will use default if you don't set it
-        getNotifier().setNotificationInfoProvider(new MessageNotifier.EaseNotificationInfoProvider() {
+        getNotifier().setNotificationInfoProvider(
+                new MessageNotifier.EaseNotificationInfoProvider() {
 
-            @Override
-            public String getTitle(EMMessage message) {
-                //you can update title here
-                return null;
-            }
-
-            @Override
-            public int getSmallIcon(EMMessage message) {
-                //you can update icon here
-                return 0;
-            }
-
-            @Override
-            public String getDisplayedText(EMMessage message) {
-                // be used on notification bar, different text according the message type.
-                String ticker = EaseCommonUtils.getMessageDigest(message, mContext);
-                if(message.getType() == EMMessage.Type.TXT){
-                    ticker = ticker.replaceAll("\\[.{2,3}\\]", "[Emoticon]");
-                }
-                EaseUser user = getUserInfo(message.getFrom());
-                if(user != null){
-                    return user.getEaseNickname() + ": " + ticker;
-                }else{
-                    return message.getFrom() + ": " + ticker;
-                }
-            }
-
-            @Override
-            public String getLatestText(EMMessage message, int fromUsersNum, int messageNum) {
-                // here you can customize the text.
-                // return fromUsersNum + "contacts send " + messageNum + "messages to you";
-                return null;
-            }
-
-            @Override
-            public Intent getLaunchIntent(EMMessage message) {
-                // you can set what activity you want display when user click the notification
-                Intent intent = new Intent(mContext, ChatActivity.class);
-                // open calling activity if there is call
-                if(isVideoCalling){
-                    intent = new Intent(mContext, VideoCallActivity.class);
-                }else if(isVoiceCalling){
-                    intent = new Intent(mContext, VoiceCallActivity.class);
-                }else{
-                    ChatType chatType = message.getChatType();
-                    if (chatType == ChatType.Chat) { // single chat message
-                        intent.putExtra("userId", message.getFrom());
-                        intent.putExtra("chatType", Constant.CHATTYPE_SINGLE);
-                    } else { // group chat message
-                        // message.getTo() is the group id
-                        intent.putExtra("userId", message.getTo());
-                        if(chatType == ChatType.GroupChat){
-                            intent.putExtra("chatType", Constant.CHATTYPE_GROUP);
-                        }else{
-                            intent.putExtra("chatType", Constant.CHATTYPE_CHATROOM);
-                        }
-
+                    @Override public String getTitle(EMMessage message) {
+                        //you can update title here
+                        return null;
                     }
-                }
-                return intent;
-            }
-        });
+
+                    @Override public int getSmallIcon(EMMessage message) {
+                        //you can update icon here
+                        return 0;
+                    }
+
+                    @Override public String getDisplayedText(EMMessage message) {
+                        // be used on notification bar, different text according the message type.
+                        String ticker = EaseCommonUtils.getMessageDigest(message, mContext);
+                        if (message.getType() == EMMessage.Type.TXT) {
+                            ticker = ticker.replaceAll("\\[.{2,3}\\]", "[Emoticon]");
+                        }
+                        EaseUser user = getUserInfo(message.getFrom());
+                        if (user != null) {
+                            return user.getEaseNickname() + ": " + ticker;
+                        } else {
+                            return message.getFrom() + ": " + ticker;
+                        }
+                    }
+
+                    @Override public String getLatestText(EMMessage message, int fromUsersNum,
+                            int messageNum) {
+                        // here you can customize the text.
+                        // return fromUsersNum + "contacts send " + messageNum + "messages to you";
+                        return null;
+                    }
+
+                    @Override public Intent getLaunchIntent(EMMessage message) {
+                        // you can set what activity you want display when user click the notification
+                        Intent intent = new Intent(mContext, ChatActivity.class);
+                        // open calling activity if there is call
+                        if (isVideoCalling) {
+                            intent = new Intent(mContext, VideoCallActivity.class);
+                        } else if (isVoiceCalling) {
+                            intent = new Intent(mContext, VoiceCallActivity.class);
+                        } else {
+                            ChatType chatType = message.getChatType();
+                            if (chatType == ChatType.Chat) { // single chat message
+                                intent.putExtra("userId", message.getFrom());
+                                intent.putExtra("chatType", Constant.CHATTYPE_SINGLE);
+                            } else { // group chat message
+                                // message.getTo() is the group id
+                                intent.putExtra("userId", message.getTo());
+                                if (chatType == ChatType.GroupChat) {
+                                    intent.putExtra("chatType", Constant.CHATTYPE_GROUP);
+                                } else {
+                                    intent.putExtra("chatType", Constant.CHATTYPE_CHATROOM);
+                                }
+                            }
+                        }
+                        return intent;
+                    }
+                });
         //EaseUI.getInstance().setSettingsProvider(new EaseUI.EaseSettingsProvider() {
         //    @Override public boolean isMsgNotifyAllowed(EMMessage message) {
         //        return false;

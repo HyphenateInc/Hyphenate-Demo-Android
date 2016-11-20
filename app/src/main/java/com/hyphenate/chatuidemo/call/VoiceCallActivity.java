@@ -1,9 +1,15 @@
 package com.hyphenate.chatuidemo.call;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
@@ -469,6 +475,40 @@ public class VoiceCallActivity extends CallActivity {
         }
     }
 
+    private NotificationManager mNotificationManager;
+    private int callNotificationId = 0526;
+
+    /**
+     * send call notification
+     */
+    private void sendCallNotification() {
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mActivity);
+
+        builder.setSmallIcon(R.mipmap.em_logo_uidemo);
+        builder.setPriority(Notification.PRIORITY_HIGH);
+        builder.setAutoCancel(true);
+        builder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
+
+        builder.setContentText("While the video call is in progress, tap Resume");
+
+        builder.setContentTitle(getString(R.string.app_name));
+        Intent intent = new Intent(mActivity, VoiceCallActivity.class);
+        PendingIntent pIntent =
+                PendingIntent.getActivity(mActivity, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.setContentIntent(pIntent);
+        builder.setOngoing(true);
+
+        builder.setWhen(System.currentTimeMillis());
+
+        mNotificationManager.notify(callNotificationId, builder.build());
+    }
+
+    @Override protected void onUserLeaveHint() {
+        sendCallNotification();
+        super.onUserLeaveHint();
+    }
+
     /**
      * Call end finish activity
      */
@@ -480,11 +520,16 @@ public class VoiceCallActivity extends CallActivity {
 
     @Override protected void onResume() {
         super.onResume();
+        if (mNotificationManager != null) {
+            mNotificationManager.cancel(callNotificationId);
+        }
     }
 
     @Override protected void onDestroy() {
         super.onDestroy();
-        mTimer.cancel();
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
         DemoHelper.getInstance().isVoiceCalling = false;
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
     }

@@ -121,7 +121,7 @@ public class ApplyActivity extends BaseActivity {
         new Thread(new Runnable() {
             @Override public void run() {
                 try {
-                    EMMessage message = mConversation.getMessage(msgId, false);
+                    EMMessage message = mConversation.getMessage(msgId, true);
                     if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE) == 1) {
                         if (message.getIntAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
 
@@ -181,7 +181,7 @@ public class ApplyActivity extends BaseActivity {
         new Thread(new Runnable() {
             @Override public void run() {
                 try {
-                    EMMessage message = mConversation.getMessage(msgId, false);
+                    EMMessage message = mConversation.getMessage(msgId, true);
                     if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE) == 1) {
                         if (message.getIntAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
                             EMClient.getInstance()
@@ -208,7 +208,6 @@ public class ApplyActivity extends BaseActivity {
                     message.setAttribute(Constant.MESSAGE_ATTR_STATUS,
                             mActivity.getString(R.string.em_rejected));
                     EMClient.getInstance().chatManager().updateMessage(message);
-
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
                             Toast.makeText(mActivity, R.string.em_rejected, Toast.LENGTH_LONG)
