@@ -59,6 +59,7 @@ public class GroupDetailsActivity extends BaseActivity {
     @BindView(R.id.text_allow_member_to_invite) TextView inviteView;
     @BindView(R.id.text_appear_in_group_search) TextView groupTypeView;
     @BindView(R.id.switch_push_notification) Switch notificationSwitch;
+    @BindView(R.id.txt_group_id) TextView groupIdView;
 
     LinearLayoutManager layoutManager;
     List<String> members = new ArrayList<>();
@@ -75,6 +76,7 @@ public class GroupDetailsActivity extends BaseActivity {
 
         progressBar = new ProgressBar(this);
         groupId = getIntent().getStringExtra("groupId");
+        groupIdView.setText(groupId);
         updateGroup();
 
 

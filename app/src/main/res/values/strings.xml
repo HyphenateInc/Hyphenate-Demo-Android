@@ -100,8 +100,8 @@
     <string name="em_pref_key_accept_group_invite_automatically">em_pref_accept_group_invite_automatically</string>
     <string name="em_pref_key_adaptive_video_bitrate">em_pref_adaptive_video_bitrate</string>
     <!--Status-->
-    <string name="em_pref_on">Open</string>
-    <string name="em_pref_off">Close</string>
+    <string name="em_pref_on">On</string>
+    <string name="em_pref_off">Off</string>
 
     <!--About-->
     <string name="em_pref_about">About</string>
@@ -112,7 +112,7 @@
     <string name="em_pref_notification_switch">Notification Switch</string>
     <string name="em_pref_notification_summary">Set push notification</string>
     <string name="em_pref_notification_sound">Notification Sound</string>
-    <string name="em_pref_notification_vibrate">Notification Vibrate</string>
+    <string name="em_pref_notification_vibrate">Notification Vibration</string>
     <string name="em_pref_notification_display_name">Display name</string>
 
     <string name="em_pref_chat_call">Chat And Call</string>
@@ -128,6 +128,7 @@
     <!--group-->
     <string name="em_groups">Groups</string>
     <string name="em_group">group</string>
+    <string name="em_name_group_id">Group ID</string>
     <string name="em_exit_group">exit group</string>
     <string name="em_ok">ok</string>
     <string name="em_cancel">cancel</string>
@@ -169,7 +170,7 @@
 
     <!-- account -->
     <string name="account_item_name_id">Hyphenate ID</string>
-    <string name="account_item_name_nick">Nick</string>
+    <string name="account_item_name_nick">Nickname</string>
     <string name="account_title_upload_photo">Upload Photo</string>
     <string name="account_msg_local_upload">Upload photo</string>
     <string name="account_msg_take_photo">Take Photo</string>

@@ -35,7 +35,7 @@
             android:layout_width="@dimen/group_item_avatar_size"
             android:layout_height="@dimen/group_item_avatar_size"
             android:layout_marginLeft="@dimen/group_item_padding"
-            android:src="@drawable/ease_default_avatar"
+            android:src="@drawable/ease_ic_group_default"
             />
 
         <TextView
@@ -108,7 +108,40 @@
           android:layout_height="10dip"
           android:background="#E6E6E6"
           />
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="56dip"
+          >
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="16dp"
+            android:text="@string/em_name_group_id"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:typeface="serif"
+            />
+
+        <TextView
+            android:id="@+id/txt_group_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="19dp"
+            android:textColor="#8798a4"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentBottom="true"
+            android:background="#e0e0e0"
+            />
+      </RelativeLayout>
       <RelativeLayout
           android:layout_width="match_parent"
           android:layout_height="56dip"
