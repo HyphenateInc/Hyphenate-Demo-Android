@@ -100,8 +100,8 @@
     <string name="em_pref_key_accept_group_invite_automatically">em_pref_accept_group_invite_automatically</string>
     <string name="em_pref_key_adaptive_video_bitrate">em_pref_adaptive_video_bitrate</string>
     <!--Status-->
-    <string name="em_pref_on">Open</string>
-    <string name="em_pref_off">Close</string>
+    <string name="em_pref_on">On</string>
+    <string name="em_pref_off">Off</string>
 
     <!--About-->
     <string name="em_pref_about">About</string>
@@ -112,7 +112,7 @@
     <string name="em_pref_notification_switch">Notification Switch</string>
     <string name="em_pref_notification_summary">Set push notification</string>
     <string name="em_pref_notification_sound">Notification Sound</string>
-    <string name="em_pref_notification_vibrate">Notification Vibrate</string>
+    <string name="em_pref_notification_vibration">Notification vibration</string>
     <string name="em_pref_notification_display_name">Display name</string>
 
     <string name="em_pref_chat_call">Chat And Call</string>

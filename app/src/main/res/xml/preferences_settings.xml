@@ -38,7 +38,7 @@
                 android:layout="?android:attr/preferenceLayoutChild"
                 android:summaryOff="@string/em_pref_off"
                 android:summaryOn="@string/em_pref_on"
-                android:title="@string/em_pref_notification_vibrate"/>
+                android:title="@string/em_pref_notification_vibration"/>
             <!--Set push display name-->
             <EditTextPreference
                 android:dependency="@string/em_pref_key_notification"

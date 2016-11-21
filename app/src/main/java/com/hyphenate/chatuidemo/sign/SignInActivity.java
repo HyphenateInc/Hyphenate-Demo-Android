@@ -22,6 +22,7 @@ import com.hyphenate.util.EMLog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.hyphenate.util.NetUtils;
 
 /**
  * Created by lzan13 on 2016/10/10.
@@ -197,8 +198,14 @@ public class SignInActivity extends BaseActivity {
                                 error = res.getString(R.string.em_error_sign_in_failed);
                                 break;
                         }
-                        Toast.makeText(mActivity, error + "-" + i + "-" + s, Toast.LENGTH_LONG)
-                                .show();
+
+                        if (!NetUtils.hasNetwork(mActivity)) {
+                            Toast.makeText(mActivity, R.string.em_error_network_error,
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(mActivity, error + "-" + i + "-" + s, Toast.LENGTH_LONG)
+                                    .show();
+                        }
                     }
                 });
             }
