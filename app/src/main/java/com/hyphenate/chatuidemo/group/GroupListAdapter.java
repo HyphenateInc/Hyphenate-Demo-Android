@@ -84,7 +84,6 @@ public class GroupListAdapter extends RecyclerView.Adapter {
 
                 EMGroup group = groupList.get(position);
                 ((ViewHolder) holder).nameView.setText(group.getGroupName());
-                ((ViewHolder) holder).memberSizeView.setText(group.getMembers().size() + "");
             }
 
             if (listener != null) {
@@ -168,7 +167,6 @@ public class GroupListAdapter extends RecyclerView.Adapter {
         @BindView(R.id.layout_group_list) RelativeLayout groupItem;
         @BindView(R.id.img_group_avatar) ImageView avatarView;
         @BindView(R.id.text_group_name) TextView nameView;
-        @BindView(R.id.text_group_member_size) TextView memberSizeView;
         @BindView(R.id.btn_group_join) Button groupJoinView;
         @BindView(R.id.img_guide_arrow) ImageView guideArrowView;
 
