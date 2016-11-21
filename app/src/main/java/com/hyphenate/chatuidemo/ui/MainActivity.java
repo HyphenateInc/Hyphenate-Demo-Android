@@ -105,7 +105,8 @@ public class MainActivity extends BaseActivity {
                 }
             }
 
-            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            @Override public void onPageScrolled(int position, float positionOffset,
+                    int positionOffsetPixels) {
             }
 
             @Override public void onPageScrollStateChanged(int state) {
@@ -121,11 +122,14 @@ public class MainActivity extends BaseActivity {
             View customTab = LayoutInflater.from(this).inflate(R.layout.em_tab_layout_item, null);
             ImageView imageView = (ImageView) customTab.findViewById(R.id.img_tab_item);
             if (i == 0) {
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_contacts_selector));
+                imageView.setImageDrawable(
+                        getResources().getDrawable(R.drawable.em_tab_contacts_selector));
             } else if (i == 1) {
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_chats_selector));
+                imageView.setImageDrawable(
+                        getResources().getDrawable(R.drawable.em_tab_chats_selector));
             } else {
-                imageView.setImageDrawable(getResources().getDrawable(R.drawable.em_tab_settings_selector));
+                imageView.setImageDrawable(
+                        getResources().getDrawable(R.drawable.em_tab_settings_selector));
             }
             //set the custom tabview
             mTabLayout.getTabAt(i).setCustomView(customTab);
@@ -165,7 +169,8 @@ public class MainActivity extends BaseActivity {
                 }
             });
         } else if (mCurrentPageIndex == 1) {
-            searchView = (SearchView) MenuItemCompat.getActionView(toolbar.getMenu().findItem(R.id.menu_conversations_search));
+            searchView = (SearchView) MenuItemCompat.getActionView(
+                    toolbar.getMenu().findItem(R.id.menu_conversations_search));
             // search conversations list
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override public boolean onQueryTextSubmit(String query) {
@@ -277,8 +282,7 @@ public class MainActivity extends BaseActivity {
         EMClient.getInstance().groupManager().removeGroupChangeListener(mGroupListener);
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
+    @Override protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (intent.getBooleanExtra(Constant.ACCOUNT_CONFLICT, false) && !isConflictDialogShow) {
             showConflictDialog();
@@ -331,6 +335,21 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private void refreshApply() {
+        runOnUiThread(new Runnable() {
+            @Override public void run() {
+                EMConversation conversation = EMClient.getInstance()
+                        .chatManager()
+                        .getConversation(Constant.CONVERSATION_NAME_APPLY,
+                                EMConversation.EMConversationType.Chat, true);
+                if (conversation.getUnreadMsgCount() > 0) {
+                    getTabUnreadStatusView(0).setVisibility(View.VISIBLE);
+                } else {
+                    getTabUnreadStatusView(0).setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
     /**
      * refresh the contacts view
      */
@@ -344,29 +363,25 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void refreshApply() {
+    private void refreshConversation() {
         runOnUiThread(new Runnable() {
             @Override public void run() {
-                EMConversation conversation = EMClient.getInstance()
-                        .chatManager()
-                        .getConversation(Constant.CONVERSATION_NAME_APPLY, EMConversation.EMConversationType.Chat, true);
-                if (conversation.getUnreadMsgCount() > 0) {
-                    getTabUnreadStatusView(0).setVisibility(View.VISIBLE);
-                } else {
-                    getTabUnreadStatusView(0).setVisibility(View.INVISIBLE);
-                }
+                Fragment fragment = ((PagerAdapter) mViewPager.getAdapter()).getItem(1);
+                ((ConversationListFragment) fragment).refresh();
             }
         });
     }
 
+
     //private boolean isConflict;
     private boolean isConflictDialogShow;
+
     /**
      * show the dialog when user logged into another device
      */
     private void showConflictDialog() {
         isConflictDialogShow = true;
-        DemoHelper.getInstance().signOut(false,null);
+        DemoHelper.getInstance().signOut(false, null);
         String st = getResources().getString(R.string.Logoff_notification);
         if (!isFinishing()) {
             // clear up global variables
@@ -374,26 +389,25 @@ public class MainActivity extends BaseActivity {
                 AlertDialog.Builder conflictBuilder = new AlertDialog.Builder(this);
                 conflictBuilder.setTitle(st);
                 conflictBuilder.setMessage(R.string.connect_conflict);
-                conflictBuilder.setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
+                conflictBuilder.setPositiveButton(R.string.common_ok,
+                        new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        finish();
-                        Intent intent = new Intent(MainActivity.this, SignInActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                    }
-                });
+                            @Override public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                finish();
+                                Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                        | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                        });
                 conflictBuilder.setCancelable(false);
                 conflictBuilder.show();
                 //isConflict = true;
             } catch (Exception e) {
                 EMLog.e(TAG, "---------conflictBuilder error" + e.getMessage());
             }
-
         }
-
     }
 
     private class DefaultContactsChangeListener extends ContactsChangeListener {
@@ -455,21 +469,23 @@ public class MainActivity extends BaseActivity {
         @Override public void onUserRemoved(String s, String s1) {
             refreshApply();
             refreshContacts();
+            refreshConversation();
         }
 
         @Override public void onGroupDestroyed(String s, String s1) {
             refreshApply();
             refreshContacts();
+            refreshConversation();
         }
 
         @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
             refreshApply();
             refreshContacts();
+            refreshConversation();
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+    @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
             @NonNull int[] grantResults) {
         PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
     }

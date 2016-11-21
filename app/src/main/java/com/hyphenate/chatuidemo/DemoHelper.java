@@ -93,6 +93,8 @@ public class DemoHelper {
             EMLog.d(TAG, "------- init hyphenate start --------------");
             //init hyphenate sdk with options
             EMClient.getInstance().init(context, initOptions());
+            // init call options
+            initCallOptions();
             // set debug mode open:true, close:false
             EMClient.getInstance().setDebugMode(true);
             //init EaseUI if you want to use it
@@ -133,6 +135,17 @@ public class DemoHelper {
         options.setGCMNumber("998166487724");
 
         return options;
+    }
+
+    /**
+     * init call options
+     */
+    private void initCallOptions() {
+        // set video call bitrate, default(150)
+        EMClient.getInstance().callManager().getCallOptions().setVideoKbps(800);
+        // set video call resolution, default(320, 240)
+        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
+        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
     }
 
     /**
