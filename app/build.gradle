@@ -25,7 +25,6 @@ android {
     buildToolsVersion "24.0.2"
     //use legacy for for android 6.0
     useLibrary 'org.apache.http.legacy'
-
     defaultConfig {
         applicationId "com.hyphenate.chatuidemo"
         minSdkVersion 15
@@ -43,27 +42,19 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
-
     // Design support already included v4 and appcompat-v7, So here on the introduction of 'design'
     compile 'com.android.support:design:24.2.1'
-
     compile 'org.greenrobot:eventbus:3.0.0'
-
     compile 'com.github.bumptech.glide:glide:3.7.0'
-
     compile 'com.google.android.gms:play-services-gcm:9.4.0'
     compile 'com.google.android.gms:play-services-places:9.4.0'
     compile 'com.google.android.gms:play-services-maps:9.4.0'
-
     compile 'com.parse:parse-android:1.13.1'
-
     compile 'com.hyphenate:hyphenate-sdk:3.2.1'
-
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }
