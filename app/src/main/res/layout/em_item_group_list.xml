@@ -20,32 +20,16 @@
         android:layout_centerVertical="true"
         android:src="@drawable/ease_default_avatar"
         />
-    <LinearLayout
+    <TextView
+        android:id="@+id/text_group_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/group_name_margin_left"
         android:layout_toRightOf="@id/img_group_avatar"
-        android:orientation="vertical"
-        >
-      <TextView
-          android:id="@+id/text_group_name"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textColor="@color/group_name_color"
-          android:textSize="@dimen/group_name_size"
-          />
-
-      <TextView
-          android:id="@+id/text_group_member_size"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textColor="@color/group_name_color"
-          android:textSize="@dimen/group_name_size"
-          />
-
-
-    </LinearLayout>
+        android:textColor="@color/group_name_color"
+        android:textSize="@dimen/group_name_size"
+        />
 
     <ImageView
         android:id="@+id/img_guide_arrow"
