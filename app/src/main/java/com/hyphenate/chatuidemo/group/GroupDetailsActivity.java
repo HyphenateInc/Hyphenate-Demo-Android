@@ -75,8 +75,17 @@ public class GroupDetailsActivity extends BaseActivity {
 
         progressBar = new ProgressBar(this);
         groupId = getIntent().getStringExtra("groupId");
-        updateGroup();
 
+        group = EMClient.getInstance().groupManager().getGroup(groupId);
+
+        if (group == null) {
+            progressDialog.dismiss();
+            finish();
+        }
+
+        initLocalView();
+
+        updateGroupFromServer();
 
         toolbar = getActionBarToolbar();
         toolbar.setNavigationIcon(R.drawable.em_ic_back);
@@ -92,6 +101,65 @@ public class GroupDetailsActivity extends BaseActivity {
 
         listener = new DefaultGroupChangeListener();
         EMClient.getInstance().groupManager().addGroupChangeListener(listener);
+    }
+
+    private void initLocalView() {
+        groupNameView.setText(group.getGroupName());
+        memberSizeView.setText("(" + group.getMemberCount() + ")");
+
+        if (EMClient.getInstance().getCurrentUser().equals(group.getOwner())) {
+            isOwner = true;
+            exitGroupView.setText(getString(R.string.em_delete_group));
+        } else {
+            isOwner = false;
+            exitGroupView.setText(getString(R.string.em_leave_group));
+        }
+
+        if (group.isMemberAllowToInvite()) {
+            inviteView.setText(getString(R.string.em_enable));
+        } else {
+            inviteView.setText(getString(R.string.em_disabled));
+        }
+
+        if (group.isPublic()) {
+            groupTypeView.setText(getString(R.string.em_public));
+        } else {
+            groupTypeView.setText(getString(R.string.em_private));
+        }
+
+        members.clear();
+        members.addAll(group.getMembers());
+
+        layoutManager = new LinearLayoutManager(GroupDetailsActivity.this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(layoutManager);
+        if (isOwner) {
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            } else {
+                adapter = new MembersListAdapter(GroupDetailsActivity.this, members, LinearLayoutManager.HORIZONTAL, true);
+            }
+        } else {
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            } else {
+                adapter = new MembersListAdapter(GroupDetailsActivity.this, members, LinearLayoutManager.HORIZONTAL, group.isMemberAllowToInvite());
+            }
+        }
+        recyclerView.setAdapter(adapter);
+
+        adapter.setItemClickListener(new EaseListItemClickListener() {
+
+            @Override public void onItemClick(View view, int position) {
+                startActivityForResult(new Intent(GroupDetailsActivity.this, InviteMembersActivity.class).putExtra("groupId", groupId)
+                        .putExtra("isOwner", isOwner)
+                        .putStringArrayListExtra("members", (ArrayList<String>) members), REQUEST_CODE_MEMBER_REFRESH);
+            }
+
+            @Override public void onItemLongClick(View view, int position) {
+
+            }
+        });
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -217,7 +285,7 @@ public class GroupDetailsActivity extends BaseActivity {
         }).start();
     }
 
-    protected void updateGroup() {
+    protected void updateGroupFromServer() {
         new Thread(new Runnable() {
             public void run() {
                 try {
@@ -226,61 +294,7 @@ public class GroupDetailsActivity extends BaseActivity {
                     runOnUiThread(new Runnable() {
                         public void run() {
 
-                            if (group == null) {
-                                progressDialog.dismiss();
-                                finish();
-                            }
-
-                            groupNameView.setText(group.getGroupName());
-                            memberSizeView.setText("(" + group.getMemberCount() + ")");
-
-                            if (EMClient.getInstance().getCurrentUser().equals(group.getOwner())) {
-                                isOwner = true;
-                                exitGroupView.setText(getString(R.string.em_delete_group));
-                            } else {
-                                isOwner = false;
-                                exitGroupView.setText(getString(R.string.em_leave_group));
-                            }
-
-                            if (group.isMemberAllowToInvite()) {
-                                inviteView.setText(getString(R.string.em_enable));
-                            } else {
-                                inviteView.setText(getString(R.string.em_disabled));
-                            }
-
-                            if (group.isPublic()) {
-                                groupTypeView.setText(getString(R.string.em_public));
-                            } else {
-                                groupTypeView.setText(getString(R.string.em_private));
-                            }
-
-                            members.clear();
-                            members.addAll(group.getMembers());
-
-                            layoutManager = new LinearLayoutManager(GroupDetailsActivity.this);
-                            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                            recyclerView.setLayoutManager(layoutManager);
-                            if (isOwner) {
-                                adapter = new MembersListAdapter(GroupDetailsActivity.this, members, LinearLayoutManager.HORIZONTAL, true);
-                            } else {
-                                adapter = new MembersListAdapter(GroupDetailsActivity.this, members, LinearLayoutManager.HORIZONTAL,
-                                        group.isMemberAllowToInvite());
-                            }
-                            recyclerView.setAdapter(adapter);
-
-                            adapter.setItemClickListener(new EaseListItemClickListener() {
-
-                                @Override public void onItemClick(View view, int position) {
-                                    startActivityForResult(
-                                            new Intent(GroupDetailsActivity.this, InviteMembersActivity.class).putExtra("groupId", groupId)
-                                                    .putExtra("isOwner", isOwner)
-                                                    .putStringArrayListExtra("members", (ArrayList<String>) members), REQUEST_CODE_MEMBER_REFRESH);
-                                }
-
-                                @Override public void onItemLongClick(View view, int position) {
-
-                                }
-                            });
+                            initLocalView();
                             toolbar.removeView(progressBar);
                         }
                     });
