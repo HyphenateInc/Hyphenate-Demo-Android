@@ -120,8 +120,8 @@ public class ApplyActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMMessage message = mConversation.getMessage(msgId, true);
-                    if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE) == 1) {
-                        if (message.getIntAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
+                    if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE) == 1) {//0:chat,1:groupChat
+                        if (message.getIntAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE) == 0) {//0 : private group,1:public group
 
                             EMClient.getInstance()
                                     .groupManager()
@@ -171,8 +171,8 @@ public class ApplyActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMMessage message = mConversation.getMessage(msgId, true);
-                    if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE) == 1) {
-                        if (message.getIntAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
+                    if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE) == 1) { //0:chat,1:groupChat
+                        if (message.getIntAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE) == 0) { //0 : private group,1:public group
                             EMClient.getInstance()
                                     .groupManager()
                                     .declineInvitation(message.getStringAttribute(Constant.MESSAGE_ATTR_GROUP_ID),
@@ -180,8 +180,8 @@ public class ApplyActivity extends BaseActivity {
                         } else {
                             EMClient.getInstance()
                                     .groupManager()
-                                    .declineApplication(message.getStringAttribute(Constant.MESSAGE_ATTR_GROUP_ID), Constant.MESSAGE_ATTR_USERNAME,
-                                            "");
+                                    .declineApplication(message.getStringAttribute(Constant.MESSAGE_ATTR_USERNAME),
+                                            message.getStringAttribute(Constant.MESSAGE_ATTR_GROUP_ID), "");
                         }
                     } else {
                         EMClient.getInstance().contactManager().declineInvitation(message.getStringAttribute(Constant.MESSAGE_ATTR_USERNAME, ""));
