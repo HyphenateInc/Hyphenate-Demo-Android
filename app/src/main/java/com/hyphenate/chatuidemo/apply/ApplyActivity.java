@@ -65,9 +65,7 @@ public class ApplyActivity extends BaseActivity {
                 finish();
             }
         });
-        mConversation = EMClient.getInstance()
-                .chatManager()
-                .getConversation(Constant.CONVERSATION_NAME_APPLY, null, true);
+        mConversation = EMClient.getInstance().chatManager().getConversation(Constant.CONVERSATION_NAME_APPLY, null, true);
         mConversation.markAllMessagesAsRead();
 
         int count = mConversation.getAllMessages().size();
@@ -122,34 +120,25 @@ public class ApplyActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMMessage message = mConversation.getMessage(msgId, true);
-                    if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE) == 1) {
-                        if (message.getIntAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
+                    if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE) == 1) {//0:chat,1:groupChat
+                        if (message.getIntAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE) == 0) {//0 : private group,1:public group
 
                             EMClient.getInstance()
                                     .groupManager()
-                                    .acceptInvitation(message.getStringAttribute(
-                                            Constant.MESSAGE_ATTR_GROUP_ID),
-                                            message.getStringAttribute(
-                                                    Constant.MESSAGE_ATTR_USERNAME));
+                                    .acceptInvitation(message.getStringAttribute(Constant.MESSAGE_ATTR_GROUP_ID),
+                                            message.getStringAttribute(Constant.MESSAGE_ATTR_USERNAME));
                         } else {
                             EMClient.getInstance()
                                     .groupManager()
-                                    .acceptApplication(message.getStringAttribute(
-                                            Constant.MESSAGE_ATTR_USERNAME),
-                                            message.getStringAttribute(
-                                                    Constant.MESSAGE_ATTR_GROUP_ID));
+                                    .acceptApplication(message.getStringAttribute(Constant.MESSAGE_ATTR_USERNAME),
+                                            message.getStringAttribute(Constant.MESSAGE_ATTR_GROUP_ID));
                         }
                     } else {
-                        EMClient.getInstance()
-                                .contactManager()
-                                .acceptInvitation(
-                                        message.getStringAttribute(Constant.MESSAGE_ATTR_USERNAME,
-                                                ""));
+                        EMClient.getInstance().contactManager().acceptInvitation(message.getStringAttribute(Constant.MESSAGE_ATTR_USERNAME, ""));
                     }
 
                     // update contacts apply for message status
-                    message.setAttribute(Constant.MESSAGE_ATTR_STATUS,
-                            mActivity.getString(R.string.em_agreed));
+                    message.setAttribute(Constant.MESSAGE_ATTR_STATUS, mActivity.getString(R.string.em_agreed));
                     EMClient.getInstance().chatManager().updateMessage(message);
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
@@ -182,36 +171,27 @@ public class ApplyActivity extends BaseActivity {
             @Override public void run() {
                 try {
                     EMMessage message = mConversation.getMessage(msgId, true);
-                    if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE) == 1) {
-                        if (message.getIntAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE) == 0) {
+                    if (message.getIntAttribute(Constant.MESSAGE_ATTR_TYPE) == 1) { //0:chat,1:groupChat
+                        if (message.getIntAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE) == 0) { //0 : private group,1:public group
                             EMClient.getInstance()
                                     .groupManager()
-                                    .declineInvitation(message.getStringAttribute(
-                                            Constant.MESSAGE_ATTR_GROUP_ID),
-                                            message.getStringAttribute(
-                                                    Constant.MESSAGE_ATTR_USERNAME), "");
+                                    .declineInvitation(message.getStringAttribute(Constant.MESSAGE_ATTR_GROUP_ID),
+                                            message.getStringAttribute(Constant.MESSAGE_ATTR_USERNAME), "");
                         } else {
                             EMClient.getInstance()
                                     .groupManager()
-                                    .declineApplication(message.getStringAttribute(
-                                            Constant.MESSAGE_ATTR_GROUP_ID),
-                                            Constant.MESSAGE_ATTR_USERNAME, "");
+                                    .declineApplication(message.getStringAttribute(Constant.MESSAGE_ATTR_USERNAME),
+                                            message.getStringAttribute(Constant.MESSAGE_ATTR_GROUP_ID), "");
                         }
                     } else {
-                        EMClient.getInstance()
-                                .contactManager()
-                                .declineInvitation(
-                                        message.getStringAttribute(Constant.MESSAGE_ATTR_USERNAME,
-                                                ""));
+                        EMClient.getInstance().contactManager().declineInvitation(message.getStringAttribute(Constant.MESSAGE_ATTR_USERNAME, ""));
                     }
                     // update contacts apply for message status
-                    message.setAttribute(Constant.MESSAGE_ATTR_STATUS,
-                            mActivity.getString(R.string.em_rejected));
+                    message.setAttribute(Constant.MESSAGE_ATTR_STATUS, mActivity.getString(R.string.em_rejected));
                     EMClient.getInstance().chatManager().updateMessage(message);
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
-                            Toast.makeText(mActivity, R.string.em_rejected, Toast.LENGTH_LONG)
-                                    .show();
+                            Toast.makeText(mActivity, R.string.em_rejected, Toast.LENGTH_LONG).show();
                             dialog.dismiss();
                             refresh();
                         }
