@@ -51,6 +51,7 @@ public abstract class ContactsChangeListener implements EMContactListener {
             message.setAttribute(Constant.MESSAGE_ATTR_STATUS, "");
             message.setMsgTime(System.currentTimeMillis());
             message.setLocalTime(message.getMsgTime());
+            message.setUnread(true);
             // update message
             EMClient.getInstance().chatManager().updateMessage(message);
         } else {
