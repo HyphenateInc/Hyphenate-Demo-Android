@@ -531,6 +531,9 @@ public class VoiceCallActivity extends CallActivity {
     @Override protected void onFinish() {
         // Call end release SurfaceView
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
+        if (mNotificationManager != null) {
+            mNotificationManager.cancelAll();
+        }
         super.onFinish();
     }
 
