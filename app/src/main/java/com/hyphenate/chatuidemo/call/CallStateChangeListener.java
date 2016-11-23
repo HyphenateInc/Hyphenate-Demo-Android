@@ -6,12 +6,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.util.EMLog;
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by lzan13 on 2016/10/14.
+ * Call status listener
  */
-
 public class CallStateChangeListener implements EMCallStateChangeListener {
 
     private final String TAG = this.getClass().getSimpleName();
@@ -20,24 +19,15 @@ public class CallStateChangeListener implements EMCallStateChangeListener {
 
     public CallStateChangeListener(Context context) {
         mContext = context;
+        localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
     }
 
     @Override public void onCallStateChanged(CallState callState, CallError callError) {
-        /**
-         * Use EventBus send subscribable events,
-         *  {@link VideoCallActivity#onEventBus(CallEvent)}
-         *  {@link VoiceCallActivity#onEventBus(CallEvent)}
-         */
-        CallEvent event = new CallEvent();
-        event.setCallState(callState);
-        event.setCallError(callError);
-        EventBus.getDefault().post(event);
 
         // send broadcast
         Intent intent = new Intent(Constant.BROADCAST_ACTION_CALL);
         intent.putExtra("callState", callState);
         intent.putExtra("callError", callError);
-        localBroadcastManager = LocalBroadcastManager.getInstance(mContext);
         localBroadcastManager.sendBroadcast(intent);
 
         switch (callState) {

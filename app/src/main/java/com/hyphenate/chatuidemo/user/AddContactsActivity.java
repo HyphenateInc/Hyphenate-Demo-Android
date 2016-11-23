@@ -1,5 +1,6 @@
 package com.hyphenate.chatuidemo.user;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -31,6 +32,8 @@ public class AddContactsActivity extends BaseActivity {
 
     private String addUsername;
 
+    private ProgressDialog mDialog;
+
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
@@ -55,10 +58,15 @@ public class AddContactsActivity extends BaseActivity {
             Toast.makeText(mActivity, R.string.em_hint_input_not_null, Toast.LENGTH_LONG).show();
             return;
         }
+        mDialog = new ProgressDialog(mActivity);
+        mDialog.setMessage(getString(R.string.em_wait));
+        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.show();
         new Thread(new Runnable() {
             @Override public void run() {
                 try {
                     EMClient.getInstance().contactManager().addContact(addUsername, "Add friends");
+                    mDialog.dismiss();
                     runOnUiThread(new Runnable() {
                         @Override public void run() {
                             Toast.makeText(mActivity, R.string.em_contacts_apply_send_success,
@@ -67,6 +75,7 @@ public class AddContactsActivity extends BaseActivity {
                     });
                 } catch (HyphenateException e) {
                     e.printStackTrace();
+                    mDialog.dismiss();
                     int errorCode = e.getErrorCode();
                     String errorMsg = e.getMessage();
                     EMLog.e(TAG, "add contacts: error - " + errorCode + ", msg - " + errorMsg);

@@ -48,7 +48,7 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     // Design support already included v4 and appcompat-v7, So here on the introduction of 'design'
     compile 'com.android.support:design:24.2.1'
-    compile 'org.greenrobot:eventbus:3.0.0'
+
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.google.android.gms:play-services-gcm:9.4.0'
     compile 'com.google.android.gms:play-services-places:9.4.0'

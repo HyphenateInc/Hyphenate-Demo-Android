@@ -3,13 +3,16 @@ package com.hyphenate.chatuidemo.call;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.widget.Chronometer;
@@ -25,6 +28,7 @@ import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMCallStateChangeListener.CallError;
 import com.hyphenate.chat.EMCallStateChangeListener.CallState;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.exceptions.EMNoActiveCallException;
@@ -35,8 +39,6 @@ import com.hyphenate.media.EMOppositeSurfaceView;
 import com.hyphenate.util.EMLog;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Create by lzan13 2016/10/13
@@ -58,6 +60,9 @@ public class VideoCallActivity extends CallActivity {
 
     // SurfaceView state, 0 local is small, 1 opposite is small
     private int surfaceViewState = 0;
+
+    private LocalBroadcastManager localBroadcastManager;
+    private CallBroadcastReceiver broadcastReceiver;
 
     // Use ButterKnife define view
     @BindView(R.id.layout_call_control) View mControlLayout;
@@ -93,6 +98,13 @@ public class VideoCallActivity extends CallActivity {
         ButterKnife.bind(this);
 
         initView();
+
+        // register call broadcast receiver
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        broadcastReceiver = new CallBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constant.BROADCAST_ACTION_CALL);
+        localBroadcastManager.registerReceiver(broadcastReceiver, filter);
     }
 
     /**
@@ -588,108 +600,112 @@ public class VideoCallActivity extends CallActivity {
     }
 
     /**
-     * Implement the subscribe method, subscribe to the call state event sent by the global monitor
+     * call broadcast receiver
      */
-    @Subscribe(threadMode = ThreadMode.MAIN) public void onEventBus(CallEvent event) {
-        CallError callError = event.getCallError();
-        CallState callState = event.getCallState();
+    private class CallBroadcastReceiver extends BroadcastReceiver {
+        @Override public void onReceive(Context context, Intent intent) {
+            // get call state and error
+            CallState callState = (CallState) intent.getExtras().get("callState");
+            CallError callError = (CallError) intent.getExtras().get("callError");
 
-        switch (callState) {
-            case CONNECTING:
-                // Set call state view show content
-                mCallStatusView.setText(
-                        String.format(getString(R.string.em_call_connecting), mCallId));
-                break;
-            case CONNECTED:
-                // Set call state view show content
-                mCallStatusView.setText(
-                        String.format(getString(R.string.em_call_connected), mCallId));
-                break;
-            case ACCEPTED:
-                if (mTimer != null) {
-                    mTimer.cancel();
-                }
-                stopCallSound();
-                openSpeaker();
-                // Set call state view show content
-                mCallStatusView.setText(R.string.em_call_accepted);
-                // Set call state
-                mCallStatus = CallStatus.CALL_ACCEPTED;
-                // Set SurfaceView processor
-                surfaceViewProcessor();
-                // Start time
-                mChronometer.setBase(SystemClock.elapsedRealtime());
-                mChronometer.start();
-                startMonitor();
-                break;
-            case DISCONNECTED:
-                mChronometer.stop();
-                // Set call state view show content
-                mCallStatusView.setText(R.string.em_call_disconnected);
-                // Check call error
-                if (callError == CallError.ERROR_UNAVAILABLE) {
-                    mCallStatus = CallStatus.CALL_OFFLINE;
+            switch (callState) {
+                case CONNECTING:
+                    // Set call state view show content
                     mCallStatusView.setText(
-                            String.format(getString(R.string.em_call_not_online), mCallId));
-                } else if (callError == CallError.ERROR_BUSY) {
-                    mCallStatus = CallStatus.CALL_BUSY;
+                            String.format(getString(R.string.em_call_connecting), mCallId));
+                    break;
+                case CONNECTED:
+                    // Set call state view show content
                     mCallStatusView.setText(
-                            String.format(getString(R.string.em_call_busy), mCallId));
-                } else if (callError == CallError.REJECTED) {
-                    mCallStatus = CallStatus.CALL_REJECT;
-                    mCallStatusView.setText(
-                            String.format(getString(R.string.em_call_reject), mCallId));
-                } else if (callError == CallError.ERROR_NORESPONSE) {
-                    mCallStatus = CallStatus.CALL_NO_RESPONSE;
-                    mCallStatusView.setText(
-                            String.format(getString(R.string.em_call_no_response), mCallId));
-                } else if (callError == CallError.ERROR_TRANSPORT) {
-                    mCallStatus = CallStatus.CALL_TRANSPORT;
-                    mCallStatusView.setText(R.string.em_call_connection_fail);
-                } else if (callError == CallError.ERROR_LOCAL_SDK_VERSION_OUTDATED) {
-                    mCallStatus = CallStatus.CALL_VERSION_DIFFERENT;
-                    mCallStatusView.setText(R.string.em_call_local_sdk_version_outdated);
-                } else if (callError == CallError.ERROR_REMOTE_SDK_VERSION_OUTDATED) {
-                    mCallStatus = CallStatus.CALL_VERSION_DIFFERENT;
-                    mCallStatusView.setText(R.string.em_call_remote_sdk_version_outdated);
-                } else {
-                    if (mCallStatus == CallStatus.CALL_CANCEL) {
-                        // Set call state
-                        mCallStatus = CallStatus.CALL_CANCEL_INCOMING_CALL;
+                            String.format(getString(R.string.em_call_connected), mCallId));
+                    break;
+                case ACCEPTED:
+                    if (mTimer != null) {
+                        mTimer.cancel();
                     }
-                    mCallStatusView.setText(R.string.em_call_cancel_incoming_call);
-                }
-                // Save call message to local
-                saveCallMessage();
-                // Remove call state listener
-                DemoHelper.getInstance().removeCallStateChangeListener();
-                // Finish activity
-                onFinish();
-                break;
-            case NETWORK_UNSTABLE:
-                if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
-                    mCallStatusView.setText(R.string.em_call_no_data);
-                } else {
-                    mCallStatusView.setText(R.string.em_call_network_unstable);
-                }
-                break;
-            case NETWORK_NORMAL:
-                mCallStatusView.setText(R.string.em_call_network_normal);
-                break;
-            case VIDEO_PAUSE:
-                mCallStatusView.setText(R.string.em_call_video_pause);
-                break;
-            case VIDEO_RESUME:
-                mCallStatusView.setText(R.string.em_call_video_resume);
-                break;
-            case VOICE_PAUSE:
-                mCallStatusView.setText(R.string.em_call_voice_pause);
-                break;
-            case VOICE_RESUME:
-                mCallStatusView.setText(R.string.em_call_voice_resume);
-                break;
-            default:
-                break;
+                    stopCallSound();
+                    openSpeaker();
+                    // Set call state view show content
+                    mCallStatusView.setText(R.string.em_call_accepted);
+                    // Set call state
+                    mCallStatus = CallStatus.CALL_ACCEPTED;
+                    // Set SurfaceView processor
+                    surfaceViewProcessor();
+                    // Start time
+                    mChronometer.setBase(SystemClock.elapsedRealtime());
+                    mChronometer.start();
+                    startMonitor();
+                    break;
+                case DISCONNECTED:
+                    mChronometer.stop();
+                    // Set call state view show content
+                    mCallStatusView.setText(R.string.em_call_disconnected);
+                    // Check call error
+                    if (callError == CallError.ERROR_UNAVAILABLE) {
+                        mCallStatus = CallStatus.CALL_OFFLINE;
+                        mCallStatusView.setText(
+                                String.format(getString(R.string.em_call_not_online), mCallId));
+                    } else if (callError == CallError.ERROR_BUSY) {
+                        mCallStatus = CallStatus.CALL_BUSY;
+                        mCallStatusView.setText(
+                                String.format(getString(R.string.em_call_busy), mCallId));
+                    } else if (callError == CallError.REJECTED) {
+                        mCallStatus = CallStatus.CALL_REJECT;
+                        mCallStatusView.setText(
+                                String.format(getString(R.string.em_call_reject), mCallId));
+                    } else if (callError == CallError.ERROR_NORESPONSE) {
+                        mCallStatus = CallStatus.CALL_NO_RESPONSE;
+                        mCallStatusView.setText(
+                                String.format(getString(R.string.em_call_no_response), mCallId));
+                    } else if (callError == CallError.ERROR_TRANSPORT) {
+                        mCallStatus = CallStatus.CALL_TRANSPORT;
+                        mCallStatusView.setText(R.string.em_call_connection_fail);
+                    } else if (callError == CallError.ERROR_LOCAL_SDK_VERSION_OUTDATED) {
+                        mCallStatus = CallStatus.CALL_VERSION_DIFFERENT;
+                        mCallStatusView.setText(R.string.em_call_local_sdk_version_outdated);
+                    } else if (callError == CallError.ERROR_REMOTE_SDK_VERSION_OUTDATED) {
+                        mCallStatus = CallStatus.CALL_VERSION_DIFFERENT;
+                        mCallStatusView.setText(R.string.em_call_remote_sdk_version_outdated);
+                    } else {
+                        if (mCallStatus == CallStatus.CALL_CANCEL) {
+                            // Set call state
+                            mCallStatus = CallStatus.CALL_CANCEL_INCOMING_CALL;
+                        }
+                        mCallStatusView.setText(R.string.em_call_cancel_incoming_call);
+                    }
+                    // Save call message to local
+                    saveCallMessage();
+                    // Remove call state listener
+                    DemoHelper.getInstance().removeCallStateChangeListener();
+                    // Finish activity
+                    onFinish();
+                    break;
+                case NETWORK_UNSTABLE:
+                    if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
+                        mCallStatusView.setText(R.string.em_call_no_data);
+                    } else {
+                        mCallStatusView.setText(R.string.em_call_network_unstable);
+                    }
+                    break;
+                case NETWORK_NORMAL:
+                    mCallStatusView.setText(R.string.em_call_network_normal);
+                    break;
+                case VIDEO_PAUSE:
+                    Toast.makeText(mActivity, "video pause", Toast.LENGTH_LONG).show();
+                    mCallStatusView.setText(R.string.em_call_video_pause);
+                    break;
+                case VIDEO_RESUME:
+                    mCallStatusView.setText(R.string.em_call_video_resume);
+                    break;
+                case VOICE_PAUSE:
+                    mCallStatusView.setText(R.string.em_call_voice_pause);
+                    break;
+                case VOICE_RESUME:
+                    mCallStatusView.setText(R.string.em_call_voice_resume);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -739,6 +755,9 @@ public class VideoCallActivity extends CallActivity {
         mLocalSurfaceView = null;
         mOppositeSurfaceView = null;
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
+        if (mNotificationManager != null) {
+            mNotificationManager.cancelAll();
+        }
         super.onFinish();
     }
 
@@ -813,5 +832,6 @@ public class VideoCallActivity extends CallActivity {
         }
         DemoHelper.getInstance().isVideoCalling = false;
         mAudioManager.setMode(AudioManager.MODE_NORMAL);
+        localBroadcastManager.unregisterReceiver(broadcastReceiver);
     }
 }

@@ -17,7 +17,6 @@ import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.easeui.EaseConstant;
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by lzan13 on 2016/10/13.
@@ -60,6 +59,7 @@ public class CallActivity extends BaseActivity {
                 | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
                 | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
     }
 
     /**
@@ -248,17 +248,5 @@ public class CallActivity extends BaseActivity {
     @Override public void onBackPressed() {
         // super.onBackPressed();
 
-    }
-
-    @Override protected void onStart() {
-        super.onStart();
-        // Register an event subscriber
-        EventBus.getDefault().register(this);
-    }
-
-    @Override protected void onStop() {
-        super.onStop();
-        // Unregister event subscribers
-        EventBus.getDefault().unregister(this);
     }
 }
