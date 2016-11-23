@@ -13,7 +13,7 @@
         android:id="@+id/iv_voice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ease_ic_voice_from_stopped"
+        android:src="@drawable/ease_ic_voice_sent_stopped"
         />
 
     <TextView
