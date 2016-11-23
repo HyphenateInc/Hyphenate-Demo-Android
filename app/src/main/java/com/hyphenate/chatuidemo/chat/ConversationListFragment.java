@@ -26,6 +26,8 @@ import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseConversationListView;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.util.NetUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.hyphenate.easeui.EaseConstant.CHATTYPE_GROUP;
 
@@ -64,6 +66,9 @@ public class ConversationListFragment extends Fragment {
 
         // init ConversationListView
         mConversationListView.init();
+        List<String> hiddenList = new ArrayList<>();
+        hiddenList.add(Constant.CONVERSATION_NAME_APPLY);
+        mConversationListView.setHiddenList(hiddenList);
 
         mConversationListView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override public void onCreateContextMenu(ContextMenu menu, View v,

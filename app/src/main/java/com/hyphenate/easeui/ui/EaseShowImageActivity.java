@@ -45,7 +45,7 @@ public class EaseShowImageActivity extends Activity {
 	private static final String TAG = "ShowBigImage";
 	private ProgressDialog pd;
 	private EasePhotoView photoView;
-	private int default_res = R.drawable.ease_default_image;
+	private int default_res;
 	private String localFilePath;
 	private Bitmap bitmap;
 	private boolean isDownloaded;
@@ -58,7 +58,7 @@ public class EaseShowImageActivity extends Activity {
 
 		photoView = (EasePhotoView) findViewById(R.id.image);
 		loadLocalPb = (ProgressBar) findViewById(R.id.pb_load_local);
-		default_res = getIntent().getIntExtra("default_image", R.drawable.ease_default_avatar);
+		default_res = getIntent().getIntExtra("default_image", R.drawable.ease_default_image);
 		Uri uri = getIntent().getParcelableExtra("uri");
 		String remotepath = getIntent().getExtras().getString("remotepath");
 		localFilePath = getIntent().getExtras().getString("localUrl");
