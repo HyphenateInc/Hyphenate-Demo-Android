@@ -34,23 +34,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 >
-            <com.hyphenate.easeui.widget.EaseImageView
-                android:id="@+id/img_account_avatar"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/ease_default_avatar"
-                />
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_edit_avatar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/img_account_avatar"
-                android:layout_alignRight="@id/img_account_avatar"
-                android:src="@drawable/em_ic_mode_edit_white_24dp"
-                app:fabSize="mini"
-                />
+                <com.hyphenate.easeui.widget.EaseImageView
+                    android:id="@+id/img_account_avatar"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ease_default_avatar"
+                    />
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_edit_avatar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/img_account_avatar"
+                    android:layout_alignRight="@id/img_account_avatar"
+                    android:src="@drawable/em_ic_mode_edit_white_24dp"
+                    app:fabSize="mini"
+                    />
             </RelativeLayout>
         </RelativeLayout>
 
@@ -70,6 +70,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:text="@string/account_item_name_id"
                 android:textColor="@color/em_black_87"
                 />
@@ -78,15 +79,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="lzan13"
+                android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:maxWidth="180dp"
+                android:text="lz1"
                 android:textColor="@color/em_black_54"
                 />
         </RelativeLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/em_black_12"
             android:layout_marginLeft="@dimen/account_item_padding"
+            android:background="@color/em_black_12"
             />
         <RelativeLayout
             android:id="@+id/layout_nick_container"
@@ -100,35 +105,38 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:text="@string/account_item_name_nick"
                 android:textColor="@color/em_black_87"
-                android:layout_centerVertical="true"
                 />
             <TextView
                 android:id="@+id/text_user_nick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/em_black_54"
-                android:layout_marginRight="2dp"
-                android:layout_marginLeft="5dp"
-                android:layout_toLeftOf="@+id/img_right_arrow"
-                android:text="sdfsdf"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="2dp"
+                android:layout_toLeftOf="@+id/img_right_arrow"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:maxWidth="180dp"
+                android:text="dd"
+                android:textColor="@color/em_black_54"
                 />
             <ImageView
                 android:id="@+id/img_right_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/cell_chevron_right"
                 android:layout_centerVertical="true"
+                android:src="@drawable/cell_chevron_right"
                 />
         </RelativeLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/em_black_12"
             android:layout_marginLeft="@dimen/account_item_padding"
+            android:background="@color/em_black_12"
             />
         <RelativeLayout
             android:layout_width="match_parent"
@@ -148,8 +156,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/em_black_12"
             android:layout_marginLeft="@dimen/account_item_padding"
+            android:background="@color/em_black_12"
             />
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
