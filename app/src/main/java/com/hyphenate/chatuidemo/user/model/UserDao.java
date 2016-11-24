@@ -4,8 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
-import com.hyphenate.util.HanziToPinyin;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,24 +101,6 @@ public class UserDao {
                     UserEntity user = new UserEntity(userId);
                     user.setNickname(nick);
                     user.setAvatar(avatar);
-                    String headerName;
-                    if (!TextUtils.isEmpty(user.getNickname())) {
-                        headerName = user.getNickname();
-                    } else {
-                        headerName = user.getUsername();
-                    }
-
-                    if (Character.isDigit(headerName.charAt(0))) {
-                        user.setInitialLetter("#");
-                    } else {
-                        user.setInitialLetter(HanziToPinyin.getInstance()
-                                .get(headerName.substring(0, 1))
-                                .get(0).target.substring(0, 1).toUpperCase());
-                        char header = user.getInitialLetter().toLowerCase().charAt(0);
-                        if (header < 'a' || header > 'z') {
-                            user.setInitialLetter("#");
-                        }
-                    }
                     users.put(userId, user);
                 }
                 cursor.close();
