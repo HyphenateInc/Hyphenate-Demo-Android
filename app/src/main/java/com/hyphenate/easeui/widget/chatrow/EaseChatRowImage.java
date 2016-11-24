@@ -29,8 +29,7 @@ public class EaseChatRowImage extends EaseChatRowFile{
     protected EMImageMessageBody imgBody;
 
 
-    protected static final int THUMBNAIL_WIDTH = 160;
-    protected static final int THUMBNAIL_HEIGHT = 160;
+    protected static final int THUMBNAIL_SIZE = 180;
 
     protected int toScaleMaxSize = 110;
     protected int toScaleMinSize = 50;
@@ -116,25 +115,30 @@ public class EaseChatRowImage extends EaseChatRowFile{
         imageView.setImageResource(R.drawable.ease_default_image);
 
         String filePath = imgBody.getLocalUrl();
+        String thumbnailPath = EaseImageUtils.getThumbnailImagePath(filePath);
         if(message.direct() == EMMessage.Direct.RECEIVE){
             filePath = imgBody.thumbnailLocalPath();
+            thumbnailPath = filePath;
         }
 
         // first check if the thumbnail image already loaded into cache
-        Bitmap bitmap = EaseImageCache.getInstance().get(filePath);
+        Bitmap bitmap = EaseImageCache.getInstance().get(thumbnailPath);
         if (bitmap != null) {
             scaleImageView(bitmap, imageView);
             // thumbnail image is already loaded, reuse the drawable
             imageView.setImageBitmap(bitmap);
         } else {
             final String finalFilePath = filePath;
+            final String finalThumbnailPath = thumbnailPath;
             new AsyncTask<Object, Void, Bitmap>() {
 
                 @Override
                 protected Bitmap doInBackground(Object... args) {
-                    File file = new File(finalFilePath);
+                    File file = new File(finalThumbnailPath);
                     if (file.exists()) {
-                        return EaseImageUtils.decodeScaleImage(finalFilePath, toScaleMaxSize, toScaleMaxSize);
+                        return EaseImageUtils.decodeScaleImage(finalThumbnailPath, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+                    } else if (new File(finalFilePath).exists()) {
+                        return EaseImageUtils.decodeScaleImage(finalFilePath, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
                     }
                     return null;
 
@@ -145,7 +149,7 @@ public class EaseChatRowImage extends EaseChatRowFile{
                         scaleImageView(bmp, imageView);
                         //set bitmap to scaled image view
                         imageView.setImageBitmap(bmp);
-                        EaseImageCache.getInstance().put(finalFilePath, bmp);
+                        EaseImageCache.getInstance().put(finalThumbnailPath, bmp);
                     } else {
                         if (message.status() == EMMessage.Status.FAIL) {
                             if (EaseCommonUtils.isNetWorkConnected(context)) {
@@ -203,7 +207,8 @@ public class EaseChatRowImage extends EaseChatRowFile{
         if(lp.width != scaledWidth || lp.height != scaledHeight) {
             lp.width = scaledWidth;
             lp.height = scaledHeight;
-            imageView.setLayoutParams(lp);
+            //imageView.setLayoutParams(lp);
+            onUpdateView();
         }
     }
 }

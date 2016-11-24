@@ -17,6 +17,7 @@ import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.widget.chatrow.EaseChatRowVoicePlayClickListener;
 
 /**
  * Created by lzan13 on 2016/10/13.
@@ -60,6 +61,9 @@ public class CallActivity extends BaseActivity {
                 | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
+        if(EaseChatRowVoicePlayClickListener.currentPlayListener != null && EaseChatRowVoicePlayClickListener.isPlaying){
+            EaseChatRowVoicePlayClickListener.currentPlayListener.stopPlayVoice();
+        }
     }
 
     /**
