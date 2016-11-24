@@ -1,20 +1,15 @@
 package com.hyphenate.chatuidemo.group;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.chat.EMClient;
@@ -37,10 +32,8 @@ public class GroupListActivity extends BaseActivity {
     LinearLayoutManager manager;
     GroupListAdapter adapter;
     List<EMGroup> groupList = new ArrayList<>();
-    private ProgressDialog progressDialog;
     static Toolbar toolbar;
     static MenuItem item;
-    boolean isDelete;
     static SearchView searchView;
 
     private DefaultGroupChangeListener listener;
@@ -60,45 +53,7 @@ public class GroupListActivity extends BaseActivity {
         toolbar = getActionBarToolbar();
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override public boolean onMenuItemClick(MenuItem item) {
-                if (isDelete) {
-                    String content = getString(R.string.em_delete_group);
-
-                    new AlertDialog.Builder(GroupListActivity.this).setTitle(getString(R.string.em_group))
-                            .setMessage(content)
-                            .setPositiveButton(getString(R.string.em_ok), new DialogInterface.OnClickListener() {
-                                @Override public void onClick(DialogInterface dialog, int which) {
-                                    if (progressDialog == null) {
-                                        progressDialog = new ProgressDialog(GroupListActivity.this);
-                                        progressDialog.setMessage(getResources().getString(R.string.em_group));
-                                        progressDialog.setCanceledOnTouchOutside(false);
-                                    }
-
-                                    for (EMGroup group : adapter.selected) {
-                                        if (EMClient.getInstance().getCurrentUser().equals(group.getOwner())) {
-                                            deleteGroup(group);
-                                        } else {
-                                            leaveGroup(group);
-                                        }
-                                    }
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setNegativeButton(getString(R.string.em_cancel), new DialogInterface.OnClickListener() {
-                                @Override public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .show();
-                } else {
-
-                }
-                return true;
+                finish();
             }
         });
     }
@@ -122,7 +77,6 @@ public class GroupListActivity extends BaseActivity {
 
             @Override public void onItemLongClick(View view, final int position) {
 
-                isDelete = true;
             }
         });
     }
@@ -158,66 +112,6 @@ public class GroupListActivity extends BaseActivity {
         return true;
     }
 
-    private void leaveGroup(final EMGroup group) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    EMClient.getInstance().groupManager().leaveGroup(group.getGroupId());
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            groupList.remove(group);
-                            adapter.notifyDataSetChanged();
-                            progressDialog.dismiss();
-                            item.setIcon(R.drawable.em_ic_action_light_search);
-                            item.setActionView(searchView);
-                            toolbar.setTitle(getString(R.string.em_groups));
-                        }
-                    });
-                } catch (final Exception e) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                            item.setIcon(R.drawable.em_ic_action_light_search);
-                            toolbar.setTitle(getString(R.string.em_groups));
-                            item.setActionView(searchView);
-                            Toast.makeText(getApplicationContext(), "exit failure " + e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-            }
-        }).start();
-    }
-
-    private void deleteGroup(final EMGroup group) {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    EMClient.getInstance().groupManager().destroyGroup(group.getGroupId());
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            groupList.remove(group);
-                            adapter.notifyDataSetChanged();
-                            progressDialog.dismiss();
-                            item.setIcon(R.drawable.em_ic_action_light_search);
-                            item.setActionView(searchView);
-                            toolbar.setTitle(getString(R.string.em_groups));
-                        }
-                    });
-                } catch (final Exception e) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                            Toast.makeText(getApplicationContext(), "delete failure" + e.getMessage(), Toast.LENGTH_LONG).show();
-                            item.setIcon(R.drawable.em_ic_action_light_search);
-                            item.setActionView(searchView);
-                            toolbar.setTitle(getString(R.string.em_groups));
-                        }
-                    });
-                }
-            }
-        }).start();
-    }
-
     @Override protected void onResume() {
         super.onResume();
         if (adapter != null) {
@@ -231,20 +125,6 @@ public class GroupListActivity extends BaseActivity {
         super.onDestroy();
 
         EMClient.getInstance().groupManager().removeGroupChangeListener(listener);
-    }
-
-    @Override public void onBackPressed() {
-        if (adapter != null) {
-            if (adapter.selected != null && adapter.selected.size() != 0) {
-                adapter.notifyDataSetChanged();
-                item.setIcon(R.drawable.em_ic_action_light_search);
-                item.setActionView(searchView);
-                toolbar.setTitle(getString(R.string.em_groups));
-                adapter.selected.clear();
-            } else {
-                super.onBackPressed();
-            }
-        }
     }
 
     private void refresh() {
