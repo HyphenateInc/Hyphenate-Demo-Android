@@ -63,9 +63,9 @@ public class EaseChatRowVoicePlayClickListener implements View.OnClickListener {
 	public void stopPlayVoice() {
 		//voiceAnimation.stop();
 		if (message.direct() == EMMessage.Direct.RECEIVE) {
-			voiceIconView.setImageResource(R.drawable.ease_ic_voice_from_stopped);
+			voiceIconView.setImageResource(R.drawable.ease_ic_voice_received_stopped);
 		} else {
-			voiceIconView.setImageResource(R.drawable.ease_ic_voice_to_stopped);
+			voiceIconView.setImageResource(R.drawable.ease_ic_voice_sent_stopped);
 		}
 		// stop play voice
 		if (mediaPlayer != null) {
@@ -138,9 +138,9 @@ public class EaseChatRowVoicePlayClickListener implements View.OnClickListener {
 	private void showAnimation() {
 		// play voice, and start animation
 		if (message.direct() == EMMessage.Direct.RECEIVE) {
-			voiceIconView.setImageResource(R.drawable.ease_ic_voice_from_playing);
+			voiceIconView.setImageResource(R.drawable.ease_ic_voice_received_playing);
 		} else {
-			voiceIconView.setImageResource(R.drawable.ease_ic_voice_to_playing);
+			voiceIconView.setImageResource(R.drawable.ease_ic_voice_sent_playing);
 		}
 		//voiceAnimation = (AnimationDrawable) voiceIconView.getDrawable();
 		//voiceAnimation.start();
