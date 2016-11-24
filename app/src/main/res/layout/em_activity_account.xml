@@ -80,6 +80,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:maxWidth="180dp"
                 android:text="lz1"
                 android:textColor="@color/em_black_54"
@@ -115,8 +117,10 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="2dp"
                 android:layout_toLeftOf="@+id/img_right_arrow"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:maxWidth="180dp"
-                android:text="lz"
+                android:text="dd"
                 android:textColor="@color/em_black_54"
                 />
             <ImageView
