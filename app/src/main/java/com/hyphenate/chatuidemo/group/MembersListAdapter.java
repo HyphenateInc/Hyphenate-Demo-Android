@@ -78,7 +78,7 @@ public class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.
             if (RECYCLER_ORIENTATION == LinearLayoutManager.HORIZONTAL) {
                 holder.memberListView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
-                        if (position == 0) {
+                        if (isOpenInvite && position == 0) {
                             listener.onItemClick(v, position);
                         }
                     }

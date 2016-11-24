@@ -18,7 +18,6 @@ import android.widget.CompoundButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
@@ -48,7 +47,7 @@ public class InviteMembersActivity extends BaseActivity {
     static InviteMembersActivity instance;
     private Snackbar snackbar;
     private boolean isCreate;
-    private List<String> selectedMembers;
+    public List<String> selectedMembers;
     private String[] newMembers;
     private ProgressDialog progressDialog;
     String content, action;
@@ -193,7 +192,9 @@ public class InviteMembersActivity extends BaseActivity {
                     if (membersList != null && membersList.contains(userEntity.getUsername())) {
                         return;
                     }
-                    selectedMembers.add(userEntity.getUsername());
+                    if (!selectedMembers.contains(userEntity.getUsername())){
+                        selectedMembers.add(userEntity.getUsername());
+                    }
                 } else {
                     if (selectedMembers.contains(userEntity.getUsername())) {
                         selectedMembers.remove(userEntity.getUsername());

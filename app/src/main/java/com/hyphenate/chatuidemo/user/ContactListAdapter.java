@@ -82,16 +82,21 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
 
         if (showCheckBox) {
             //set checkbox listener
-            ((InviteMembersActivity)context).checkBoxListener(holder.checkBoxView,user);
+            ((InviteMembersActivity) context).checkBoxListener(holder.checkBoxView, user);
             holder.checkBoxView.setVisibility(View.VISIBLE);
+
             if (membersList != null && membersList.contains(user.getUsername())) {
                 holder.checkBoxView.setChecked(true);
                 holder.checkBoxView.setEnabled(false);
                 holder.checkBoxView.setClickable(false);
             } else {
-                holder.checkBoxView.setChecked(false);
-                holder.checkBoxView.setEnabled(true);
-                holder.checkBoxView.setClickable(true);
+                if (((InviteMembersActivity) context).selectedMembers.contains(user.getUsername())) {
+                    holder.checkBoxView.setChecked(true);
+                } else {
+                    holder.checkBoxView.setChecked(false);
+                    holder.checkBoxView.setEnabled(true);
+                    holder.checkBoxView.setClickable(true);
+                }
             }
         }
 
