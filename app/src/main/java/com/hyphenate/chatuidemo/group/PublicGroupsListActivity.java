@@ -39,7 +39,6 @@ public class PublicGroupsListActivity extends GroupListActivity {
         super.onCreate(savedInstanceState);
         toolbar.setTitle(R.string.em_public_group);
         loadAndShowData();
-
     }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,7 +78,7 @@ public class PublicGroupsListActivity extends GroupListActivity {
         progressDialog.setTitle(getString(R.string.em_load_public_group));
         progressDialog.setMessage(getString(R.string.em_waiting));
         progressDialog.setCanceledOnTouchOutside(false);
-        if (isFirstLoading){
+        if (isFirstLoading) {
             progressDialog.show();
         }
         new Thread(new Runnable() {
@@ -95,6 +94,11 @@ public class PublicGroupsListActivity extends GroupListActivity {
                             groups.addAll(returnGroups);
                             if (returnGroups.size() != 0) {
                                 cursor = result.getCursor();
+                                if (returnGroups.size() == pageSize){
+                                    if (adapter != null){
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }
                             }
 
                             progressDialog.dismiss();
@@ -113,6 +117,16 @@ public class PublicGroupsListActivity extends GroupListActivity {
                                                     EMGroup group = EMClient.getInstance()
                                                             .groupManager()
                                                             .getGroupFromServer(groups.get(position).getGroupId());
+
+                                                    if (group != null && EMClient.getInstance().groupManager().getAllGroups().contains(group)){
+                                                        runOnUiThread(new Runnable() {
+                                                            @Override public void run() {
+                                                                progressDialog.dismiss();
+                                                                Snackbar.make(recyclerView,"you have already joined this group",Snackbar.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                                        return;
+                                                    }
                                                     if (group != null) {
                                                         if (group.isMemberOnly()) {
                                                             EMClient.getInstance()
@@ -130,16 +144,16 @@ public class PublicGroupsListActivity extends GroupListActivity {
                                                             view.setClickable(false);
                                                             view.setEnabled(false);
                                                             ((Button) view).setTextColor(Color.parseColor("#8798a4"));
-                                                            Snackbar.make(recyclerView, "successful application,please waiting...",
+                                                            Snackbar.make(recyclerView, "successful application,please wait",
                                                                     Snackbar.LENGTH_SHORT).show();
                                                         }
                                                     });
-                                                } catch (HyphenateException e) {
+                                                } catch (final HyphenateException e) {
                                                     e.printStackTrace();
                                                     runOnUiThread(new Runnable() {
                                                         @Override public void run() {
                                                             progressDialog.dismiss();
-                                                            Snackbar.make(recyclerView, "join failure,please again", Snackbar.LENGTH_SHORT).show();
+                                                            Snackbar.make(recyclerView, "join failure,please again" + e.getMessage(), Snackbar.LENGTH_SHORT).show();
                                                         }
                                                     });
                                                 }
@@ -180,9 +194,6 @@ public class PublicGroupsListActivity extends GroupListActivity {
                     if (manager.getItemCount() != 0) {
                         int lasPos = manager.findLastVisibleItemPosition();
                         if (hasMoreData && !isLoading && lasPos == manager.getItemCount() - 1) {
-                            if (cursor != null) {
-                                adapter.notifyDataSetChanged();
-                            }
                             loadAndShowData();
                         }
                     }
