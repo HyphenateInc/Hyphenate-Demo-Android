@@ -147,7 +147,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
 
     @Override public int getItemViewType(int position) {
         if (isPublic) {
-            return publicGroupList.get(position) != null ? VIEW_ITEM : VIEW_PROGRESSBAR;
+            return getItemCount() != position + 1 ? VIEW_ITEM : VIEW_PROGRESSBAR;
         } else {
             return groupList.get(position) != null ? VIEW_ITEM : VIEW_PROGRESSBAR;
         }
