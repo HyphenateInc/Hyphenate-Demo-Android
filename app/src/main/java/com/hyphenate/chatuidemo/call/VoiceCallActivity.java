@@ -43,7 +43,6 @@ public class VoiceCallActivity extends CallActivity {
 
     private Timer mTimer;
 
-
     private LocalBroadcastManager localBroadcastManager;
     private CallBroadcastReceiver broadcastReceiver;
 
@@ -227,7 +226,9 @@ public class VoiceCallActivity extends CallActivity {
         vibrate();
         // Back home
         //        mActivity.moveTaskToBack(true);
-        mActivity.finish();
+        //mActivity.finish();
+        Toast.makeText(mActivity, "Voice call minimization is not currently supported",
+                Toast.LENGTH_LONG).show();
     }
 
     /**
