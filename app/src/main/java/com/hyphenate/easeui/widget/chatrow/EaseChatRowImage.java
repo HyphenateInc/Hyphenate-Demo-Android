@@ -68,21 +68,13 @@ public class EaseChatRowImage extends EaseChatRowFile{
             } else {
                 progressBar.setVisibility(View.GONE);
                 percentageView.setVisibility(View.GONE);
-                imageView.setImageResource(R.drawable.ease_default_image);
-                String thumbPath = imgBody.thumbnailLocalPath();
-                if (!new File(thumbPath).exists()) {
-                	// to make it compatible with thumbnail received in previous version
-                    thumbPath = EaseImageUtils.getThumbnailImagePath(imgBody.getLocalUrl());
-                }
-                showImageView(thumbPath, imageView, imgBody.getLocalUrl(), message);
+                showImageView();
             }
-            return;
+        } else {
+            showImageView();
+            handleSendMessage();
         }
-        
-        String filePath = imgBody.getLocalUrl();
-        String thumbPath = EaseImageUtils.getThumbnailImagePath(imgBody.getLocalUrl());
-        showImageView(thumbPath, imageView, filePath, message);
-        handleSendMessage();
+
     }
     
     @Override
@@ -120,41 +112,40 @@ public class EaseChatRowImage extends EaseChatRowFile{
      * load image into image view
      * 
      */
-    private boolean showImageView(final String thumbernailPath, final ImageView iv, final String localFullSizePath,final EMMessage message) {
+    private void showImageView() {
+        imageView.setImageResource(R.drawable.ease_default_image);
+
+        String filePath = imgBody.getLocalUrl();
+        if(message.direct() == EMMessage.Direct.RECEIVE){
+            filePath = imgBody.thumbnailLocalPath();
+        }
+
         // first check if the thumbnail image already loaded into cache
-        Bitmap bitmap = EaseImageCache.getInstance().get(thumbernailPath);
+        Bitmap bitmap = EaseImageCache.getInstance().get(filePath);
         if (bitmap != null) {
-            scaleImageView(bitmap, iv);
+            scaleImageView(bitmap, imageView);
             // thumbnail image is already loaded, reuse the drawable
-            iv.setImageBitmap(bitmap);
-            return true;
+            imageView.setImageBitmap(bitmap);
         } else {
+            final String finalFilePath = filePath;
             new AsyncTask<Object, Void, Bitmap>() {
 
                 @Override
                 protected Bitmap doInBackground(Object... args) {
-                    File file = new File(thumbernailPath);
+                    File file = new File(finalFilePath);
                     if (file.exists()) {
-                        return EaseImageUtils.decodeScaleImage(thumbernailPath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
-                    } else if (new File(imgBody.thumbnailLocalPath()).exists()) {
-                        return EaseImageUtils.decodeScaleImage(imgBody.thumbnailLocalPath(), THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
+                        return EaseImageUtils.decodeScaleImage(finalFilePath, toScaleMaxSize, toScaleMaxSize);
                     }
-                    else {
-                        if (message.direct() == EMMessage.Direct.SEND) {
-                            if (localFullSizePath != null && new File(localFullSizePath).exists()) {
-                                return EaseImageUtils.decodeScaleImage(localFullSizePath, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
-                            }
-                        }
-                        return null;
-                    }
+                    return null;
 
                 }
 
                 protected void onPostExecute(Bitmap bmp) {
                     if (bmp != null) {
-                        scaleImageView(bmp, iv);
-                        iv.setImageBitmap(bmp);
-                        EaseImageCache.getInstance().put(thumbernailPath, bmp);
+                        scaleImageView(bmp, imageView);
+                        //set bitmap to scaled image view
+                        imageView.setImageBitmap(bmp);
+                        EaseImageCache.getInstance().put(finalFilePath, bmp);
                     } else {
                         if (message.status() == EMMessage.Status.FAIL) {
                             if (EaseCommonUtils.isNetWorkConnected(context)) {
@@ -172,7 +163,6 @@ public class EaseChatRowImage extends EaseChatRowFile{
                 }
             }.execute();
 
-            return true;
         }
     }
 
@@ -194,31 +184,26 @@ public class EaseChatRowImage extends EaseChatRowFile{
                     /bmpWidth : (float) toScaleMaxSize /bmpHeight;
             int scaledWidth = (int) (bmpWidth * scale);
             int scaledHeight = (int) (bmpHeight * scale);
-            if(lp.width != scaledWidth || lp.height != scaledHeight) {
-                lp.width = scaledWidth;
-                lp.height = scaledHeight;
-                //avoid request layout twice
-                //imageView.setLayoutParams(lp);
-            }
+            setLayoutParams(imageView, lp, scaledWidth, scaledHeight);
         } else {
             if (originWidth < toScaleMinSize || originHeight < toScaleMinSize) {
                 float scale = originWidth < originHeight ? (float) toScaleMinSize
                         /bmpWidth : (float) toScaleMinSize /bmpHeight;
                 int scaledWidth = (int) (bmpWidth * scale);
                 int scaledHeight = (int) (bmpHeight * scale);
-                if(lp.width != scaledWidth || lp.height != scaledHeight) {
-                    lp.width = scaledWidth;
-                    lp.height = scaledHeight;
-                }
+                setLayoutParams(imageView, lp, scaledWidth, scaledHeight);
             }else{
-                if (lp.width != bmpWidth || lp.height != bmpHeight) {
-                    lp.width = bmpWidth;
-                    lp.height = bmpHeight;
-                }
+                setLayoutParams(imageView, lp, bmpWidth, bmpHeight);
             }
-
         }
     }
 
-
+    private void setLayoutParams(ImageView imageView, ViewGroup.LayoutParams lp, int scaledWidth,
+            int scaledHeight) {
+        if(lp.width != scaledWidth || lp.height != scaledHeight) {
+            lp.width = scaledWidth;
+            lp.height = scaledHeight;
+            imageView.setLayoutParams(lp);
+        }
+    }
 }
