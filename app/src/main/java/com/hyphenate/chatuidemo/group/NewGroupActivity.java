@@ -13,8 +13,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -53,7 +51,6 @@ public class NewGroupActivity extends BaseActivity {
 
     LinearLayoutManager manager;
     private List<String> newMembers;
-    private boolean freely;
     private Button button;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,10 +86,9 @@ public class NewGroupActivity extends BaseActivity {
             @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     inviteTextView.setText(getString(R.string.em_freely));
-                    freely = false;
                 } else {
                     inviteTextView.setText(getString(R.string.em_allow));
-                    freely = true;
+                    inviteSwitch.setChecked(false);
                 }
             }
         });
@@ -118,8 +114,8 @@ public class NewGroupActivity extends BaseActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 if (!TextUtils.isEmpty(groupNameView.getText().toString())) {
-                    final ProgressDialog progressDialog = ProgressDialog.show(NewGroupActivity.this, getString(R.string.em_creating),
-                            getString(R.string.em_waiting), false);
+                    final ProgressDialog progressDialog =
+                            ProgressDialog.show(NewGroupActivity.this, getString(R.string.em_creating), getString(R.string.em_waiting), false);
 
                     new Thread(new Runnable() {
                         @Override public void run() {
@@ -127,7 +123,7 @@ public class NewGroupActivity extends BaseActivity {
                             EMGroupManager.EMGroupOptions options = new EMGroupManager.EMGroupOptions();
                             options.maxUsers = 200;
                             if (groupTypeSwitch.isChecked()) {
-                                if (freely) {
+                                if (inviteSwitch.isChecked()) {
                                     options.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicOpenJoin;
                                 } else {
                                     options.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicJoinNeedApproval;
@@ -144,7 +140,7 @@ public class NewGroupActivity extends BaseActivity {
                                 runOnUiThread(new Runnable() {
                                     public void run() {
                                         progressDialog.dismiss();
-                                        if (InviteMembersActivity.instance != null){
+                                        if (InviteMembersActivity.instance != null) {
                                             InviteMembersActivity.instance.finish();
                                         }
                                         finish();
@@ -194,11 +190,10 @@ public class NewGroupActivity extends BaseActivity {
                 if (groupTypeSwitch.isChecked()) {
                     groupTypeSwitch.setChecked(false);
                     inviteTextView.setText(getString(R.string.em_allow));
-                    freely = false;
+                    inviteSwitch.setChecked(false);
                 } else {
                     groupTypeSwitch.setChecked(true);
                     inviteTextView.setText(getString(R.string.em_freely));
-                    freely = true;
                 }
                 break;
         }
