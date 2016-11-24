@@ -124,7 +124,6 @@ public class DemoHelper {
         options.setRequireAck(true);
         // set if need delivery ack
         options.setRequireDeliveryAck(false);
-
         // set auto accept group invitation
         SharedPreferences preferences =
                 android.preference.PreferenceManager.getDefaultSharedPreferences(mContext);

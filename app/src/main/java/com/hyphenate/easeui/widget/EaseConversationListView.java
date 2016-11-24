@@ -30,6 +30,8 @@ public class EaseConversationListView extends RecyclerView {
     protected List<EMConversation> mConversationList;
     protected EaseConversationListAdapter mAdapter;
 
+    protected List<String> mHiddenList;
+
     public EaseConversationListView(Context context) {
         this(context, null);
     }
@@ -147,7 +149,7 @@ public class EaseConversationListView extends RecyclerView {
         Iterator iterator = mConversationList.iterator();
         while (iterator.hasNext()){
             EMConversation conversation = (EMConversation) iterator.next();
-            if(conversation.getAllMessages().size() == 0){
+            if(conversation.getAllMessages().size() == 0 || (mHiddenList != null && mHiddenList.contains(conversation.getUserName()))){
                 //remove the conversation which messages size == 0
                 iterator.remove();
             }
@@ -176,6 +178,14 @@ public class EaseConversationListView extends RecyclerView {
             }
         }
         return list;
+    }
+
+    /**
+     * set a list you want not to show in conversation list
+     * @param hiddenList
+     */
+    public void setHiddenList(List<String> hiddenList){
+        mHiddenList = hiddenList;
     }
 
 }

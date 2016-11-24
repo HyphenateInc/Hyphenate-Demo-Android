@@ -1,34 +1,34 @@
 buildscript {
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
+//    dependencies {
+//        classpath 'io.fabric.tools:gradle:1.+'
+//    }
 
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
+//    repositories {
+//        maven { url 'https://maven.fabric.io/public' }
+//    }
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'io.fabric'
+//apply plugin: 'io.fabric'
 
 repositories {
     flatDir {
         dirs 'libs'
     }
-    maven { url 'https://maven.fabric.io/public' }
+//    maven { url 'https://maven.fabric.io/public' }
 }
 
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "23.0.2"
     //use legacy for for android 6.0
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.hyphenate.chatuidemo"
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion 22
         versionCode 39
         versionName '3.2.6'
         multiDexEnabled true
@@ -48,16 +48,16 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     // Design support already included v4 and appcompat-v7, So here on the introduction of 'design'
     compile 'com.android.support:design:24.2.1'
-    compile 'org.greenrobot:eventbus:3.0.0'
+
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.google.android.gms:play-services-gcm:9.4.0'
     compile 'com.google.android.gms:play-services-places:9.4.0'
     compile 'com.google.android.gms:play-services-maps:9.4.0'
     compile 'com.parse:parse-android:1.13.1'
     compile 'com.hyphenate:hyphenate-sdk:3.2.1'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
-        transitive = true;
-    }
+//    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+//        transitive = true;
+//    }
 }
 
 apply plugin: 'com.google.gms.google-services'

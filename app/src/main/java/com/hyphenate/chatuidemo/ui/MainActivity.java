@@ -350,6 +350,7 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
     /**
      * refresh the contacts view
      */
@@ -371,7 +372,6 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
-
 
     //private boolean isConflict;
     private boolean isConflictDialogShow;
@@ -482,6 +482,11 @@ public class MainActivity extends BaseActivity {
             refreshApply();
             refreshContacts();
             refreshConversation();
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    updateUnreadMsgLabel();
+                }
+            });
         }
     }
 
