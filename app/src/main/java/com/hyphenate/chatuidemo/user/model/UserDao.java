@@ -98,13 +98,12 @@ public class UserDao {
                 while (cursor.moveToNext()) {
                     String userId = cursor.getString(cursor.getColumnIndex(UserDao.COLUMN_NAME_ID));
                     String nick = cursor.getString(cursor.getColumnIndex(UserDao.COLUMN_NAME_NICK));
-                    String avatar =
-                            cursor.getString(cursor.getColumnIndex(UserDao.COLUMN_NAME_AVATAR));
+                    String avatar = cursor.getString(cursor.getColumnIndex(UserDao.COLUMN_NAME_AVATAR));
                     UserEntity user = new UserEntity(userId);
                     user.setNickname(nick);
                     user.setAvatar(avatar);
                     String headerName;
-                    if (!TextUtils.isEmpty(user.getNickname())) {
+                    if (!TextUtils.isEmpty(user.getNickname().trim())) {
                         headerName = user.getNickname();
                     } else {
                         headerName = user.getUsername();
@@ -113,9 +112,8 @@ public class UserDao {
                     if (Character.isDigit(headerName.charAt(0))) {
                         user.setInitialLetter("#");
                     } else {
-                        user.setInitialLetter(HanziToPinyin.getInstance()
-                                .get(headerName.substring(0, 1))
-                                .get(0).target.substring(0, 1).toUpperCase());
+                        user.setInitialLetter(
+                                HanziToPinyin.getInstance().get(headerName.substring(0, 1)).get(0).target.substring(0, 1).toUpperCase());
                         char header = user.getInitialLetter().toLowerCase().charAt(0);
                         if (header < 'a' || header > 'z') {
                             user.setInitialLetter("#");
