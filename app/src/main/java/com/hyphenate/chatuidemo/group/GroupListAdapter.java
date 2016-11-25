@@ -16,7 +16,6 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupInfo;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -106,7 +105,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
 
     @Override public int getItemViewType(int position) {
         if (isPublic) {
-            return getItemCount() != position + 1 ? VIEW_ITEM : VIEW_PROGRESSBAR;
+            return publicGroupList.get(position) != null ? VIEW_ITEM : VIEW_PROGRESSBAR;
         } else {
             return groupList.get(position) != null ? VIEW_ITEM : VIEW_PROGRESSBAR;
         }
