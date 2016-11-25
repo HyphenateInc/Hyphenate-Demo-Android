@@ -29,6 +29,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
             message.setAttribute(Constant.MESSAGE_ATTR_STATUS, "");
             message.setMsgTime(System.currentTimeMillis());
             message.setLocalTime(message.getMsgTime());
+            message.setUnread(true);
             // update message
             EMClient.getInstance().chatManager().updateMessage(message);
         } else {
@@ -65,6 +66,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
             message.setAttribute(Constant.MESSAGE_ATTR_STATUS, "");
             message.setMsgTime(System.currentTimeMillis());
             message.setLocalTime(message.getMsgTime());
+            message.setUnread(true);
             // update message
             EMClient.getInstance().chatManager().updateMessage(message);
         } else {
@@ -101,6 +103,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
             message.setAttribute(Constant.MESSAGE_ATTR_STATUS, s2 + "Agreed");
             message.setMsgTime(System.currentTimeMillis());
             message.setLocalTime(message.getMsgTime());
+            message.setUnread(true);
             // update message
             EMClient.getInstance().chatManager().updateMessage(message);
         } else {
@@ -137,6 +140,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
             message.setAttribute(Constant.MESSAGE_ATTR_STATUS, s2 + " Declined");
             message.setMsgTime(System.currentTimeMillis());
             message.setLocalTime(message.getMsgTime());
+            message.setUnread(true);
             // update message
             EMClient.getInstance().chatManager().updateMessage(message);
         } else {
@@ -174,6 +178,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
             message.setAttribute(Constant.MESSAGE_ATTR_STATUS, s1 + " Accepted");
             message.setMsgTime(System.currentTimeMillis());
             message.setLocalTime(message.getMsgTime());
+            message.setUnread(true);
             // update message
             EMClient.getInstance().chatManager().updateMessage(message);
         } else {
@@ -209,6 +214,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
             message.setAttribute(Constant.MESSAGE_ATTR_STATUS, s1 + " Declined");
             message.setMsgTime(System.currentTimeMillis());
             message.setLocalTime(message.getMsgTime());
+            message.setUnread(true);
             // update message
             EMClient.getInstance().chatManager().updateMessage(message);
         } else {

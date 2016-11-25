@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,7 @@ public class GroupDetailsActivity extends BaseActivity {
     @BindView(R.id.text_appear_in_group_search) TextView groupTypeView;
     @BindView(R.id.switch_push_notification) Switch notificationSwitch;
     @BindView(R.id.txt_group_id) TextView groupIdView;
+    @BindView(R.id.layout_member_list) RelativeLayout layoutMemberView;
 
     LinearLayoutManager layoutManager;
     List<String> members = new ArrayList<>();
@@ -153,9 +155,15 @@ public class GroupDetailsActivity extends BaseActivity {
         adapter.setItemClickListener(new EaseListItemClickListener() {
 
             @Override public void onItemClick(View view, int position) {
-                startActivityForResult(new Intent(GroupDetailsActivity.this, InviteMembersActivity.class).putExtra("groupId", groupId)
-                        .putExtra("isOwner", isOwner)
-                        .putStringArrayListExtra("members", (ArrayList<String>) members), REQUEST_CODE_MEMBER_REFRESH);
+                if ((group.getOwner().equals(EMClient.getInstance().getCurrentUser()) || group.isMemberAllowToInvite()) && position == 0) {
+                    startActivityForResult(new Intent(GroupDetailsActivity.this, InviteMembersActivity.class).putExtra("groupId", groupId)
+                            .putExtra("isOwner", isOwner)
+                            .putStringArrayListExtra("members", (ArrayList<String>) members), REQUEST_CODE_MEMBER_REFRESH);
+                } else {
+                    startActivityForResult(new Intent(GroupDetailsActivity.this, MembersListActivity.class).putExtra("isOwner", isOwner)
+                            .putExtra("groupId", groupId)
+                            .putStringArrayListExtra("members", (ArrayList<String>) members), REQUEST_CODE_MEMBER_REFRESH);
+                }
             }
 
             @Override public void onItemLongClick(View view, int position) {

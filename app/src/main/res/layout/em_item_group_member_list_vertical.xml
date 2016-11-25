@@ -29,6 +29,8 @@
         android:layout_marginLeft="17.5dp"
         android:textColor="@color/group_name_color"
         android:textSize="@dimen/group_name_size"
+        android:ellipsize="end"
+        android:maxLines="1"
         />
 
   </LinearLayout>
