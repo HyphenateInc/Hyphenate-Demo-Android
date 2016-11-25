@@ -30,8 +30,6 @@ public class GroupListAdapter extends RecyclerView.Adapter {
     private List<EMGroupInfo> publicGroupList; // the public groups info set
     private EaseListItemClickListener listener; //rewrite click and long click listener
     private boolean isPublic; // true is public group otherwise false
-    private boolean isLongClickable; // true is set long click otherwise false
-    List<EMGroup> selected;//selected groups set,when you press long click event
 
     private static final int VIEW_ITEM = 0;
     private static final int VIEW_PROGRESSBAR = 1;
@@ -80,7 +78,6 @@ public class GroupListAdapter extends RecyclerView.Adapter {
             } else {
                 ((ViewHolder) holder).groupItem.setBackgroundResource(0);
                 ((ViewHolder) holder).guideArrowView.setImageResource(R.drawable.cell_chevron_right);
-                isLongClickable = false;
 
                 EMGroup group = groupList.get(position);
                 ((ViewHolder) holder).nameView.setText(group.getGroupName());
@@ -97,45 +94,7 @@ public class GroupListAdapter extends RecyclerView.Adapter {
                     ((ViewHolder) holder).groupItem.setOnClickListener(new View.OnClickListener() {
                         @Override public void onClick(View v) {
 
-                            if (isLongClickable) {
-                                if (selected.contains(groupList.get(position))) {
-                                    ((ViewHolder) holder).groupItem.setBackgroundResource(0);
-                                    ((ViewHolder) holder).guideArrowView.setImageResource(R.drawable.cell_chevron_right);
-                                    selected.remove(groupList.get(position));
-                                    GroupListActivity.toolbar.setTitle(
-                                            context.getResources().getString(R.string.em_delete) + "(" + selected.size() + ")");
-                                    if (selected != null && selected.size() == 0) {
-                                        isLongClickable = false;
-                                        GroupListActivity.item.setActionView(LayoutInflater.from(context).inflate(R.layout.em_search_view, null));
-                                        GroupListActivity.item.setIcon(R.drawable.em_ic_action_light_search);
-                                        GroupListActivity.toolbar.setTitle(context.getResources().getString(R.string.em_groups));
-                                    }
-                                } else {
-                                    ((ViewHolder) holder).groupItem.setBackgroundResource(R.color.em_gray);
-                                    ((ViewHolder) holder).guideArrowView.setImageResource(R.drawable.cell_check);
-                                    selected.add(groupList.get(position));
-                                    GroupListActivity.toolbar.setTitle(
-                                            context.getResources().getString(R.string.em_delete) + "(" + selected.size() + ")");
-                                }
-                            } else {
-                                listener.onItemClick(v, position);
-                            }
-                        }
-                    });
-
-                    ((ViewHolder) holder).groupItem.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override public boolean onLongClick(View v) {
-                            selected = new ArrayList<>();
-                            ((ViewHolder) holder).groupItem.setBackgroundResource(R.color.em_gray);
-                            ((ViewHolder) holder).guideArrowView.setImageResource(R.drawable.cell_check);
-                            isLongClickable = true;
-                            selected.add(groupList.get(position));
-                            GroupListActivity.item.setActionView(null);
-                            GroupListActivity.item.setIcon(R.drawable.delete);
-                            GroupListActivity.toolbar.setTitle(context.getResources().getString(R.string.em_delete) + "(" + selected.size() + ")");
-                            listener.onItemLongClick(v, position);
-
-                            return true;
+                            listener.onItemClick(v, position);
                         }
                     });
                 }

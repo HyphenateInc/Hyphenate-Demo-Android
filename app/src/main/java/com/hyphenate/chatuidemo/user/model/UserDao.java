@@ -96,8 +96,7 @@ public class UserDao {
                 while (cursor.moveToNext()) {
                     String userId = cursor.getString(cursor.getColumnIndex(UserDao.COLUMN_NAME_ID));
                     String nick = cursor.getString(cursor.getColumnIndex(UserDao.COLUMN_NAME_NICK));
-                    String avatar =
-                            cursor.getString(cursor.getColumnIndex(UserDao.COLUMN_NAME_AVATAR));
+                    String avatar = cursor.getString(cursor.getColumnIndex(UserDao.COLUMN_NAME_AVATAR));
                     UserEntity user = new UserEntity(userId);
                     user.setNickname(nick);
                     user.setAvatar(avatar);
