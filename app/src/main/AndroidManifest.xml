@@ -204,6 +204,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAzTPKEIuWRgCtcn6NJeHqOPXcbG6YWM-4"/>
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="33bb2bc04d2ed7f91da02025c362279e3406ed81" />
     </application>
 
 </manifest>
