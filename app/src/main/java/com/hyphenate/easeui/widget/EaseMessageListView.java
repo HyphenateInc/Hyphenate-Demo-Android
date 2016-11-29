@@ -29,8 +29,6 @@ public class EaseMessageListView extends ListView {
     protected int chatType;
     protected String toChatUsername;
     protected EaseMessageListAdapter messageAdapter;
-    protected boolean showUserNick;
-    protected boolean showAvatar;
     protected Drawable myBubbleBg;
     protected Drawable otherBuddleBg;
 
@@ -131,11 +129,11 @@ public class EaseMessageListView extends ListView {
     }
 
     public void setShowUserNick(boolean showUserNick){
-        this.showUserNick = showUserNick;
+        itemStyle.setShowUserNick(showUserNick);
     }
 
     public boolean isShowUserNick(){
-        return showUserNick;
+        return itemStyle.isShowUserNick();
     }
 
     public interface MessageListItemClicksListener {
