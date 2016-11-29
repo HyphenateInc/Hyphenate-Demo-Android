@@ -30,8 +30,8 @@ android {
         applicationId "com.hyphenate.chatuidemo"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 204
-        versionName '3.2.7'
+        versionCode 2004
+        versionName '3.2.8'
         multiDexEnabled true
     }
     buildTypes {
