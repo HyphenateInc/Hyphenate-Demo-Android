@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+  <RelativeLayout
+      android:id="@+id/layout_group_list"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/group_item_height"
+      android:background="?android:attr/selectableItemBackground"
+      android:paddingLeft="@dimen/group_item_padding"
+      android:paddingRight="@dimen/group_item_padding"
+      >
+    <ImageView
+        android:id="@+id/img_group_avatar"
+        android:layout_width="@dimen/group_item_avatar_size"
+        android:layout_height="@dimen/group_item_avatar_size"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ease_ic_group_default"
+        />
+    <TextView
+        android:id="@+id/text_group_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/group_name_margin_left"
+        android:layout_toRightOf="@id/img_group_avatar"
+        android:textColor="@color/group_name_color"
+        android:textSize="@dimen/group_name_size"
+        />
+
+    <ImageView
+        android:id="@+id/img_guide_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/cell_chevron_right"
+        />
+
+    <Button
+        android:id="@+id/btn_group_join"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@color/colorAccent"
+        android:text="@string/em_join"
+        android:textColor="@color/colorTextPrimary"
+        android:visibility="gone"
+        />
+  </RelativeLayout>
+
+</LinearLayout>

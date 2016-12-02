@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/dark_background"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="false"
+    tools:context=".call.VoiceCallActivity"
+    >
+
+    <!--call background-->
+    <ImageView
+        android:id="@+id/img_call_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="true"
+        android:fitsSystemWindows="true"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/call_layout_margin"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                >
+                <!--Call status-->
+                <TextView
+                    android:id="@+id/text_call_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textColor="@color/em_white_87"
+                    />
+                <com.hyphenate.chatuidemo.ui.widget.MyChronometer
+                    android:id="@+id/chronometer_call_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/em_white_87"
+                    />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+            <!--Avatar-->
+            <com.hyphenate.easeui.widget.EaseImageView
+                android:id="@+id/img_call_avatar"
+                android:layout_width="@dimen/call_avatar_size"
+                android:layout_height="@dimen/call_avatar_size"
+                android:src="@drawable/ease_default_avatar"
+                app:imgShapeType="round"
+                />
+            <!--Name-->
+            <TextView
+                android:id="@+id/text_call_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/em_white_87"
+                android:textSize="@dimen/call_name_size"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_calling"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/call_layout_margin"
+                android:orientation="horizontal"
+                >
+
+                <!--Speaker-->
+                <ImageButton
+                    android:id="@+id/btn_speaker_switch"
+                    android:layout_width="@dimen/call_switch_width"
+                    android:layout_height="@dimen/call_switch_height"
+                    android:background="@drawable/em_btn_rectangle_white"
+                    android:src="@drawable/em_checkbox_speaker"
+                    />
+
+                <!--Microphone-->
+                <ImageButton
+                    android:id="@+id/btn_mic_switch"
+                    android:layout_width="@dimen/call_switch_width"
+                    android:layout_height="@dimen/call_switch_height"
+                    android:background="@drawable/em_btn_rectangle_white"
+                    android:src="@drawable/em_checkbox_mic"
+                    />
+
+                <!--Exit full screen-->
+                <ImageButton
+                    android:id="@+id/btn_exit_full_screen"
+                    android:layout_width="@dimen/call_switch_width"
+                    android:layout_height="@dimen/call_switch_height"
+                    android:background="@drawable/em_btn_rectangle_white"
+                    android:src="@drawable/em_ic_fullscreen_exit_white_24dp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <!--Reject call-->
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_reject_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/call_btn_margin"
+                    android:src="@drawable/em_ic_call_end_white_24dp"
+                    app:backgroundTint="@color/em_red_87"
+                    app:fabSize="normal"
+                    />
+
+                <!--End call-->
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_end_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/call_btn_margin"
+                    android:src="@drawable/em_ic_call_end_white_24dp"
+                    android:visibility="gone"
+                    app:backgroundTint="@color/em_red_87"
+                    app:fabSize="normal"
+                    />
+
+                <!--Answer call-->
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_answer_call"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="@dimen/call_btn_margin"
+                    android:src="@drawable/em_ic_call_white_24dp"
+                    app:backgroundTint="@color/em_green_87"
+                    app:fabSize="normal"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

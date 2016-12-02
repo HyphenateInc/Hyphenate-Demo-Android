@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+  <LinearLayout
+      android:id="@+id/layout_member_list"
+      android:layout_width="match_parent"
+      android:layout_height="60dp"
+      android:orientation="horizontal"
+      android:gravity="center_vertical"
+      android:background="?android:attr/selectableItemBackground"
+      >
+
+    <com.hyphenate.easeui.widget.EaseImageView
+        android:id="@+id/img_member_avatar"
+        android:layout_width="@dimen/group_item_avatar_size"
+        android:layout_height="@dimen/group_item_avatar_size"
+        android:src="@drawable/ease_default_avatar"
+        android:layout_marginLeft="16dp"
+        />
+
+    <TextView
+        android:id="@+id/text_member_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="17.5dp"
+        android:textColor="@color/group_name_color"
+        android:textSize="@dimen/group_name_size"
+        android:ellipsize="end"
+        android:maxLines="1"
+        />
+
+  </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="EaseImageView">
+        <attr format="color" name="imgBorderColor"/>
+        <attr format="dimension" name="imgBorderWidth"/>
+        <attr format="integer" name="imgPressAlpha"/>
+        <attr format="color" name="imgPressColor"/>
+        <attr format="dimension" name="imgRadius"/>
+        <attr format="enum" name="imgShapeType">
+            <enum name="none" value="0"/>
+            <enum name="round" value="1"/>
+            <enum name="rectangle" value="2"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="EaseMessageListView">
+        <attr format="reference" name="msgListMyBubbleBackground"/>
+        <attr format="reference" name="msgListOtherBubbleBackground"/>
+        <attr format="boolean" name="msgListShowUserAvatar"/>
+        <attr format="boolean" name="msgListShowUserNick"/>
+    </declare-styleable>
+
+</resources>

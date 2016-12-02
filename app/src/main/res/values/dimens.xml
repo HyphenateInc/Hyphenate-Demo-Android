@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--contact-->
+    <dimen name="header_size">20.5sp</dimen>
+    <dimen name="contact_name_size">16sp</dimen>
+    <dimen name="contact_item_height">60dp</dimen>
+    <dimen name="contact_avatar_size">39.5dp</dimen>
+    <dimen name="contact_avatar_margin_left">43dp</dimen>
+    <dimen name="contact_name_margin_left">17.5dp</dimen>
+    <dimen name="contact_dialog_width">280dp</dimen>
+    <dimen name="contact_dialog_height">218dp</dimen>
+    <dimen name="contact_dialog_avatar_size">79dp</dimen>
+    <dimen name="contact_dialog_txt_margin_top">20dp</dimen>
+    <dimen name="contact_dialog_base_line_height">1.5dp</dimen>
+    <dimen name="contact_dialog_icon_size">20dp</dimen>
+    <dimen name="contact_search_margin">16dp</dimen>
+    <dimen name="contact_search_padding_horizontal">16dp</dimen>
+    <dimen name="contact_search_padding_vertical">8dp</dimen>
+    <dimen name="contact_search_input_height">48dp</dimen>
+
+    <!--group-->
+    <dimen name="group_icon_padding_left">7dp</dimen>
+    <dimen name="group_text_margin_left">8.5dp</dimen>
+    <dimen name="group_text_size">14sp</dimen>
+    <dimen name="group_arrow_right_icon">16dp</dimen>
+
+    <dimen name="base_line_height">1dp</dimen>
+    <dimen name="base_line_margin_left">72.5dp</dimen>
+    <dimen name="group_item_height">73dp</dimen>
+    <dimen name="group_item_avatar_size">39.5dp</dimen>
+    <dimen name="group_item_padding">16dp</dimen>
+    <dimen name="group_name_margin_left">17.5dp</dimen>
+    <dimen name="group_name_size">16sp</dimen>
+    <dimen name="group_details_item_height">70dp</dimen>
+    <dimen name="group_details_name_size">24sp</dimen>
+
+
+    <!--call-->
+    <dimen name="call_name_size">18sp</dimen>
+    <dimen name="call_info_size">14sp</dimen>
+
+    <dimen name="call_info_item_height">48dp</dimen>
+    <dimen name="call_switch_width">48dp</dimen>
+    <dimen name="call_switch_height">48dp</dimen>
+    <dimen name="call_avatar_size">96dp</dimen>
+    <dimen name="call_btn_margin">16dp</dimen>
+    <dimen name="call_layout_margin">16dp</dimen>
+    <dimen name="call_local_width">120dp</dimen>
+    <dimen name="call_local_height">160dp</dimen>
+    <dimen name="call_message_icon_margin">8dp</dimen>
+    <dimen name="call_small_width">120dp</dimen>
+    <dimen name="call_small_height">160dp</dimen>
+
+    <dimen name="devices_height">1dp</dimen>
+
+    <dimen name="apply_avatar_size">48dp</dimen>
+    <dimen name="apply_padding">8dp</dimen>
+    <dimen name="apply_margin">8dp</dimen>
+
+    <dimen name="btn_height_big">48dp</dimen>
+    <dimen name="btn_height_small">36dp</dimen>
+    <dimen name="btn_margin">8dp</dimen>
+
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_padding">16dp</dimen>
+
+
+    <!--Settings-->
+    <dimen name="settings_fab_small_size">36dp</dimen>
+    <dimen name="setting_header_height">220dp</dimen>
+    <dimen name="account_item_padding">16dp</dimen>
+
+    <dimen name="logo_margin">24dp</dimen>
+</resources>

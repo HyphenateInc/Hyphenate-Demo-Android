@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/chat_item_bubble_min_height"
+    android:id="@+id/bubble"
+    android:gravity="center"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp"
+    >
+
+    <ImageView
+        android:id="@+id/iv_voice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ease_ic_voice_sent_stopped"
+        />
+
+    <TextView
+        android:id="@+id/tv_length"
+        android:layout_marginLeft="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0:01"
+        android:textColor="@color/ease_white"
+        />
+
+
+</LinearLayout>

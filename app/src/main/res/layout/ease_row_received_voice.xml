@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/chat_item_bubble_min_height"
+    >
+
+    <LinearLayout
+        android:id="@+id/bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        >
+        <ImageView
+            android:id="@+id/iv_voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ease_ic_voice_received_stopped"
+            />
+
+        <TextView
+            android:id="@+id/tv_length"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:text="0:01"
+            android:textColor="@color/ease_black"
+            />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/iv_unread_voice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/ease_unread_dot"
+        />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="@dimen/chat_item_pb_size"
+        android:layout_height="@dimen/chat_item_pb_size"
+        android:layout_marginLeft="5dp"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone" />
+</LinearLayout>
