@@ -418,7 +418,7 @@ public class DemoHelper {
                     EMLog.d(TAG, "onCmdMessageReceived");
                     //get message body
                     EMCmdMessageBody cmdMsgBody = (EMCmdMessageBody) message.getBody();
-                    final String action = cmdMsgBody.action();//获取自定义action
+                    final String action = cmdMsgBody.action();
 
                     //get extension attribute if you need
                     //message.getStringAttribute("");
