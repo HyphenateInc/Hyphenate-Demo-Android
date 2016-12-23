@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/bubble"
+    >
+
+        <TextView
+            android:id="@+id/tv_chatcontent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:autoLink="web"
+            android:gravity="center|left"
+            android:lineSpacingExtra="2dp"
+            android:maxWidth="@dimen/chat_bubble_max_width"
+            android:minHeight="@dimen/chat_item_bubble_min_height"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="3dp"
+            android:textColor="@color/ease_white"
+            android:textSize="15sp"
+            />
+
+
+</RelativeLayout>

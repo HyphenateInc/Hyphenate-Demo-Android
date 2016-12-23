@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ml_layout_coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_background"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    tools:context=".user.AddContactsActivity"
+    >
+    <include layout="@layout/em_widget_toolbar_communal"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/contact_search_padding_vertical"
+            android:paddingLeft="@dimen/contact_search_padding_horizontal"
+            android:paddingRight="@dimen/contact_search_padding_horizontal"
+            android:paddingTop="@dimen/contact_search_padding_vertical"
+            >
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/sign_text_white"
+                android:textColorHint="@color/em_black_54"
+                >
+
+                <EditText
+                    android:id="@+id/edit_search_contacts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/em_hint_account"
+                    android:inputType="textImeMultiLine"
+                    android:textColor="@color/em_black_87"
+                    android:textColorHint="@color/em_black_87"
+                    android:textSize="16sp"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_add_contacts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/btn_margin"
+                android:background="@drawable/em_btn_rectangle_green"
+                android:paddingLeft="@dimen/contact_search_padding_horizontal"
+                android:paddingRight="@dimen/contact_search_padding_horizontal"
+                android:text="@string/em_contacts_add"
+                android:textColor="@color/em_white_87"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

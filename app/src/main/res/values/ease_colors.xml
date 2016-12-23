@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="list_item_primary_text">#1b1d1d</color>
+    <color name="list_item_secondary_text">#546e7a</color>
+    <color name="ease_gray">#adb9c1</color>
+    <color name="ease_white">#ffffff</color>
+    <color name="ease_black">#000000</color>
+    <color name="gray_normal">#666667</color>
+    <color name="emojicon_tab_selected">#D9D9D9</color>
+    <color name="emojicon_tab_nomal">#ffffff</color>
+</resources>

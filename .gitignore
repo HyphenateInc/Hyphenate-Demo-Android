@@ -27,5 +27,7 @@ local.properties
 .gradle
 .idea/
 *.iml
+projectFilesBackup/
 
 #*.properties
+

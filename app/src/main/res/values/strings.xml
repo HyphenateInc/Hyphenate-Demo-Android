@@ -1,0 +1,202 @@
+<resources>
+    <string name="app_name">Hyphenate Demo</string>
+
+    <!--hint string-->
+    <string name="em_hint_account">Account</string>
+    <string name="em_hint_dont_have_account">Don\'t have an account?</string>
+    <string name="em_hint_already_have_account">Already have an account!</string>
+    <string name="em_hint_input_not_null">The input must not be empty</string>
+    <string name="em_hint_loading">Loading……</string>
+    <string name="em_hint_password">Password</string>
+    <string name="em_hint_sign_in">Input your account sign in, Account can not contain \'\@\'!</string>
+    <string name="em_hint_sign_up">Enter the account you want to register, the account can make the phone number,
+        or any length of the string should be all lowercase letters or numbers,
+        in addition to (.) (_) (-) can not contain other special characters,
+        can not be e-mail Account</string>
+
+    <!--call-->
+    <string name="em_call_voice">Voice call</string>
+    <string name="em_call_video">Video call</string>
+    <string name="em_call_accepted">Call is connected</string>
+    <string name="em_call_busy">%1$s is busy</string>
+    <string name="em_call_cancel">Call canceled</string>
+    <string name="em_call_cancel_incoming_call">Call canceled</string>
+    <string name="em_call_connecting">Calling %1$s</string>
+    <string name="em_call_connected">Wait for %1$s to answer</string>
+    <string name="em_call_connected_incoming_call">%1$s call incoming</string>
+    <string name="em_call_connection_fail">Call connection failed</string>
+    <string name="em_call_disconnected">The call has ended</string>
+    <string name="em_call_no_data">No call data</string>
+    <string name="em_call_not_answer">%1$s not answer</string>
+    <string name="em_call_no_response">%1$s no response</string>
+    <string name="em_call_not_online">%1$s not online</string>
+    <string name="em_call_network_unstable">Network unstable</string>
+    <string name="em_call_network_normal">Network normal</string>
+    <string name="em_call_reject">%1$s rejected</string>
+    <string name="em_call_reject_incoming_call">Rejected</string>
+    <string name="em_call_local_sdk_version_outdated">Local sdk version outdated</string>
+    <string name="em_call_remote_sdk_version_outdated">Remote sdk version outdated</string>
+    <string name="em_call_sdk_version_different">Both sdk version different</string>
+    <string name="em_call_video_pause">Video streaming pause</string>
+    <string name="em_call_video_resume">Video streaming resume</string>
+    <string name="em_call_voice_pause">Voice transfer pause</string>
+    <string name="em_call_voice_resume">Voice transfer resume</string>
+    <string name="em_call_voice_calling">Voice calling</string>
+    <string name="em_call_video_calling">Video calling</string>
+    <string name="em_call_info_resolution">Resolution</string>
+    <string name="em_call_info_time_latency">Time Latency</string>
+    <string name="em_call_info_frame_rate">Frame Rate</string>
+    <string name="em_call_info_lost_rate">Lost Rate</string>
+    <string name="em_call_info_local_bitrate">Local Bitrate</string>
+    <string name="em_call_info_remote_bitrate">Remote Bitrate</string>
+
+    <!--sign-->
+    <string name="em_sign_in">Sign in</string>
+    <string name="em_sign_out">Sign out</string>
+    <string name="em_sign_up">Sign up</string>
+    <string name="em_sign_up_begin">Account is begin sign up</string>
+    <string name="em_sign_in_begin">Account is begin sign in</string>
+
+    <!--Error-->
+    <string name="em_error_invalid_password">Invalid password</string>
+    <string name="em_error_invalid_username">Invalid username</string>
+    <string name="em_error_network_error">Network error</string>
+    <string name="em_error_illegal_argument">Illegal argument</string>
+    <string name="em_error_server_busy">Server busy</string>
+    <string name="em_error_server_timeout">Server timeout</string>
+    <string name="em_error_sign_in_failed">Sign in failed</string>
+    <string name="em_error_sign_up_failed">Sign up failed</string>
+    <string name="em_error_unknown_error">Unknown error</string>
+    <string name="em_error_user_already_exit">User already exit</string>
+    <string name="em_error_user_authentication_failed">User authentication failed</string>
+    <string name="em_error_user_not_found">User not found</string>
+
+    <!--Contacts-->
+    <string name="em_contacts_add">Add contacts</string>
+    <string name="em_delete_contact">Delete contact</string>
+    <string name="em_contacts_apply_send_success">Contacts apply for sent successfully</string>
+    <string name="em_contacts_apply_send_failed">Contacts apply for failed to send</string>
+    <string name="em_contacts_apply">Notifications</string>
+    <string name="em_contacts_apply_agree">Agree</string>
+    <string name="em_contacts_apply_reject">Reject</string>
+    <string name="em_wait">Wait...</string>
+    <string name="em_agreed">Agreed</string>
+    <string name="em_rejected">Rejected</string>
+
+    <string name="em_add_to_blacklist">Add To Blacklist</string>
+    <string name="em_blacklist">Black List</string>
+    <string name="em_blacklist_unblock">Unblock</string>
+
+    <string name="em_contact_invite">INVITE</string>
+    <string name="em_contact_next">NEXT</string>
+    <string name="em_contact_selected">Members selected</string>
+
+    <!--Setting Preference-->
+    <string name="em_pref_key_about">em_pref_about</string>
+    <string name="em_pref_key_notification">em_pref_notification</string>
+    <string name="em_pref_key_notification_sound">em_pref_notification_sound</string>
+    <string name="em_pref_key_notification_vibrate">em_pref_notification_vibrate</string>
+    <string name="em_pref_key_notification_display_name">em_pref_notification_name</string>
+    <string name="em_pref_key_accept_group_invite_automatically">em_pref_accept_group_invite_automatically</string>
+    <string name="em_pref_key_adaptive_video_bitrate">em_pref_adaptive_video_bitrate</string>
+    <!--Status-->
+    <string name="em_pref_on">On</string>
+    <string name="em_pref_off">Off</string>
+
+    <!--About-->
+    <string name="em_pref_about">About</string>
+    <string name="em_pref_about_version">SDK Version</string>
+
+    <!--Notification-->
+    <string name="em_pref_notification">Notification</string>
+    <string name="em_pref_notification_switch">Notification Switch</string>
+    <string name="em_pref_notification_summary">Set push notification</string>
+    <string name="em_pref_notification_sound">Notification Sound</string>
+    <string name="em_pref_notification_vibration">Notification vibration</string>
+    <string name="em_pref_notification_display_name">Display name</string>
+
+    <string name="em_pref_chat_call">Chat And Call</string>
+    <string name="em_pref_chat_call_summary">Setting chat and call info</string>
+    <string name="em_pref_group_invites">Group invites</string>
+    <string name="em_pref_group_invites_summary">accept group invites automatically</string>
+    <string name="em_pref_adaptive_video_bitrate">Adaptive video bitrate</string>
+    <string name="em_pref_blocked_users">Blocked Users</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="groups">Groups</string>
+
+    <!--group-->
+    <string name="em_groups">Groups</string>
+    <string name="em_group">group</string>
+    <string name="em_name_group_id">Group ID</string>
+    <string name="em_exit_group">exit group</string>
+    <string name="em_ok">ok</string>
+    <string name="em_cancel">cancel</string>
+    <string name="em_leave_group">leave group</string>
+    <string name="em_waiting">waiting...</string>
+    <string name="em_delete_group">delete group</string>
+    <string name="em_group_info">Group Info</string>
+    <string name="em_enable">Enabled</string>
+    <string name="em_disabled">Disabled</string>
+    <string name="em_push_notification">Push Notification</string>
+    <string name="em_public">Public</string>
+    <string name="em_private">Private</string>
+    <string name="em_delete">Delete</string>
+    <string name="em_group_members">Members</string>
+    <string name="em_group_member">member</string>
+    <string name="em_group_delete_member">delete member</string>
+    <string name="em_new_group">New Group</string>
+    <string name="em_create">CREATE</string>
+    <string name="em_creating">creating group</string>
+    <string name="em_appear_in_group_search">Appear in group search</string>
+    <string name="em_allow">Allow members to invite</string>
+    <string name="em_freely">Join the group freely</string>
+    <string name="em_public_group">Public Groups</string>
+    <string name="em_invite_members">Invite Members</string>
+    <string name="em_load_public_group">load public group</string>
+    <string name="em_join">JOIN</string>
+
+    <!-- chat -->
+    <string name="chat_voice_call">Voice call</string>
+    <string name="chat_video_call">Video call</string>
+    <string name="chat_expand_more">More</string>
+    <string name="sd_card_does_not_exist">"SD card does not exist, can't take pictures"</string>
+    <string name="unable_to_get_location">Unable to get to your location information!</string>
+    <string name="hint_search">Search</string>
+    <string name="delete_conversation">Delete conversation</string>
+    <string name="delete_message">Delete message</string>
+    <string name="chat_send">Send</string>
+    <string name="not_connect_to_server">Not connect to server, please try again later</string>
+
+    <!-- account -->
+    <string name="account_item_name_id">Hyphenate ID</string>
+    <string name="account_item_name_nick">Nickname</string>
+    <string name="account_title_upload_photo">Upload Photo</string>
+    <string name="account_msg_local_upload">Upload photo</string>
+    <string name="account_msg_take_photo">Take Photo</string>
+    <string name="account_update_nick">Update nickname</string>
+    <string name="account_update_photo">Update photo</string>
+    <string name="account_waiting">Waiting...</string>
+    <string name="account_set_nickname">Set Nickname</string>
+    <string name="toast_nick_not_isnull">Nickname cannot be empty!</string>
+    <string name="toast_update_photo_success">Update photo success!</string>
+    <string name="toast_update_photo_fail">Update photo fail!</string>
+    <string name="toast_updatenick_success">update nickname success!</string>
+    <string name="toast_updatenick_fail">update nickname fail!</string>
+    <string name="move_into_blacklist_success">Move into blacklist success</string>
+    <string name="move_into_blacklist_failure">Move into blacklist failure</string>
+    <string name="be_removing">Be removing</string>
+    <string name="removed_from_blacklist_fail">Removed fail</string>
+
+    <!-- commons-->
+    <string name="Logoff_notification">Logoff notification</string>
+    <string name="connect_conflict">The same account was logged in other device</string>
+    <string name="can_not_connect_chat_server_connection">Cannot connect to server</string>
+    <string name="current_network_unavailable">The current network is not available, please check the network Settings</string>
+    <string name="unable_to_connect">Unable to connect to the server</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_ok">Ok</string>
+    <string name="title_contacts">Contacts</string>
+    <string name="title_chats">Chats</string>
+    <string name="title_settings">Settings</string>
+</resources>

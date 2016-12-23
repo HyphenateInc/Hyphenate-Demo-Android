@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bubble"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+        <ImageView
+            android:id="@+id/img_call_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/call_message_icon_margin"
+            android:src="@drawable/em_ic_call_white_24dp"
+            android:tint="@color/em_white_38"
+            />
+        <TextView
+            android:id="@+id/tv_chatcontent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toRightOf="@id/img_call_icon"
+            android:autoLink="web"
+            android:gravity="center|left"
+            android:lineSpacingExtra="2dp"
+            android:maxWidth="225.0dip"
+            android:minHeight="@dimen/chat_item_bubble_min_height"
+            android:paddingBottom="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="3dp"
+            android:text="@string/app_name"
+            android:textColor="@color/em_white_100"
+            android:textSize="15sp"
+            />
+</RelativeLayout>

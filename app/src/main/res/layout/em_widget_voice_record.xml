@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:layout_width="280dp"
+    android:background="#fff"
+    android:layout_height="wrap_content">
+
+    <Chronometer
+        android:id="@+id/chronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19.5dp"
+        android:text="0:03"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="#1b1d1d"
+        android:visibility="invisible"
+        />
+
+    <TextView
+        android:id="@+id/txt_recording_hint"
+        android:layout_marginTop="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/record_tap_to_record"
+        android:textSize="16sp"
+        android:textColor="#1b1d1d"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="115dp"
+        >
+        <View
+            android:id="@+id/view_speaking_shadow"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/em_voice_speaking_shadow"
+            android:layout_gravity="center"
+            />
+        <ImageView
+            android:id="@+id/iv_voice_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/em_btn_voice_record_selector"
+            />
+
+    </FrameLayout>
+
+</LinearLayout>

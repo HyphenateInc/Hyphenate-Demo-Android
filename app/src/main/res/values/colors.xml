@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#243e55</color>
+    <color name="colorPrimaryDark">#243e55</color>
+    <color name="colorAccent">#ff00ba6e</color>
+    <color name="colorTextPrimary">#ffffff</color>
+    <color name="tab_indicator">#ffffff</color>
+
+    <color name="contact_name_color">#1b1d1d</color>
+    <color name="header_text_color">#adb9c1</color>
+    <color name="base_line_color">#e0e0e0</color>
+    <color name="voice_speaking_shadow">#33f52700</color>
+    <color name="voice_cancel_hint">#f52700</color>
+    <color name="voice_recording_hint">#1b1d1d</color>
+    <color name="group_name_color">#1b1d1d</color>
+    <color name="holo_blue_bright">#ff00ddff</color>
+    <color name="holo_green_light">#ff99cc00</color>
+    <color name="holo_orange_light">#ffffbb33</color>
+    <color name="holo_red_light">#ffff4444</color>
+    <color name="color_gray">#8798a4</color>
+
+    <!--layout_background-->
+    <color name="dark_background">#243e55</color>
+    <color name="light_background">#3d5b76</color>
+    <color name="gray_background">#ced3d9</color>
+    <color name="white_background">#ffffff</color>
+
+    <color name="text_black">#ff212121</color>
+
+    <color name="sign_text_white">#ddffffff</color>
+    <color name="sign_text_hint">#61ffffff</color>
+
+    <color name="em_transparent">#00000000</color>
+
+    <!--black color-->
+    <color name="em_black_100">#ff232323</color>
+    <color name="em_black_87">#dd232323</color>
+    <color name="em_black_54">#89232323</color>
+    <color name="em_black_38">#61232323</color>
+    <color name="em_black_12">#1e232323</color>
+
+    <!--white color-->
+    <color name="em_white_100">#ffffffff</color>
+    <color name="em_white_87">#ddffffff</color>
+    <color name="em_white_54">#89ffffff</color>
+    <color name="em_white_38">#61ffffff</color>
+    <color name="em_white_12">#1effffff</color>
+    <color name="em_gray">#50cccccc</color>
+
+    <!--green color-->
+    <color name="em_green_100">#ff00ba6e</color>
+    <color name="em_green_87">#dd00ba6e</color>
+    <color name="em_green_54">#8900ba6e</color>
+    <color name="em_green_38">#6100ba6e</color>
+    <color name="em_green_12">#1e00ba6e</color>
+
+    <!--red color -->
+    <color name="em_red_100">#ffe62f17</color>
+    <color name="em_red_87">#dde62f17</color>
+    <color name="em_red_54">#89e62f17</color>
+    <color name="em_red_38">#42e62f17</color>
+
+    <!--dark red color-->
+    <color name="em_red_dark_100">#ffd22a14</color>
+    <color name="em_red_dark_87">#ddd22a14</color>
+    <color name="em_red_dark_54">#89d22a14</color>
+    <color name="em_red_dark_38">#61d22a14</color>
+    <color name="em_red_dark_12">#1ed22a14</color>
+</resources>

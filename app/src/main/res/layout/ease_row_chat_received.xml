@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/chat_item_padding_top"
+    >
+
+
+    <com.hyphenate.easeui.widget.EaseImageView
+        android:id="@+id/iv_userhead"
+        android:layout_width="@dimen/size_avatar"
+        android:layout_height="@dimen/size_avatar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="@dimen/margin_chat_activity"
+        android:scaleType="fitXY"
+        android:src="@drawable/ease_default_avatar"
+        />
+
+    <TextView
+        android:id="@+id/tv_userid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/chat_nick_margin_left"
+        android:layout_toRightOf="@id/iv_userhead"
+        android:textSize="@dimen/chat_nick_text_size"
+        android:layout_marginBottom="2dp"
+        android:visibility="gone"
+        style="@style/chat_text_name_style"
+        />
+
+    <RelativeLayout
+        android:id="@+id/bubble_container"
+        android:layout_below="@+id/tv_userid"
+        android:layout_toRightOf="@id/iv_userhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_chat_activity"
+        >
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/chat_item_padding_bottom"
+        android:layout_below="@id/bubble_container"
+        android:layout_toRightOf="@id/iv_userhead"
+
+        >
+        <TextView
+            android:id="@+id/timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/margin_chat_activity"
+            android:layout_marginTop="@dimen/chat_timestamp_margin_top"
+            android:textSize="@dimen/chat_timestamp_size"
+            style="@style/chat_text_date_style"
+            />
+    </RelativeLayout>
+</RelativeLayout>

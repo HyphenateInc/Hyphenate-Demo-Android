@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="size_avatar">38dp</dimen>
+    <dimen name="margin_chat_activity">5dp</dimen>
+    <dimen name="chat_nick_margin_left">12dp</dimen>
+    <dimen name="chat_nick_text_size">13sp</dimen>
+    <dimen name="chat_timestamp_size">12sp</dimen>
+    <dimen name="chat_timestamp_margin_top">3dp</dimen>
+    <dimen name="chat_input_img_padding">16dp</dimen>
+    <dimen name="chat_item_bubble_min_height">38dp</dimen>
+    <dimen name="chat_item_progress_margin">6dp</dimen>
+    <dimen name="chat_item_ack_margin">3dp</dimen>
+    <dimen name="chat_item_padding_top">11dp</dimen>
+    <dimen name="chat_item_padding_bottom">6dp</dimen>
+    <dimen name="chat_item_pb_size">25dp</dimen>
+    <dimen name="chat_bubble_max_width">238dp</dimen>
+
+</resources>

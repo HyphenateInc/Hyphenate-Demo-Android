@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_input_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <include layout="@layout/em_layout_chat_input_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#33000000" />
+    <FrameLayout
+        android:id="@+id/extend_menu_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:visibility="gone" >
+
+        <com.hyphenate.easeui.widget.EaseChatExtendMenu
+            android:id="@+id/extend_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="11dp"
+            android:layout_marginTop="11dp"
+            />
+
+        <com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenu
+            android:id="@+id/emojicon_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ></com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenu>
+    </FrameLayout>
+
+</LinearLayout>
