@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.WindowManager;
 import android.widget.Chronometer;
+
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
@@ -49,9 +50,10 @@ public class CallActivity extends BaseActivity {
     // Vibration
     protected Vibrator mVibrator;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             finish();
             return;
         }
@@ -61,7 +63,7 @@ public class CallActivity extends BaseActivity {
                 | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
-        if(EaseChatRowVoicePlayClickListener.currentPlayListener != null && EaseChatRowVoicePlayClickListener.isPlaying){
+        if (EaseChatRowVoicePlayClickListener.currentPlayListener != null && EaseChatRowVoicePlayClickListener.isPlaying) {
             EaseChatRowVoicePlayClickListener.currentPlayListener.stopPlayVoice();
         }
     }
@@ -100,7 +102,8 @@ public class CallActivity extends BaseActivity {
             }
             // Load SoundPool listener
             mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-                @Override public void onLoadComplete(SoundPool soundPool, int i, int i1) {
+                @Override
+                public void onLoadComplete(SoundPool soundPool, int i, int i1) {
                     playCallSound();
                 }
             });
@@ -219,7 +222,8 @@ public class CallActivity extends BaseActivity {
      * different way
      * Instantiate SoundPool using {@link SoundPool.Builder}
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP) protected void createSoundPoolWithBuilder() {
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    protected void createSoundPoolWithBuilder() {
         AudioAttributes attributes = new AudioAttributes.Builder()
                 // Set the audio mode, This select USAGE_NOTIFICATION_RINGTONE
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
@@ -241,7 +245,7 @@ public class CallActivity extends BaseActivity {
      * finish activity
      */
     protected void onFinish() {
-        // 关闭音效并释放资源
+        // turn off call sound and release resources
         stopCallSound();
         finish();
     }
@@ -249,7 +253,8 @@ public class CallActivity extends BaseActivity {
     /**
      * Overload Return key
      */
-    @Override public void onBackPressed() {
+    @Override
+    public void onBackPressed() {
         // super.onBackPressed();
 
     }
