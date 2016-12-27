@@ -155,7 +155,7 @@ public class VoiceCallActivity extends CallActivity {
     }
 
     /**
-     * 开始呼叫对方
+     * Make voice call
      */
     private void makeCall() {
         try {
