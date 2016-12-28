@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.util.Log;
+
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMError;
@@ -32,6 +33,7 @@ import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.easeui.model.EaseUser;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.util.EMLog;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -43,13 +45,16 @@ import java.util.List;
 public class DemoHelper {
 
     protected static final String TAG = DemoHelper.class.getSimpleName();
+
     //
     private static DemoHelper instance;
+
     // context
     private Context mContext;
 
     // Call broadcast receiver
     private CallReceiver mCallReceiver = null;
+
     // Call state listener
     private CallStateChangeListener mCallStateChangeListener = null;
 
@@ -142,8 +147,11 @@ public class DemoHelper {
     private void initCallOptions() {
         // set video call bitrate, default(150)
         EMClient.getInstance().callManager().getCallOptions().setVideoKbps(800);
+
         // set video call resolution, default(320, 240)
         EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
+
+        // send push notification when user offline
         EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
     }
 
@@ -174,47 +182,56 @@ public class DemoHelper {
     }
 
     private class DefaultGroupChangeListener extends GroupChangeListener {
-        @Override public void onInvitationReceived(String s, String s1, String s2, String s3) {
+        @Override
+        public void onInvitationReceived(String s, String s1, String s2, String s3) {
             super.onInvitationReceived(s, s1, s2, s3);
             getNotifier().vibrateAndPlayTone(null);
         }
 
-        @Override public void onRequestToJoinReceived(String s, String s1, String s2, String s3) {
+        @Override
+        public void onRequestToJoinReceived(String s, String s1, String s2, String s3) {
             super.onRequestToJoinReceived(s, s1, s2, s3);
             getNotifier().vibrateAndPlayTone(null);
         }
 
-        @Override public void onRequestToJoinAccepted(String s, String s1, String s2) {
+        @Override
+        public void onRequestToJoinAccepted(String s, String s1, String s2) {
             super.onRequestToJoinAccepted(s, s1, s2);
             getNotifier().vibrateAndPlayTone(null);
         }
 
-        @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
+        @Override
+        public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
             super.onRequestToJoinDeclined(s, s1, s2, s3);
             getNotifier().vibrateAndPlayTone(null);
         }
 
-        @Override public void onInvitationAccepted(String s, String s1, String s2) {
+        @Override
+        public void onInvitationAccepted(String s, String s1, String s2) {
             super.onInvitationAccepted(s, s1, s2);
             getNotifier().vibrateAndPlayTone(null);
         }
 
-        @Override public void onInvitationDeclined(String s, String s1, String s2) {
+        @Override
+        public void onInvitationDeclined(String s, String s1, String s2) {
             super.onInvitationDeclined(s, s1, s2);
             getNotifier().vibrateAndPlayTone(null);
         }
 
-        @Override public void onUserRemoved(String s, String s1) {
+        @Override
+        public void onUserRemoved(String s, String s1) {
             super.onUserRemoved(s, s1);
             getNotifier().vibrateAndPlayTone(null);
         }
 
-        @Override public void onGroupDestroyed(String s, String s1) {
+        @Override
+        public void onGroupDestroyed(String s, String s1) {
             super.onGroupDestroyed(s, s1);
             getNotifier().vibrateAndPlayTone(null);
         }
 
-        @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
+        @Override
+        public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
             super.onAutoAcceptInvitationFromGroup(s, s1, s2);
             getNotifier().vibrateAndPlayTone(null);
         }
@@ -224,7 +241,8 @@ public class DemoHelper {
         // set profile provider if you want easeUI to handle avatar and nickname
         EaseUI.getInstance().setUserProfileProvider(new EaseUI.EaseUserProfileProvider() {
 
-            @Override public EaseUser getUser(String username) {
+            @Override
+            public EaseUser getUser(String username) {
                 return getUserInfo(username);
             }
         });
@@ -232,17 +250,20 @@ public class DemoHelper {
         getNotifier().setNotificationInfoProvider(
                 new MessageNotifier.EaseNotificationInfoProvider() {
 
-                    @Override public String getTitle(EMMessage message) {
+                    @Override
+                    public String getTitle(EMMessage message) {
                         //you can update title here
                         return null;
                     }
 
-                    @Override public int getSmallIcon(EMMessage message) {
+                    @Override
+                    public int getSmallIcon(EMMessage message) {
                         //you can update icon here
                         return 0;
                     }
 
-                    @Override public String getDisplayedText(EMMessage message) {
+                    @Override
+                    public String getDisplayedText(EMMessage message) {
                         // be used on notification bar, different text according the message type.
                         String ticker = EaseCommonUtils.getMessageDigest(message, mContext);
                         if (message.getType() == EMMessage.Type.TXT) {
@@ -256,14 +277,16 @@ public class DemoHelper {
                         }
                     }
 
-                    @Override public String getLatestText(EMMessage message, int fromUsersNum,
-                            int messageNum) {
+                    @Override
+                    public String getLatestText(EMMessage message, int fromUsersNum,
+                                                int messageNum) {
                         // here you can customize the text.
                         // return fromUsersNum + "contacts send " + messageNum + "messages to you";
                         return null;
                     }
 
-                    @Override public Intent getLaunchIntent(EMMessage message) {
+                    @Override
+                    public Intent getLaunchIntent(EMMessage message) {
                         // you can set what activity you want display when user click the notification
                         Intent intent = new Intent(mContext, ChatActivity.class);
                         // open calling activity if there is call
@@ -293,22 +316,26 @@ public class DemoHelper {
             SharedPreferences preferences =
                     android.preference.PreferenceManager.getDefaultSharedPreferences(mContext);
 
-            @Override public boolean isMsgNotifyAllowed(EMMessage message) {
+            @Override
+            public boolean isMsgNotifyAllowed(EMMessage message) {
                 return preferences.getBoolean(mContext.getString(R.string.em_pref_key_notification),
                         false);
             }
 
-            @Override public boolean isMsgSoundAllowed(EMMessage message) {
+            @Override
+            public boolean isMsgSoundAllowed(EMMessage message) {
                 return preferences.getBoolean(
                         mContext.getString(R.string.em_pref_key_notification_sound), false);
             }
 
-            @Override public boolean isMsgVibrateAllowed(EMMessage message) {
+            @Override
+            public boolean isMsgVibrateAllowed(EMMessage message) {
                 return preferences.getBoolean(
                         mContext.getString(R.string.em_pref_key_notification_vibrate), false);
             }
 
-            @Override public boolean isSpeakerOpened() {
+            @Override
+            public boolean isSpeakerOpened() {
                 return false;
             }
         });
@@ -376,7 +403,8 @@ public class DemoHelper {
             /**
              * The connection to the server is successful
              */
-            @Override public void onConnected() {
+            @Override
+            public void onConnected() {
                 EMLog.d(TAG, "onConnected");
             }
 
@@ -385,7 +413,8 @@ public class DemoHelper {
              *
              * @param errorCode Disconnected error code
              */
-            @Override public void onDisconnected(int errorCode) {
+            @Override
+            public void onDisconnected(int errorCode) {
                 EMLog.d(TAG, "onDisconnected: " + errorCode);
                 if (errorCode == EMError.USER_LOGIN_ANOTHER_DEVICE) {
                     onConnectionConflict();
@@ -403,7 +432,8 @@ public class DemoHelper {
     private void registerMessageListener() {
         EMMessageListener messageListener = new EMMessageListener() {
 
-            @Override public void onMessageReceived(List<EMMessage> messages) {
+            @Override
+            public void onMessageReceived(List<EMMessage> messages) {
                 for (EMMessage message : messages) {
                     EMLog.d(TAG, "onMessageReceived id : " + message.getMsgId());
                     // in background, do not refresh UI, notify it in notification bar
@@ -413,7 +443,8 @@ public class DemoHelper {
                 }
             }
 
-            @Override public void onCmdMessageReceived(List<EMMessage> messages) {
+            @Override
+            public void onCmdMessageReceived(List<EMMessage> messages) {
                 for (EMMessage message : messages) {
                     EMLog.d(TAG, "onCmdMessageReceived");
                     //get message body
@@ -427,13 +458,16 @@ public class DemoHelper {
                 }
             }
 
-            @Override public void onMessageRead(List<EMMessage> messages) {
+            @Override
+            public void onMessageRead(List<EMMessage> messages) {
             }
 
-            @Override public void onMessageDelivered(List<EMMessage> message) {
+            @Override
+            public void onMessageDelivered(List<EMMessage> message) {
             }
 
-            @Override public void onMessageChanged(EMMessage message, Object change) {
+            @Override
+            public void onMessageChanged(EMMessage message, Object change) {
 
             }
         };
@@ -453,23 +487,28 @@ public class DemoHelper {
     }
 
     private class DefaultContactsChangeListener extends ContactsChangeListener {
-        @Override public void onContactAdded(String username) {
+        @Override
+        public void onContactAdded(String username) {
             super.onContactAdded(username);
         }
 
-        @Override public void onContactDeleted(String username) {
+        @Override
+        public void onContactDeleted(String username) {
             super.onContactDeleted(username);
         }
 
-        @Override public void onContactInvited(String username, String reason) {
+        @Override
+        public void onContactInvited(String username, String reason) {
             super.onContactInvited(username, reason);
         }
 
-        @Override public void onFriendRequestAccepted(String username) {
+        @Override
+        public void onFriendRequestAccepted(String username) {
             super.onFriendRequestAccepted(username);
         }
 
-        @Override public void onFriendRequestDeclined(String username) {
+        @Override
+        public void onFriendRequestDeclined(String username) {
             super.onFriendRequestDeclined(username);
         }
     }
@@ -508,7 +547,8 @@ public class DemoHelper {
         Log.d(TAG, "Sign out: " + unbindDeviceToken);
         EMClient.getInstance().logout(unbindDeviceToken, new EMCallBack() {
 
-            @Override public void onSuccess() {
+            @Override
+            public void onSuccess() {
                 Log.d(TAG, "Sign out: onSuccess");
                 if (callback != null) {
                     callback.onSuccess();
@@ -517,13 +557,15 @@ public class DemoHelper {
                 reset();
             }
 
-            @Override public void onProgress(int progress, String status) {
+            @Override
+            public void onProgress(int progress, String status) {
                 if (callback != null) {
                     callback.onProgress(progress, status);
                 }
             }
 
-            @Override public void onError(int code, String error) {
+            @Override
+            public void onError(int code, String error) {
                 Log.d(TAG, "Sign out: onSuccess");
                 if (callback != null) {
                     callback.onError(code, error);

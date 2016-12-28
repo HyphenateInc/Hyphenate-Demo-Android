@@ -429,7 +429,7 @@ public class VideoCallActivity extends CallActivity {
         // Vibrate
         vibrate();
         if (mCameraSwitch.isActivated()) {
-            // Pause video streaming
+            // Pause video transfer
             try {
                 EMClient.getInstance().callManager().pauseVideoTransfer();
             } catch (HyphenateException e) {
@@ -549,7 +549,7 @@ public class VideoCallActivity extends CallActivity {
      */
     private void surfaceViewProcessor() {
 
-        // 设置显示对方图像控件显示
+        // display the caller party's view
         mOppositeSurfaceView.setVisibility(View.VISIBLE);
 
         //RelativeLayout.LayoutParams lp =
@@ -562,14 +562,12 @@ public class VideoCallActivity extends CallActivity {
     }
 
     /**
-     * Open Speaker
-     * Turn on the speaker switch, and set the audio playback mode
-     * 1、MODE_NORMAL:   Normal mode, generally used for putting audio
-     * 2、MODE_IN_CALL:
-     * 3、MODE_IN_COMMUNICATION: This and MODE_IN_CALL communication mode, But Huawei MODE_IN_CALL
-     * in
-     * the bad, So the use of MODE_IN_COMMUNICATION
-     * 4、MODE_RINGTONE: Ringtones mode
+     * turn on speaker
+     * Turn on the speaker switch and set to audio playback mode
+     * 1. MODE_NORMAL: default mode, generally used for putting audio
+     * 2. MODE_IN_CALL:
+     * 3. MODE_IN_COMMUNICATION:
+     * 4. MODE_RINGTONE: Ringtones mode
      */
     private void openSpeaker() {
         // Set button state
@@ -766,7 +764,7 @@ public class VideoCallActivity extends CallActivity {
      */
     @Override protected void onUserLeaveHint() {
         if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_ACCEPTED) {
-            // The activity is not visible, Pause video streaming
+            // The activity is not visible, Pause video transfer
             try {
                 EMClient.getInstance().callManager().pauseVideoTransfer();
             } catch (HyphenateException e) {
