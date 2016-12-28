@@ -429,7 +429,7 @@ public class VideoCallActivity extends CallActivity {
         // Vibrate
         vibrate();
         if (mCameraSwitch.isActivated()) {
-            // Pause video streaming
+            // Pause video transfer
             try {
                 EMClient.getInstance().callManager().pauseVideoTransfer();
             } catch (HyphenateException e) {
@@ -764,7 +764,7 @@ public class VideoCallActivity extends CallActivity {
      */
     @Override protected void onUserLeaveHint() {
         if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_ACCEPTED) {
-            // The activity is not visible, Pause video streaming
+            // The activity is not visible, Pause video transfer
             try {
                 EMClient.getInstance().callManager().pauseVideoTransfer();
             } catch (HyphenateException e) {

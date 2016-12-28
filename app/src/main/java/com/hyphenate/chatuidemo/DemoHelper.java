@@ -45,13 +45,16 @@ import java.util.List;
 public class DemoHelper {
 
     protected static final String TAG = DemoHelper.class.getSimpleName();
+
     //
     private static DemoHelper instance;
+
     // context
     private Context mContext;
 
     // Call broadcast receiver
     private CallReceiver mCallReceiver = null;
+
     // Call state listener
     private CallStateChangeListener mCallStateChangeListener = null;
 
@@ -144,8 +147,11 @@ public class DemoHelper {
     private void initCallOptions() {
         // set video call bitrate, default(150)
         EMClient.getInstance().callManager().getCallOptions().setVideoKbps(800);
+
         // set video call resolution, default(320, 240)
         EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
+
+        // send push notification when user offline
         EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
     }
 

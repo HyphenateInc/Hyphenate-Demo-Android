@@ -195,7 +195,6 @@ public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<Recy
                         final T item = itemsToRemove.get(i);
                         mSortedList.remove(item);
                     }
-                    // TODO: BUG: getting different item everytime
                     mSortedList.addAll(items);
                 }
             });
