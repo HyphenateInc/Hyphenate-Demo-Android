@@ -3,24 +3,24 @@ package com.hyphenate.easeui.model;
 import java.util.List;
 
 /**
- * 一组表情所对应的实体类
+ * Emoticon type
  *
  */
 public class EaseEmojiconGroupEntity {
     /**
-     * 表情数据
+     * emoticon data
      */
     private List<EaseEmojicon> emojiconList;
     /**
-     * 图片
+     * icon
      */
     private int icon;
     /**
-     * 组名
+     * name
      */
     private String name;
     /**
-     * 表情类型
+     * emoticon type
      */
     private EaseEmojicon.Type type;
     

@@ -5,6 +5,7 @@ import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.util.SortedListAdapterCallback;
 import android.view.LayoutInflater;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,11 +15,17 @@ public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<Recy
 
     public interface Editor<T> {
         Editor<T> add(T item);
+
         Editor<T> add(List<T> items);
+
         Editor<T> remove(T item);
+
         Editor<T> remove(List<T> items);
+
         Editor<T> replaceAll(List<T> items);
+
         Editor<T> removeAll();
+
         void commit();
     }
 
@@ -35,20 +42,23 @@ public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<Recy
         mComparator = comparator;
 
         mSortedList = new SortedList<>(itemClass, new SortedListAdapterCallback<T>(this) {
-            @Override public int compare(T o1, T o2) {
+            @Override
+            public int compare(T o1, T o2) {
                 int result;
-                if(areItemsTheSame(o1, o2)){
+                if (areItemsTheSame(o1, o2)) {
                     return 0;
-                }else {
+                } else {
                     return mComparator.compare(o1, o2);
                 }
             }
 
-            @Override public boolean areContentsTheSame(T oldItem, T newItem) {
+            @Override
+            public boolean areContentsTheSame(T oldItem, T newItem) {
                 return EaseSortedListAdapter.this.areItemContentsTheSame(oldItem, newItem);
             }
 
-            @Override public boolean areItemsTheSame(T item1, T item2) {
+            @Override
+            public boolean areItemsTheSame(T item1, T item2) {
                 return EaseSortedListAdapter.this.areItemsTheSame(item1, item2);
             }
         });
@@ -59,6 +69,7 @@ public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<Recy
      * Called by the SortedList to decide whether two object represent the same Item or not.
      * <p>
      * For example, if your items have unique ids, this method should check their equality.
+     *
      * @param item1
      * @param item2
      * @return
@@ -71,6 +82,7 @@ public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<Recy
      * onChanged(int, int) or not.
      * <p>
      * SortedList uses this method to check equality instead of {@link Object#equals(Object)}
+     *
      * @param oldItem
      * @param newItem
      * @return
@@ -183,7 +195,6 @@ public abstract class EaseSortedListAdapter<T> extends RecyclerView.Adapter<Recy
                         final T item = itemsToRemove.get(i);
                         mSortedList.remove(item);
                     }
-                    //BUG: 每次取到对象都不一样
                     mSortedList.addAll(items);
                 }
             });
