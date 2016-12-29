@@ -67,6 +67,9 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_main);
 
+        android.preference.PreferenceManager.setDefaultValues(this, R.xml.preferences_default,
+                false);
+
         mContactListener = new DefaultContactsChangeListener();
         mGroupListener = new DefaultGroupChangeListener();
 
