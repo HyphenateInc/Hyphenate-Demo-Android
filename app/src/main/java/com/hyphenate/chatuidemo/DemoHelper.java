@@ -146,7 +146,7 @@ public class DemoHelper {
      */
     private void initCallOptions() {
         // set video call bitrate, default(150)
-        EMClient.getInstance().callManager().getCallOptions().setVideoKbps(800);
+        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(800);
 
         // set video call resolution, default(320, 240)
         EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);

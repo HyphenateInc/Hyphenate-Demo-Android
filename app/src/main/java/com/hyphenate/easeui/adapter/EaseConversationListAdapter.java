@@ -8,8 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
@@ -22,8 +21,12 @@ import com.hyphenate.easeui.utils.EaseSmileUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.util.DateUtils;
+
 import java.util.Comparator;
 import java.util.Date;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by wei on 2016/10/9.
@@ -48,8 +51,8 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
         ConversationListHolder holder = (ConversationListHolder) viewHolder;
         EMConversation conversation = getItem(position);
         // get username or group id
-        String username = conversation.getUserName();
-        if (conversation.getUserName().equals(Constant.CONVERSATION_NAME_APPLY)) {
+        String username = conversation.conversationId();
+        if (conversation.conversationId().equals(Constant.CONVERSATION_NAME_APPLY)) {
             holder.mNameView.setText(R.string.em_contacts_apply);
         } else {
             if (conversation.getType() == EMConversation.EMConversationType.GroupChat) {
@@ -122,7 +125,7 @@ public class EaseConversationListAdapter extends EaseSortedListAdapter<EMConvers
     }
 
     @Override protected boolean areItemsTheSame(EMConversation item1, EMConversation item2) {
-        return item1.getUserName().equals(item2.getUserName());
+        return item1.conversationId().equals(item2.conversationId());
     }
 
     @Override
