@@ -30,7 +30,7 @@ public class DemoModel {
      */
     public boolean isNotification() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sharedPref.getBoolean("notification_switch", false);
+        return sharedPref.getBoolean(mContext.getString(R.string.em_pref_key_notification), true);
     }
 
     /**
@@ -38,7 +38,8 @@ public class DemoModel {
      */
     public boolean isSoundNotification() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sharedPref.getBoolean("notification_sound_switch", false);
+        return sharedPref.getBoolean(mContext.getString(R.string.em_pref_key_notification_sound),
+                true);
     }
 
     /**
@@ -46,7 +47,8 @@ public class DemoModel {
      */
     public boolean isVibrateNotification() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sharedPref.getBoolean("notification_vibrate_switch", false);
+        return sharedPref.getBoolean(mContext.getString(R.string.em_pref_key_notification_vibrate),
+                true);
     }
 
     /**
@@ -54,7 +56,8 @@ public class DemoModel {
      */
     public boolean isAcceptGroupInvitesAutomatically() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sharedPref.getBoolean("accept_group_invites_automatically", false);
+        return sharedPref.getBoolean(
+                mContext.getString(R.string.em_pref_key_accept_group_invite_automatically), true);
     }
 
     /**
@@ -62,7 +65,7 @@ public class DemoModel {
      */
     public boolean isAdaptiveVideoBitrate() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sharedPref.getBoolean("adaptive_video_bitrate", false);
+        return sharedPref.getBoolean(
+                mContext.getString(R.string.em_pref_key_adaptive_video_bitrate), true);
     }
-
 }

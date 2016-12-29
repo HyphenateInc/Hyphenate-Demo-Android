@@ -20,11 +20,13 @@
             android:title="@string/em_pref_notification">
             <!--Push notification main switch-->
             <SwitchPreference
+                android:defaultValue="true"
                 android:key="@string/em_pref_key_notification"
                 android:summary="@string/em_pref_notification_summary"
                 android:title="@string/em_pref_notification"/>
             <!--Sound switch-->
             <SwitchPreference
+                android:defaultValue="true"
                 android:dependency="@string/em_pref_key_notification"
                 android:key="@string/em_pref_key_notification_sound"
                 android:layout="?android:attr/preferenceLayoutChild"
@@ -33,6 +35,7 @@
                 android:title="@string/em_pref_notification_sound"/>
             <!--Vibrate switch-->
             <SwitchPreference
+                android:defaultValue="true"
                 android:dependency="@string/em_pref_key_notification"
                 android:key="@string/em_pref_key_notification_vibrate"
                 android:layout="?android:attr/preferenceLayoutChild"
@@ -58,11 +61,13 @@
             android:title="@string/em_pref_chat_call">
             <!--Group invite switch-->
             <SwitchPreference
+                android:defaultValue="true"
                 android:key="@string/em_pref_key_accept_group_invite_automatically"
                 android:summary="@string/em_pref_group_invites_summary"
                 android:title="@string/em_pref_group_invites"/>
             <!--Adaptive video bitrate-->
             <SwitchPreference
+                android:defaultValue="true"
                 android:key="@string/em_pref_key_adaptive_video_bitrate"
                 android:title="@string/em_pref_adaptive_video_bitrate"/>
             <!--Blocked Users-->
