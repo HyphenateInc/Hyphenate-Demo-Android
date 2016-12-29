@@ -30,7 +30,7 @@ public class DemoModel {
      */
     public boolean isNotification() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sharedPref.getBoolean("notification_switch", false);
+        return sharedPref.getBoolean("notification_switch", true);
     }
 
     /**
@@ -38,7 +38,7 @@ public class DemoModel {
      */
     public boolean isSoundNotification() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sharedPref.getBoolean("notification_sound_switch", false);
+        return sharedPref.getBoolean("notification_sound_switch", true);
     }
 
     /**
@@ -46,7 +46,7 @@ public class DemoModel {
      */
     public boolean isVibrateNotification() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sharedPref.getBoolean("notification_vibrate_switch", false);
+        return sharedPref.getBoolean("notification_vibrate_switch", true);
     }
 
     /**
