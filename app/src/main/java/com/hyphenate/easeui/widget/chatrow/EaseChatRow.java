@@ -159,6 +159,15 @@ public abstract class EaseChatRow extends LinearLayout {
             }
         }
 
+        if (usernickView != null) {
+            if (itemStyle.isShowUserNick()){
+                usernickView.setVisibility(View.VISIBLE);
+            } else {
+                usernickView.setVisibility(View.GONE);
+            }
+        }
+
+
 
         //if (adapter instanceof EaseMessageListAdapter) {
         //    if (((EaseMessageListAdapter) adapter).isShowAvatar())

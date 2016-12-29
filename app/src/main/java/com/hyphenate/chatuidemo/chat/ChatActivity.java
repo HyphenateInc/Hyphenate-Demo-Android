@@ -163,6 +163,10 @@ public class ChatActivity extends BaseActivity {
     private void initView() {
         // init message list view
         mMessageListView.init(toChatUsername, chatType, newCustomChatRowProvider());
+        // show user nick in group chat
+        if(mConversation.isGroup()){
+            mMessageListView.setShowUserNick(true);
+        }
         mMessageListView.setOnScrollListener(new MsgListScrollListener());
         //register context menu for message listView
         registerForContextMenu(mMessageListView);
@@ -272,10 +276,10 @@ public class ChatActivity extends BaseActivity {
 
                     if (!isFirstLoad) mLoadingProgressBar.setVisibility(View.VISIBLE);
                     isFirstLoad = false;
-                    // sdk初始化加载的聊天记录为20条，到顶时去db里获取更多
                     final List<EMMessage> messages;
                     EMMessage firstMsg = mConversation.getAllMessages().get(0);
                     try {
+                        // load more messages from db
                         messages = mConversation.loadMoreMsgFromDB(firstMsg.getMsgId(), pageSize);
                     } catch (Exception e1) {
                         mLoadingProgressBar.setVisibility(View.INVISIBLE);
@@ -290,7 +294,6 @@ public class ChatActivity extends BaseActivity {
                             runOnUiThread(new Runnable() {
                                 @Override public void run() {
                                     if (messages.size() != 0) {
-                                        // 刷新ui
                                         if (messages.size() > 0) {
                                             mMessageListView.refreshSeekTo(messages.size() - 1);
                                         }

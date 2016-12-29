@@ -62,8 +62,8 @@ public class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.
                 if (position == 0) {
                     holder.memberAvatarView.setImageResource(R.drawable.add_member_icon);
                 } else {
-                    EaseUserUtils.setUserNick(membersList.get(position-1), holder.memberNameView);
-                    EaseUserUtils.setUserAvatar(context, membersList.get(position-1), holder.memberAvatarView);
+                    EaseUserUtils.setUserNick(membersList.get(position - 1), holder.memberNameView);
+                    EaseUserUtils.setUserAvatar(context, membersList.get(position - 1), holder.memberAvatarView);
                 }
             } else {
                 EaseUserUtils.setUserNick(membersList.get(position), holder.memberNameView);
@@ -78,9 +78,7 @@ public class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.
             if (RECYCLER_ORIENTATION == LinearLayoutManager.HORIZONTAL) {
                 holder.memberListView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
-                        if (isOpenInvite && position == 0) {
-                            listener.onItemClick(v, position);
-                        }
+                        listener.onItemClick(v, position);
                     }
                 });
             } else {

@@ -21,7 +21,6 @@ import com.hyphenate.easeui.ui.EaseShowImageActivity;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseImageUtils;
 import com.hyphenate.util.DensityUtil;
-import com.hyphenate.util.EMLog;
 import java.io.File;
 
 public class EaseChatRowImage extends EaseChatRowFile{
@@ -206,7 +205,6 @@ public class EaseChatRowImage extends EaseChatRowFile{
     private void setLayoutParams(ImageView imageView, ViewGroup.LayoutParams lp, int scaledWidth,
             int scaledHeight) {
         if(lp.width != scaledWidth || lp.height != scaledHeight) {
-            EMLog.e(TAG, "set layout params");
             lp.width = scaledWidth;
             lp.height = scaledHeight;
             //imageView.setLayoutParams(lp);
