@@ -201,7 +201,7 @@ public abstract class EaseChatRow extends LinearLayout {
                 
                 @Override
                 public void onSuccess() {
-                    updateView();
+                    updateView(0);
                 }
                 
                 @Override
@@ -218,7 +218,7 @@ public abstract class EaseChatRow extends LinearLayout {
                 
                 @Override
                 public void onError(int code, String error) {
-                    updateView();
+                    updateView(code);
                 }
             };
         }
@@ -234,7 +234,7 @@ public abstract class EaseChatRow extends LinearLayout {
                 
                 @Override
                 public void onSuccess() {
-                    updateView();
+                    updateView(0);
                 }
                 
                 @Override
@@ -250,7 +250,7 @@ public abstract class EaseChatRow extends LinearLayout {
                 
                 @Override
                 public void onError(int code, String error) {
-                    updateView();
+                    updateView(code);
                 }
             };
         }
@@ -330,14 +330,13 @@ public abstract class EaseChatRow extends LinearLayout {
     }
 
 
-    protected void updateView() {
+    protected void updateView(final int errorCode) {
         handler.post(new Runnable() {
             public void run() {
                 if (message.status() == EMMessage.Status.FAIL) {
-
-                    if (message.getError() == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
+                    if (errorCode == EMError.MESSAGE_INCLUDE_ILLEGAL_CONTENT) {
                         Toast.makeText(context,context.getString(R.string.send_fail) + context.getString(R.string.error_send_invalid_content), Toast.LENGTH_SHORT).show();
-                    } else if (message.getError() == EMError.GROUP_NOT_JOINED) {
+                    } else if (errorCode == EMError.GROUP_NOT_JOINED) {
                         Toast.makeText(context,context.getString(R.string.send_fail) + context.getString(R.string.error_send_not_in_the_group), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(context,context.getString(R.string.send_fail) + context.getString(R.string.connect_failuer_toast), Toast.LENGTH_SHORT).show();

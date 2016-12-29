@@ -11,9 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
@@ -26,8 +24,13 @@ import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseConversationListView;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.util.NetUtils;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 import static com.hyphenate.easeui.EaseConstant.CHATTYPE_GROUP;
 
@@ -80,17 +83,17 @@ public class ConversationListFragment extends Fragment {
         mConversationListView.setOnItemClickListener(new EaseListItemClickListener() {
             @Override public void onItemClick(View view, int position) {
                 EMConversation conversation = mConversationListView.getItem(position);
-                if (conversation.getUserName().equals(Constant.CONVERSATION_NAME_APPLY)) {
+                if (conversation.conversationId().equals(Constant.CONVERSATION_NAME_APPLY)) {
                     startActivity(new Intent(getActivity(), ApplyActivity.class));
                 } else {
                     //enter to chat activity
                     if(conversation.getType() == EMConversation.EMConversationType.GroupChat){
                         startActivity(new Intent(getActivity(), ChatActivity.class)
-                                .putExtra(Constant.EXTRA_USER_ID, conversation.getUserName())
+                                .putExtra(Constant.EXTRA_USER_ID, conversation.conversationId())
                                 .putExtra(EaseConstant.EXTRA_CHAT_TYPE, CHATTYPE_GROUP));
                     }else if(conversation.getType() == EMConversation.EMConversationType.Chat){
                         startActivity(new Intent(getActivity(), ChatActivity.class).putExtra(
-                                Constant.EXTRA_USER_ID, conversation.getUserName()));
+                                Constant.EXTRA_USER_ID, conversation.conversationId()));
                     }
                 }
             }
@@ -108,7 +111,7 @@ public class ConversationListFragment extends Fragment {
             if(tobeDeleteCons == null){
                 return true;
             }
-            EMClient.getInstance().chatManager().deleteConversation(tobeDeleteCons.getUserName(), true);
+            EMClient.getInstance().chatManager().deleteConversation(tobeDeleteCons.conversationId(), true);
             refresh();
 
             ((MainActivity)getActivity()).updateUnreadMsgLabel();

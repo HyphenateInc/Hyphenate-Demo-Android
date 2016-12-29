@@ -24,11 +24,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
-import com.hyphenate.chat.EMClient;
+
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.util.EMLog;
 import com.hyphenate.util.EasyUtils;
+
 import java.util.HashSet;
 import java.util.List;
 
@@ -106,9 +107,6 @@ public class MessageNotifier {
      * @param message
      */
     public synchronized void onNewMsg(EMMessage message) {
-        if(EMClient.getInstance().chatManager().isSilentMessage(message)){
-            return;
-        }
         EaseUI.EaseSettingsProvider settingsProvider = EaseUI.getInstance().getSettingsProvider();
         if(!settingsProvider.isMsgNotifyAllowed(message)){
             return;
@@ -127,9 +125,6 @@ public class MessageNotifier {
     }
     
     public synchronized void onNewMsg(List<EMMessage> messages) {
-        if(EMClient.getInstance().chatManager().isSilentMessage(messages.get(messages.size()-1))){
-            return;
-        }
         EaseUI.EaseSettingsProvider settingsProvider = EaseUI.getInstance().getSettingsProvider();
         if(!settingsProvider.isMsgNotifyAllowed(null)){
             return;
@@ -293,12 +288,6 @@ public class MessageNotifier {
      * vibrate and  play tone
      */
     public void vibrateAndPlayTone(EMMessage message) {
-        if(message != null){
-            if(EMClient.getInstance().chatManager().isSilentMessage(message)){
-                return;
-            } 
-        }
-        
         if (System.currentTimeMillis() - lastNotifyTime < 1000) {
             // received new messages within 2 seconds, skip play ringtone
             return;

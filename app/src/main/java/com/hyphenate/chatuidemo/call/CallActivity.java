@@ -119,7 +119,7 @@ public class CallActivity extends BaseActivity {
             message.setFrom(mCallId);
         } else {
             message = EMMessage.createSendMessage(EMMessage.Type.TXT);
-            message.setReceipt(mCallId);
+            message.setTo(mCallId);
         }
 
         switch (mCallStatus) {
