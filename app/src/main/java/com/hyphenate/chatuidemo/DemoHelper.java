@@ -152,7 +152,7 @@ public class DemoHelper {
         EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
 
         // send push notification when user offline
-        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
+        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(true);
     }
 
     /**
