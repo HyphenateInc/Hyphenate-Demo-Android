@@ -5,6 +5,8 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chatuidemo.Constant;
+
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -275,4 +277,19 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
         // save invitation as messages
         EMClient.getInstance().chatManager().saveMessage(msg);
     }
+
+    @Override
+    public void onMuteListAdded(String var1, List<String> var2, long var3){}
+
+    @Override
+    public void onMuteListRemoved(String var1, List<String> var2){}
+
+    @Override
+    public void onAdminAdded(String var1, String var2) {}
+
+    @Override
+    public void onAdminRemoved(String var1, String var2) {}
+
+    @Override
+    public void onOwnerChanged(String var1, String var2, String var3) {}
 }

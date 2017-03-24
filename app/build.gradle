@@ -40,6 +40,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {
@@ -55,7 +60,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-places:9.4.0'
     compile 'com.google.android.gms:play-services-maps:9.4.0'
     compile 'com.parse:parse-android:1.13.1'
-    compile 'com.hyphenate:hyphenate-sdk:3.2.3'
+    compile 'com.android.support:multidex:1.0.0'
+//    compile 'com.hyphenate:hyphenate-sdk:3.2.3'
 //    compile(name:'hyphenate-sdk-3.2.3',ext:'aar')
 
     // Fabric
