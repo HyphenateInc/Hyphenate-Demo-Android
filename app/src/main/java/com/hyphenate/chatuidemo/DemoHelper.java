@@ -18,6 +18,7 @@ import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessage.ChatType;
 import com.hyphenate.chat.EMOptions;
+import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chatuidemo.call.CallReceiver;
 import com.hyphenate.chatuidemo.call.CallStateChangeListener;
 import com.hyphenate.chatuidemo.call.VideoCallActivity;
@@ -37,6 +38,9 @@ import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by wei on 2016/10/11.
@@ -68,6 +72,7 @@ public class DemoHelper {
     //whether in calling
     public boolean isVoiceCalling;
     public boolean isVideoCalling;
+    private ExecutorService executor = null;
 
     /**
      * save foreground Activity which registered message listeners
@@ -77,6 +82,7 @@ public class DemoHelper {
     private MessageNotifier mNotifier = new MessageNotifier();
 
     private DemoHelper() {
+        this.executor = Executors.newCachedThreadPool();
     }
 
     public synchronized static DemoHelper getInstance() {
@@ -84,6 +90,10 @@ public class DemoHelper {
             instance = new DemoHelper();
         }
         return instance;
+    }
+
+    public void execute(Runnable runnable) {
+        executor.execute(runnable);
     }
 
     /**
@@ -183,48 +193,212 @@ public class DemoHelper {
 
     private class DefaultGroupChangeListener extends GroupChangeListener {
         @Override public void onInvitationReceived(String s, String s1, String s2, String s3) {
-            super.onInvitationReceived(s, s1, s2, s3);
+            String msgId = s2 + s + EMClient.getInstance().getCurrentUser();
+            EMMessage message = EMClient.getInstance().chatManager().getMessage(msgId);
+            if (message != null) {
+                message.setAttribute(Constant.MESSAGE_ATTR_REASON,
+                        " receive invitation to join the group：" + s1);
+                message.setAttribute(Constant.MESSAGE_ATTR_STATUS, "");
+                message.setMsgTime(System.currentTimeMillis());
+                message.setLocalTime(message.getMsgTime());
+                message.setUnread(true);
+                // update message
+                EMClient.getInstance().chatManager().updateMessage(message);
+            } else {
+                // Create message save application info
+                message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                EMTextMessageBody body =
+                        new EMTextMessageBody(" receive invitation to join the group：" + s1);
+                message.addBody(body);
+                message.setAttribute(Constant.MESSAGE_ATTR_GROUP_ID, s);
+                message.setAttribute(Constant.MESSAGE_ATTR_USERNAME, s2);
+                message.setAttribute(Constant.MESSAGE_ATTR_REASON,
+                        " receive invitation to join the group：" + s1);
+                message.setAttribute(Constant.MESSAGE_ATTR_TYPE, 1);
+                message.setAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE, 0);
+                message.setFrom(Constant.CONVERSATION_NAME_APPLY);
+                message.setMsgId(msgId);
+                // save message to db
+                EMClient.getInstance().chatManager().saveMessage(message);
+            }
             getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onRequestToJoinReceived(String s, String s1, String s2, String s3) {
-            super.onRequestToJoinReceived(s, s1, s2, s3);
+            String msgId = s2 + s + EMClient.getInstance().getCurrentUser();
+            EMMessage message = EMClient.getInstance().chatManager().getMessage(msgId);
+            if (message != null) {
+                message.setAttribute(Constant.MESSAGE_ATTR_REASON, " Apply to join group：" + s1);
+                message.setAttribute(Constant.MESSAGE_ATTR_STATUS, "");
+                message.setMsgTime(System.currentTimeMillis());
+                message.setLocalTime(message.getMsgTime());
+                message.setUnread(true);
+                // update message
+                EMClient.getInstance().chatManager().updateMessage(message);
+            } else {
+                // Create message save application info
+                message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                EMTextMessageBody body = new EMTextMessageBody(s2 + " Apply to join group：" + s1);
+                message.addBody(body);
+                message.setAttribute(Constant.MESSAGE_ATTR_GROUP_ID, s);
+                message.setAttribute(Constant.MESSAGE_ATTR_USERNAME, s2);
+                message.setAttribute(Constant.MESSAGE_ATTR_REASON,
+                        s2 + " Apply to join public group：" + s1);
+                message.setAttribute(Constant.MESSAGE_ATTR_TYPE, 1);
+                message.setFrom(Constant.CONVERSATION_NAME_APPLY);
+                message.setAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE, 1);
+                message.setMsgId(msgId);
+                // save message to db
+                EMClient.getInstance().chatManager().saveMessage(message);
+            }
             getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onRequestToJoinAccepted(String s, String s1, String s2) {
-            super.onRequestToJoinAccepted(s, s1, s2);
+            String msgId = s2 + s + EMClient.getInstance().getCurrentUser();
+            EMMessage message = EMClient.getInstance().chatManager().getMessage(msgId);
+            if (message != null) {
+                message.setAttribute(Constant.MESSAGE_ATTR_REASON, s2 + " Accepted your group apply ");
+                message.setAttribute(Constant.MESSAGE_ATTR_STATUS, s2 + "Agreed");
+                message.setMsgTime(System.currentTimeMillis());
+                message.setLocalTime(message.getMsgTime());
+                message.setUnread(true);
+                // update message
+                EMClient.getInstance().chatManager().updateMessage(message);
+            } else {
+                // Create message save application info
+                message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                EMTextMessageBody body = new EMTextMessageBody(s2 + " Accepted your group apply ");
+                message.addBody(body);
+                message.setAttribute(Constant.MESSAGE_ATTR_GROUP_ID, s);
+                message.setAttribute(Constant.MESSAGE_ATTR_USERNAME, s1);
+                message.setAttribute(Constant.MESSAGE_ATTR_REASON, s2 + " Accepted your group apply ");
+                message.setAttribute(Constant.MESSAGE_ATTR_TYPE, 1);
+                message.setFrom(Constant.CONVERSATION_NAME_APPLY);
+                message.setAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE, 1);
+                message.setAttribute(Constant.MESSAGE_ATTR_STATUS, s2 + " Agreed");
+                message.setStatus(EMMessage.Status.SUCCESS);
+                message.setMsgId(msgId);
+                // save accept message
+                EMClient.getInstance().chatManager().saveMessage(message);
+            }
             getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
-            super.onRequestToJoinDeclined(s, s1, s2, s3);
+            String msgId = s2 + s + EMClient.getInstance().getCurrentUser();
+            EMMessage message = EMClient.getInstance().chatManager().getMessage(msgId);
+            if (message != null) {
+                message.setAttribute(Constant.MESSAGE_ATTR_REASON, s2 + " Declined your group apply ");
+                message.setAttribute(Constant.MESSAGE_ATTR_STATUS, s2 + " Declined");
+                message.setMsgTime(System.currentTimeMillis());
+                message.setLocalTime(message.getMsgTime());
+                message.setUnread(true);
+                // update message
+                EMClient.getInstance().chatManager().updateMessage(message);
+            } else {
+                // Create message save application info
+                message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                EMTextMessageBody body = new EMTextMessageBody(s2 + " Declined your group apply ");
+                message.addBody(body);
+                message.setAttribute(Constant.MESSAGE_ATTR_GROUP_ID, s);
+                message.setAttribute(Constant.MESSAGE_ATTR_USERNAME, s1);
+                message.setAttribute(Constant.MESSAGE_ATTR_REASON, s2 + " Declined your group apply ");
+                message.setAttribute(Constant.MESSAGE_ATTR_TYPE, 1);
+                message.setFrom(Constant.CONVERSATION_NAME_APPLY);
+                message.setAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE, 1);
+                message.setAttribute(Constant.MESSAGE_ATTR_STATUS, s2 + " Declined");
+                message.setStatus(EMMessage.Status.SUCCESS);
+                message.setMsgId(msgId);
+                // save accept message
+                EMClient.getInstance().chatManager().saveMessage(message);
+            }
             getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onInvitationAccepted(String s, String s1, String s2) {
-            super.onInvitationAccepted(s, s1, s2);
+            String msgId = s2 + s + EMClient.getInstance().getCurrentUser();
+            EMMessage message = EMClient.getInstance().chatManager().getMessage(msgId);
+            if (message != null) {
+                message.setAttribute(Constant.MESSAGE_ATTR_REASON, s1 + " Accepted your group invite ");
+                message.setAttribute(Constant.MESSAGE_ATTR_STATUS, s1 + " Accepted");
+                message.setMsgTime(System.currentTimeMillis());
+                message.setLocalTime(message.getMsgTime());
+                message.setUnread(true);
+                // update message
+                EMClient.getInstance().chatManager().updateMessage(message);
+            } else {
+                // Create message save application info
+                message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                EMTextMessageBody body = new EMTextMessageBody(s2 + " Accepted your group invite ");
+                message.addBody(body);
+                message.setAttribute(Constant.MESSAGE_ATTR_GROUP_ID, s);
+                message.setAttribute(Constant.MESSAGE_ATTR_USERNAME, s1);
+                message.setAttribute(Constant.MESSAGE_ATTR_REASON, s1 + " Accepted your group invite ");
+                message.setAttribute(Constant.MESSAGE_ATTR_TYPE, 1);
+                message.setFrom(Constant.CONVERSATION_NAME_APPLY);
+                message.setAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE, 0);
+                message.setAttribute(Constant.MESSAGE_ATTR_STATUS, s1 + " Accepted");
+                message.setStatus(EMMessage.Status.SUCCESS);
+                message.setMsgId(msgId);
+                // save accept message
+                EMClient.getInstance().chatManager().saveMessage(message);
+            }
             getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onInvitationDeclined(String s, String s1, String s2) {
-            super.onInvitationDeclined(s, s1, s2);
+            String msgId = s2 + s + EMClient.getInstance().getCurrentUser();
+            EMMessage message = EMClient.getInstance().chatManager().getMessage(msgId);
+            if (message != null) {
+                message.setAttribute(Constant.MESSAGE_ATTR_REASON, s1 + " Declined your group invite ");
+                message.setAttribute(Constant.MESSAGE_ATTR_STATUS, s1 + " Declined");
+                message.setMsgTime(System.currentTimeMillis());
+                message.setLocalTime(message.getMsgTime());
+                message.setUnread(true);
+                // update message
+                EMClient.getInstance().chatManager().updateMessage(message);
+            } else {
+                // Create message save application info
+                message = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+                EMTextMessageBody body = new EMTextMessageBody(s1 + " Declined your group invite ");
+                message.addBody(body);
+                message.setAttribute(Constant.MESSAGE_ATTR_GROUP_ID, s);
+                message.setAttribute(Constant.MESSAGE_ATTR_USERNAME, s1);
+                message.setAttribute(Constant.MESSAGE_ATTR_REASON, s1 + " Declined your group invite ");
+                message.setAttribute(Constant.MESSAGE_ATTR_TYPE, 1);
+                message.setFrom(Constant.CONVERSATION_NAME_APPLY);
+                message.setAttribute(Constant.MESSAGE_ATTR_GROUP_TYPE, 0);
+                message.setAttribute(Constant.MESSAGE_ATTR_STATUS, s1 + " Declined");
+                message.setStatus(EMMessage.Status.SUCCESS);
+                message.setMsgId(msgId);
+                // save accept message
+                EMClient.getInstance().chatManager().saveMessage(message);
+            }
             getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onUserRemoved(String s, String s1) {
-            super.onUserRemoved(s, s1);
             getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onGroupDestroyed(String s, String s1) {
-            super.onGroupDestroyed(s, s1);
             getNotifier().vibrateAndPlayTone(null);
         }
 
         @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
-            super.onAutoAcceptInvitationFromGroup(s, s1, s2);
+            EMMessage msg = EMMessage.createReceiveMessage(EMMessage.Type.TXT);
+            msg.setChatType(EMMessage.ChatType.GroupChat);
+            msg.setFrom(s1);
+            msg.setTo(s);
+            msg.setMsgId(UUID.randomUUID().toString());
+            msg.addBody(new EMTextMessageBody(s1 + " Invite you to join this group "));
+            msg.setStatus(EMMessage.Status.SUCCESS);
+            // save invitation as messages
+            EMClient.getInstance().chatManager().saveMessage(msg);
+
             getNotifier().vibrateAndPlayTone(null);
+
         }
     }
 

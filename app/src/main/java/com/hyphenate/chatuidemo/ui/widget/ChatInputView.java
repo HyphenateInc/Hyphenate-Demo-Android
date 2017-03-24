@@ -9,13 +9,13 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import android.widget.TextView;
+
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.model.EaseDefaultEmojiconDatas;
 import com.hyphenate.easeui.model.EaseEmojicon;
@@ -25,9 +25,15 @@ import com.hyphenate.easeui.utils.Utils;
 import com.hyphenate.easeui.widget.EaseChatExtendMenu;
 import com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenu;
 import com.hyphenate.easeui.widget.emojicon.EaseEmojiconMenuBase;
+import com.hyphenate.util.EMLog;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by wei on 2016/10/14.
@@ -50,8 +56,9 @@ public class ChatInputView extends LinearLayout {
 
     private Context mContext;
 
-
     private Handler handler = new Handler();
+
+    private boolean ctrlPress = false;
 
     public ChatInputView(Context context) {
         super(context);
@@ -90,6 +97,41 @@ public class ChatInputView extends LinearLayout {
                 }
             }
         });
+
+        mEditText.setOnKeyListener(new OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                EMLog.d("key", "keyCode:" + keyCode + " action:" + event.getAction());
+
+                // test on Mac virtual machine: Ctrl key map to KEYCODE_UNKNOWN
+                if (keyCode == KeyEvent.KEYCODE_UNKNOWN) {
+                    if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                        ctrlPress = true;
+                    } else if (event.getAction() == KeyEvent.ACTION_UP) {
+                        ctrlPress = false;
+                    }
+                }
+                return false;
+            }
+        });
+
+        mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                EMLog.d("key", "keyCode:" + event.getKeyCode() + " action" + event.getAction() + " ctrl:" + ctrlPress);
+                if (actionId == EditorInfo.IME_ACTION_SEND ||
+                        (event.getKeyCode() == KeyEvent.KEYCODE_ENTER &&
+                                event.getAction() == KeyEvent.ACTION_DOWN &&
+                                ctrlPress == true)) {
+                    onSendClick();
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        });
+
         mEditText.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
                 hideExtendMenuContainer();

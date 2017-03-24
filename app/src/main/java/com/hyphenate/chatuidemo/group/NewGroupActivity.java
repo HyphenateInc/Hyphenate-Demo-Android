@@ -21,18 +21,21 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.chat.ChatActivity;
+import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.exceptions.HyphenateException;
+
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by benson on 2016/10/26.
@@ -122,6 +125,7 @@ public class NewGroupActivity extends BaseActivity {
 
                             EMGroupManager.EMGroupOptions options = new EMGroupManager.EMGroupOptions();
                             options.maxUsers = 200;
+                            options.inviteNeedConfirm = true;
                             if (groupTypeSwitch.isChecked()) {
                                 if (inviteSwitch.isChecked()) {
                                     options.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicOpenJoin;
