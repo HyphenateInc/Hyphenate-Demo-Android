@@ -5,6 +5,7 @@ buildscript {
 
     repositories {
 //        maven { url 'https://maven.fabric.io/public' }
+        mavenCentral()
     }
 }
 
@@ -23,7 +24,7 @@ repositories {
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion '25.0.0'
     //use legacy for for android 6.0
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
@@ -49,6 +50,7 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     // Design support already included v4 and appcompat-v7, So here on the introduction of 'design'
     compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:multidex:1.0.0'
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.google.android.gms:play-services-gcm:9.4.0'
@@ -56,7 +58,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:9.4.0'
     compile 'com.parse:parse-android:1.13.1'
     compile 'com.hyphenate:hyphenate-sdk:3.2.3'
-//    compile(name:'hyphenate-sdk-3.2.3',ext:'aar')
 
     // Fabric
 //    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
