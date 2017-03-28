@@ -3,6 +3,8 @@ package com.hyphenate.chatuidemo;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by wei on 2016/9/27.
@@ -21,7 +23,7 @@ public class DemoApplication extends Application {
         public void onCreate() {
         MultiDex.install(this);
         super.onCreate();
-        //Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics());
         instance = this;
         applicationContext = this;
 
