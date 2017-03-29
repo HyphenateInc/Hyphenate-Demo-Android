@@ -292,4 +292,11 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
 
     @Override
     public void onOwnerChanged(String var1, String var2, String var3) {}
+
+    @Override
+    public void onMemberJoined(String var1, String var2) {}
+
+    @Override
+    public void onMemberExited(String var1, String var2) {}
+
 }

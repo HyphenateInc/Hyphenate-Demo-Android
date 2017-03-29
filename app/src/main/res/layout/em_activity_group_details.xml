@@ -38,14 +38,28 @@
             android:src="@drawable/ease_ic_group_default"
             />
 
-        <TextView
-            android:id="@+id/text_group_details_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/group_name_margin_left"
-            android:textColor="@color/group_name_color"
-            android:textSize="@dimen/group_details_name_size"
-            />
+            android:orientation="vertical">
+          <TextView
+              android:id="@+id/text_group_details_name"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="@dimen/group_name_margin_left"
+              android:textColor="@color/group_name_color"
+              android:textSize="@dimen/group_details_name_size"
+              />
+
+          <TextView
+              android:id="@+id/text_group_details_desc"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="@dimen/group_name_margin_left"
+              android:textColor="@color/group_name_color"
+              android:textSize="@dimen/group_details_desc_size"
+              />
+        </LinearLayout>
       </LinearLayout>
 
       <TextView
@@ -54,51 +68,70 @@
           android:background="@color/base_line_color"
           />
 
-      <LinearLayout
+      <RelativeLayout
           android:layout_width="match_parent"
           android:layout_height="48dp"
           android:background="@color/colorTextPrimary"
           android:gravity="center_vertical"
+          android:orientation="horizontal"
           >
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/group_item_padding"
-            android:text="Members"
-            android:textSize="@dimen/group_text_size"
-            />
+            android:layout_centerVertical="true"
+            >
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="@dimen/group_item_padding"
+              android:text="Members"
+              android:textSize="@dimen/group_text_size"
+              />
 
-        <TextView
-            android:id="@+id/text_group_details_member_size"
+          <TextView
+              android:id="@+id/text_group_details_member_size"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textColor="#8798a4"
+              android:textSize="@dimen/group_text_size"
+              />
+        </LinearLayout>
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#8798a4"
-            android:textSize="@dimen/group_text_size"
-            />
+            android:id="@+id/iv_invite_member"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/add_member_icon"/>
 
-      </LinearLayout>
+      </RelativeLayout>
 
       <RelativeLayout
           android:id="@+id/layout_member_list"
           android:layout_width="match_parent"
-          android:layout_height="80dp"
+          android:layout_height="60dp"
           android:background="?android:attr/selectableItemBackground"
           android:orientation="horizontal"
           >
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_member"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:listSelector="@android:color/transparent"
-            />
         <ImageView
+            android:id="@+id/go_members"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="16.5dp"
             android:src="@drawable/cell_chevron_right"
+            />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_member"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:listSelector="@android:color/transparent"
+            android:layout_toLeftOf="@id/go_members"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="25dp"
             />
       </RelativeLayout>
 
@@ -246,6 +279,7 @@
             />
       </RelativeLayout>
 
+
       <TextView
           android:id="@+id/text_exit_group"
           android:layout_width="match_parent"
@@ -258,8 +292,6 @@
           android:typeface="serif"
           />
 
-
     </LinearLayout>
   </ScrollView>
-
 </LinearLayout>
