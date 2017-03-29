@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.utils.EaseUserUtils;
+import com.hyphenate.easeui.widget.EaseListItemClickListener;
 
 import java.util.List;
 
@@ -26,11 +27,16 @@ public class MucMembersHorizontalAdapter extends RecyclerView.Adapter<MucMembers
     private Context context;
     private List<String> membersList;
     private MucRoleJudge roleJudge;
+    private EaseListItemClickListener listener;
 
     public MucMembersHorizontalAdapter(Context context, List<String> objects, MucRoleJudge judge) {
         this.context = context;
         this.membersList = objects;
         this.roleJudge = judge;
+    }
+
+    public void setItemClickListener(EaseListItemClickListener listener) {
+        this.listener = listener;
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -39,7 +45,7 @@ public class MucMembersHorizontalAdapter extends RecyclerView.Adapter<MucMembers
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         String username = membersList.get(position);
         EaseUserUtils.setUserNick(username, holder.memberNameView);
         EaseUserUtils.setUserAvatar(context, username, holder.memberAvatarView);
@@ -55,6 +61,14 @@ public class MucMembersHorizontalAdapter extends RecyclerView.Adapter<MucMembers
             holder.img_role.setImageResource(R.drawable.em_avatar_admin);
         } else {
             holder.img_role.setVisibility(View.GONE);
+        }
+
+        if (listener != null) {
+            holder.memberListView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(v, position);
+                }
+            });
         }
     }
 

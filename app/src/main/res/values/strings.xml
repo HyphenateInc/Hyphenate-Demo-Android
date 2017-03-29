@@ -156,7 +156,7 @@
     <string name="em_load_public_group">load public group</string>
     <string name="em_join">JOIN</string>
 
-    <!-- group menu -->
+    <!-- group detail menu -->
     <string name="em_group_transfer_owner">Transfer owner</string>
     <string name="em_group_clear_conversation">Clear conversation</string>
     <string name="em_group_change_group_name">Change group name</string>
@@ -164,6 +164,9 @@
     <string name="em_group_admin_list">Admin list</string>
     <string name="em_group_black_list">Black list</string>
     <string name="em_group_mute_list">Mute list</string>
+
+    <!-- group detail menu -->
+    <string name="em_group_members_add">Add members</string>
 
     <!-- chat -->
     <string name="chat_voice_call">Voice call</string>

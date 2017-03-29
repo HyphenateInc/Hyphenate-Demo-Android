@@ -10,18 +10,26 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.chat.ChatActivity;
+import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.exceptions.HyphenateException;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by benson on 2016/10/25.
@@ -34,8 +42,36 @@ public class MembersListActivity extends BaseActivity {
     List<String> membersList = new ArrayList<>();
     boolean isOwner = false;
     String groupId;
+    EMGroup group;
     ProgressDialog progressDialog;
     private boolean isChange;
+
+    private Set<String> adminSet = new HashSet<>();
+    private Set<String> muteSet = new HashSet<>();
+
+    MucRoleJudge mucRoleJudge = new MucRoleJudge() {
+
+        @Override
+        public boolean isOwner(String name) {
+            return group.getOwner().equals(name);
+        }
+
+        @Override
+        public boolean isAdmin(String name) {
+            if (name == null || name.isEmpty()) {
+                return false;
+            }
+            return adminSet.contains(name);
+        }
+
+        @Override
+        public boolean isMuted(String name) {
+            if (name == null || name.isEmpty()) {
+                return false;
+            }
+            return muteSet.contains(name);
+        }
+    };
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,14 +79,18 @@ public class MembersListActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         groupId = getIntent().getExtras().getString("groupId");
+        group = EMClient.getInstance().groupManager().getGroup(groupId);
         isOwner = getIntent().getExtras().getBoolean("isOwner");
-        membersList.addAll(getIntent().getStringArrayListExtra("members"));
+
+        membersList.add(group.getOwner());
+        membersList.addAll(group.getAdminList());
+        membersList.addAll(group.getMembers());
 
         manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
 
-        final MembersListAdapter adapter = new MembersListAdapter(this, membersList, LinearLayoutManager.VERTICAL);
+        final MucMembersHorizontalAdapter adapter = new MucMembersHorizontalAdapter(this, membersList, mucRoleJudge);
         recyclerView.setAdapter(adapter);
 
         final Toolbar toolbar = getActionBarToolbar();
@@ -64,7 +104,6 @@ public class MembersListActivity extends BaseActivity {
         adapter.setItemClickListener(new EaseListItemClickListener() {
             @Override public void onItemClick(View view, int position) {
                 if (!EMClient.getInstance().getCurrentUser().equals(membersList.get(position))) {
-
                     startActivity(
                             new Intent(MembersListActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, membersList.get(position)));
                 } else {
@@ -125,6 +164,25 @@ public class MembersListActivity extends BaseActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.em_group_members_menu, menu);
+        return true;
+    }
+
+    private Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.menu_item_group_members_add:
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+    };
 
     @Override public void onBackPressed() {
         if (isChange){
