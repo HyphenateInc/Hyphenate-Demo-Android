@@ -38,9 +38,7 @@ import com.hyphenate.chatuidemo.chat.ChatActivity;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,11 +70,9 @@ public class GroupDetailsActivity extends BaseActivity {
 
     List<String> members = new ArrayList<>();
     private boolean isOwner = false;
+    GroupUtils.MucRoleJudge mucRoleJudge = new GroupUtils.MucRoleJudgeImpl();
 
     private DefaultGroupChangeListener listener;
-
-    private Set<String> adminSet = new HashSet<>();
-    private Set<String> muteSet = new HashSet<>();
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +127,7 @@ public class GroupDetailsActivity extends BaseActivity {
                 case R.id.menu_item_change_group_desc:
                     break;
                 case R.id.menu_item_admin_list:
+                    startActivity(new Intent(GroupDetailsActivity.this, GroupAdminActivity.class).putExtra("groupId", groupId));
                     break;
                 case R.id.menu_item_black_list:
                     break;
@@ -178,8 +175,7 @@ public class GroupDetailsActivity extends BaseActivity {
         members.add(group.getOwner());
         members.addAll(group.getAdminList());
 
-        adminSet.addAll(group.getAdminList());
-        muteSet.addAll(group.getMuteList());
+        mucRoleJudge.update(group);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(GroupDetailsActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
@@ -221,7 +217,7 @@ public class GroupDetailsActivity extends BaseActivity {
                 exitGroupUI();
                 break;
             case R.id.layout_member_list://show member list
-                startActivityForResult(new Intent(GroupDetailsActivity.this, MembersListActivity.class).putExtra("isOwner", isOwner)
+                startActivityForResult(new Intent(GroupDetailsActivity.this, GroupMembersListActivity.class).putExtra("isOwner", isOwner)
                         .putExtra("groupId", groupId)
                         .putStringArrayListExtra("members", (ArrayList<String>) members), REQUEST_CODE_MEMBER_REFRESH);
                 break;
@@ -388,28 +384,4 @@ public class GroupDetailsActivity extends BaseActivity {
             });
         }
     }
-
-    MucRoleJudge mucRoleJudge = new MucRoleJudge() {
-
-        @Override
-        public boolean isOwner(String name) {
-            return group.getOwner().equals(name);
-        }
-
-        @Override
-        public boolean isAdmin(String name) {
-            if (name == null || name.isEmpty()) {
-                return false;
-            }
-            return adminSet.contains(name);
-        }
-
-        @Override
-        public boolean isMuted(String name) {
-            if (name == null || name.isEmpty()) {
-                return false;
-            }
-            return muteSet.contains(name);
-        }
-    };
 }

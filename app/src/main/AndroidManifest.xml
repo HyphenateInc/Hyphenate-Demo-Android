@@ -105,6 +105,8 @@
         <activity android:name=".group.GroupDetailsActivity"/>
         <activity android:name=".group.InviteMembersActivity"/>
         <activity android:name=".group.MembersListActivity"/>
+        <activity android:name=".group.GroupMembersListActivity"/>
+        <activity android:name=".group.GroupAdminActivity"/>
         <activity android:name=".group.NewGroupActivity"/>
         <activity android:name=".group.PublicGroupsListActivity"/>
 

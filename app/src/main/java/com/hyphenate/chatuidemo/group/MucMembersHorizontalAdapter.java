@@ -26,10 +26,10 @@ public class MucMembersHorizontalAdapter extends RecyclerView.Adapter<MucMembers
 
     private Context context;
     private List<String> membersList;
-    private MucRoleJudge roleJudge;
+    private GroupUtils.MucRoleJudge roleJudge;
     private EaseListItemClickListener listener;
 
-    public MucMembersHorizontalAdapter(Context context, List<String> objects, MucRoleJudge judge) {
+    public MucMembersHorizontalAdapter(Context context, List<String> objects, GroupUtils.MucRoleJudge judge) {
         this.context = context;
         this.membersList = objects;
         this.roleJudge = judge;

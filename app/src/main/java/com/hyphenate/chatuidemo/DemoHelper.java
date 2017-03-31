@@ -37,6 +37,8 @@ import com.hyphenate.util.EMLog;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by wei on 2016/10/11.
@@ -68,6 +70,7 @@ public class DemoHelper {
     //whether in calling
     public boolean isVoiceCalling;
     public boolean isVideoCalling;
+    private ExecutorService executor = null;
 
     /**
      * save foreground Activity which registered message listeners
@@ -77,6 +80,7 @@ public class DemoHelper {
     private MessageNotifier mNotifier = new MessageNotifier();
 
     private DemoHelper() {
+        this.executor = Executors.newCachedThreadPool();
     }
 
     public synchronized static DemoHelper getInstance() {
@@ -84,6 +88,10 @@ public class DemoHelper {
             instance = new DemoHelper();
         }
         return instance;
+    }
+
+    public void execute(Runnable runnable) {
+        executor.execute(runnable);
     }
 
     /**

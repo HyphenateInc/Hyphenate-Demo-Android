@@ -25,9 +25,9 @@ public class MucMembersVerticalAdapter extends RecyclerView.Adapter<MucMembersVe
 
     private Context context;
     private List<String> membersList;
-    private MucRoleJudge roleJudge;
+    private GroupUtils.MucRoleJudge roleJudge;
 
-    public MucMembersVerticalAdapter(Context context, List<String> objects, MucRoleJudge judge) {
+    public MucMembersVerticalAdapter(Context context, List<String> objects, GroupUtils.MucRoleJudge judge) {
         this.context = context;
         this.membersList = objects;
         this.roleJudge = judge;
