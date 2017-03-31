@@ -167,6 +167,8 @@
 
     <!-- group detail menu -->
     <string name="em_group_members_add">Add members</string>
+    <string name="em_group_admin_save">Save</string>
+    <string name="em_group_transfer_owner_save">Save</string>
 
     <!-- group member item alert menu -->
     <string name="em_group_member_alert_item_add_mute">mute</string>

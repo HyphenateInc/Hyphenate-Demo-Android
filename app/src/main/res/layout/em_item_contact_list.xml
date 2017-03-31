@@ -57,6 +57,19 @@
             android:layout_marginRight="16dp"
             android:visibility="gone"
             />
+
+        <ImageView
+            android:id="@+id/img_right"
+            android:layout_width="18dp"
+            android:layout_height="13dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:focusable="false"
+            android:src="@drawable/em_cell_check"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <TextView

@@ -55,7 +55,7 @@ public class GroupMembersListActivity extends BaseActivity {
 
     Handler handler = new Handler();
 
-    GroupUtils.LoadMoreData loadMoreData;
+    GroupUtils.LoadMoreData<String> loadMoreData;
 
     GroupUtils.MucRoleJudge mucRoleJudge = new GroupUtils.MucRoleJudgeImpl();
 
@@ -165,7 +165,7 @@ public class GroupMembersListActivity extends BaseActivity {
             }
         });
 
-        loadMoreData = new GroupUtils.LoadMoreData(this, membersList, adapter,
+        loadMoreData = new GroupUtils.LoadMoreData<>(this, membersList, adapter,
                 new Runnable() { // initial load
                     @Override
                     public void run() {
@@ -178,7 +178,7 @@ public class GroupMembersListActivity extends BaseActivity {
                             list.addAll(group.getAdminList());
                             EMCursorResult<String> result = new EMCursorResult<>();
                             result.setData(list);
-                            loadMoreData.updateResult(result);
+                            loadMoreData.setFetchResult(result);
                         } catch (HyphenateException e) { e.printStackTrace(); }
                     }
                 },
@@ -186,7 +186,7 @@ public class GroupMembersListActivity extends BaseActivity {
                     @Override
                     public void run() {
                         try {
-                            loadMoreData.updateResult(EMClient.getInstance().groupManager().fetchGroupMembers(groupId, loadMoreData.getCursor(), GroupUtils.LoadMoreData.PAGE_SIZE));
+                            loadMoreData.setFetchResult(EMClient.getInstance().groupManager().fetchGroupMembers(groupId, loadMoreData.getCursor(), GroupUtils.LoadMoreData.PAGE_SIZE));
                         } catch (HyphenateException e) { e.printStackTrace(); }
                     }
                 },
@@ -196,7 +196,7 @@ public class GroupMembersListActivity extends BaseActivity {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                snackbar = Snackbar.make(recyclerView, "No more data", Snackbar.LENGTH_INDEFINITE);
+                                snackbar = Snackbar.make(recyclerView, "No more data", Snackbar.LENGTH_LONG);
                                 snackbar.show();
                             }
                         }, 1000);

@@ -119,6 +119,7 @@ public class GroupDetailsActivity extends BaseActivity {
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.menu_item_transfer_owner:
+                    startActivity(new Intent(GroupDetailsActivity.this, GroupTransferOwnerActivity.class).putExtra("groupId", groupId));
                     break;
                 case R.id.menu_item_clear_conversation:
                     break;

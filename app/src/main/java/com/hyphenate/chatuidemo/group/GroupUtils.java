@@ -20,7 +20,7 @@ public class GroupUtils {
     /**
      * load more data byte cursor or by page
      */
-    public static class LoadMoreData {
+    public static class LoadMoreData<T> {
         public static final int PAGE_SIZE = 20;
 
         private boolean isLoading;
@@ -29,9 +29,9 @@ public class GroupUtils {
         private String cursor;
         private Object loadMutex = new Object();
 
-        private List<String> adapterDataList;
+        private List<T> adapterDataList;
         private RecyclerView.Adapter adapter;
-        private List<String> fetchData = new ArrayList<>();
+        private List<T> fetchData = new ArrayList<>();
 
         private Runnable initialAction;
         private Runnable loadAction;
@@ -39,7 +39,7 @@ public class GroupUtils {
 
         private Activity activity;
 
-        public LoadMoreData(Activity activity, List<String> dataList, RecyclerView.Adapter adapter, Runnable initialAction, Runnable loadAction, Runnable onNoMoreDataAction) {
+        public LoadMoreData(Activity activity, List<T> dataList, RecyclerView.Adapter adapter, Runnable initialAction, Runnable loadAction, Runnable onNoMoreDataAction) {
             this.activity = activity;
             this.adapterDataList = dataList;
             this.adapter = adapter;
@@ -108,7 +108,7 @@ public class GroupUtils {
             }
         }
 
-        public void updateResult(EMCursorResult<String> data) {
+        public void setFetchResult(EMCursorResult<T> data) {
             fetchData.clear();
             fetchData.addAll(data.getData());
             cursor = data.getCursor();

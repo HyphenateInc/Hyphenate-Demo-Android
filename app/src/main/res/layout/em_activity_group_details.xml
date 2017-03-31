@@ -80,6 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:gravity="center"
             >
           <TextView
               android:layout_width="wrap_content"
@@ -99,8 +100,8 @@
         </LinearLayout>
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:id="@+id/iv_invite_member"
             android:layout_alignParentRight="true"
             android:layout_marginRight="8dp"
@@ -114,6 +115,7 @@
           android:layout_height="60dp"
           android:background="?android:attr/selectableItemBackground"
           android:orientation="horizontal"
+          android:paddingTop="8dp"
           >
         <ImageView
             android:id="@+id/go_members"

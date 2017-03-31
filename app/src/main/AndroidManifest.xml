@@ -109,7 +109,7 @@
         <activity android:name=".group.GroupAdminActivity"/>
         <activity android:name=".group.NewGroupActivity"/>
         <activity android:name=".group.PublicGroupsListActivity"/>
-
+        <activity android:name=".group.GroupTransferOwnerActivity"/>
 
         <!--Chat activity-->
         <activity

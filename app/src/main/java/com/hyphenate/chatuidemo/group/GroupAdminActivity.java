@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -14,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;
@@ -30,10 +35,14 @@ import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.EMLog;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.hyphenate.chatuidemo.group.GroupListActivity.toolbar;
 
 /**
  * Created by linan on 17/3/30.
@@ -76,7 +85,107 @@ public class GroupAdminActivity extends BaseActivity {
         recycler_members.setLayoutManager(new LinearLayoutManager(GroupAdminActivity.this, LinearLayoutManager.VERTICAL, false));
         recycler_members.setAdapter(checkBoxAdapter);
 
+        toolbar = getActionBarToolbar();
+        toolbar.setNavigationIcon(R.drawable.em_ic_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                finish();
+            }
+        });
+
+        Toolbar.LayoutParams params = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.RIGHT;
+        toolbar.setOnMenuItemClickListener(onMenuItemClick);
+
         updateMemberList();
+    }
+
+    private Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.menu_item_group_admin_save:
+                    saveAdmins();
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+    };
+
+    private void saveAdmins() {
+        // save admin list
+        final List<String> toAdd = new ArrayList<>();
+        final List<String> toRemove = new ArrayList<>();
+
+        Set<String> adminSet = new HashSet<>();
+        adminSet.addAll((ArrayList)group.getAdminList());
+        for (String user : gridAdapterData) {
+            if (!adminSet.contains(user)) {
+                toAdd.add(user);
+            }
+        }
+
+        Set<String> gridDataSet = new HashSet<>();
+        gridDataSet.addAll(gridAdapterData);
+        for (String user : adminSet) {
+            if (!gridAdapterData.contains(user)) {
+                toRemove.add(user);
+            }
+        }
+
+        DemoHelper.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean result = true;
+                HyphenateException exceptionResult = null;
+                try {
+                    for (String user : toAdd) {
+                        EMClient.getInstance().groupManager().addGroupAdmin(groupId, user);
+                    }
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                    exceptionResult = e;
+                    result = false;
+                }
+                try {
+                    if (result) {
+                        for (String user : toRemove) {
+                            EMClient.getInstance().groupManager().removeGroupAdmin(groupId, user);
+                        }
+                    }
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                    exceptionResult = e;
+                    result = false;
+                }
+
+                final boolean fResult = result;
+                final HyphenateException fExceptionResult = exceptionResult;
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!fResult) {
+                            Toast.makeText(GroupAdminActivity.this,
+                                    String.format("Failed to save admin list, errorCode: %s, desc: %s",
+                                            fExceptionResult.getErrorCode(),
+                                            fExceptionResult.getDescription()),
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            finish();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.em_group_admin_menu, menu);
+        return true;
     }
 
     private void updateMemberList() {
