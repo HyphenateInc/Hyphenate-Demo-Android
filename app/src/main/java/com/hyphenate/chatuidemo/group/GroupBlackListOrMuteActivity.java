@@ -5,9 +5,9 @@ import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
@@ -18,15 +18,18 @@ import com.hyphenate.exceptions.HyphenateException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.hyphenate.chatuidemo.group.GroupListActivity.toolbar;
 
 /**
  * Created by linan on 17/3/31.
  */
 
-public class GroupBlackListActivity  extends BaseActivity {
+public class GroupBlackListOrMuteActivity extends BaseActivity {
 
     @BindView(R.id.recycler_members) RecyclerView recyclerView;
 
@@ -39,6 +42,9 @@ public class GroupBlackListActivity  extends BaseActivity {
 
     List<UserEntity> userEntityList = new ArrayList<>();
     GroupUtils.LoadMoreData<UserEntity> loadMoreData;
+    boolean isMuteActivity = false;
+    boolean isBlackListActivity = false;
+
 
     @Override protected void onCreate(Bundle savedInstanceState) {
 
@@ -47,7 +53,25 @@ public class GroupBlackListActivity  extends BaseActivity {
         ButterKnife.bind(this);
 
         groupId = getIntent().getExtras().getString("groupId");
+        isBlackListActivity = getIntent().getExtras().getBoolean("is_black_list");
+        isMuteActivity = getIntent().getExtras().getBoolean("is_mute");
+
         group = EMClient.getInstance().groupManager().getGroup(groupId);
+
+        // toolbar
+        toolbar = getActionBarToolbar();
+        toolbar.setNavigationIcon(R.drawable.em_ic_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                finish();
+            }
+        });
+
+        if (isBlackListActivity) {
+            toolbar.setTitle(R.string.em_group_black_list);
+        } else if (isMuteActivity) {
+            toolbar.setTitle(R.string.em_group_mute_list);
+        }
 
         // recyclerView
         manager = new LinearLayoutManager(this);
@@ -75,17 +99,21 @@ public class GroupBlackListActivity  extends BaseActivity {
 
         });
 
-        loadMoreData = new GroupUtils.LoadMoreData<>(GroupBlackListActivity.this, userEntityList, adapter,
+        // loadMoreData
+        loadMoreData = new GroupUtils.LoadMoreData<>(GroupBlackListOrMuteActivity.this, userEntityList, adapter,
                 null,               // initial data
                 new Runnable() {    // fetch data
                     @Override
                     public void run() {
                         try {
-                            EMCursorResult<String> result = EMClient.getInstance().groupManager().fetchGroupBlackList(groupId, loadMoreData.getCursor(), GroupUtils.LoadMoreData.PAGE_SIZE);
-                            EMCursorResult<UserEntity> fetchResult = new EMCursorResult<>();
-                            fetchResult.setCursor(result.getCursor());
-                            fetchResult.setData(UserProfileManager.convertContactList(result.getData()));
-                            loadMoreData.setFetchResult(fetchResult);
+                            List<String> result = new ArrayList<>();
+                            if (isBlackListActivity) {
+                                result.addAll(EMClient.getInstance().groupManager().fetchGroupBlackList(groupId, loadMoreData.getPageNumber(), GroupUtils.LoadMoreData.PAGE_SIZE));
+                            } else if (isMuteActivity) {
+                                Map<String, Long>  mutes = EMClient.getInstance().groupManager().fetchGroupMuteList(groupId, loadMoreData.getPageNumber(), GroupUtils.LoadMoreData.PAGE_SIZE);
+                                result.addAll(mutes.keySet());
+                            }
+                            loadMoreData.setFetchResult(UserProfileManager.convertContactList(result));
                         } catch (HyphenateException e) { e.printStackTrace(); }
                     }
                 },

@@ -26,6 +26,7 @@ public class GroupUtils {
         private boolean isLoading;
         private boolean isFirstLoading = true;
         private boolean hasMoreData = true;
+        private int pageNumber = 0;
         private String cursor;
         private Object loadMutex = new Object();
 
@@ -46,6 +47,7 @@ public class GroupUtils {
             this.initialAction = initialAction;
             this.loadAction = loadAction;
             this.onNoMoreAction = onNoMoreDataAction;
+            this.pageNumber = 0;
         }
 
         public void load(){
@@ -70,6 +72,7 @@ public class GroupUtils {
                         }
 
                         loadAction.run();
+                        pageNumber++;
 
                         activity.runOnUiThread(new Runnable() {
 
@@ -91,9 +94,6 @@ public class GroupUtils {
             }).start();
         }
 
-        public String getCursor() {
-            return cursor;
-        }
 
         public boolean hasMoreData() {
             return hasMoreData;
@@ -112,11 +112,41 @@ public class GroupUtils {
             }
         }
 
+        /**
+         * Cursor type API
+         * @return
+         */
+        public String getCursor() {
+            return cursor;
+        }
+
+        /**
+         * Cursor type API
+         * @return
+         */
         public void setFetchResult(EMCursorResult<T> data) {
             fetchData.clear();
             fetchData.addAll(data.getData());
             cursor = data.getCursor();
         }
+
+        /**
+         * Page type API
+         * @return
+         */
+        public int getPageNumber() {
+            return pageNumber;
+        }
+
+        /**
+         * Page type API
+         * @param data
+         */
+        public void setFetchResult(List<T> data) {
+            fetchData.clear();
+            fetchData.addAll(data);
+        }
+
     }
 
     /**

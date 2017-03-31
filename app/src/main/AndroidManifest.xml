@@ -110,7 +110,7 @@
         <activity android:name=".group.NewGroupActivity"/>
         <activity android:name=".group.PublicGroupsListActivity"/>
         <activity android:name=".group.GroupTransferOwnerActivity"/>
-        <activity android:name=".group.GroupBlackListActivity"/>
+        <activity android:name=".group.GroupBlackListOrMuteActivity"/>
         <!--Chat activity-->
         <activity
             android:name=".chat.ChatActivity"
