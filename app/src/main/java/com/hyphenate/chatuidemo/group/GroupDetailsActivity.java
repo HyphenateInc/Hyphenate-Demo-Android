@@ -131,6 +131,7 @@ public class GroupDetailsActivity extends BaseActivity {
                     startActivity(new Intent(GroupDetailsActivity.this, GroupAdminActivity.class).putExtra("groupId", groupId));
                     break;
                 case R.id.menu_item_black_list:
+                    startActivity(new Intent(GroupDetailsActivity.this, GroupBlackListActivity.class).putExtra("groupId", groupId));
                     break;
                 case R.id.menu_item_mute_list:
                     break;

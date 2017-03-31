@@ -51,7 +51,6 @@ public class GroupMembersListActivity extends BaseActivity {
     private boolean isChange;
 
     MucMembersHorizontalAdapter adapter;
-    private Snackbar snackbar;
 
     Handler handler = new Handler();
 
@@ -66,7 +65,7 @@ public class GroupMembersListActivity extends BaseActivity {
 
         groupId = getIntent().getExtras().getString("groupId");
         group = EMClient.getInstance().groupManager().getGroup(groupId);
-        isOwner = getIntent().getExtras().getBoolean("isOwner");
+        isOwner = group.getOwner().equals(EMClient.getInstance().getCurrentUser());
 
         manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -196,8 +195,7 @@ public class GroupMembersListActivity extends BaseActivity {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                snackbar = Snackbar.make(recyclerView, "No more data", Snackbar.LENGTH_LONG);
-                                snackbar.show();
+                                Snackbar.make(recyclerView, "No more data", Snackbar.LENGTH_LONG).show();
                             }
                         }, 1000);
                     }

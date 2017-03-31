@@ -60,7 +60,9 @@ public class GroupUtils {
                         isLoading = true;
 
                         if (isFirstLoading) {
-                            initialAction.run();
+                            if (initialAction != null) {
+                                initialAction.run();
+                            }
 
                             isFirstLoading = false;
                             adapterDataList.addAll(fetchData);
@@ -76,7 +78,9 @@ public class GroupUtils {
                                 if (fetchData.size() < PAGE_SIZE) {
                                     hasMoreData = false;
 
-                                    onNoMoreAction.run();
+                                    if (onNoMoreAction != null) {
+                                        onNoMoreAction.run();
+                                    }
                                 }
                                 adapter.notifyDataSetChanged();
                             }
@@ -116,7 +120,7 @@ public class GroupUtils {
     }
 
     /**
-     * Muc Role judge
+     * Muc role judge
      */
     interface MucRoleJudge {
 
@@ -130,7 +134,7 @@ public class GroupUtils {
     }
 
     /**
-     * Muc Role judge default implementation
+     * Muc role judge's default implementation
      */
     public static class MucRoleJudgeImpl implements MucRoleJudge {
 
