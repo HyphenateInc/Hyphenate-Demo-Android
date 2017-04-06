@@ -13,7 +13,7 @@
       style="@style/ToolbarNormalTheme"
       />
 
-  <android.support.v7.widget.RecyclerView
+  <com.hyphenate.easeui.widget.RecyclerSwipeView
       android:id="@+id/recycler_members"
       android:layout_width="match_parent"
       android:layout_height="match_parent"

@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
+import com.hyphenate.easeui.widget.EaseSwipeLayout;
+import com.hyphenate.easeui.widget.RecyclerSwipeView;
 
 import java.util.List;
 
@@ -28,15 +30,28 @@ public class MucMembersHorizontalAdapter extends RecyclerView.Adapter<MucMembers
     private List<String> membersList;
     private GroupUtils.MucRoleJudge roleJudge;
     private EaseListItemClickListener listener;
+    private EaseSwipeLayout.SwipeListener swipeListener;
 
-    public MucMembersHorizontalAdapter(Context context, List<String> objects, GroupUtils.MucRoleJudge judge) {
+    // swipe layout actions
+    String[] buttons;
+    String[] colors;
+    View.OnClickListener[] onClickListeners;
+
+    public MucMembersHorizontalAdapter(Context context, List<String> objects, GroupUtils.MucRoleJudge judge, EaseSwipeLayout.SwipeListener listener) {
         this.context = context;
         this.membersList = objects;
         this.roleJudge = judge;
+        this.swipeListener = listener;
     }
 
     public void setItemClickListener(EaseListItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setSwipeLayoutActions(String[] buttons, String[] colors, View.OnClickListener[] onClickListeners) {
+        this.buttons = buttons;
+        this.colors = colors;
+        this.onClickListeners = onClickListeners;
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -77,15 +92,21 @@ public class MucMembersHorizontalAdapter extends RecyclerView.Adapter<MucMembers
         return membersList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.layout_member_list)  LinearLayout memberListView;
+    class ViewHolder extends RecyclerSwipeView.SwipeViewHolder {
+        @BindView(R.id.layout_member_list)  RelativeLayout memberListView;
         @BindView(R.id.img_member_avatar)   ImageView memberAvatarView;
         @BindView(R.id.text_member_name)    TextView memberNameView;
         @BindView(R.id.img_mute)            ImageView img_mute;
         @BindView(R.id.img_role)            ImageView img_role;
         public ViewHolder(View itemView) {
-            super(itemView);
+            super(itemView, swipeListener);
             ButterKnife.bind(this, itemView);
+
+            EaseSwipeLayout layout = (EaseSwipeLayout)itemView.findViewById(R.id.swipe_layout);
+            if (buttons != null && colors != null && onClickListeners != null) {
+                layout.setButtons(itemView, buttons, colors, onClickListeners);
+            }
+//            layout.setButtons(itemView, new String[] {"delete", "mute", "block"}, new String[] {"#ADB9C1", "#405E7A", "#F52700"}, onClickListeners);
         }
     }
 }

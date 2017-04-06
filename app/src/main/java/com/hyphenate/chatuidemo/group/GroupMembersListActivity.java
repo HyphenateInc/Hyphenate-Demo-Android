@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;
@@ -22,6 +23,7 @@ import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
+import com.hyphenate.easeui.widget.RecyclerSwipeView;
 import com.hyphenate.exceptions.HyphenateException;
 
 import java.util.ArrayList;
@@ -38,7 +40,7 @@ import static com.hyphenate.chatuidemo.group.GroupListActivity.toolbar;
 
 public class GroupMembersListActivity extends BaseActivity {
 
-    @BindView(R.id.recycler_members) RecyclerView recyclerView;
+    @BindView(R.id.recycler_members)    RecyclerSwipeView recyclerView;
 
     private final int REQUEST_CODE_MEMBER_REFRESH = 1;
 
@@ -71,15 +73,13 @@ public class GroupMembersListActivity extends BaseActivity {
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
 
-        adapter = new MucMembersHorizontalAdapter(this, membersList, mucRoleJudge);
+        adapter = new MucMembersHorizontalAdapter(this, membersList, mucRoleJudge, recyclerView.getSwipeListener());
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
             public void onScrollStateChanged(RecyclerView view, int scrollState) {
-
-
                 if(scrollState == RecyclerView.SCROLL_STATE_IDLE){
                     if(adapter.getItemCount() != 0){
                         int lastVisibleItem = manager.findLastVisibleItemPosition();
@@ -163,6 +163,28 @@ public class GroupMembersListActivity extends BaseActivity {
                 }
             }
         });
+
+        View.OnClickListener[] onClickListeners = new View.OnClickListener[] {
+                new View.OnClickListener() { // mute
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(GroupMembersListActivity.this, "mute", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new View.OnClickListener() { // block
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(GroupMembersListActivity.this, "block", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new View.OnClickListener() { // delete
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(GroupMembersListActivity.this, "delete", Toast.LENGTH_SHORT).show();
+                    }
+                },
+        };
+        adapter.setSwipeLayoutActions(new String[] {"mute", "block", "delete"}, new String[] {"#ADB9C1", "#405E7A", "#F52700"}, onClickListeners);
 
         loadMoreData = new GroupUtils.LoadMoreData<>(this, membersList, adapter,
                 new Runnable() { // initial load
