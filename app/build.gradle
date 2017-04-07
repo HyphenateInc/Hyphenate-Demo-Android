@@ -29,9 +29,9 @@ android {
     defaultConfig {
         applicationId "com.hyphenate.chatuidemo"
         minSdkVersion 15
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 2005
-        versionName '3.2.9'
+        versionName '3.2.10'
         multiDexEnabled true
     }
     buildTypes {
