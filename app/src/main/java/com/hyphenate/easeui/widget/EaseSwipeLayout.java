@@ -29,6 +29,17 @@ public class EaseSwipeLayout extends LinearLayout {
         void onClose(EaseSwipeLayout layout) {}
     }
 
+    public static class SwipeAction {
+        public SwipeAction(String name, String color, View.OnClickListener onClickListener) {
+            this.buttonName = name;
+            this.color = color;
+            this.onClickListener = onClickListener;
+        }
+        String buttonName;
+        String color;
+        View.OnClickListener onClickListener;
+    }
+
     private ViewDragHelper viewDragHelper;
     private View contentView;
     private View actionView;
@@ -38,6 +49,8 @@ public class EaseSwipeLayout extends LinearLayout {
 
     private SwipeListener mSwipeListener;
     private View listItem;
+
+    private boolean disable = false;
 
     Handler handler = new Handler();
 
@@ -71,25 +84,27 @@ public class EaseSwipeLayout extends LinearLayout {
         super.onFinishInflate();
     }
 
-    public void setButtons(final View listItem, String[] btnTexts, String[] colors, final OnClickListener[] onClickListeners) {
-
+    public void attachListItem(View listItem) {
         this.listItem = listItem;
+    }
 
-        ((ViewGroup)actionView).removeAllViews();
+    public void setButtons(SwipeAction[] actions) {
+        disable = actions.length == 0;
 
+        ((ViewGroup) actionView).removeAllViews();
         LayoutInflater layoutInflater = LayoutInflater.from(this.getContext());
-        for (int i = 0; i < btnTexts.length; i++) {
+        for (int i = 0; i < actions.length; i++) {
+            final SwipeAction action = actions[i];
             View convertView0 = layoutInflater.inflate(R.layout.ease_list_item_action_item, (ViewGroup) actionView, false);
             LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
             ((ViewGroup) actionView).addView(convertView0, params);
-            ((TextView)convertView0.findViewById(R.id.text_item)).setText(btnTexts[i]);
-            convertView0.findViewById(R.id.text_item).setBackgroundColor(Color.parseColor(colors[i]));
-            final int finalI = i;
+            ((TextView)convertView0.findViewById(R.id.text_item)).setText(action.buttonName);
+            convertView0.findViewById(R.id.text_item).setBackgroundColor(Color.parseColor(action.color));
             convertView0.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (onClickListeners[finalI] != null) {
-                        onClickListeners[finalI].onClick(listItem);
+                    if (action.onClickListener != null) {
+                        action.onClickListener.onClick(listItem);
                     }
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -97,20 +112,20 @@ public class EaseSwipeLayout extends LinearLayout {
                             EaseSwipeLayout.this.close();
                         }
                     }, 200);
-
                 }
             });
         }
-        dragDistance = dip2px(getContext(), 50 * btnTexts.length);
+        dragDistance = dip2px(getContext(), 50 * actions.length);
         actionView.invalidate();
+    }
+
+    public void updateListPosition(int position) {
+        listItem.setTag(new Integer(position));
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-//        dragDistance = actionView.getMeasuredWidth();
-//        dragDistance = dip2px(getContext(), 50 * 3);
     }
 
     private class DragHelperCallback extends ViewDragHelper.Callback {
@@ -183,7 +198,7 @@ public class EaseSwipeLayout extends LinearLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if(viewDragHelper.shouldInterceptTouchEvent(ev)) {
+        if(disable == false && viewDragHelper.shouldInterceptTouchEvent(ev)) {
             return true;
         }
         return super.onInterceptTouchEvent(ev);
@@ -191,6 +206,9 @@ public class EaseSwipeLayout extends LinearLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (disable == true) {
+            return false;
+        }
         viewDragHelper.processTouchEvent(event);
 //        return super.onTouchEvent(event);
         return true;

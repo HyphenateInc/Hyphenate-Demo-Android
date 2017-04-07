@@ -32,10 +32,7 @@ public class MucMembersHorizontalAdapter extends RecyclerView.Adapter<MucMembers
     private EaseListItemClickListener listener;
     private EaseSwipeLayout.SwipeListener swipeListener;
 
-    // swipe layout actions
-    String[] buttons;
-    String[] colors;
-    View.OnClickListener[] onClickListeners;
+    EaseSwipeLayout.SwipeAction muteAction, blockAction, deleteAction;
 
     public MucMembersHorizontalAdapter(Context context, List<String> objects, GroupUtils.MucRoleJudge judge, EaseSwipeLayout.SwipeListener listener) {
         this.context = context;
@@ -48,10 +45,10 @@ public class MucMembersHorizontalAdapter extends RecyclerView.Adapter<MucMembers
         this.listener = listener;
     }
 
-    public void setSwipeLayoutActions(String[] buttons, String[] colors, View.OnClickListener[] onClickListeners) {
-        this.buttons = buttons;
-        this.colors = colors;
-        this.onClickListeners = onClickListeners;
+    public void setSwipeLayoutActions(EaseSwipeLayout.SwipeAction muteAction, EaseSwipeLayout.SwipeAction blockAction, EaseSwipeLayout.SwipeAction deleteAction) {
+        this.muteAction = muteAction;
+        this.blockAction = blockAction;
+        this.deleteAction = deleteAction;
     }
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -85,6 +82,18 @@ public class MucMembersHorizontalAdapter extends RecyclerView.Adapter<MucMembers
                 }
             });
         }
+
+        if (isOwner) {
+            EaseSwipeLayout.SwipeAction[] actions = {};
+            holder.swipeLayout.setButtons(actions);
+        } else if (roleJudge.isMuted(username)) {
+            EaseSwipeLayout.SwipeAction[] actions = {blockAction, deleteAction};
+            holder.swipeLayout.setButtons(actions);
+        } else {
+            EaseSwipeLayout.SwipeAction[] actions = {muteAction, blockAction, deleteAction};
+            holder.swipeLayout.setButtons(actions);
+        }
+        holder.swipeLayout.updateListPosition(position);
     }
 
     @Override
@@ -98,15 +107,11 @@ public class MucMembersHorizontalAdapter extends RecyclerView.Adapter<MucMembers
         @BindView(R.id.text_member_name)    TextView memberNameView;
         @BindView(R.id.img_mute)            ImageView img_mute;
         @BindView(R.id.img_role)            ImageView img_role;
+        @BindView(R.id.swipe_layout)        EaseSwipeLayout swipeLayout;
         public ViewHolder(View itemView) {
             super(itemView, swipeListener);
             ButterKnife.bind(this, itemView);
-
-            EaseSwipeLayout layout = (EaseSwipeLayout)itemView.findViewById(R.id.swipe_layout);
-            if (buttons != null && colors != null && onClickListeners != null) {
-                layout.setButtons(itemView, buttons, colors, onClickListeners);
-            }
-//            layout.setButtons(itemView, new String[] {"delete", "mute", "block"}, new String[] {"#ADB9C1", "#405E7A", "#F52700"}, onClickListeners);
+            swipeLayout.attachListItem(itemView);
         }
     }
 }

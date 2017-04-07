@@ -23,6 +23,7 @@ import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
+import com.hyphenate.easeui.widget.EaseSwipeLayout;
 import com.hyphenate.easeui.widget.RecyclerSwipeView;
 import com.hyphenate.exceptions.HyphenateException;
 
@@ -164,27 +165,84 @@ public class GroupMembersListActivity extends BaseActivity {
             }
         });
 
-        View.OnClickListener[] onClickListeners = new View.OnClickListener[] {
-                new View.OnClickListener() { // mute
+        EaseSwipeLayout.SwipeAction muteAction = new EaseSwipeLayout.SwipeAction("mute", "#ADB9C1", new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                Toast.makeText(GroupMembersListActivity.this, "mute", Toast.LENGTH_SHORT).show();
+
+                DemoHelper.getInstance().execute(new Runnable() {
                     @Override
-                    public void onClick(View view) {
-                        Toast.makeText(GroupMembersListActivity.this, "mute", Toast.LENGTH_SHORT).show();
+                    public void run() {
+                        Integer position = (Integer) view.getTag();
+                        List<String> members = new ArrayList<>();
+                        members.add(membersList.get(position.intValue()));
+                        try {
+                            EMClient.getInstance().groupManager().muteGroupMembers(groupId, members, Long.MAX_VALUE);
+                            // TODO: update UI
+                            updateUIList();
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                        }
                     }
-                },
-                new View.OnClickListener() { // block
+                });
+            }
+        });
+
+        EaseSwipeLayout.SwipeAction blockAction = new EaseSwipeLayout.SwipeAction("block", "#405E7A", new View.OnClickListener() { // block
+            @Override
+            public void onClick(final View view) {
+                Toast.makeText(GroupMembersListActivity.this, "block", Toast.LENGTH_SHORT).show();
+                DemoHelper.getInstance().execute(new Runnable() {
                     @Override
-                    public void onClick(View view) {
-                        Toast.makeText(GroupMembersListActivity.this, "block", Toast.LENGTH_SHORT).show();
+                    public void run() {
+                        final Integer position = (Integer) view.getTag();
+                        try {
+                            EMClient.getInstance().groupManager().blockUser(groupId, membersList.get(position.intValue()));
+
+                            // TODO: update UI
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    membersList.remove(position.intValue());
+                                    updateUIList();
+                                }
+                            });
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                        }
                     }
-                },
-                new View.OnClickListener() { // delete
+                });
+            }
+        });
+
+        EaseSwipeLayout.SwipeAction deleteAction = new EaseSwipeLayout.SwipeAction("delete", "#F52700",  new View.OnClickListener() { // delete
+            @Override
+            public void onClick(final View view) {
+                Toast.makeText(GroupMembersListActivity.this, "delete", Toast.LENGTH_SHORT).show();
+                DemoHelper.getInstance().execute(new Runnable() {
                     @Override
-                    public void onClick(View view) {
-                        Toast.makeText(GroupMembersListActivity.this, "delete", Toast.LENGTH_SHORT).show();
+                    public void run() {
+                        final Integer position = (Integer) view.getTag();
+                        try {
+                            EMClient.getInstance().groupManager().removeUserFromGroup(groupId, membersList.get(position.intValue()));
+
+                            // TODO: update UI
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    membersList.remove(position.intValue());
+                                    updateUIList();
+                                }
+                            });
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                        }
                     }
-                },
-        };
-        adapter.setSwipeLayoutActions(new String[] {"mute", "block", "delete"}, new String[] {"#ADB9C1", "#405E7A", "#F52700"}, onClickListeners);
+                });
+            }
+        });
+
+        adapter.setSwipeLayoutActions(muteAction, blockAction, deleteAction);
 
         loadMoreData = new GroupUtils.LoadMoreData<>(this, membersList, adapter,
                 new Runnable() { // initial load
@@ -229,6 +287,7 @@ public class GroupMembersListActivity extends BaseActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                mucRoleJudge.update(group);
                 adapter.notifyDataSetChanged();
             }
         });
