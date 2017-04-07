@@ -99,7 +99,9 @@ public class EaseSwipeLayout extends LinearLayout {
             LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
             ((ViewGroup) actionView).addView(convertView0, params);
             ((TextView)convertView0.findViewById(R.id.text_item)).setText(action.buttonName);
-            convertView0.findViewById(R.id.text_item).setBackgroundColor(Color.parseColor(action.color));
+            if (action.color != null && !action.color.isEmpty()) {
+                convertView0.findViewById(R.id.text_item).setBackgroundColor(Color.parseColor(action.color));
+            }
             convertView0.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {

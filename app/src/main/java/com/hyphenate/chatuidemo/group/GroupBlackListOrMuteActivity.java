@@ -9,11 +9,13 @@ import android.view.View;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
+import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
-import com.hyphenate.chatuidemo.user.ContactListAdapter;
 import com.hyphenate.chatuidemo.user.model.UserEntity;
 import com.hyphenate.chatuidemo.user.model.UserProfileManager;
+import com.hyphenate.easeui.widget.EaseSwipeLayout;
+import com.hyphenate.easeui.widget.RecyclerSwipeView;
 import com.hyphenate.exceptions.HyphenateException;
 
 import java.util.ArrayList;
@@ -31,13 +33,13 @@ import static com.hyphenate.chatuidemo.group.GroupListActivity.toolbar;
 
 public class GroupBlackListOrMuteActivity extends BaseActivity {
 
-    @BindView(R.id.recycler_members) RecyclerView recyclerView;
+    @BindView(R.id.recycler_members)    RecyclerSwipeView recyclerView;
 
     String groupId;
     EMGroup group;
 
     LinearLayoutManager manager;
-    ContactListAdapter adapter;
+    GroupMuteListAdapter adapter;
     Handler handler = new Handler();
 
     List<UserEntity> userEntityList = new ArrayList<>();
@@ -78,8 +80,40 @@ public class GroupBlackListOrMuteActivity extends BaseActivity {
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
 
-        adapter = new ContactListAdapter(this, userEntityList, false);
+        adapter = new GroupMuteListAdapter(this, userEntityList, false, recyclerView.getSwipeListener());
         recyclerView.setAdapter(adapter);
+
+        EaseSwipeLayout.SwipeAction action = new EaseSwipeLayout.SwipeAction("remove", "", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Integer position = (Integer) view.getTag();
+                final UserEntity user = userEntityList.get(position);
+                DemoHelper.getInstance().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (isMuteActivity) {
+                                List<String> unMutes = new ArrayList<>();
+                                unMutes.add(user.getEaseUsername());
+                                EMClient.getInstance().groupManager().unMuteGroupMembers(groupId, unMutes);
+                            } else {
+                                EMClient.getInstance().groupManager().unblockUser(groupId, user.getEaseUsername());
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    userEntityList.remove(position.intValue());
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+        adapter.setSwipeActions(action);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
