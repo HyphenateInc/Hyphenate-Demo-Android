@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/layout_member_list"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:background="?android:attr/selectableItemBackground">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.hyphenate.easeui.widget.EaseImageView
+                android:id="@+id/img_member_avatar"
+                android:layout_width="@dimen/group_item_avatar_size"
+                android:layout_height="@dimen/group_item_avatar_size"
+                android:src="@drawable/ease_default_avatar"
+                android:layout_marginLeft="16dp"
+                android:layout_gravity="center_vertical"
+                />
+
+            <TextView
+                android:id="@+id/text_member_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="17.5dp"
+                android:textColor="@color/group_name_color"
+                android:textSize="@dimen/group_name_size"
+                android:ellipsize="end"
+                android:layout_gravity="center_vertical"
+                android:maxLines="1"
+                />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_role"
+            android:layout_width="18dp"
+            android:layout_height="16dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            />
+
+        <ImageView
+            android:id="@+id/img_mute"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@id/img_role"
+            android:layout_centerVertical="true"
+            />
+
+    </RelativeLayout>
+
+    <com.hyphenate.easeui.widget.EaseSwipeLayout
+        android:id="@+id/swipe_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            >
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+        </LinearLayout>
+    </com.hyphenate.easeui.widget.EaseSwipeLayout>
+
+</RelativeLayout>

@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
 
   <LinearLayout
       android:id="@+id/layout_member_list"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:gravity="center"
       android:orientation="vertical"
-      android:paddingLeft="16dp"
+      android:paddingLeft="10dp"
+      android:paddingRight="10dp"
       >
+
     <com.hyphenate.easeui.widget.EaseImageView
         android:id="@+id/img_member_avatar"
         android:layout_width="@dimen/group_item_avatar_size"
         android:layout_height="@dimen/group_item_avatar_size"
-        android:scaleType="fitXY"
+        android:scaleType="centerInside"
         android:src="@drawable/ease_default_avatar"
+        app:imgShapeType="round"
         />
+
     <TextView
         android:id="@+id/text_member_name"
         android:layout_width="@dimen/group_item_avatar_size"

@@ -156,6 +156,25 @@
     <string name="em_load_public_group">load public group</string>
     <string name="em_join">JOIN</string>
 
+    <!-- group detail menu -->
+    <string name="em_group_transfer_owner">Transfer owner</string>
+    <string name="em_group_clear_conversation">Clear conversation</string>
+    <string name="em_group_change_group_name">Change group name</string>
+    <string name="em_group_change_group_desc">Change group description</string>
+    <string name="em_group_admin_list">Admin list</string>
+    <string name="em_group_black_list">Black list</string>
+    <string name="em_group_mute_list">Mute list</string>
+
+    <!-- group detail menu -->
+    <string name="em_group_members_add">Add members</string>
+    <string name="em_group_admin_save">Save</string>
+    <string name="em_group_transfer_owner_save">Save</string>
+
+    <!-- group member item alert menu -->
+    <string name="em_group_member_alert_item_add_mute">mute</string>
+    <string name="em_group_member_alert_item_add_black">add to black list</string>
+    <string name="em_group_member_alert_item_remove">remove</string>
+
     <!-- chat -->
     <string name="chat_voice_call">Voice call</string>
     <string name="chat_video_call">Video call</string>
