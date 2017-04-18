@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- provide an empty layout, help pass the compile for swipe_layout -->
+<com.github.lzyzsd.swipelayoutexample.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/swipe_layout"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+</com.github.lzyzsd.swipelayoutexample.SwipeLayout>

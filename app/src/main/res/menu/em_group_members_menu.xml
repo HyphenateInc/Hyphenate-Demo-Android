@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/em_group_members_add"
+          android:icon="@drawable/em_title_bar_add_contact"
+          android:id="@+id/menu_item_group_members_add"
+          app:showAsAction="always"/>
+</menu>
