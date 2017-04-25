@@ -136,7 +136,7 @@ public class DemoHelper {
                 mContext.getString(R.string.em_pref_key_accept_group_invite_automatically), false));
 
         //set gcm project number
-        options.setGCMNumber("998166487724");
+        options.setGCMNumber("324169311137");
 
         return options;
     }
@@ -152,7 +152,7 @@ public class DemoHelper {
         EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
 
         // send push notification when user offline
-        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(false);
+        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(true);
     }
 
     /**
