@@ -6,17 +6,19 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.user.ContactsChangeListener;
 import com.hyphenate.chatuidemo.group.GroupChangeListener;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
+import com.hyphenate.chatuidemo.user.ContactsChangeListener;
 import com.hyphenate.exceptions.HyphenateException;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by lzan13 on 2016/10/26.
@@ -327,6 +329,24 @@ public class ApplyActivity extends BaseActivity {
         }
 
         @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override
+        public void onMemberJoined(String groupId, String member) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override
+        public void onMemberExited(String groupId, String member) {
             runOnUiThread(new Runnable() {
                 @Override public void run() {
                     refresh();
