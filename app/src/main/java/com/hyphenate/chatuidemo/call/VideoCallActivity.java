@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
@@ -20,9 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+
 import com.hyphenate.chat.EMCallManager;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMCallStateChangeListener.CallError;
@@ -37,8 +36,13 @@ import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.media.EMLocalSurfaceView;
 import com.hyphenate.media.EMOppositeSurfaceView;
 import com.hyphenate.util.EMLog;
+
 import java.util.Timer;
 import java.util.TimerTask;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Create by lzan13 2016/10/13
@@ -130,6 +134,13 @@ public class VideoCallActivity extends CallActivity {
         mLocalSurfaceView.setZOrderMediaOverlay(true);
         mLocalSurfaceView.setZOrderOnTop(true);
 
+        // Set local and opposite SurfaceView
+        EMClient.getInstance()
+                .callManager()
+                .setSurfaceView(mLocalSurfaceView, mOppositeSurfaceView);
+        mCameraDataProcessor = new CameraDataProcessor();
+        // Set video call data processor
+        EMClient.getInstance().callManager().setCameraDataProcessor(mCameraDataProcessor);
         try {
             // By default, the front camera is used
             EMClient.getInstance()
@@ -138,15 +149,6 @@ public class VideoCallActivity extends CallActivity {
         } catch (HyphenateException e) {
             e.printStackTrace();
         }
-
-        // Set local and opposite SurfaceView
-        EMClient.getInstance()
-                .callManager()
-                .setSurfaceView(mLocalSurfaceView, mOppositeSurfaceView);
-
-        mCameraDataProcessor = new CameraDataProcessor();
-        // Set video call data processor
-        EMClient.getInstance().callManager().setCameraDataProcessor(mCameraDataProcessor);
 
         // Check call state
         if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_NORMAL) {
@@ -643,6 +645,7 @@ public class VideoCallActivity extends CallActivity {
                         mCallStatus = CallStatus.CALL_OFFLINE;
                         mCallStatusView.setText(
                                 String.format(getString(R.string.em_call_not_online), mCallId));
+                        Toast.makeText(VideoCallActivity.this, mCallStatusView.getText(), Toast.LENGTH_LONG).show();
                     } else if (callError == CallError.ERROR_BUSY) {
                         mCallStatus = CallStatus.CALL_BUSY;
                         mCallStatusView.setText(

@@ -11,19 +11,22 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.sign.SignInActivity;
@@ -31,7 +34,14 @@ import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.utils.Utils;
 import com.hyphenate.easeui.widget.EaseImageView;
+import com.hyphenate.util.EMLog;
+
 import java.io.ByteArrayOutputStream;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by lzan13 on 2016/10/21.
@@ -49,7 +59,7 @@ public class AccountActivity extends BaseActivity {
     @BindView(R.id.fab_edit_avatar) FloatingActionButton mEditAvatarFab;
     @BindView(R.id.text_hyphenate_id) TextView mHyphenateID;
     @BindView(R.id.text_user_nick) TextView mNickView;
-
+    @BindView(R.id.snackbar_action)    RelativeLayout snackbar_action;
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_account);
@@ -144,34 +154,109 @@ public class AccountActivity extends BaseActivity {
         alertDialog.show();
     }
 
-    @OnClick(R.id.btn_sign_out) void signOut() {
+    @OnClick({R.id.btn_sign_out, R.id.btn_send, R.id.btn_verify}) void signOut(View view) {
+        switch (view.getId()) {
+            case R.id.btn_sign_out:
 
-        final ProgressDialog dialog = new ProgressDialog(mActivity);
-        dialog.setMessage(mActivity.getString(R.string.em_hint_loading));
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+                final ProgressDialog dialog = new ProgressDialog(mActivity);
+                dialog.setMessage(mActivity.getString(R.string.em_hint_loading));
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
 
-        DemoHelper.getInstance().signOut(true, new EMCallBack() {
-            @Override public void onSuccess() {
-                Intent intent = new Intent(AccountActivity.this, SignInActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
+                DemoHelper.getInstance().signOut(true, new EMCallBack() {
+                    @Override public void onSuccess() {
+                        Intent intent = new Intent(AccountActivity.this, SignInActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
 
-            @Override public void onError(final int i, final String s) {
-                runOnUiThread(new Runnable() {
-                    @Override public void run() {
-                        dialog.dismiss();
-                        Toast.makeText(mActivity, "Sign out failed " + i + ", " + s,
-                                Toast.LENGTH_LONG).show();
+                    @Override public void onError(final int i, final String s) {
+                        runOnUiThread(new Runnable() {
+                            @Override public void run() {
+                                dialog.dismiss();
+                                Toast.makeText(mActivity, "Sign out failed " + i + ", " + s,
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
+                    @Override public void onProgress(int i, String s) {
+
                     }
                 });
-            }
+                break;
+            case R.id.btn_send:
+                send();
+                break;
+            case R.id.btn_verify:
+                DemoHelper.getInstance().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        verify();
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+    }
 
-            @Override public void onProgress(int i, String s) {
-
+    void send() {
+        String to = "gm";
+        for (int i = 0; i < 1000; i++) {
+            EMMessage message = EMMessage.createTxtSendMessage("" + i, to);
+            message.setChatType(EMMessage.ChatType.Chat);
+            EMClient.getInstance().chatManager().sendMessage(message);
+            if (i % 100 == 0) {
+                Snackbar.make(snackbar_action, "" + i, Snackbar.LENGTH_SHORT).show();
             }
-        });
+        }
+    }
+
+    void verify() {
+        // loadAllMessages
+        String msgId = "";
+        List<EMMessage> msgs;
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation("gm1");
+        do {
+            msgs = conversation.loadMoreMsgFromDB(msgId, 100);
+            if (msgs != null && msgs.size() > 0) {
+                msgId = msgs.get(msgs.size() -1).getMsgId();
+            }
+        } while(msgs.size() > 0);
+
+        final List<EMMessage> allMessages =  conversation.getAllMessages();
+        EMMessage prev = null;
+        boolean result = true;
+        for (EMMessage msg : allMessages) {
+            if (prev != null) {
+                String prevText = ((EMTextMessageBody) prev.getBody()).getMessage();
+                String msgText = ((EMTextMessageBody)prev.getBody()).getMessage();
+                if ((new Integer(prevText)).intValue() > (new Integer(msgText)).intValue()) {
+                    EMLog.d("ASSERT FAIL:", "disorder, prev:" + prevText + " msg:" + msgText);
+                    result = false;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Snackbar.make(snackbar_action, "verify fail", Snackbar.LENGTH_INDEFINITE).show();
+
+                        }
+                    });
+                    break;
+                }
+            }
+            prev = msg;
+        }
+
+        if (result) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Snackbar.make(snackbar_action, "verify ok, allMessage.size:" + allMessages.size(), Snackbar.LENGTH_INDEFINITE).show();
+                }
+            });
+        }
+
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

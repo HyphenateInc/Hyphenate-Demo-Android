@@ -3,14 +3,18 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url "https://raw.githubusercontent.com/HyphenateInc/Hyphenate-SDK-Android/master/repository" }
+        maven {
+            url "https://raw.githubusercontent.com/HyphenateInc/Hyphenate-SDK-Android/master/repository"
+        }
+        mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
-        // Crashlytics
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.android.tools.build:gradle:2.3.1'
         // Firebase
         classpath 'com.google.gms:google-services:3.0.0'
+        // Twitter fabric
+        classpath 'io.fabric.tools:gradle:1.+'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -19,7 +23,11 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven { url "https://raw.githubusercontent.com/HyphenateInc/Hyphenate-SDK-Android/master/repository" }
+        maven {
+            url "https://raw.githubusercontent.com/HyphenateInc/Hyphenate-SDK-Android/master/repository"
+        }
+
+        maven { url 'https://maven.fabric.io/public' }
     }
 }
 

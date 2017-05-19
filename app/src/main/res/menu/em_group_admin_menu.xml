@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/em_group_admin_save"
+          android:icon="@drawable/em_save"
+          android:id="@+id/menu_item_group_admin_save"
+          app:showAsAction="always"/>
+</menu>

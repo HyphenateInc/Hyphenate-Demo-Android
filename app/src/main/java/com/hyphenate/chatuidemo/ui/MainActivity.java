@@ -1,8 +1,10 @@
 package com.hyphenate.chatuidemo.ui;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -33,6 +35,7 @@ import com.hyphenate.chatuidemo.group.GroupChangeListener;
 import com.hyphenate.chatuidemo.group.InviteMembersActivity;
 import com.hyphenate.chatuidemo.group.PublicGroupsListActivity;
 import com.hyphenate.chatuidemo.runtimepermissions.PermissionsManager;
+import com.hyphenate.chatuidemo.runtimepermissions.PermissionsResultAction;
 import com.hyphenate.chatuidemo.settings.SettingsFragment;
 import com.hyphenate.chatuidemo.sign.SignInActivity;
 import com.hyphenate.chatuidemo.user.AddContactsActivity;
@@ -74,6 +77,12 @@ public class MainActivity extends BaseActivity {
         mGroupListener = new DefaultGroupChangeListener();
 
         ButterKnife.bind(this);
+
+        // runtime permission for android 6.0, just require all permissions here for simple
+        if(Build.VERSION.SDK_INT >= 23) {
+            requestPermissions();
+        }
+
         //setup viewpager
         setupViewPager();
         //setup tabLayout with viewpager
@@ -250,6 +259,21 @@ public class MainActivity extends BaseActivity {
         View tabView = mTabLayout.getTabAt(index).getCustomView();
         ImageView unreadStatusView = (ImageView) tabView.findViewById(R.id.img_unread_status);
         return unreadStatusView;
+    }
+
+    @TargetApi(23)
+    private void requestPermissions() {
+        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this, new PermissionsResultAction() {
+            @Override
+            public void onGranted() {
+                //				Toast.makeText(MainActivity.this, "All permissions have been granted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDenied(String permission) {
+                //Toast.makeText(MainActivity.this, "Permission " + permission + " has been denied", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override protected void onResume() {

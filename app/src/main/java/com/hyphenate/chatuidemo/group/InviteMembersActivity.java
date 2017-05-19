@@ -15,8 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
@@ -25,10 +24,14 @@ import com.hyphenate.chatuidemo.user.ContactListAdapter;
 import com.hyphenate.chatuidemo.user.model.UserEntity;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.exceptions.HyphenateException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by benson on 2016/10/24.
@@ -83,7 +86,7 @@ public class InviteMembersActivity extends BaseActivity {
 
             isCreate = true;
         }
-        content = "0" + getString(R.string.em_contact_selected);
+        content = "0 " + getString(R.string.em_contact_selected);
         snackbar = Snackbar.make(recyclerView, content, Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction(action, listener);
         snackbar.show();
@@ -204,7 +207,7 @@ public class InviteMembersActivity extends BaseActivity {
                 newMembers = selectedMembers.toArray(new String[0]);
 
                 if (newMembers.length > 1 || newMembers.length == 0) {
-                    content = newMembers.length + getString(R.string.em_contact_selected);
+                    content = newMembers.length + " " + getString(R.string.em_contact_selected);
                 } else if (newMembers.length == 1) {
                     content = newMembers[0];
                 }

@@ -31,21 +31,35 @@
           android:orientation="horizontal"
           >
         <ImageView
-            android:id="@+id/img_group_details_avatar"
+            android:id="@+id/img_chatroom_details_avatar"
             android:layout_width="@dimen/group_item_avatar_size"
             android:layout_height="@dimen/group_item_avatar_size"
             android:layout_marginLeft="@dimen/group_item_padding"
             android:src="@drawable/ease_ic_group_default"
             />
 
-        <TextView
-            android:id="@+id/text_group_details_name"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/group_name_margin_left"
-            android:textColor="@color/group_name_color"
-            android:textSize="@dimen/group_details_name_size"
-            />
+            android:orientation="vertical">
+          <TextView
+              android:id="@+id/text_group_details_name"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="@dimen/group_name_margin_left"
+              android:textColor="@color/group_name_color"
+              android:textSize="@dimen/group_details_name_size"
+              />
+
+          <TextView
+              android:id="@+id/text_group_details_desc"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="@dimen/group_name_margin_left"
+              android:textColor="@color/group_name_color"
+              android:textSize="@dimen/group_details_desc_size"
+              />
+        </LinearLayout>
       </LinearLayout>
 
       <TextView
@@ -54,45 +68,56 @@
           android:background="@color/base_line_color"
           />
 
-      <LinearLayout
+      <RelativeLayout
           android:layout_width="match_parent"
           android:layout_height="48dp"
           android:background="@color/colorTextPrimary"
           android:gravity="center_vertical"
-          >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/group_item_padding"
-            android:text="Members"
-            android:textSize="@dimen/group_text_size"
-            />
-
-        <TextView
-            android:id="@+id/text_group_details_member_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#8798a4"
-            android:textSize="@dimen/group_text_size"
-            />
-
-      </LinearLayout>
-
-      <RelativeLayout
-          android:id="@+id/layout_member_list"
-          android:layout_width="match_parent"
-          android:layout_height="80dp"
-          android:background="?android:attr/selectableItemBackground"
           android:orientation="horizontal"
           >
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_member"
+
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:listSelector="@android:color/transparent"
-            />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            >
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="@dimen/group_item_padding"
+              android:text="Members"
+              android:textSize="@dimen/group_text_size"
+              />
+
+          <TextView
+              android:id="@+id/text_group_details_member_size"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textColor="#8798a4"
+              android:textSize="@dimen/group_text_size"
+              />
+        </LinearLayout>
+
         <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/iv_invite_member"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/add_member_icon"/>
+
+      </RelativeLayout>
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="60dp"
+          android:background="?android:attr/selectableItemBackground"
+          android:orientation="horizontal"
+          android:paddingTop="8dp"
+          >
+        <ImageView
+            android:id="@+id/go_members"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -100,6 +125,20 @@
             android:layout_marginRight="16.5dp"
             android:src="@drawable/cell_chevron_right"
             />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_member"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:listSelector="@android:color/transparent"
+            android:layout_toLeftOf="@id/go_members"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="25dp"
+            android:clickable="false"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/layout_member_list"/>
       </RelativeLayout>
 
 
@@ -118,7 +157,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:paddingLeft="16dp"
-            android:text="@string/em_name_group_id"
+            android:text="@string/em_group_id"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:typeface="serif"
@@ -245,6 +284,40 @@
             android:background="#e0e0e0"
             />
       </RelativeLayout>
+      
+      <RelativeLayout
+          android:id="@+id/layout_block_group_message"
+          android:layout_width="match_parent"
+          android:layout_height="56dip">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="16dp"
+            android:text="@string/em_group_block_group_message"
+            android:textColor="#212121"
+            android:textSize="16sp"
+            android:typeface="serif"
+            />
+
+        <Switch
+            android:id="@+id/switch_block_group_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="18.5dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentBottom="true"
+            android:background="#e0e0e0"
+            />
+      </RelativeLayout>
+
 
       <TextView
           android:id="@+id/text_exit_group"
@@ -258,8 +331,6 @@
           android:typeface="serif"
           />
 
-
     </LinearLayout>
   </ScrollView>
-
 </LinearLayout>

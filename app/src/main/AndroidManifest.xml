@@ -85,7 +85,6 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 
-        <activity android:name=".group.GroupListActivity"/>
 
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
@@ -102,12 +101,22 @@
             android:name="com.hyphenate.easeui.ui.EaseMapActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".group.GroupListActivity"/>
         <activity android:name=".group.GroupDetailsActivity"/>
         <activity android:name=".group.InviteMembersActivity"/>
         <activity android:name=".group.MembersListActivity"/>
+        <activity android:name=".group.GroupMembersListActivity"/>
+        <activity android:name=".group.GroupAdminActivity"/>
         <activity android:name=".group.NewGroupActivity"/>
         <activity android:name=".group.PublicGroupsListActivity"/>
+        <activity android:name=".group.GroupTransferOwnerActivity"/>
+        <activity android:name=".group.GroupBlackListOrMuteActivity"/>
 
+        <!--Chat room-->
+        <activity android:name=".chatroom.ChatRoomListActivity"/>
+        <activity android:name=".chatroom.ChatRoomDetailsActivity"/>
+        <activity android:name=".chatroom.ChatRoomMembersActivity"/>
+        <activity android:name=".chatroom.ChatRoomBlacklistActivity"/>
 
         <!--Chat activity-->
         <activity
@@ -172,14 +181,15 @@
         <!-- set your API key -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="hyphenatedemo#hyphenatedemo"/>
+            android:value="easemob-demo#chatdemoui"/>
         <!-- SDK service -->
         <service
             android:name="com.hyphenate.chat.EMChatService"
             android:exported="true"/>
-        <service android:name="com.hyphenate.chat.EMJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
+        <service
+            android:name="com.hyphenate.chat.EMJobService"
             android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             />
         <!-- SDK receiver -->
         <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
@@ -206,7 +216,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="33bb2bc04d2ed7f91da02025c362279e3406ed81" />
+            android:value="33bb2bc04d2ed7f91da02025c362279e3406ed81"/>
     </application>
 
 </manifest>

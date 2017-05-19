@@ -4,6 +4,7 @@ import android.content.Context;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.PreferenceManager;
 import com.hyphenate.chatuidemo.user.model.parse.ParseManager;
 import com.hyphenate.exceptions.HyphenateException;
@@ -227,5 +228,24 @@ public class UserProfileManager {
 
     private String getCurrentUserAvatar() {
         return PreferenceManager.getInstance().getCurrentUserAvatar();
+    }
+
+    /**
+     * convert username to user entity
+     * @return
+     */
+    public static List<UserEntity> convertContactList(List<String> list) {
+
+        Map<String, UserEntity> mUsersMap = DemoHelper.getInstance().getUserManager().getContactList();
+
+        List<UserEntity> result = new ArrayList<>();
+        for (String user : list) {
+            if (mUsersMap.containsKey(user)) {
+                result.add(mUsersMap.get(user));
+            } else {
+                result.add(new UserEntity(user));
+            }
+        }
+        return result;
     }
 }

@@ -153,11 +153,51 @@
                 android:textColor="@color/em_red_87"
                 />
         </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <Button
+                android:id="@+id/btn_send"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/em_btn_rectangle_white"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/account_item_padding"
+                android:text="send"
+                android:textColor="@color/em_red_87"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <Button
+                android:id="@+id/btn_verify"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/em_btn_rectangle_white"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/account_item_padding"
+                android:text="verify"
+                android:textColor="@color/em_red_87"
+                />
+        </RelativeLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/account_item_padding"
             android:background="@color/em_black_12"
             />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/snackbar_action"
+            >
+
+        </RelativeLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
