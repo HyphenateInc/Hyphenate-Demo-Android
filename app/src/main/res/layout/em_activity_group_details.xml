@@ -284,6 +284,39 @@
             android:background="#e0e0e0"
             />
       </RelativeLayout>
+      
+      <RelativeLayout
+          android:id="@+id/layout_block_group_message"
+          android:layout_width="match_parent"
+          android:layout_height="56dip">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="16dp"
+            android:text="@string/em_group_block_group_message"
+            android:textColor="#212121"
+            android:textSize="16sp"
+            android:typeface="serif"
+            />
+
+        <Switch
+            android:id="@+id/switch_block_group_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="18.5dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_alignParentBottom="true"
+            android:background="#e0e0e0"
+            />
+      </RelativeLayout>
 
 
       <TextView

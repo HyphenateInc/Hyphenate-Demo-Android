@@ -155,6 +155,8 @@
     <string name="em_invite_members">Invite Members</string>
     <string name="em_load_public_group">load public group</string>
     <string name="em_join">JOIN</string>
+    <string name="em_group_block_group_message">Block group message</string>
+    <string name="em_group_unblock_group_message">Unblock group message</string>
 
     <!-- group detail menu -->
     <string name="em_group_transfer_owner">Transfer owner</string>

@@ -44,6 +44,7 @@ import com.hyphenate.chatuidemo.chat.ChatActivity;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.utils.ThreadPoolManager;
 import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.util.EMLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +79,7 @@ public class GroupDetailsActivity extends BaseActivity {
     @BindView(R.id.txt_group_id) TextView groupIdView;
     @BindView(R.id.layout_member_list) LinearLayout layoutMemberView;
     @BindView(R.id.iv_invite_member) ImageView invite_member;
+    @BindView(R.id.switch_block_group_message) Switch switch_block_group_message;
 
     List<String> members = new ArrayList<>();
     private boolean isOwner = false;
@@ -215,6 +217,8 @@ public class GroupDetailsActivity extends BaseActivity {
             adapter = new MucMembersVerticalAdapter(GroupDetailsActivity.this, members, mucRoleJudge);
             recyclerView.setAdapter(adapter);
         }
+
+        switch_block_group_message.setChecked(group.isMsgBlocked());
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -236,7 +240,7 @@ public class GroupDetailsActivity extends BaseActivity {
         }
     }
 
-    @OnClick({ R.id.text_exit_group, R.id.layout_member_list, R.id.layout_push_notification, R.id.iv_invite_member }) void onclick(View view) {
+    @OnClick({ R.id.text_exit_group, R.id.layout_member_list, R.id.layout_push_notification, R.id.iv_invite_member, R.id.switch_block_group_message }) void onclick(View view) {
         switch (view.getId()) {
             case R.id.iv_invite_member:
 
@@ -262,8 +266,61 @@ public class GroupDetailsActivity extends BaseActivity {
                 } else {
                     notificationSwitch.setChecked(true);
                 }
-
                 break;
+            case R.id.switch_block_group_message:
+                toggleBlockGroup();
+                break;
+        }
+    }
+
+    private void toggleBlockGroup() {
+        EMLog.d("GroupDetail", "toggleBlockGroup:" + switch_block_group_message.isChecked());
+        if(switch_block_group_message.isChecked()){
+            showDialog(getString(R.string.em_group_block_group_message), getString(R.string.em_waiting));
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        EMClient.getInstance().groupManager().blockGroupMessage(groupId);
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                progressDialog.dismiss();
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.em_group_unblock_group_message) + " failed", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }
+            }).start();
+
+        } else {
+            showDialog(getString(R.string.em_group_unblock_group_message), getString(R.string.em_waiting));
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        EMClient.getInstance().groupManager().unblockGroupMessage(groupId);
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                progressDialog.dismiss();
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.em_group_block_group_message) + " failed", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                    }
+                }
+            }).start();
         }
     }
 
