@@ -110,7 +110,6 @@
       </RelativeLayout>
 
       <RelativeLayout
-          android:id="@+id/layout_member_list"
           android:layout_width="match_parent"
           android:layout_height="60dp"
           android:background="?android:attr/selectableItemBackground"
@@ -134,7 +133,12 @@
             android:layout_toLeftOf="@id/go_members"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="25dp"
+            android:clickable="false"
             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/layout_member_list"/>
       </RelativeLayout>
 
 

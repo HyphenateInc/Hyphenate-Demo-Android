@@ -30,8 +30,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,7 +76,7 @@ public class GroupDetailsActivity extends BaseActivity {
     @BindView(R.id.text_appear_in_group_search) TextView groupTypeView;
     @BindView(R.id.switch_push_notification) Switch notificationSwitch;
     @BindView(R.id.txt_group_id) TextView groupIdView;
-    @BindView(R.id.layout_member_list) RelativeLayout layoutMemberView;
+    @BindView(R.id.layout_member_list) LinearLayout layoutMemberView;
     @BindView(R.id.iv_invite_member) ImageView invite_member;
 
     List<String> members = new ArrayList<>();
