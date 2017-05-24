@@ -19,8 +19,7 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -33,26 +32,30 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.call.VideoCallActivity;
+import com.hyphenate.chatuidemo.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.group.GroupChangeListener;
 import com.hyphenate.chatuidemo.group.GroupDetailsActivity;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
-import com.hyphenate.chatuidemo.call.VideoCallActivity;
-import com.hyphenate.chatuidemo.call.VoiceCallActivity;
-import com.hyphenate.chatuidemo.user.model.UserEntity;
 import com.hyphenate.chatuidemo.ui.widget.ChatInputView;
 import com.hyphenate.chatuidemo.ui.widget.VoiceRecordDialog;
 import com.hyphenate.chatuidemo.ui.widget.VoiceRecordView;
 import com.hyphenate.chatuidemo.ui.widget.chatrow.ChatRowCall;
-import com.hyphenate.easeui.utils.Utils;
+import com.hyphenate.chatuidemo.user.model.UserEntity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.utils.Utils;
 import com.hyphenate.easeui.widget.EaseChatExtendMenu;
 import com.hyphenate.easeui.widget.EaseMessageListView;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 import com.hyphenate.util.PathUtil;
+
 import java.io.File;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.hyphenate.easeui.EaseConstant.CHATTYPE_SINGLE;
 
@@ -343,6 +346,14 @@ public class ChatActivity extends BaseActivity {
             menu.findItem(R.id.menu_group_detail).setVisible(true);
             menu.findItem(R.id.menu_voice_call).setVisible(false);
             menu.findItem(R.id.menu_video_call).setVisible(false);
+            menu.findItem(R.id.menu_chatroom_detail).setVisible(false);
+        }
+
+        if (chatType == EaseConstant.CHATTYPE_CHATROOM) {
+            menu.findItem(R.id.menu_voice_call).setVisible(false);
+            menu.findItem(R.id.menu_video_call).setVisible(false);
+            menu.findItem(R.id.menu_group_detail).setVisible(false);
+            menu.findItem(R.id.menu_chatroom_detail).setVisible(true);
         }
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -367,6 +378,11 @@ public class ChatActivity extends BaseActivity {
                         startActivity(
                                 new Intent(ChatActivity.this, GroupDetailsActivity.class).putExtra(
                                         "groupId", toChatUsername));
+                        break;
+                    case R.id.menu_chatroom_detail:
+//                        startActivity(
+//                                new Intent(ChatActivity.this, ChatRoomDetailsActivity.class).putExtra(
+//                                        "chatRoomId", toChatUsername));
                         break;
                 }
 
