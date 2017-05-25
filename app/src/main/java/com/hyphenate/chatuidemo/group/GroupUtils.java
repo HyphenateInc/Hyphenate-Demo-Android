@@ -54,7 +54,7 @@ public class GroupUtils {
         private boolean isLoading;
         private boolean isFirstLoading = true;
         private boolean hasMoreData = true;
-        private int pageNumber = 0;
+        private int pageNumber = 1;
         private String cursor;
         private Object loadMutex = new Object();
 
@@ -157,6 +157,13 @@ public class GroupUtils {
          */
         public int getPageNumber() {
             return pageNumber;
+        }
+
+        /**
+         * set Page number
+         */
+        public void setPageNumber(int number) {
+            pageNumber = number;
         }
 
         /**

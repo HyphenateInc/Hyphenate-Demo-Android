@@ -85,7 +85,6 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 
-        <activity android:name=".group.GroupListActivity"/>
 
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
@@ -102,6 +101,7 @@
             android:name="com.hyphenate.easeui.ui.EaseMapActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".group.GroupListActivity"/>
         <activity android:name=".group.GroupDetailsActivity"/>
         <activity android:name=".group.InviteMembersActivity"/>
         <activity android:name=".group.MembersListActivity"/>
@@ -111,6 +111,9 @@
         <activity android:name=".group.PublicGroupsListActivity"/>
         <activity android:name=".group.GroupTransferOwnerActivity"/>
         <activity android:name=".group.GroupBlackListOrMuteActivity"/>
+
+        <activity android:name=".chatroom.ChatRoomListActivity"/>
+
         <!--Chat activity-->
         <activity
             android:name=".chat.ChatActivity"
@@ -174,7 +177,7 @@
         <!-- set your API key -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="hyphenatedemo#hyphenatedemo"/>
+            android:value="easemob-demo#chatdemoui"/>
         <!-- SDK service -->
         <service
             android:name="com.hyphenate.chat.EMChatService"
