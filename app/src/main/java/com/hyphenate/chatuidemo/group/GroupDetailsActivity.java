@@ -217,7 +217,6 @@ public class GroupDetailsActivity extends BaseActivity {
             adapter = new MucMembersVerticalAdapter(GroupDetailsActivity.this, members, mucRoleJudge);
             recyclerView.setAdapter(adapter);
         }
-
         switch_block_group_message.setChecked(group.isMsgBlocked());
     }
 

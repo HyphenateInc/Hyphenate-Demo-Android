@@ -160,6 +160,7 @@ public class GroupUtils {
         }
 
         /**
+<<<<<<< HEAD
          * set Page number
          */
         public void setPageNumber(int number) {
@@ -167,6 +168,8 @@ public class GroupUtils {
         }
 
         /**
+=======
+>>>>>>> hyphenate/dev
          * Page type API
          * @param data
          */

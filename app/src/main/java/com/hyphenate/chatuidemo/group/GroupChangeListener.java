@@ -16,8 +16,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
      * @param s2 Who invite you join the group
      * @param s3 Literal message coming with the invitation
      */
-    @Override public void onInvitationReceived(String s, String s1, String s2, String s3) {
-    }
+    @Override public void onInvitationReceived(String s, String s1, String s2, String s3) {}
 
     /*
      * some one want to join the group.
@@ -26,8 +25,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
      * @param s2 The applicant want to join the group
      * @param s3 Literal message coming with the application
      */
-    @Override public void onRequestToJoinReceived(String s, String s1, String s2, String s3) {
-    }
+    @Override public void onRequestToJoinReceived(String s, String s1, String s2, String s3) {}
 
 
     /*
@@ -37,8 +35,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
      * @param s2 who approve the application
      */
 
-    @Override public void onRequestToJoinAccepted(String s, String s1, String s2) {
-    }
+    @Override public void onRequestToJoinAccepted(String s, String s1, String s2) {}
 
     /*!
      * Join group's application has been declined
@@ -47,8 +44,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
      * @param s2 decliner's username
      * @param s3 decline reason
      */
-    @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
-    }
+    @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {}
 
 
     /*
@@ -58,8 +54,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
      * @param s2 reason
      */
 
-    @Override public void onInvitationAccepted(String s, String s1, String s2) {
-    }
+    @Override public void onInvitationAccepted(String s, String s1, String s2) {}
 
     /*
      * invite some one to be member of group, and the user has decline the invitation
@@ -67,16 +62,14 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
      * @param invitee
      * @param reason refuse reason
      */
-    @Override public void onInvitationDeclined(String s, String s1, String s2) {
-    }
+    @Override public void onInvitationDeclined(String s, String s1, String s2) {}
 
     /*!
      * current user has been remove from the group
      * @param s groupId
      * @param s1 groupName
      */
-    @Override public void onUserRemoved(String s, String s1) {
-    }
+    @Override public void onUserRemoved(String s, String s1) {}
 
     /*!
      * @param s groupId
@@ -85,8 +78,7 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
      * group dissolution
      * SDK will delete the group from local DB and local memory cache, then notify user this group has been destroyed
      */
-    @Override public void onGroupDestroyed(String s, String s1) {
-    }
+    @Override public void onGroupDestroyed(String s, String s1) {}
 
     /*!
      * @param s groupId
