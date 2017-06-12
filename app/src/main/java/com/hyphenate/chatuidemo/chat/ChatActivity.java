@@ -381,6 +381,7 @@ public class ChatActivity extends BaseActivity {
     protected void sendTextMessage(String content) {
         // create a message
         EMMessage message = EMMessage.createTxtSendMessage(content, toChatUsername);
+
         // send message
         sendMessage(message);
     }
@@ -414,18 +415,23 @@ public class ChatActivity extends BaseActivity {
     }
 
     protected void sendMessage(EMMessage message) {
+
         if (message == null) {
             return;
         }
+
         onSetMessageAttributes(message);
+
         if (chatType == EaseConstant.CHATTYPE_GROUP) {
             message.setChatType(EMMessage.ChatType.GroupChat);
         } else if (chatType == EaseConstant.CHATTYPE_CHATROOM) {
             message.setChatType(EMMessage.ChatType.ChatRoom);
         }
-        //send message
+
+        // send message
         EMClient.getInstance().chatManager().sendMessage(message);
-        //refresh ui
+
+        // refresh ui
         mMessageListView.refreshSelectLast();
     }
 
