@@ -320,6 +320,7 @@
 
 
 
+
       <TextView
           android:id="@+id/text_exit_group"
           android:layout_width="match_parent"

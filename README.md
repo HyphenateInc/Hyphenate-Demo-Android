@@ -3,9 +3,9 @@ Hyphenate Mobile Instant Messaging Demo app. This messaging app demonstrates how
 For more information, please visit Hyphenate docs at [docs.hyphenate.io](https://docs.hyphenate.io).
 
 - Real-time one-to-one and group chat
-- File, photo/video, and location sharing with your friends
+- File, photo, video, and location sharing
 - Video/Voice calls
-- Background notifications - so you know there's a message waiting for you
+- Background notifications - push services via GCM/FCM
 
 ## Download from Google play
 Android on Google play https://play.google.com/store/apps/details?id=com.hyphenate.chatuidemo&hl=en
