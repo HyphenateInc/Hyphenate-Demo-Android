@@ -105,7 +105,11 @@ public class UserProfileManager {
 
                         @Override public void onSuccess(List<UserEntity> uList) {
                             // save the contact list to cache
-                            setContactList(uList);
+                            if (uList.size() < entityList.size()) {
+                                setContactList(entityList);
+                            }else{
+                                setContactList(uList);
+                            }
                             if (callback != null) {
                                 callback.onSuccess();
                             }

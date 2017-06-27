@@ -128,7 +128,7 @@
     <!--group-->
     <string name="em_groups">Groups</string>
     <string name="em_group">group</string>
-    <string name="em_name_group_id">Group ID</string>
+    <string name="em_group_id">Group ID</string>
     <string name="em_exit_group">exit group</string>
     <string name="em_ok">ok</string>
     <string name="em_cancel">cancel</string>
@@ -155,6 +155,20 @@
     <string name="em_invite_members">Invite Members</string>
     <string name="em_load_public_group">load public group</string>
     <string name="em_join">JOIN</string>
+    <string name="em_group_block_group_message">Block group message</string>
+    <string name="em_group_unblock_group_message">Unblock group message</string>
+
+    <!--chatroom-->
+    <string name="em_chatrooms">Chatrooms</string>
+    <string name="em_chatroom_info">ChatRoom Info</string>
+    <string name="em_chatroom_members">ChatRoom Members</string>
+    <string name="em_chatroom_id">ChatRoom ID</string>
+    <string name="em_chatroom_members_size">%1$d Members</string>
+    <string name="em_chatroom_blacklist">ChatRoom Blacklist</string>
+    <string name="em_chatroom_change_name">Change ChatRoom name</string>
+    <string name="em_chatroom_change_description">Change ChatRoom description</string>
+    <string name="em_chatroom_destroy">Destroy ChatRoom</string>
+    <string name="em_chatroom_destroy_sure">Are you sure you want to destroy ChatRoom?</string>
 
     <!-- group detail menu -->
     <string name="em_group_transfer_owner">Transfer owner</string>
@@ -218,4 +232,7 @@
     <string name="title_contacts">Contacts</string>
     <string name="title_chats">Chats</string>
     <string name="title_settings">Settings</string>
+    <string name="em_clear_all_message">Clear all message</string>
+    <string name="em_clear_all_message_sure">Are you sure you want to clear all messages? It is irrevocable after confirming operation!</string>
+
 </resources>

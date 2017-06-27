@@ -217,7 +217,9 @@ public class AccountActivity extends BaseActivity {
         // loadAllMessages
         String msgId = "";
         List<EMMessage> msgs;
-        EMConversation conversation = EMClient.getInstance().chatManager().getConversation("gm1");
+        // Using the three-parameter method to prevent conversation from being null
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation("gm1",
+                EMConversation.EMConversationType.Chat, true);
         do {
             msgs = conversation.loadMoreMsgFromDB(msgId, 100);
             if (msgs != null && msgs.size() > 0) {

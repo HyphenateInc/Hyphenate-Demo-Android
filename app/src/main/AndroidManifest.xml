@@ -85,7 +85,6 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 
-        <activity android:name=".group.GroupListActivity"/>
 
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
@@ -102,6 +101,7 @@
             android:name="com.hyphenate.easeui.ui.EaseMapActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".group.GroupListActivity"/>
         <activity android:name=".group.GroupDetailsActivity"/>
         <activity android:name=".group.InviteMembersActivity"/>
         <activity android:name=".group.MembersListActivity"/>
@@ -111,6 +111,13 @@
         <activity android:name=".group.PublicGroupsListActivity"/>
         <activity android:name=".group.GroupTransferOwnerActivity"/>
         <activity android:name=".group.GroupBlackListOrMuteActivity"/>
+
+        <!--Chat room-->
+        <activity android:name=".chatroom.ChatRoomListActivity"/>
+        <activity android:name=".chatroom.ChatRoomDetailsActivity"/>
+        <activity android:name=".chatroom.ChatRoomMembersActivity"/>
+        <activity android:name=".chatroom.ChatRoomBlacklistActivity"/>
+
         <!--Chat activity-->
         <activity
             android:name=".chat.ChatActivity"

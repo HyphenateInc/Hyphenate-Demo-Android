@@ -160,6 +160,13 @@ public class GroupUtils {
         }
 
         /**
+         * set Page number
+         */
+        public void setPageNumber(int number) {
+            pageNumber = number;
+        }
+
+        /**
          * Page type API
          * @param data
          */
