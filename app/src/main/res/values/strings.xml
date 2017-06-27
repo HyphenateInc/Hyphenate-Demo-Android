@@ -128,7 +128,7 @@
     <!--group-->
     <string name="em_groups">Groups</string>
     <string name="em_group">group</string>
-    <string name="em_name_group_id">Group ID</string>
+    <string name="em_group_id">Group ID</string>
     <string name="em_exit_group">exit group</string>
     <string name="em_ok">ok</string>
     <string name="em_cancel">cancel</string>
@@ -155,6 +155,39 @@
     <string name="em_invite_members">Invite Members</string>
     <string name="em_load_public_group">load public group</string>
     <string name="em_join">JOIN</string>
+    <string name="em_group_block_group_message">Block group message</string>
+    <string name="em_group_unblock_group_message">Unblock group message</string>
+
+    <!--chatroom-->
+    <string name="em_chatrooms">Chatrooms</string>
+    <string name="em_chatroom_info">ChatRoom Info</string>
+    <string name="em_chatroom_members">ChatRoom Members</string>
+    <string name="em_chatroom_id">ChatRoom ID</string>
+    <string name="em_chatroom_members_size">%1$d Members</string>
+    <string name="em_chatroom_blacklist">ChatRoom Blacklist</string>
+    <string name="em_chatroom_change_name">Change ChatRoom name</string>
+    <string name="em_chatroom_change_description">Change ChatRoom description</string>
+    <string name="em_chatroom_destroy">Destroy ChatRoom</string>
+    <string name="em_chatroom_destroy_sure">Are you sure you want to destroy ChatRoom?</string>
+
+    <!-- group detail menu -->
+    <string name="em_group_transfer_owner">Transfer owner</string>
+    <string name="em_group_clear_conversation">Clear conversation</string>
+    <string name="em_group_change_group_name">Change group name</string>
+    <string name="em_group_change_group_desc">Change group description</string>
+    <string name="em_group_admin_list">Admin list</string>
+    <string name="em_group_black_list">Black list</string>
+    <string name="em_group_mute_list">Mute list</string>
+
+    <!-- group detail menu -->
+    <string name="em_group_members_add">Add members</string>
+    <string name="em_group_admin_save">Save</string>
+    <string name="em_group_transfer_owner_save">Save</string>
+
+    <!-- group member item alert menu -->
+    <string name="em_group_member_alert_item_add_mute">mute</string>
+    <string name="em_group_member_alert_item_add_black">add to black list</string>
+    <string name="em_group_member_alert_item_remove">remove</string>
 
     <!-- chat -->
     <string name="chat_voice_call">Voice call</string>
@@ -199,4 +232,7 @@
     <string name="title_contacts">Contacts</string>
     <string name="title_chats">Chats</string>
     <string name="title_settings">Settings</string>
+    <string name="em_clear_all_message">Clear all message</string>
+    <string name="em_clear_all_message_sure">Are you sure you want to clear all messages? It is irrevocable after confirming operation!</string>
+
 </resources>

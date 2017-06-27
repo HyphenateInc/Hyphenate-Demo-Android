@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/em_group_transfer_owner"
+          android:id="@+id/menu_item_transfer_owner"/>
+    <item android:title="@string/em_group_clear_conversation"
+          android:id="@+id/menu_item_clear_conversation"/>
+    <item android:title="@string/em_group_change_group_name"
+          android:id="@+id/menu_item_change_group_name"/>
+    <item android:title="@string/em_group_change_group_desc"
+          android:id="@+id/menu_item_change_group_desc"/>
+    <item android:title="@string/em_group_admin_list"
+          android:id="@+id/menu_item_admin_list"/>
+    <item android:title="@string/em_group_black_list"
+          android:id="@+id/menu_item_black_list"/>
+    <item android:title="@string/em_group_mute_list"
+          android:id="@+id/menu_item_mute_list"/>
+</menu>

@@ -9,12 +9,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
+
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by benson on 2016/10/26.
@@ -50,7 +53,7 @@ public class MembersListAdapter extends RecyclerView.Adapter<MembersListAdapter.
         if (RECYCLER_ORIENTATION == LinearLayoutManager.VERTICAL) {
             view = LayoutInflater.from(context).inflate(R.layout.em_item_group_member_list_vertical, parent, false);
         } else {
-            view = LayoutInflater.from(context).inflate(R.layout.em_item_group_memeber_list_horizontal, parent, false);
+            view = LayoutInflater.from(context).inflate(R.layout.em_item_group_member_list_horizontal, parent, false);
         }
         return new ViewHolder(view);
     }

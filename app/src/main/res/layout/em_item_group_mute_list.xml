@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:id="@+id/layout_contact_item"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/contact_item_height"
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingLeft="16dp"
+        >
+        <TextView
+            android:id="@+id/txt_header"
+            android:layout_width="16dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@color/header_text_color"
+            android:textSize="@dimen/header_size"
+            />
+
+        <com.hyphenate.easeui.widget.EaseImageView
+            android:id="@+id/img_contact_avatar"
+            android:layout_width="@dimen/contact_avatar_size"
+            android:layout_height="@dimen/contact_avatar_size"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/contact_avatar_margin_left"
+            android:layout_toRightOf="@id/txt_header"
+            android:scaleType="centerInside"
+            android:src="@drawable/ease_default_avatar"
+            app:imgShapeType="round"
+            />
+
+        <TextView
+            android:id="@+id/txt_contact_name"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/contact_name_margin_left"
+            android:layout_toRightOf="@id/img_contact_avatar"
+            android:text="@string/app_name"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/contact_name_color"
+            android:textSize="@dimen/contact_name_size"
+            />
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:visibility="gone"
+            />
+
+        <ImageView
+            android:id="@+id/img_right"
+            android:layout_width="18dp"
+            android:layout_height="13dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:focusable="false"
+            android:src="@drawable/em_cell_check"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txt_base_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_line_height"
+        android:layout_marginLeft="@dimen/base_line_margin_left"
+        android:background="@color/base_line_color"
+        />
+
+    <com.hyphenate.easeui.widget.EaseSwipeLayout
+        android:id="@+id/swipe_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            >
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:orientation="horizontal">
+        </LinearLayout>
+    </com.hyphenate.easeui.widget.EaseSwipeLayout>
+
+</RelativeLayout>
