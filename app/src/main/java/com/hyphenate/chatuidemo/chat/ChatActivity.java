@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.ContextMenu;
@@ -641,7 +642,7 @@ public class ChatActivity extends BaseActivity {
             // Start the Intent by requesting a result, identified by a request code.
             startActivityForResult(intent, REQUEST_CODE_MAP);
         } catch (GooglePlayServicesRepairableException e) {
-            GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), this, 0);
+            GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), this, 0).show();
         } catch (GooglePlayServicesNotAvailableException e) {
             Toast.makeText(this, "Google Play Services is not available.", Toast.LENGTH_LONG).show();
         }
@@ -905,7 +906,7 @@ public class ChatActivity extends BaseActivity {
             super.onMemberJoined(roomId, participant);
             runOnUiThread(new Runnable() {
                 @Override public void run() {
-                    Toast.makeText(activityInstance, participant + " joined", Toast.LENGTH_LONG).show();
+                    Snackbar.make(mMessageListView, participant + " joined", Snackbar.LENGTH_SHORT).show();
                 }
             });
         }
@@ -914,7 +915,7 @@ public class ChatActivity extends BaseActivity {
             super.onMemberExited(roomId, roomName, participant);
             runOnUiThread(new Runnable() {
                 @Override public void run() {
-                    Toast.makeText(activityInstance, participant + " exited", Toast.LENGTH_LONG).show();
+                    Snackbar.make(mMessageListView, participant + " exited", Snackbar.LENGTH_SHORT).show();
                 }
             });
         }
@@ -928,7 +929,7 @@ public class ChatActivity extends BaseActivity {
             super.onMuteListAdded(chatRoomId, mutes, expireTime);
             runOnUiThread(new Runnable() {
                 @Override public void run() {
-                    Toast.makeText(activityInstance, mutes.get(0) + " is muted", Toast.LENGTH_LONG).show();
+                    Snackbar.make(mMessageListView, mutes.get(0) + " is muted", Snackbar.LENGTH_SHORT).show();
                 }
             });
         }
@@ -937,7 +938,7 @@ public class ChatActivity extends BaseActivity {
             super.onMuteListRemoved(chatRoomId, mutes);
             runOnUiThread(new Runnable() {
                 @Override public void run() {
-                    Toast.makeText(activityInstance, mutes.get(0) + " is unmuted", Toast.LENGTH_LONG).show();
+                    Snackbar.make(mMessageListView, mutes.get(0) + " is unmuted", Snackbar.LENGTH_SHORT).show();
                 }
             });
         }
@@ -946,7 +947,7 @@ public class ChatActivity extends BaseActivity {
             super.onAdminAdded(chatRoomId, admin);
             runOnUiThread(new Runnable() {
                 @Override public void run() {
-                    Toast.makeText(activityInstance, admin + "  administrator privileges are added", Toast.LENGTH_LONG).show();
+                    Snackbar.make(mMessageListView, admin + "  administrator privileges are added", Snackbar.LENGTH_SHORT).show();
                 }
             });
         }
@@ -955,7 +956,7 @@ public class ChatActivity extends BaseActivity {
             super.onAdminRemoved(chatRoomId, admin);
             runOnUiThread(new Runnable() {
                 @Override public void run() {
-                    Toast.makeText(activityInstance, admin + " administrator privileges are canceled", Toast.LENGTH_LONG).show();
+                    Snackbar.make(mMessageListView, admin + " administrator privileges are canceled", Snackbar.LENGTH_SHORT).show();
                 }
             });
         }
@@ -964,8 +965,7 @@ public class ChatActivity extends BaseActivity {
             super.onOwnerChanged(chatRoomId, newOwner, oldOwner);
             runOnUiThread(new Runnable() {
                 @Override public void run() {
-                    Toast.makeText(activityInstance, oldOwner + " transferred ownership to " + newOwner, Toast.LENGTH_LONG)
-                            .show();
+                    Snackbar.make(mMessageListView, oldOwner + " transferred ownership to " + newOwner, Snackbar.LENGTH_SHORT).show();
                 }
             });
         }

@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
@@ -33,8 +32,7 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.exceptions.EMNoActiveCallException;
 import com.hyphenate.exceptions.EMServiceNotReadyException;
 import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.media.EMLocalSurfaceView;
-import com.hyphenate.media.EMOppositeSurfaceView;
+import com.hyphenate.media.EMCallSurfaceView;
 import com.hyphenate.util.EMLog;
 
 import java.util.Timer;
@@ -70,8 +68,8 @@ public class VideoCallActivity extends CallActivity {
 
     // Use ButterKnife define view
     @BindView(R.id.layout_call_control) View mControlLayout;
-    @BindView(R.id.surface_view_local) EMLocalSurfaceView mLocalSurfaceView;
-    @BindView(R.id.surface_view_opposite) EMOppositeSurfaceView mOppositeSurfaceView;
+    @BindView(R.id.surface_view_local) EMCallSurfaceView mLocalSurfaceView;
+    @BindView(R.id.surface_view_opposite) EMCallSurfaceView mOppositeSurfaceView;
 
     @BindView(R.id.layout_call_info) View mCallInfoView;
     @BindView(R.id.text_resolution) TextView mResolutionView;
