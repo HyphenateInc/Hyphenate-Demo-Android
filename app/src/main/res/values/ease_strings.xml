@@ -36,6 +36,7 @@
     <string name="record_no_permission">Recording without permission</string>
     <string name="record_recording_time_is_too_short">The recording time is too short</string>
     <string name="record_need_sdcard_support">Send voice need sdcard support</string>
+    <string name="record_failed">Record voice failed! </string>
     <string name="record_tap_to_record">Tap and hold to record</string>
     <string name="record_move_up_to_cancel">Release to send, swipe up to cancel</string>
     <string name="record_release_to_cancel">Release to cancel</string>

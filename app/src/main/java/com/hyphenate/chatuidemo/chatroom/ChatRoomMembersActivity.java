@@ -1,26 +1,30 @@
 package com.hyphenate.chatuidemo.chatroom;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMCursorResult;
+import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.exceptions.HyphenateException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lzan13 on 2017/6/1.
@@ -30,21 +34,32 @@ public class ChatRoomMembersActivity extends BaseActivity {
 
     private String TAG = this.getClass().getSimpleName();
 
+    private final int REFRESH_CODE = 0;
+    private final int MENU_CODE_REMOVE_MEMBER = 0;
+    private final int MENU_CODE_MUTE_OPERATION = 1;
+    private final int MENU_CODE_BLACK_LIST_OPERATION = 2;
+    private final int MENU_CODE_TRANSFER_OWNERSHIP = 3;
+    private final int MENU_CODE_ADMIN_OPERATION = 4;
+
     private ChatRoomMembersActivity activity;
     private DefaultChatRoomChangeListener chatRoomChangeListener;
 
     @BindView(R.id.recycler_chatroom_members) RecyclerView recyclerView;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
 
     private LinearLayoutManager layoutManager;
     private ChatRoomMembersAdapter adapter;
-
-    private ProgressDialog progressDialog;
 
     private String currentUser;
     private String chatRoomId;
     private EMChatRoom chatRoom;
     private List<String> adminList;
     private List<String> muteList = new ArrayList<>();
+    // chatroom member page
+    private String cursor = "";
+    private int pageSize = 20;
+    private boolean isLoading = false;
+    private boolean isMoreData = true;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,26 +92,38 @@ public class ChatRoomMembersActivity extends BaseActivity {
         adapter = new ChatRoomMembersAdapter(activity, chatRoomId);
         recyclerView.setAdapter(adapter);
 
-        updateChatRoomData();
+        initChatRoomData();
+        loadChatroomMembers();
 
         chatRoomChangeListener = new DefaultChatRoomChangeListener();
         EMClient.getInstance().chatroomManager().addChatRoomChangeListener(chatRoomChangeListener);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override public void onScrollStateChanged(RecyclerView view, int scrollState) {
+                if (scrollState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (adapter.getItemCount() != 0) {
+                        int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+                        int totalItemCount = layoutManager.getItemCount();
+                        if (isMoreData && !isLoading && lastVisibleItem == totalItemCount - 1) {
+                            loadChatroomMembers();
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**
-     * Update chat room data from server
+     * init chat room data from server
      */
-    private void updateChatRoomData() {
+    private void initChatRoomData() {
         // fetch members from server
-        new Thread(new Runnable() {
+        DemoHelper.getInstance().execute(new Runnable() {
             @Override public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override public void run() {
-                        showProgressDialog();
-                    }
-                });
+                showLoading();
                 try {
-                    chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatRoomId, true);
+                    chatRoom = EMClient.getInstance().chatroomManager().fetchChatRoomFromServer(chatRoomId, false);
                     adminList.clear();
                     adminList.addAll(chatRoom.getAdminList());
                     if (currentUser.equals(chatRoom.getOwner()) || chatRoom.getAdminList().contains(currentUser)) {
@@ -104,15 +131,57 @@ public class ChatRoomMembersActivity extends BaseActivity {
                         setItemClickListener();
                         // fetch mute list from server
                         muteList.clear();
-                        muteList.addAll(
-                                EMClient.getInstance().chatroomManager().fetchChatRoomMuteList(chatRoomId, 0, 200).keySet());
+                        int count = 0;
+                        int page = 0;
+                        do {
+                            Map<String, Long> map =
+                                    EMClient.getInstance().chatroomManager().fetchChatRoomMuteList(chatRoomId, page, pageSize);
+                            count = map.size();
+                            page++;
+                            muteList.addAll(map.keySet());
+                        } while (count == pageSize);
                     }
-                    handler.sendMessage(handler.obtainMessage(0));
+                    handler.sendMessage(handler.obtainMessage(REFRESH_CODE));
                 } catch (HyphenateException e) {
                     e.printStackTrace();
+                } finally {
+                    hideLoading();
                 }
             }
-        }).start();
+        });
+    }
+
+    /**
+     * load chatroom members, 20 loaded at a time
+     */
+    private void loadChatroomMembers() {
+        if (!isMoreData) {
+            Snackbar.make(recyclerView, "No more data!", Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+        if (isLoading) {
+            return;
+        }
+        DemoHelper.getInstance().execute(new Runnable() {
+            @Override public void run() {
+                showLoading();
+                try {
+                    isLoading = true;
+                    EMCursorResult<String> result =
+                            EMClient.getInstance().chatroomManager().fetchChatRoomMembers(chatRoomId, cursor, pageSize);
+                    cursor = result.getCursor();
+                    if (TextUtils.isEmpty(result.getCursor()) || result.getData().size() < pageSize) {
+                        isMoreData = false;
+                    }
+                    isLoading = false;
+                    handler.sendMessage(handler.obtainMessage(REFRESH_CODE));
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                } finally {
+                    hideLoading();
+                }
+            }
+        });
     }
 
     /**
@@ -169,25 +238,20 @@ public class ChatRoomMembersActivity extends BaseActivity {
 
         String[] menus = new String[menuList.size()];
         menuList.toArray(menus);
-
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
         alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialog, final int which) {
-                new Thread(new Runnable() {
+                DemoHelper.getInstance().execute(new Runnable() {
                     @Override public void run() {
-                        runOnUiThread(new Runnable() {
-                            @Override public void run() {
-                                showProgressDialog();
-                            }
-                        });
+                        showLoading();
                         try {
                             switch (which) {
-                                case 0:
+                                case MENU_CODE_REMOVE_MEMBER:
                                     List<String> members = new ArrayList<String>();
                                     members.add(username);
                                     EMClient.getInstance().chatroomManager().removeChatRoomMembers(chatRoomId, members);
                                     break;
-                                case 1:
+                                case MENU_CODE_MUTE_OPERATION:
                                     List<String> muteMembers = new ArrayList<String>();
                                     muteMembers.add(username);
                                     if (muteList.contains(username)) {
@@ -198,15 +262,15 @@ public class ChatRoomMembersActivity extends BaseActivity {
                                                 .muteChatRoomMembers(chatRoomId, muteMembers, 10 * 60 * 1000);
                                     }
                                     break;
-                                case 2:
+                                case MENU_CODE_BLACK_LIST_OPERATION:
                                     List<String> blacklistMembers = new ArrayList<String>();
                                     blacklistMembers.add(username);
                                     EMClient.getInstance().chatroomManager().blockChatroomMembers(chatRoomId, blacklistMembers);
                                     break;
-                                case 3:
+                                case MENU_CODE_TRANSFER_OWNERSHIP:
                                     EMClient.getInstance().chatroomManager().changeOwner(chatRoomId, username);
                                     break;
-                                case 4:
+                                case MENU_CODE_ADMIN_OPERATION:
                                     if (adminList.contains(username)) {
                                         EMClient.getInstance().chatroomManager().removeChatRoomAdmin(chatRoomId, username);
                                     } else {
@@ -214,29 +278,17 @@ public class ChatRoomMembersActivity extends BaseActivity {
                                     }
                                     break;
                             }
-                            updateChatRoomData();
+                            initChatRoomData();
                         } catch (HyphenateException e) {
                             e.printStackTrace();
+                        } finally {
+                            hideLoading();
                         }
                     }
-                }).start();
+                });
             }
         });
         alertDialogBuilder.show();
-    }
-
-    /**
-     * show progress dialog
-     */
-    private void showProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(activity);
-            progressDialog.setMessage("Please waiting...");
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
-        if (!progressDialog.isShowing()) {
-            progressDialog.show();
-        }
     }
 
     // refresh ui handler
@@ -244,10 +296,7 @@ public class ChatRoomMembersActivity extends BaseActivity {
         @Override public void handleMessage(Message msg) {
             //super.handleMessage(msg);
             switch (msg.what) {
-                case 0:
-                    if (progressDialog != null && progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
+                case REFRESH_CODE:
                     if (adapter != null) {
                         adapter.refresh();
                     }
@@ -255,6 +304,22 @@ public class ChatRoomMembersActivity extends BaseActivity {
             }
         }
     };
+
+    private void showLoading() {
+        this.runOnUiThread(new Runnable() {
+            @Override public void run() {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void hideLoading() {
+        this.runOnUiThread(new Runnable() {
+            @Override public void run() {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+    }
 
     @Override protected void onDestroy() {
         super.onDestroy();
@@ -279,37 +344,37 @@ public class ChatRoomMembersActivity extends BaseActivity {
 
         @Override public void onMemberJoined(String roomId, String participant) {
             super.onMemberJoined(roomId, participant);
-            updateChatRoomData();
+            initChatRoomData();
         }
 
         @Override public void onMemberExited(String roomId, String roomName, String participant) {
             super.onMemberExited(roomId, roomName, participant);
-            updateChatRoomData();
+            initChatRoomData();
         }
 
         @Override public void onMuteListAdded(String chatRoomId, List<String> mutes, long expireTime) {
             super.onMuteListAdded(chatRoomId, mutes, expireTime);
-            updateChatRoomData();
+            initChatRoomData();
         }
 
         @Override public void onMuteListRemoved(String chatRoomId, List<String> mutes) {
             super.onMuteListRemoved(chatRoomId, mutes);
-            updateChatRoomData();
+            initChatRoomData();
         }
 
         @Override public void onAdminAdded(String chatRoomId, String admin) {
             super.onAdminAdded(chatRoomId, admin);
-            updateChatRoomData();
+            initChatRoomData();
         }
 
         @Override public void onAdminRemoved(String chatRoomId, String admin) {
             super.onAdminRemoved(chatRoomId, admin);
-            updateChatRoomData();
+            initChatRoomData();
         }
 
         @Override public void onOwnerChanged(String chatRoomId, String newOwner, String oldOwner) {
             super.onOwnerChanged(chatRoomId, newOwner, oldOwner);
-            updateChatRoomData();
+            initChatRoomData();
         }
     }
 }
