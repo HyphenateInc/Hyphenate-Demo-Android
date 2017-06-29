@@ -15,11 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+
 import com.hyphenate.EMCallBack;
-import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chatuidemo.Constant;
@@ -29,18 +26,24 @@ import com.hyphenate.chatuidemo.apply.ApplyActivity;
 import com.hyphenate.chatuidemo.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.chat.ChatActivity;
+import com.hyphenate.chatuidemo.chatroom.ChatRoomListActivity;
 import com.hyphenate.chatuidemo.group.GroupListActivity;
 import com.hyphenate.chatuidemo.user.model.UserEntity;
 import com.hyphenate.chatuidemo.user.model.UserProfileManager;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.exceptions.HyphenateException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by benson on 2016/10/8.
@@ -317,10 +320,13 @@ public class ContactListFragment extends Fragment {
         super.onStop();
     }
 
-    @OnClick({ R.id.layout_group_entry, R.id.layout_apply_entry }) void onclick(View v) {
+    @OnClick({ R.id.layout_group_entry, R.id.layout_chatroom_entry, R.id.layout_apply_entry }) void onclick(View v) {
         switch (v.getId()) {
             case R.id.layout_group_entry:
                 startActivity(new Intent(getActivity(), GroupListActivity.class));
+                break;
+            case R.id.layout_chatroom_entry:
+                startActivity(new Intent(getActivity(), ChatRoomListActivity.class));
                 break;
             case R.id.layout_apply_entry:
                 startActivity(new Intent(getActivity(), ApplyActivity.class));

@@ -13,11 +13,18 @@
         android:title="@string/chat_video_call"
         app:showAsAction="always"
         />
-
     <item
         android:id="@+id/menu_group_detail"
         android:icon="@android:drawable/ic_menu_info_details"
         android:title="detail"
         android:visible="false"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_chatroom_detail"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="detail"
+        android:visible="false"
+        app:showAsAction="always"/>
+
 </menu>

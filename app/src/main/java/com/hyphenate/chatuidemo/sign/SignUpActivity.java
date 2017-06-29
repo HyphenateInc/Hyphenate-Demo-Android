@@ -115,7 +115,7 @@ public class SignUpActivity extends BaseActivity {
                             // Sign up success, save account to shared
                             //MLSPUtil.put(mActivity, MLConstants.ML_SHARED_USERNAME, mAccount);
                             Toast.makeText(mActivity, "Sign up success!", Toast.LENGTH_LONG).show();
-                            // Sign up success, Back sign in
+                            // Sign up succeed, go to sign in
                             finish();
                         }
                     });

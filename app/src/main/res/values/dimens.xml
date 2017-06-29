@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--base-->
+    <dimen name="size_headline">24sp</dimen>
+    <dimen name="size_title">20sp</dimen>
+    <dimen name="size_subhead">16sp</dimen>
+    <dimen name="size_body">14sp</dimen>
+    <dimen name="size_menu">16sp</dimen>
+    <dimen name="size_btn_large">20sp</dimen>
+    <dimen name="size_btn_normal">16sp</dimen>
+    <dimen name="size_btn_small">12sp</dimen>
+    <dimen name="size_caption">12sp</dimen>
+    <dimen name="size_10">10sp</dimen>
+    <dimen name="size_12">12sp</dimen>
+    <dimen name="size_14">14sp</dimen>
+    <dimen name="size_16">16sp</dimen>
+
     <!--contact-->
     <dimen name="header_size">20.5sp</dimen>
     <dimen name="contact_name_size">16sp</dimen>
@@ -33,13 +48,16 @@
     <dimen name="group_name_margin_left">17.5dp</dimen>
     <dimen name="group_name_size">16sp</dimen>
     <dimen name="group_details_item_height">70dp</dimen>
-    <dimen name="group_details_name_size">24sp</dimen>
+    <dimen name="group_details_name_size">20sp</dimen>
+    <dimen name="group_details_desc_size">12sp</dimen>
 
+    <!--chatroom-->
+    <dimen name="chatroom_item_avatar_size">39.5dp</dimen>
+    <dimen name="chatroom_name_margin">16dp</dimen>
 
     <!--call-->
     <dimen name="call_name_size">18sp</dimen>
     <dimen name="call_info_size">14sp</dimen>
-
     <dimen name="call_info_item_height">48dp</dimen>
     <dimen name="call_switch_width">48dp</dimen>
     <dimen name="call_switch_height">48dp</dimen>
@@ -75,4 +93,7 @@
     <dimen name="account_item_padding">16dp</dimen>
 
     <dimen name="logo_margin">24dp</dimen>
+
+    <!--other-->
+
 </resources>

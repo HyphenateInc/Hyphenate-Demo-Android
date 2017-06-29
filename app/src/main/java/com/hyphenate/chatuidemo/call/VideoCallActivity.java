@@ -20,9 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+
 import com.hyphenate.chat.EMCallManager;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMCallStateChangeListener.CallError;
@@ -34,11 +32,15 @@ import com.hyphenate.chatuidemo.R;
 import com.hyphenate.exceptions.EMNoActiveCallException;
 import com.hyphenate.exceptions.EMServiceNotReadyException;
 import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.media.EMLocalSurfaceView;
-import com.hyphenate.media.EMOppositeSurfaceView;
+import com.hyphenate.media.EMCallSurfaceView;
 import com.hyphenate.util.EMLog;
+
 import java.util.Timer;
 import java.util.TimerTask;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Create by lzan13 2016/10/13
@@ -66,8 +68,8 @@ public class VideoCallActivity extends CallActivity {
 
     // Use ButterKnife define view
     @BindView(R.id.layout_call_control) View mControlLayout;
-    @BindView(R.id.surface_view_local) EMLocalSurfaceView mLocalSurfaceView;
-    @BindView(R.id.surface_view_opposite) EMOppositeSurfaceView mOppositeSurfaceView;
+    @BindView(R.id.surface_view_local) EMCallSurfaceView mLocalSurfaceView;
+    @BindView(R.id.surface_view_opposite) EMCallSurfaceView mOppositeSurfaceView;
 
     @BindView(R.id.layout_call_info) View mCallInfoView;
     @BindView(R.id.text_resolution) TextView mResolutionView;
@@ -643,6 +645,7 @@ public class VideoCallActivity extends CallActivity {
                         mCallStatus = CallStatus.CALL_OFFLINE;
                         mCallStatusView.setText(
                                 String.format(getString(R.string.em_call_not_online), mCallId));
+                        Toast.makeText(VideoCallActivity.this, mCallStatusView.getText(), Toast.LENGTH_LONG).show();
                     } else if (callError == CallError.ERROR_BUSY) {
                         mCallStatus = CallStatus.CALL_BUSY;
                         mCallStatusView.setText(

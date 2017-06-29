@@ -23,7 +23,7 @@ repositories {
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.2'
     //use legacy for for android 6.0
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
@@ -38,6 +38,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
         }
     }
 }
@@ -56,7 +61,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-places:9.4.0'
     compile 'com.google.android.gms:play-services-maps:9.4.0'
     compile 'com.parse:parse-android:1.13.1'
-    compile 'com.hyphenate:hyphenate-sdk:3.2.3'
+
+    compile 'com.hyphenate:hyphenate-sdk:3.3.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
         transitive = true;
     }
