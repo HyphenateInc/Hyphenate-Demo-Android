@@ -19,8 +19,8 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessage.ChatType;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.chatuidemo.call.CallManager;
 import com.hyphenate.chatuidemo.call.CallReceiver;
-import com.hyphenate.chatuidemo.call.CallStateChangeListener;
 import com.hyphenate.chatuidemo.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.chat.ChatActivity;
@@ -58,9 +58,6 @@ public class DemoHelper {
 
     // Call broadcast receiver
     private CallReceiver mCallReceiver = null;
-
-    // Call state listener
-    private CallStateChangeListener mCallStateChangeListener = null;
 
     // Contacts listener
     private ContactsChangeListener mContactListener = null;
@@ -122,6 +119,9 @@ public class DemoHelper {
             //set events listeners
             setGlobalListener();
             setEaseUIProviders();
+
+            // init call
+            CallManager.getInstance().init(context);
 
             EMLog.d(TAG, "------- init hyphenate end --------------");
         }
@@ -521,29 +521,6 @@ public class DemoHelper {
     }
 
     /**
-     * Add call state listener
-     */
-    public void addCallStateChangeListener() {
-        if (mCallStateChangeListener == null) {
-            mCallStateChangeListener = new CallStateChangeListener(mContext);
-        }
-
-        EMClient.getInstance().callManager().addCallStateChangeListener(mCallStateChangeListener);
-    }
-
-    /**
-     * Remove call state listener
-     */
-    public void removeCallStateChangeListener() {
-        if (mCallStateChangeListener != null) {
-            EMClient.getInstance()
-                    .callManager()
-                    .removeCallStateChangeListener(mCallStateChangeListener);
-            mCallStateChangeListener = null;
-        }
-    }
-
-    /**
      * Set Connection Listener
      */
     private void setConnectionListener() {
@@ -584,7 +561,11 @@ public class DemoHelper {
                     EMLog.d(TAG, "onMessageReceived id : " + message.getMsgId());
                     // in background, do not refresh UI, notify it in notification bar
                     if (!hasForegroundActivities()) {
-                        getNotifier().onNewMsg(message);
+                        if (message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_CALL_PUSH, false)) {
+                            EMClient.getInstance().chatManager().getConversation(message.getFrom()).removeMessage(message.getMsgId());
+                        }else{
+                            getNotifier().onNewMsg(message);
+                        }
                     }
                 }
             }

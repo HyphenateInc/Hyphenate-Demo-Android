@@ -1,838 +1,574 @@
 package com.hyphenate.chatuidemo.call;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.hardware.Camera;
-import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.NotificationCompat;
 import android.view.View;
-import android.widget.Chronometer;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.hyphenate.chat.EMCallManager;
-import com.hyphenate.chat.EMCallStateChangeListener;
-import com.hyphenate.chat.EMCallStateChangeListener.CallError;
-import com.hyphenate.chat.EMCallStateChangeListener.CallState;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chatuidemo.Constant;
-import com.hyphenate.chatuidemo.DemoHelper;
-import com.hyphenate.chatuidemo.R;
-import com.hyphenate.exceptions.EMNoActiveCallException;
-import com.hyphenate.exceptions.EMServiceNotReadyException;
-import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.media.EMCallSurfaceView;
-import com.hyphenate.util.EMLog;
-
-import java.util.Timer;
-import java.util.TimerTask;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.hyphenate.chat.EMCallManager;
+import com.hyphenate.chat.EMCallStateChangeListener;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chatuidemo.Constant;
+import com.hyphenate.chatuidemo.R;
+import com.hyphenate.exceptions.HyphenateException;
+import com.hyphenate.media.EMCallSurfaceView;
+import com.superrtc.sdk.VideoView;
+import java.io.File;
 
 /**
- * Create by lzan13 2016/10/13
+ * Created by lzan13 on 2017/6/18.
  * Video call activity
  */
 public class VideoCallActivity extends CallActivity {
 
-    private final String TAG = VideoCallActivity.class.getSimpleName();
+    private EMCallManager.EMVideoCallHelper videoCallHelper;
+    // SurfaceView state，-1 DISCONNECTED，0 ACCEPT，1 ACCEPT - local and opposite change
+    private int surfaceState = -1;
 
-    // Video call helper
-    private EMCallManager.EMVideoCallHelper mVideoCallHelper;
-    // Video call data processor
-    private CameraDataProcessor mCameraDataProcessor;
+    private EMCallSurfaceView localSurface = null;
+    private EMCallSurfaceView oppositeSurface = null;
+    private RelativeLayout.LayoutParams localParams = null;
+    private RelativeLayout.LayoutParams oppositeParams = null;
 
-    // Update video call info
-    private boolean mMonitor = true;
+    @BindView(R.id.layout_root) View rootView;
+    @BindView(R.id.layout_call_control) View controlLayout;
+    @BindView(R.id.layout_surface_container) RelativeLayout surfaceLayout;
 
-    private Timer mTimer;
-
-    // SurfaceView state, 0 local is small, 1 opposite is small
-    private int surfaceViewState = 0;
+    @BindView(R.id.btn_minimize_call_ui) ImageButton exitFullScreenBtn;
+    @BindView(R.id.text_call_state) TextView callStateView;
+    @BindView(R.id.text_call_time) TextView callTimeView;
+    @BindView(R.id.btn_mic_switch) ImageButton micSwitch;
+    @BindView(R.id.btn_camera_switch) ImageButton cameraSwitch;
+    @BindView(R.id.btn_speaker_switch) ImageButton speakerSwitch;
+    @BindView(R.id.btn_record_switch) ImageButton recordSwitch;
+    @BindView(R.id.btn_screenshot) ImageButton screenshotSwitch;
+    @BindView(R.id.btn_change_camera_switch) ImageButton changeCameraSwitch;
+    @BindView(R.id.fab_reject_call) FloatingActionButton rejectCallFab;
+    @BindView(R.id.fab_end_call) FloatingActionButton endCallFab;
+    @BindView(R.id.fab_answer_call) FloatingActionButton answerCallFab;
 
     private LocalBroadcastManager localBroadcastManager;
-    private CallBroadcastReceiver broadcastReceiver;
-
-    // Use ButterKnife define view
-    @BindView(R.id.layout_call_control) View mControlLayout;
-    @BindView(R.id.surface_view_local) EMCallSurfaceView mLocalSurfaceView;
-    @BindView(R.id.surface_view_opposite) EMCallSurfaceView mOppositeSurfaceView;
-
-    @BindView(R.id.layout_call_info) View mCallInfoView;
-    @BindView(R.id.text_resolution) TextView mResolutionView;
-    @BindView(R.id.text_time_latency) TextView mTimeLatencyView;
-    @BindView(R.id.text_frame_rate) TextView mFrameRateView;
-    @BindView(R.id.text_lost_rate) TextView mLostRateView;
-    @BindView(R.id.text_local_bitrate) TextView mLocalBitrateView;
-    @BindView(R.id.text_remote_bitrate) TextView mRemoteBitrateView;
-
-    @BindView(R.id.img_call_background) ImageView mCallBackgroundView;
-    @BindView(R.id.text_call_status) TextView mCallStatusView;
-    @BindView(R.id.btn_change_camera_switch) ImageButton mChangeCameraSwitch;
-    @BindView(R.id.btn_call_info) ImageButton mCallInfoBtn;
-    @BindView(R.id.btn_exit_full_screen) ImageButton mExitFullScreenBtn;
-    @BindView(R.id.btn_camera_switch) ImageButton mCameraSwitch;
-    @BindView(R.id.btn_mic_switch) ImageButton mMicSwitch;
-    @BindView(R.id.btn_speaker_switch) ImageButton mSpeakerSwitch;
-    @BindView(R.id.fab_reject_call) FloatingActionButton mRejectCallFab;
-    @BindView(R.id.fab_end_call) FloatingActionButton mEndCallFab;
-    @BindView(R.id.fab_answer_call) FloatingActionButton mAnswerCallFab;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.em_activity_video_call);
 
-        DemoHelper.getInstance().isVideoCalling = true;
-        // init ButterKnife
         ButterKnife.bind(this);
 
         initView();
 
-        // register call broadcast receiver
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
-        broadcastReceiver = new CallBroadcastReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Constant.BROADCAST_ACTION_CALL);
-        localBroadcastManager.registerReceiver(broadcastReceiver, filter);
+        registerBroadcast();
     }
 
     /**
-     * Init layout view
+     * init call activity ui
      */
     @Override protected void initView() {
         super.initView();
+        if (CallManager.getInstance().isInComingCall()) {
+            endCallFab.setVisibility(View.GONE);
+            answerCallFab.setVisibility(View.VISIBLE);
+            rejectCallFab.setVisibility(View.VISIBLE);
+            callStateView.setText(R.string.em_call_connected_is_incoming);
+        } else {
+            endCallFab.setVisibility(View.VISIBLE);
+            answerCallFab.setVisibility(View.GONE);
+            rejectCallFab.setVisibility(View.GONE);
+            callStateView.setText(R.string.em_call_connecting);
+        }
 
-        // default call type video
-        mCallType = 0;
+        micSwitch.setActivated(!CallManager.getInstance().isOpenMic());
+        cameraSwitch.setActivated(!CallManager.getInstance().isOpenCamera());
+        speakerSwitch.setActivated(CallManager.getInstance().isOpenSpeaker());
+        recordSwitch.setActivated(CallManager.getInstance().isOpenRecord());
 
-        mChronometer = (Chronometer) findViewById(R.id.chronometer_call_time);
+        videoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
 
-        // Set button state
-        mChangeCameraSwitch.setActivated(false);
-        mCameraSwitch.setActivated(CallStatus.getInstance().isCamera());
-        mMicSwitch.setActivated(CallStatus.getInstance().isMic());
-        mSpeakerSwitch.setActivated(CallStatus.getInstance().isSpeaker());
-
-        // SDK call helper
-        mVideoCallHelper = EMClient.getInstance().callManager().getVideoCallHelper();
-        // Set the local preview image displayed on the top floor, be sure to set as soon as possible, otherwise invalid
-        mLocalSurfaceView.setZOrderMediaOverlay(true);
-        mLocalSurfaceView.setZOrderOnTop(true);
+        initCallSurface();
+        if (CallManager.getInstance().getCallState() == CallManager.CallState.ACCEPTED) {
+            endCallFab.setVisibility(View.VISIBLE);
+            answerCallFab.setVisibility(View.GONE);
+            rejectCallFab.setVisibility(View.GONE);
+            callStateView.setText(R.string.em_call_accepted);
+            refreshCallTime();
+            onCallSurface();
+        }
 
         try {
-            // By default, the front camera is used
-            EMClient.getInstance()
-                    .callManager()
-                    .setCameraFacing(Camera.CameraInfo.CAMERA_FACING_FRONT);
+            EMClient.getInstance().callManager().setCameraFacing(Camera.CameraInfo.CAMERA_FACING_FRONT);
         } catch (HyphenateException e) {
             e.printStackTrace();
         }
-
-        // Set local and opposite SurfaceView
-        EMClient.getInstance()
-                .callManager()
-                .setSurfaceView(mLocalSurfaceView, mOppositeSurfaceView);
-
-        mCameraDataProcessor = new CameraDataProcessor();
-        // Set video call data processor
-        EMClient.getInstance().callManager().setCameraDataProcessor(mCameraDataProcessor);
-
-        // Check call state
-        if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_NORMAL) {
-            // Set call state
-            CallStatus.getInstance().setInComing(isInComingCall);
-
-            if (isInComingCall) {
-                // Set call state is incoming
-                CallStatus.getInstance().setCallState(CallStatus.CALL_STATUS_CONNECTING_INCOMING);
-                // Set call state view show content
-                mCallStatusView.setText(String.format(mActivity.getResources()
-                        .getString(R.string.em_call_connected_incoming_call), mCallId));
-                // Set button statue
-                mRejectCallFab.setVisibility(View.VISIBLE);
-                mEndCallFab.setVisibility(View.GONE);
-                mAnswerCallFab.setVisibility(View.VISIBLE);
-            } else {
-                // Set call state connecting
-                CallStatus.getInstance().setCallState(CallStatus.CALL_STATUS_CONNECTING);
-                // Set call state view show content
-                mCallStatusView.setText(
-                        String.format(getString(R.string.em_call_connecting), mCallId));
-                // Set button statue
-                mRejectCallFab.setVisibility(View.GONE);
-                mEndCallFab.setVisibility(View.VISIBLE);
-                mAnswerCallFab.setVisibility(View.GONE);
-                // make call
-                makeCall();
-            }
-        } else if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_CONNECTING) {
-            isInComingCall = CallStatus.getInstance().isInComing();
-            // Set call state view show content
-            mCallStatusView.setText(String.format(getString(R.string.em_call_connecting), mCallId));
-            // Set button statue
-            mRejectCallFab.setVisibility(View.GONE);
-            mEndCallFab.setVisibility(View.VISIBLE);
-            mAnswerCallFab.setVisibility(View.GONE);
-        } else if (CallStatus.getInstance().getCallState()
-                == CallStatus.CALL_STATUS_CONNECTING_INCOMING) {
-            isInComingCall = CallStatus.getInstance().isInComing();
-            // Set call state view show content
-            mCallStatusView.setText(
-                    String.format(getString(R.string.em_call_connected_incoming_call), mCallId));
-            // Set button statue
-            mRejectCallFab.setVisibility(View.VISIBLE);
-            mEndCallFab.setVisibility(View.GONE);
-            mAnswerCallFab.setVisibility(View.VISIBLE);
-        } else {
-            isInComingCall = CallStatus.getInstance().isInComing();
-            // Set call state view show content
-            mCallStatus = CallStatus.CALL_ACCEPTED;
-            mCallStatusView.setText(R.string.em_call_accepted);
-            // Set button statue
-            mRejectCallFab.setVisibility(View.GONE);
-            mEndCallFab.setVisibility(View.VISIBLE);
-            mAnswerCallFab.setVisibility(View.GONE);
-        }
+        CallManager.getInstance().setCallCameraDataProcessor();
     }
 
     /**
-     * Make call
-     */
-    private void makeCall() {
-        try {
-            EMClient.getInstance().callManager().makeVideoCall(mCallId);
-            // Set call timeout
-            mTimer = new Timer();
-            TimerTask task = new TimerTask() {
-                @Override public void run() {
-                    if (CallStatus.getInstance().getCallState() == CallStatus.CALL_CANCEL) {
-                        runOnUiThread(new Runnable() {
-                            @Override public void run() {
-                                EMLog.i(TAG, "call timeout");
-                                endCall();
-                            }
-                        });
-                    } else {
-                        mTimer.cancel();
-                    }
-                }
-            };
-            // set timeout 60s after
-            mTimer.schedule(task, 60 * 1000);
-        } catch (EMServiceNotReadyException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * widget onClick
+     * control layout view click listener
      */
     @OnClick({
-            R.id.img_call_background, R.id.layout_call_control, R.id.surface_view_local,
-            R.id.surface_view_opposite, R.id.btn_exit_full_screen, R.id.btn_change_camera_switch,
-            R.id.btn_call_info, R.id.layout_call_info, R.id.btn_mic_switch, R.id.btn_camera_switch,
-            R.id.btn_speaker_switch, R.id.fab_reject_call, R.id.fab_end_call, R.id.fab_answer_call
+            R.id.layout_call_control, R.id.btn_minimize_call_ui, R.id.btn_change_camera_switch, R.id.btn_mic_switch,
+            R.id.btn_camera_switch, R.id.btn_speaker_switch, R.id.btn_record_switch, R.id.btn_screenshot, R.id.fab_reject_call,
+            R.id.fab_end_call, R.id.fab_answer_call
     }) void onClick(View v) {
         switch (v.getId()) {
             case R.id.layout_call_control:
-            case R.id.img_call_background:
                 onControlLayout();
                 break;
-            case R.id.surface_view_local:
-                if (surfaceViewState == 0) {
-                    changeSurfaceViewSize();
-                } else {
-                    onControlLayout();
-                }
-                break;
-            case R.id.surface_view_opposite:
-                if (surfaceViewState == 1) {
-                    changeSurfaceViewSize();
-                } else {
-                    onControlLayout();
-                }
-                break;
-            case R.id.btn_exit_full_screen:
-                // Minimize the layout
-                exitFullScreen();
+            case R.id.btn_minimize_call_ui:
+                quitCallInterface();
                 break;
             case R.id.btn_change_camera_switch:
-                // Change camera
                 changeCamera();
                 break;
-            case R.id.btn_call_info:
-                mCallInfoView.setVisibility(View.VISIBLE);
-                break;
-            case R.id.layout_call_info:
-                mCallInfoView.setVisibility(View.GONE);
-                break;
             case R.id.btn_mic_switch:
-                // Microphone switch
                 onMicrophone();
                 break;
             case R.id.btn_camera_switch:
-                // Camera switch
                 onCamera();
                 break;
             case R.id.btn_speaker_switch:
-                // Speaker switch
                 onSpeaker();
                 break;
-            case R.id.fab_reject_call:
-                // Reject call
-                rejectCall();
+            case R.id.btn_screenshot:
+                onScreenShot();
+                break;
+            case R.id.btn_record_switch:
+                onRecordCall();
                 break;
             case R.id.fab_end_call:
-                // End call
                 endCall();
                 break;
+            case R.id.fab_reject_call:
+                rejectCall();
+                break;
             case R.id.fab_answer_call:
-                // Answer call
                 answerCall();
                 break;
         }
     }
 
     /**
-     * Control layout
+     * control layout show or hide
      */
     private void onControlLayout() {
-        if (mControlLayout.isShown()) {
-            mControlLayout.setVisibility(View.GONE);
+        if (controlLayout.isShown()) {
+            controlLayout.setVisibility(View.GONE);
         } else {
-            mControlLayout.setVisibility(View.VISIBLE);
+            controlLayout.setVisibility(View.VISIBLE);
         }
     }
 
     /**
-     * Change surfaceView size
-     */
-    private void changeSurfaceViewSize() {
-        //RelativeLayout.LayoutParams localLayoutParams =
-        //        (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
-        //RelativeLayout.LayoutParams oppositeLayoutParams =
-        //        (RelativeLayout.LayoutParams) mOppositeSurfaceView.getLayoutParams();
-        //if (surfaceViewState == 1) {
-        //    surfaceViewState = 0;
-        //    localLayoutParams.width =
-        //            mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_width);
-        //    localLayoutParams.height =
-        //            mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_height);
-        //    localLayoutParams.setMargins(0,
-        //            mActivity.getResources().getDimensionPixelOffset(R.dimen.call_small_width), 0,
-        //            0);
-        //
-        //    oppositeLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-        //    oppositeLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-        //    oppositeLayoutParams.setMargins(0, 0, 0, 0);
-        //
-        //    mLocalSurfaceView.setZOrderMediaOverlay(true);
-        //    mLocalSurfaceView.setZOrderOnTop(true);
-        //    mOppositeSurfaceView.setZOrderMediaOverlay(false);
-        //    mOppositeSurfaceView.setZOrderOnTop(false);
-        //} else {
-        //    surfaceViewState = 1;
-        //    localLayoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-        //    localLayoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-        //    localLayoutParams.setMargins(0, 0, 0, 0);
-        //
-        //    oppositeLayoutParams.width =
-        //            mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_width);
-        //    oppositeLayoutParams.height =
-        //            mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_height);
-        //    oppositeLayoutParams.setMargins(0,
-        //            mActivity.getResources().getDimensionPixelOffset(R.dimen.call_small_width), 0,
-        //            0);
-        //
-        //    mLocalSurfaceView.setZOrderMediaOverlay(false);
-        //    mLocalSurfaceView.setZOrderOnTop(false);
-        //    mOppositeSurfaceView.setZOrderMediaOverlay(true);
-        //    mOppositeSurfaceView.setZOrderOnTop(true);
-        //}
-        //
-        //mLocalSurfaceView.setLayoutParams(localLayoutParams);
-        //mOppositeSurfaceView.setLayoutParams(oppositeLayoutParams);
-        Toast.makeText(mActivity, "Screen Change unrealized", Toast.LENGTH_LONG).show();
-    }
-
-    /**
-     * Minimize the layout
-     * TODO Video call minimization is not currently supported
-     */
-    private void exitFullScreen() {
-        // Vibrate
-        vibrate();
-        // Back home
-        //        mActivity.moveTaskToBack(true);
-        //mActivity.finish();
-        Toast.makeText(mActivity, "Video call minimization is not currently supported",
-                Toast.LENGTH_LONG).show();
-    }
-
-    /**
-     * Change camera
+     * change camera
      */
     private void changeCamera() {
-        // Vibrate
-        vibrate();
-        if (mChangeCameraSwitch.isActivated()) {
-            EMClient.getInstance().callManager().switchCamera();
-            mChangeCameraSwitch.setActivated(false);
-        } else {
-            EMClient.getInstance().callManager().switchCamera();
-            mChangeCameraSwitch.setActivated(true);
+        try {
+            if (EMClient.getInstance().callManager().getCameraFacing() == 1) {
+                EMClient.getInstance().callManager().switchCamera();
+                EMClient.getInstance().callManager().setCameraFacing(0);
+                changeCameraSwitch.setImageResource(R.drawable.em_ic_camera_rear_white_24dp);
+            } else {
+                EMClient.getInstance().callManager().switchCamera();
+                EMClient.getInstance().callManager().setCameraFacing(1);
+                changeCameraSwitch.setImageResource(R.drawable.em_ic_camera_front_white_24dp);
+            }
+        } catch (HyphenateException e) {
+            e.printStackTrace();
         }
     }
 
     /**
-     * Microphone switch
+     * mic toggle
      */
     private void onMicrophone() {
-        // Vibrate
-        vibrate();
-        if (mMicSwitch.isActivated()) {
-            // Pause voice transfer
-            try {
-                EMClient.getInstance().callManager().pauseVoiceTransfer();
-            } catch (HyphenateException e) {
-                e.printStackTrace();
-            }
-            mMicSwitch.setActivated(false);
-            CallStatus.getInstance().setMic(false);
-        } else {
-            // Resume voice transfer
-            try {
+        try {
+            if (micSwitch.isActivated()) {
+                micSwitch.setActivated(false);
                 EMClient.getInstance().callManager().resumeVoiceTransfer();
-            } catch (HyphenateException e) {
-                e.printStackTrace();
+                CallManager.getInstance().setOpenMic(true);
+            } else {
+                micSwitch.setActivated(true);
+                EMClient.getInstance().callManager().pauseVoiceTransfer();
+                CallManager.getInstance().setOpenMic(false);
             }
-            mMicSwitch.setActivated(true);
-            CallStatus.getInstance().setMic(true);
+        } catch (HyphenateException e) {
+            e.printStackTrace();
         }
     }
 
     /**
-     * Camera switch
+     * camera toggle
      */
     private void onCamera() {
-        // Vibrate
-        vibrate();
-        if (mCameraSwitch.isActivated()) {
-            // Pause video transfer
-            try {
-                EMClient.getInstance().callManager().pauseVideoTransfer();
-            } catch (HyphenateException e) {
-                e.printStackTrace();
-            }
-            mCameraSwitch.setActivated(false);
-            CallStatus.getInstance().setCamera(false);
-        } else {
-            // Resume video streaming
-            try {
+        try {
+            if (cameraSwitch.isActivated()) {
+                cameraSwitch.setActivated(false);
                 EMClient.getInstance().callManager().resumeVideoTransfer();
-            } catch (HyphenateException e) {
-                e.printStackTrace();
+                CallManager.getInstance().setOpenCamera(true);
+            } else {
+                cameraSwitch.setActivated(true);
+                EMClient.getInstance().callManager().pauseVideoTransfer();
+                CallManager.getInstance().setOpenCamera(false);
             }
-            mCameraSwitch.setActivated(true);
-            CallStatus.getInstance().setCamera(true);
+        } catch (HyphenateException e) {
+            e.printStackTrace();
         }
     }
 
     /**
-     * Speaker switch
+     * speaker toggle
      */
     private void onSpeaker() {
-        // Vibrate
-        vibrate();
-        if (mSpeakerSwitch.isActivated()) {
-            closeSpeaker();
+        if (speakerSwitch.isActivated()) {
+            speakerSwitch.setActivated(false);
+            CallManager.getInstance().closeSpeaker();
+            CallManager.getInstance().setOpenSpeaker(false);
         } else {
-            openSpeaker();
+            speakerSwitch.setActivated(true);
+            CallManager.getInstance().openSpeaker();
+            CallManager.getInstance().setOpenSpeaker(true);
         }
     }
 
     /**
-     * Reject call
+     * record video call
      */
-    private void rejectCall() {
-        // Virbate
-        vibrate();
-        // Reset call state
-        CallStatus.getInstance().reset();
-        // Remove call state listener
-        DemoHelper.getInstance().removeCallStateChangeListener();
-        // Stop call sound
-        stopCallSound();
-        try {
-            // Call rejectCall();
-            EMClient.getInstance().callManager().rejectCall();
-        } catch (EMNoActiveCallException e) {
-            e.printStackTrace();
-            Toast.makeText(mActivity,
-                    "Reject call error-" + e.getErrorCode() + "-" + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
-        }
-        // Set call state
-        mCallStatus = CallStatus.CALL_REJECT_INCOMING_CALL;
-        // Save call message to
-        saveCallMessage();
-        // Finish activity
-        onFinish();
-    }
-
-    /**
-     * End call
-     */
-    private void endCall() {
-        // Virbate
-        vibrate();
-        // Reset call state
-        CallStatus.getInstance().reset();
-        // Remove call state listener
-        DemoHelper.getInstance().removeCallStateChangeListener();
-        // Stop call sounds
-        stopCallSound();
-        try {
-            // Call endCall();
-            EMClient.getInstance().callManager().endCall();
-        } catch (EMNoActiveCallException e) {
-            e.printStackTrace();
-            Toast.makeText(mActivity, "End call error-" + e.getErrorCode() + "-" + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
-        }
-        // Save call message to local
-        saveCallMessage();
-        // Finish activity
-        onFinish();
-    }
-
-    /**
-     * Answer call
-     */
-    private void answerCall() {
-        // Vibrate
-        vibrate();
-        // Set button state
-        mRejectCallFab.setVisibility(View.GONE);
-        mAnswerCallFab.setVisibility(View.GONE);
-        mEndCallFab.setVisibility(View.VISIBLE);
-        // Stop call sound
-        stopCallSound();
-        // Default open speaker
-        openSpeaker();
-        try {
-            // Call answerCall();
-            EMClient.getInstance().callManager().answerCall();
-            // Set call state
-            mCallStatus = CallStatus.CALL_ACCEPTED;
-            CallStatus.getInstance().setCallState(CallStatus.CALL_STATUS_ACCEPTED);
-        } catch (EMNoActiveCallException e) {
-            e.printStackTrace();
-            Toast.makeText(mActivity, "Answer callerror-" + e.getErrorCode() + "-" + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
-        }
-    }
-
-    /**
-     * Set surfaceView
-     */
-    private void surfaceViewProcessor() {
-
-        // display the caller party's view
-        mOppositeSurfaceView.setVisibility(View.VISIBLE);
-
-        //RelativeLayout.LayoutParams lp =
-        //        (RelativeLayout.LayoutParams) mLocalSurfaceView.getLayoutParams();
-        //lp.width = mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_width);
-        //lp.height = mActivity.getResources().getDimensionPixelSize(R.dimen.call_small_height);
-        //lp.setMargins(0, mActivity.getResources().getDimensionPixelOffset(R.dimen.call_small_width),
-        //        0, 0);
-        //mLocalSurfaceView.setLayoutParams(lp);
-    }
-
-    /**
-     * turn on speaker
-     * Turn on the speaker switch and set to audio playback mode
-     * 1. MODE_NORMAL: default mode, generally used for putting audio
-     * 2. MODE_IN_CALL:
-     * 3. MODE_IN_COMMUNICATION:
-     * 4. MODE_RINGTONE: Ringtones mode
-     */
-    private void openSpeaker() {
-        // Set button state
-        mSpeakerSwitch.setActivated(true);
-        CallStatus.getInstance().setSpeaker(true);
-        if (!mAudioManager.isSpeakerphoneOn()) {
-            // Open speaker
-            mAudioManager.setSpeakerphoneOn(true);
-        }
-        // Set Audio mode
-        mAudioManager.setMode(AudioManager.MODE_NORMAL);
-    }
-
-    /**
-     * Close speaker
-     * more see {@link #openSpeaker()}
-     */
-    private void closeSpeaker() {
-        // Set button state
-        mSpeakerSwitch.setActivated(false);
-        CallStatus.getInstance().setSpeaker(false);
-        if (mAudioManager.isSpeakerphoneOn()) {
-            // Close speaker
-            mAudioManager.setSpeakerphoneOn(false);
-        }
-        // Set Audio mode
-        mAudioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
-    }
-
-    /**
-     * call broadcast receiver
-     */
-    private class CallBroadcastReceiver extends BroadcastReceiver {
-        @Override public void onReceive(Context context, Intent intent) {
-            // get call state and error
-            CallState callState = (CallState) intent.getExtras().get("callState");
-            CallError callError = (CallError) intent.getExtras().get("callError");
-
-            switch (callState) {
-                case CONNECTING:
-                    // Set call state view show content
-                    mCallStatusView.setText(
-                            String.format(getString(R.string.em_call_connecting), mCallId));
-                    break;
-                case CONNECTED:
-                    // Set call state view show content
-                    mCallStatusView.setText(
-                            String.format(getString(R.string.em_call_connected), mCallId));
-                    break;
-                case ACCEPTED:
-                    if (mTimer != null) {
-                        mTimer.cancel();
-                    }
-                    stopCallSound();
-                    openSpeaker();
-                    // Set call state view show content
-                    mCallStatusView.setText(R.string.em_call_accepted);
-                    // Set call state
-                    mCallStatus = CallStatus.CALL_ACCEPTED;
-                    // Set SurfaceView processor
-                    surfaceViewProcessor();
-                    // Start time
-                    mChronometer.setBase(SystemClock.elapsedRealtime());
-                    mChronometer.start();
-                    startMonitor();
-                    break;
-                case DISCONNECTED:
-                    mChronometer.stop();
-                    // Set call state view show content
-                    mCallStatusView.setText(R.string.em_call_disconnected);
-                    // Check call error
-                    if (callError == CallError.ERROR_UNAVAILABLE) {
-                        mCallStatus = CallStatus.CALL_OFFLINE;
-                        mCallStatusView.setText(
-                                String.format(getString(R.string.em_call_not_online), mCallId));
-                        Toast.makeText(VideoCallActivity.this, mCallStatusView.getText(), Toast.LENGTH_LONG).show();
-                    } else if (callError == CallError.ERROR_BUSY) {
-                        mCallStatus = CallStatus.CALL_BUSY;
-                        mCallStatusView.setText(
-                                String.format(getString(R.string.em_call_busy), mCallId));
-                    } else if (callError == CallError.REJECTED) {
-                        mCallStatus = CallStatus.CALL_REJECT;
-                        mCallStatusView.setText(
-                                String.format(getString(R.string.em_call_reject), mCallId));
-                    } else if (callError == CallError.ERROR_NORESPONSE) {
-                        mCallStatus = CallStatus.CALL_NO_RESPONSE;
-                        mCallStatusView.setText(
-                                String.format(getString(R.string.em_call_no_response), mCallId));
-                    } else if (callError == CallError.ERROR_TRANSPORT) {
-                        mCallStatus = CallStatus.CALL_TRANSPORT;
-                        mCallStatusView.setText(R.string.em_call_connection_fail);
-                    } else if (callError == CallError.ERROR_LOCAL_SDK_VERSION_OUTDATED) {
-                        mCallStatus = CallStatus.CALL_VERSION_DIFFERENT;
-                        mCallStatusView.setText(R.string.em_call_local_sdk_version_outdated);
-                    } else if (callError == CallError.ERROR_REMOTE_SDK_VERSION_OUTDATED) {
-                        mCallStatus = CallStatus.CALL_VERSION_DIFFERENT;
-                        mCallStatusView.setText(R.string.em_call_remote_sdk_version_outdated);
-                    } else {
-                        if (mCallStatus == CallStatus.CALL_CANCEL) {
-                            // Set call state
-                            mCallStatus = CallStatus.CALL_CANCEL_INCOMING_CALL;
-                        }
-                        mCallStatusView.setText(R.string.em_call_cancel_incoming_call);
-                    }
-                    // Save call message to local
-                    saveCallMessage();
-                    // Remove call state listener
-                    DemoHelper.getInstance().removeCallStateChangeListener();
-                    // Finish activity
-                    onFinish();
-                    break;
-                case NETWORK_UNSTABLE:
-                    if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
-                        mCallStatusView.setText(R.string.em_call_no_data);
-                    } else {
-                        mCallStatusView.setText(R.string.em_call_network_unstable);
-                    }
-                    break;
-                case NETWORK_NORMAL:
-                    mCallStatusView.setText(R.string.em_call_network_normal);
-                    break;
-                case VIDEO_PAUSE:
-                    Toast.makeText(mActivity, "video pause", Toast.LENGTH_LONG).show();
-                    mCallStatusView.setText(R.string.em_call_video_pause);
-                    break;
-                case VIDEO_RESUME:
-                    mCallStatusView.setText(R.string.em_call_video_resume);
-                    break;
-                case VOICE_PAUSE:
-                    mCallStatusView.setText(R.string.em_call_voice_pause);
-                    break;
-                case VOICE_RESUME:
-                    mCallStatusView.setText(R.string.em_call_voice_resume);
-                    break;
-                default:
-                    break;
+    private void onRecordCall() {
+        if (recordSwitch.isActivated()) {
+            recordSwitch.setActivated(false);
+            String path = videoCallHelper.stopVideoRecord();
+            CallManager.getInstance().setOpenRecord(false);
+            File file = new File(path);
+            if (file.exists()) {
+                Toast.makeText(activity, "Record video success! " + path, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(activity, "Record video failed~~", Toast.LENGTH_LONG).show();
             }
+        } else {
+            recordSwitch.setActivated(true);
+            String dirPath = getExternalFilesDir("").getAbsolutePath() + "/videos";
+            File dir = new File(dirPath);
+            if (!dir.isDirectory()) {
+                dir.mkdirs();
+            }
+            videoCallHelper.startVideoRecord(dirPath);
+            Toast.makeText(activity, "Start record video ~", Toast.LENGTH_LONG).show();
+            CallManager.getInstance().setOpenRecord(true);
         }
     }
 
     /**
-     * refresh call info; for debug & testing, you can remove this when release
+     * Screenshot
      */
-    private void startMonitor() {
-        mMonitor = true;
-        new Thread(new Runnable() {
-            public void run() {
-                while (mMonitor) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            mResolutionView.setText(mVideoCallHelper.getVideoWidth()
-                                    + " x "
-                                    + mVideoCallHelper.getVideoHeight()
-                                    + " px");
-                            mTimeLatencyView.setText(mVideoCallHelper.getVideoLatency() + " ms");
-                            mFrameRateView.setText(mVideoCallHelper.getVideoFrameRate() + " fps");
-                            mLostRateView.setText(mVideoCallHelper.getVideoLostRate() + "%");
-                            mLocalBitrateView.setText(mVideoCallHelper.getLocalBitrate() + " KB");
-                            mRemoteBitrateView.setText(mVideoCallHelper.getRemoteBitrate() + " KB");
+    private void onScreenShot() {
+        String dirPath = getExternalFilesDir("").getAbsolutePath() + "/videos/";
+        File dir = new File(dirPath);
+        if (!dir.isDirectory()) {
+            dir.mkdirs();
+        }
+        String path = dirPath + "video_" + System.currentTimeMillis() + ".jpg";
+        boolean result = videoCallHelper.takePicture(path);
+        Toast.makeText(activity, "Screenshot success! " + path, Toast.LENGTH_LONG).show();
+    }
+
+    @Override protected void answerCall() {
+        super.answerCall();
+        endCallFab.setVisibility(View.VISIBLE);
+        rejectCallFab.setVisibility(View.GONE);
+        answerCallFab.setVisibility(View.GONE);
+    }
+
+    /**
+     * Init call surface view
+     */
+    private void initCallSurface() {
+        oppositeSurface = new EMCallSurfaceView(activity);
+        oppositeParams = new RelativeLayout.LayoutParams(0, 0);
+        oppositeParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        oppositeParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        oppositeSurface.setLayoutParams(oppositeParams);
+        surfaceLayout.addView(oppositeSurface);
+
+        localSurface = new EMCallSurfaceView(activity);
+        localParams = new RelativeLayout.LayoutParams(0, 0);
+        localParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        localParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        localParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        localSurface.setLayoutParams(localParams);
+        surfaceLayout.addView(localSurface);
+
+        localSurface.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                onControlLayout();
+            }
+        });
+
+        localSurface.setZOrderOnTop(false);
+        localSurface.setZOrderMediaOverlay(true);
+
+        // Set how the call screen is displayed
+        localSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+        oppositeSurface.setScaleMode(VideoView.EMCallViewScaleMode.EMCallViewScaleModeAspectFill);
+        EMClient.getInstance().callManager().setSurfaceView(localSurface, oppositeSurface);
+    }
+
+    /**
+     * change call surface view
+     */
+    private void onCallSurface() {
+        surfaceState = 0;
+
+        int width = activity.getResources().getDimensionPixelSize(R.dimen.call_local_width);
+        int height = activity.getResources().getDimensionPixelSize(R.dimen.call_local_height);
+        int rightMargin = activity.getResources().getDimensionPixelSize(R.dimen.call_layout_margin);
+        int topMargin = activity.getResources().getDimensionPixelSize(R.dimen.call_local_height);
+
+        localParams = new RelativeLayout.LayoutParams(width, height);
+        localParams.width = width;
+        localParams.height = height;
+        localParams.rightMargin = rightMargin;
+        localParams.topMargin = topMargin;
+        localParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        localSurface.setLayoutParams(localParams);
+
+        localSurface.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                changeCallSurface();
+            }
+        });
+
+        oppositeSurface.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                onControlLayout();
+            }
+        });
+    }
+
+    /**
+     * change local and opposite view
+     */
+    private void changeCallSurface() {
+        if (surfaceState == 0) {
+            surfaceState = 1;
+            EMClient.getInstance().callManager().setSurfaceView(oppositeSurface, localSurface);
+        } else {
+            surfaceState = 0;
+            EMClient.getInstance().callManager().setSurfaceView(localSurface, oppositeSurface);
+        }
+    }
+
+    /**
+     * Register call broadcast receiver
+     */
+    private void registerBroadcast() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override public void onReceive(Context context, Intent intent) {
+                final boolean isUpdateState = intent.getBooleanExtra("update_state", false);
+                final boolean isUpdateTime = intent.getBooleanExtra("update_time", false);
+                final EMCallStateChangeListener.CallState callState =
+                        (EMCallStateChangeListener.CallState) intent.getExtras().get("call_state");
+                final EMCallStateChangeListener.CallError callError =
+                        (EMCallStateChangeListener.CallError) intent.getExtras().get("call_error");
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        if (isUpdateState) {
+                            refreshCallView(callState, callError);
                         }
-                    });
-                    try {
-                        Thread.sleep(1500);
-                    } catch (InterruptedException e) {
+                        if (isUpdateTime && CallManager.getInstance().getCallType() == CallManager.CallType.VIDEO) {
+                            refreshCallTime();
+                        }
                     }
+                });
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Constant.BROADCAST_ACTION_CALL);
+        localBroadcastManager = LocalBroadcastManager.getInstance(activity);
+        localBroadcastManager.registerReceiver(broadcastReceiver, filter);
+    }
+
+    private void unregisterBroadcast() {
+        if (localBroadcastManager != null && broadcastReceiver != null) {
+            localBroadcastManager.unregisterReceiver(broadcastReceiver);
+        }
+    }
+
+    /**
+     * refresh call view
+     */
+    private void refreshCallView(EMCallStateChangeListener.CallState callState, EMCallStateChangeListener.CallError callError) {
+        switch (callState) {
+            case CONNECTING:
+                break;
+            case CONNECTED:
+                if (CallManager.getInstance().isInComingCall()) {
+                    callStateView.setText(R.string.em_call_connected_is_incoming);
+                } else {
+                    callStateView.setText(R.string.em_call_connected);
+                }
+                break;
+            case ACCEPTED:
+                callStateView.setText(R.string.em_call_accepted);
+                onCallSurface();
+                break;
+            case DISCONNECTED:
+                onFinish();
+                break;
+            case NETWORK_DISCONNECTED:
+                Toast.makeText(activity, "Remote network disconnected!", Toast.LENGTH_SHORT).show();
+                break;
+            case NETWORK_NORMAL:
+                Toast.makeText(activity, "Remote network connected!", Toast.LENGTH_SHORT).show();
+                break;
+            case NETWORK_UNSTABLE:
+                if (callError == EMCallStateChangeListener.CallError.ERROR_NO_DATA) {
+                    Toast.makeText(activity, "No call data!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, "Remote network unstable!", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case VIDEO_PAUSE:
+                Toast.makeText(activity, "Remote pause video", Toast.LENGTH_SHORT).show();
+                break;
+            case VIDEO_RESUME:
+                Toast.makeText(activity, "Remote resume video", Toast.LENGTH_SHORT).show();
+                break;
+            case VOICE_PAUSE:
+                Toast.makeText(activity, "Remote pause voice", Toast.LENGTH_SHORT).show();
+                break;
+            case VOICE_RESUME:
+                Toast.makeText(activity, "Remote resume voice", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Refresh call time
+     */
+    private void refreshCallTime() {
+        int t = CallManager.getInstance().getCallTime();
+        int h = t / 60 / 60;
+        int m = t / 60 % 60;
+        int s = t % 60 % 60;
+        String time = "";
+        if (h > 9) {
+            time = "" + h;
+        } else {
+            time = "0" + h;
+        }
+        if (m > 9) {
+            time += ":" + m;
+        } else {
+            time += ":0" + m;
+        }
+        if (s > 9) {
+            time += ":" + s;
+        } else {
+            time += ":0" + s;
+        }
+        if (!callTimeView.isShown()) {
+            callTimeView.setVisibility(View.VISIBLE);
+        }
+        callTimeView.setText(time);
+    }
+
+    @Override public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == OVERLAY_PERMISSION_REQUEST_CODE) {
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (!Settings.canDrawOverlays(activity)) {
+                    Toast.makeText(activity, "Open the floating window failed~", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(activity, "Open the floating window success!", Toast.LENGTH_LONG).show();
+                    minimizeCallUI();
                 }
             }
-        }, "CallMonitor").start();
+        }
+    }
+
+    private void minimizeCallUI() {
+        CallManager.getInstance().addFloatWindow();
+        // add call notify
+        CallManager.getInstance().addCallNotification();
+        onFinish();
     }
 
     /**
-     * stop refresh call info
+     * Exit the call interface
      */
-    private void stopMonitor() {
-        mMonitor = false;
+    private void quitCallInterface() {
+        if (ackForFloatWindowPermission()) {
+            minimizeCallUI();
+        } else {
+            Toast.makeText(activity, "No floating window permissions", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
-     * Call end finish activity
+     * When the HOME key is pressed, it is different from pressing BACK and taking the active end
      */
+    @Override protected void onUserLeaveHint() {
+        //super.onUserLeaveHint();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(activity)) {
+                Toast.makeText(activity, "No floating window permissions", Toast.LENGTH_SHORT).show();
+                CallManager.getInstance().addCallNotification();
+                onFinish();
+            } else {
+                quitCallInterface();
+            }
+        } else {
+            quitCallInterface();
+        }
+    }
+
+    @Override public void onBackPressed() {
+        //super.onBackPressed();
+        quitCallInterface();
+    }
+
     @Override protected void onFinish() {
-        stopMonitor();
-        // Call end release SurfaceView
-        mLocalSurfaceView = null;
-        mOppositeSurfaceView = null;
-        mAudioManager.setMode(AudioManager.MODE_NORMAL);
-        if (mNotificationManager != null) {
-            mNotificationManager.cancelAll();
+        // release surface view
+        if (localSurface != null) {
+            if (localSurface.getRenderer() != null) {
+                localSurface.getRenderer().dispose();
+            }
+            localSurface.release();
+            localSurface = null;
+        }
+        if (oppositeSurface != null) {
+            if (oppositeSurface.getRenderer() != null) {
+                oppositeSurface.getRenderer().dispose();
+            }
+            oppositeSurface.release();
+            oppositeSurface = null;
         }
         super.onFinish();
     }
 
-    /**
-     * The activity is not visible
-     */
-    @Override protected void onUserLeaveHint() {
-        if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_ACCEPTED) {
-            // The activity is not visible, Pause video transfer
-            try {
-                EMClient.getInstance().callManager().pauseVideoTransfer();
-            } catch (HyphenateException e) {
-                e.printStackTrace();
-            }
-        }
-        sendCallNotification();
-        super.onUserLeaveHint();
-    }
-
-    private NotificationManager mNotificationManager;
-    private int callNotificationId = 0526;
-
-    /**
-     * send call notification
-     */
-    private void sendCallNotification() {
-        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mActivity);
-
-        builder.setSmallIcon(R.mipmap.em_logo_uidemo);
-        builder.setPriority(Notification.PRIORITY_HIGH);
-        builder.setAutoCancel(true);
-        builder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
-
-        builder.setContentText("While the video call is in progress, tap Resume");
-
-        builder.setContentTitle(getString(R.string.app_name));
-        Intent intent = new Intent(mActivity, VideoCallActivity.class);
-        PendingIntent pIntent =
-                PendingIntent.getActivity(mActivity, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        builder.setContentIntent(pIntent);
-        builder.setOngoing(true);
-
-        builder.setWhen(System.currentTimeMillis());
-
-        mNotificationManager.notify(callNotificationId, builder.build());
-    }
-
-    /**
-     * The activity is resume
-     */
-    @Override protected void onResume() {
-        super.onResume();
-        if (CallStatus.getInstance().getCallState() == CallStatus.CALL_STATUS_ACCEPTED) {
-            mCallStatusView.setText(R.string.em_call_accepted);
-            // The activity is resume, Resume video streaming
-            try {
-                EMClient.getInstance().callManager().resumeVideoTransfer();
-            } catch (HyphenateException e) {
-                e.printStackTrace();
-            }
-        }
-        if (mNotificationManager != null) {
-            mNotificationManager.cancel(callNotificationId);
-        }
-    }
-
     @Override protected void onDestroy() {
         super.onDestroy();
-        if (mTimer != null) {
-            mTimer.cancel();
-        }
-        DemoHelper.getInstance().isVideoCalling = false;
-        mAudioManager.setMode(AudioManager.MODE_NORMAL);
-        localBroadcastManager.unregisterReceiver(broadcastReceiver);
+        unregisterBroadcast();
     }
 }

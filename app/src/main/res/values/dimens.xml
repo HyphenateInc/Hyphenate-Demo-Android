@@ -16,6 +16,9 @@
     <dimen name="size_14">14sp</dimen>
     <dimen name="size_16">16sp</dimen>
 
+    <dimen name="em_dimen_8">8dp</dimen>
+    <dimen name="em_dimen_16">16dp</dimen>
+
     <!--contact-->
     <dimen name="header_size">20.5sp</dimen>
     <dimen name="contact_name_size">16sp</dimen>
@@ -64,11 +67,11 @@
     <dimen name="call_avatar_size">96dp</dimen>
     <dimen name="call_btn_margin">16dp</dimen>
     <dimen name="call_layout_margin">16dp</dimen>
-    <dimen name="call_local_width">120dp</dimen>
-    <dimen name="call_local_height">160dp</dimen>
+    <dimen name="call_local_width">96dp</dimen>
+    <dimen name="call_local_height">128dp</dimen>
     <dimen name="call_message_icon_margin">8dp</dimen>
-    <dimen name="call_small_width">120dp</dimen>
-    <dimen name="call_small_height">160dp</dimen>
+    <dimen name="call_small_width">24dp</dimen>
+    <dimen name="call_small_height">32dp</dimen>
 
     <dimen name="devices_height">1dp</dimen>
 
