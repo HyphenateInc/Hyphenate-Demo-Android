@@ -2,23 +2,14 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/dark_background"
     android:clipToPadding="false"
     android:fitsSystemWindows="false"
-    tools:context=".call.VoiceCallActivity"
+    android:background="@color/dark_background"
     >
-
-    <!--call background-->
-    <ImageView
-        android:id="@+id/img_call_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -30,8 +21,18 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/call_layout_margin"
+            android:layout_marginTop="24dp"
             >
+            <!--Minimize call ui-->
+            <ImageButton
+                android:id="@+id/btn_minimize_call_ui"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="16dp"
+                android:background="@drawable/em_click_circle_transparent"
+                android:src="@drawable/em_ic_fullscreen_exit_white_24dp"
+                />
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -39,19 +40,29 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 >
-                <!--Call status-->
+
+                <!--Call state-->
                 <TextView
-                    android:id="@+id/text_call_status"
+                    android:id="@+id/text_call_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:shadowColor="@color/em_black_54"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
                     android:text="@string/app_name"
-                    android:textColor="@color/em_white_87"
+                    android:textColor="@color/em_white_54"
                     />
-                <com.hyphenate.chatuidemo.ui.widget.MyChronometer
-                    android:id="@+id/chronometer_call_time"
+                <!--Call time-->
+                <TextView
+                    android:id="@+id/text_call_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/em_white_87"
+                    android:shadowColor="@color/em_black_54"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:text="@string/app_name"
+                    android:textColor="@color/em_white_54"
+                    android:visibility="gone"
                     />
             </LinearLayout>
         </RelativeLayout>
@@ -64,21 +75,21 @@
             android:orientation="vertical"
             >
             <!--Avatar-->
-            <com.hyphenate.easeui.widget.EaseImageView
+            <ImageView
                 android:id="@+id/img_call_avatar"
                 android:layout_width="@dimen/call_avatar_size"
                 android:layout_height="@dimen/call_avatar_size"
                 android:src="@drawable/ease_default_avatar"
-                app:imgShapeType="round"
                 />
-            <!--Name-->
+            <!--Username-->
             <TextView
                 android:id="@+id/text_call_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:text="@string/app_name"
                 android:textColor="@color/em_white_87"
-                android:textSize="@dimen/call_name_size"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 />
         </LinearLayout>
@@ -88,6 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:background="@color/em_black_38"
             android:gravity="center"
             android:orientation="vertical"
             >
@@ -95,36 +107,39 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/call_layout_margin"
                 android:orientation="horizontal"
                 >
 
-                <!--Speaker-->
-                <ImageButton
-                    android:id="@+id/btn_speaker_switch"
-                    android:layout_width="@dimen/call_switch_width"
-                    android:layout_height="@dimen/call_switch_height"
-                    android:background="@drawable/em_btn_rectangle_white"
-                    android:src="@drawable/em_checkbox_speaker"
-                    />
-
-                <!--Microphone-->
+                <!--Mic toggle-->
                 <ImageButton
                     android:id="@+id/btn_mic_switch"
-                    android:layout_width="@dimen/call_switch_width"
-                    android:layout_height="@dimen/call_switch_height"
-                    android:background="@drawable/em_btn_rectangle_white"
-                    android:src="@drawable/em_checkbox_mic"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/em_click_circle_transparent"
+                    android:src="@drawable/em_ic_mic_off_white_24dp"
                     />
 
-                <!--Exit full screen-->
+                <!--Speaker toggle-->
                 <ImageButton
-                    android:id="@+id/btn_exit_full_screen"
-                    android:layout_width="@dimen/call_switch_width"
-                    android:layout_height="@dimen/call_switch_height"
-                    android:background="@drawable/em_btn_rectangle_white"
-                    android:src="@drawable/em_ic_fullscreen_exit_white_24dp"
+                    android:id="@+id/btn_speaker_switch"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/em_click_circle_transparent"
+                    android:src="@drawable/em_ic_volume_up_white_24dp"
                     />
+
+                <!--Record toggle-->
+                <ImageButton
+                    android:id="@+id/btn_record_switch"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/em_click_circle_transparent"
+                    android:src="@drawable/em_ic_record_white_24dp"
+                    />
+
             </LinearLayout>
 
             <LinearLayout
@@ -138,7 +153,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="@dimen/call_btn_margin"
+                    android:layout_margin="24dp"
                     android:src="@drawable/em_ic_call_end_white_24dp"
                     app:backgroundTint="@color/em_red_87"
                     app:fabSize="normal"
@@ -150,7 +165,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="@dimen/call_btn_margin"
+                    android:layout_margin="24dp"
                     android:src="@drawable/em_ic_call_end_white_24dp"
                     android:visibility="gone"
                     app:backgroundTint="@color/em_red_87"
@@ -163,7 +178,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="@dimen/call_btn_margin"
+                    android:layout_margin="24dp"
                     android:src="@drawable/em_ic_call_white_24dp"
                     app:backgroundTint="@color/em_green_87"
                     app:fabSize="normal"

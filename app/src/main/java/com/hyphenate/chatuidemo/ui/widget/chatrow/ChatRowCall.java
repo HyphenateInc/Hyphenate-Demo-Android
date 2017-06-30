@@ -5,11 +5,10 @@ import android.content.Intent;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.call.CallStatus;
+import com.hyphenate.chatuidemo.call.CallManager;
 import com.hyphenate.chatuidemo.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.call.VoiceCallActivity;
 import com.hyphenate.easeui.EaseConstant;
@@ -32,12 +31,9 @@ public class ChatRowCall extends EaseChatRow {
         return false;
     }
 
-
     @Override protected int onGetLayoutId() {
-        return message.direct() == EMMessage.Direct.RECEIVE ? R.layout.em_row_received_call
-                : R.layout.em_row_sent_call;
+        return message.direct() == EMMessage.Direct.RECEIVE ? R.layout.em_row_received_call : R.layout.em_row_sent_call;
     }
-
 
     @Override protected void onFindViewById() {
         contentView = (TextView) findViewById(R.id.tv_chatcontent);
@@ -64,28 +60,34 @@ public class ChatRowCall extends EaseChatRow {
     }
 
     @Override protected void onBubbleClick() {
-        if (CallStatus.getInstance().getCallType() == CallStatus.CALL_TYPE_VOICE) {
-            Toast.makeText(context, R.string.em_call_voice_calling, Toast.LENGTH_LONG).show();
-            return;
-        } else if (CallStatus.getInstance().getCallType() == CallStatus.CALL_TYPE_VIDEO) {
-            Toast.makeText(context, R.string.em_call_video_calling, Toast.LENGTH_LONG).show();
-            return;
-        }
         String toChatUsername = "";
         if (message.direct() == EMMessage.Direct.RECEIVE) {
             toChatUsername = message.getFrom();
         } else {
             toChatUsername = message.getTo();
         }
-        Intent intent = new Intent();
-        if (message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_VIDEO_CALL, false)) {
-            intent.setClass(context, VideoCallActivity.class);
+        if (CallManager.getInstance().getCallState() == CallManager.CallState.DISCONNECTED) {
+            Intent intent = new Intent();
+            if (message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_VIDEO_CALL, false)) {
+                intent.setClass(context, VideoCallActivity.class);
+                CallManager.getInstance().setCallType(CallManager.CallType.VIDEO);
+            } else {
+                intent.setClass(context, VoiceCallActivity.class);
+                CallManager.getInstance().setCallType(CallManager.CallType.VOICE);
+            }
+            CallManager.getInstance().setChatId(toChatUsername);
+            CallManager.getInstance().setInComingCall(false);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         } else {
-            intent.setClass(context, VoiceCallActivity.class);
+            Intent intent = new Intent();
+            if (CallManager.getInstance().getCallType() == CallManager.CallType.VIDEO) {
+                intent.setClass(context, VideoCallActivity.class);
+            } else {
+                intent.setClass(context, VoiceCallActivity.class);
+            }
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         }
-        intent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
-        intent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
-        context.startActivity(intent);
     }
-
 }

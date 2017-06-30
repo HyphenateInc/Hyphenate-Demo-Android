@@ -2,46 +2,24 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/dark_background"
     android:clipToPadding="false"
     android:fitsSystemWindows="false"
-    tools:context=".call.VideoCallActivity"
     >
 
-    <!--Call background-->
-    <ImageView
-        android:id="@+id/img_call_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        />
-
+    <!--Call layout-->
     <RelativeLayout
+        android:id="@+id/layout_surface_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
         >
-
-        <!--Opposite surfaceView-->
-        <com.hyphenate.media.EMOppositeSurfaceView
-            android:id="@+id/surface_view_opposite"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible"
-            />
-
-        <com.hyphenate.media.EMLocalSurfaceView
-            android:id="@+id/surface_view_local"
-            android:layout_width="@dimen/call_small_width"
-            android:layout_height="@dimen/call_small_height"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/call_small_width"
-            />
     </RelativeLayout>
 
+    <!--Control layout-->
     <RelativeLayout
         android:id="@+id/layout_call_control"
         android:layout_width="match_parent"
@@ -49,34 +27,21 @@
         android:fitsSystemWindows="true"
         >
 
-        <!--Local surfaceView-->
-
+        <!--Title and quit call ui-->
         <RelativeLayout
-            android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/call_layout_margin"
+            android:layout_marginTop="24dp"
             >
-            <!--Change camera-->
+            <!--Minimize call ui-->
             <ImageButton
-                android:id="@+id/btn_change_camera_switch"
-                android:layout_width="@dimen/call_switch_width"
-                android:layout_height="@dimen/call_switch_height"
+                android:id="@+id/btn_minimize_call_ui"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_alignParentLeft="true"
-                android:background="@drawable/em_btn_rectangle_white"
-                android:src="@drawable/em_checkbox_change_camera"
-                />
-            <!--Video call info-->
-            <ImageButton
-                android:id="@+id/btn_call_info"
-                android:layout_width="@dimen/call_switch_width"
-                android:layout_height="@dimen/call_switch_height"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/em_btn_rectangle_white"
-                android:src="@drawable/em_info_outline"
+                android:layout_marginLeft="@dimen/em_dimen_16"
+                android:background="@drawable/em_click_circle_transparent"
+                android:src="@drawable/em_ic_fullscreen_exit_white_24dp"
                 />
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -85,29 +50,50 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 >
-                <!--Call status-->
+
+                <!--Call state-->
                 <TextView
-                    android:id="@+id/text_call_status"
+                    android:id="@+id/text_call_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:shadowColor="@color/em_black_54"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
                     android:text="@string/app_name"
-                    android:textColor="@color/em_white_87"
+                    android:textColor="@color/em_white_54"
                     />
-                <!--call timer-->
-                <com.hyphenate.chatuidemo.ui.widget.MyChronometer
-                    android:id="@+id/chronometer_call_time"
+                <!--Call time-->
+                <TextView
+                    android:id="@+id/text_call_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/em_white_87"
+                    android:shadowColor="@color/em_black_54"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:text="@string/app_name"
+                    android:textColor="@color/em_white_54"
+                    android:visibility="gone"
                     />
             </LinearLayout>
+            <!--change camera-->
+            <ImageButton
+                android:id="@+id/btn_change_camera_switch"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/em_dimen_16"
+                android:background="@drawable/em_click_circle_transparent"
+                android:src="@drawable/em_ic_camera_front_white_24dp"
+                />
         </RelativeLayout>
+
 
         <LinearLayout
             android:id="@+id/layout_calling"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:background="@color/em_black_38"
             android:gravity="center"
             android:orientation="vertical"
             >
@@ -115,60 +101,75 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/call_layout_margin"
+                android:layout_marginTop="8dp"
                 android:orientation="horizontal"
                 >
 
-                <!--Camera-->
-                <ImageButton
-                    android:id="@+id/btn_camera_switch"
-                    android:layout_width="@dimen/call_switch_width"
-                    android:layout_height="@dimen/call_switch_height"
-                    android:background="@drawable/em_btn_rectangle_white"
-                    android:src="@drawable/em_checkbox_camera"
-                    />
-
-                <!--Speaker-->
-                <ImageButton
-                    android:id="@+id/btn_speaker_switch"
-                    android:layout_width="@dimen/call_switch_width"
-                    android:layout_height="@dimen/call_switch_height"
-                    android:background="@drawable/em_btn_rectangle_white"
-                    android:src="@drawable/em_checkbox_speaker"
-                    />
-
-                <!--Microphone-->
+                <!--Mic toggle-->
                 <ImageButton
                     android:id="@+id/btn_mic_switch"
-                    android:layout_width="@dimen/call_switch_width"
-                    android:layout_height="@dimen/call_switch_height"
-                    android:background="@drawable/em_btn_rectangle_white"
-                    android:src="@drawable/em_checkbox_mic"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/em_click_circle_transparent"
+                    android:src="@drawable/em_ic_mic_off_white_24dp"
                     />
 
-                <!--Exit full screen-->
+                <!--Speaker toggle-->
                 <ImageButton
-                    android:id="@+id/btn_exit_full_screen"
-                    android:layout_width="@dimen/call_switch_width"
-                    android:layout_height="@dimen/call_switch_height"
-                    android:background="@drawable/em_btn_rectangle_white"
-                    android:src="@drawable/em_ic_fullscreen_exit_white_24dp"
+                    android:id="@+id/btn_speaker_switch"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/em_click_circle_transparent"
+                    android:src="@drawable/em_ic_volume_up_white_24dp"
+                    />
+
+                <!--Camera toggle-->
+                <ImageButton
+                    android:id="@+id/btn_camera_switch"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/em_click_circle_transparent"
+                    android:src="@drawable/em_ic_videocam_off_white_24dp"
+                    />
+
+                <!--Record toggle-->
+                <ImageButton
+                    android:id="@+id/btn_record_switch"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/em_click_circle_transparent"
+                    android:src="@drawable/em_ic_record_white_24dp"
+                    />
+
+                <!--Screeshot-->
+                <ImageButton
+                    android:id="@+id/btn_screenshot"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/em_click_circle_transparent"
+                    android:src="@drawable/em_ic_camera_white_24dp"
                     />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/call_btn_margin"
+                android:gravity="center"
                 android:orientation="horizontal"
                 >
+
                 <!--Reject call-->
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab_reject_call"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="@dimen/call_btn_margin"
+                    android:layout_margin="24dp"
                     android:src="@drawable/em_ic_call_end_white_24dp"
                     app:backgroundTint="@color/em_red_87"
                     app:fabSize="normal"
@@ -180,7 +181,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="@dimen/call_btn_margin"
+                    android:layout_margin="24dp"
                     android:src="@drawable/em_ic_call_end_white_24dp"
                     android:visibility="gone"
                     app:backgroundTint="@color/em_red_87"
@@ -193,7 +194,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="@dimen/call_btn_margin"
+                    android:layout_margin="24dp"
                     android:src="@drawable/em_ic_call_white_24dp"
                     app:backgroundTint="@color/em_green_87"
                     app:fabSize="normal"
@@ -202,165 +203,4 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
-    <TableLayout
-        android:id="@+id/layout_call_info"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/dark_background"
-        android:gravity="center"
-        android:padding="@dimen/activity_padding"
-        android:stretchColumns="0,1"
-        android:visibility="gone"
-        >
-        <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/call_info_item_height"
-                android:gravity="center_vertical"
-                android:text="@string/em_call_info_resolution"
-                android:textColor="@color/em_white_54"
-                android:textSize="@dimen/call_info_size"
-                />
-            <TextView
-                android:id="@+id/text_resolution"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textColor="@color/em_white_87"
-                android:textSize="@dimen/call_info_size"
-                android:textStyle="bold"
-                />
-        </TableRow>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/em_white_12"
-            />
-
-        <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/call_info_item_height"
-                android:gravity="center_vertical"
-                android:text="@string/em_call_info_time_latency"
-                android:textColor="@color/em_white_54"
-                android:textSize="@dimen/call_info_size"
-                />
-            <TextView
-                android:id="@+id/text_time_latency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/app_name"
-                android:textColor="@color/em_white_87"
-                android:textSize="@dimen/call_info_size"
-                android:textStyle="bold"
-                />
-        </TableRow>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/em_white_12"
-            />
-
-        <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/call_info_item_height"
-                android:gravity="center_vertical"
-                android:text="@string/em_call_info_frame_rate"
-                android:textColor="@color/em_white_54"
-                android:textSize="@dimen/call_info_size"
-                />
-            <TextView
-                android:id="@+id/text_frame_rate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/app_name"
-                android:textColor="@color/em_white_87"
-                android:textSize="@dimen/call_info_size"
-                android:textStyle="bold"
-                />
-        </TableRow>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/em_white_12"
-            />
-
-        <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/call_info_item_height"
-                android:gravity="center_vertical"
-                android:text="@string/em_call_info_lost_rate"
-                android:textColor="@color/em_white_54"
-                android:textSize="@dimen/call_info_size"
-                />
-            <TextView
-                android:id="@+id/text_lost_rate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textColor="@color/em_white_87"
-                android:textSize="@dimen/call_info_size"
-                android:textStyle="bold"
-                />
-        </TableRow>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/em_white_12"
-            />
-        <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/call_info_item_height"
-                android:gravity="center_vertical"
-                android:text="@string/em_call_info_local_bitrate"
-                android:textColor="@color/em_white_54"
-                android:textSize="@dimen/call_info_size"
-                />
-            <TextView
-                android:id="@+id/text_local_bitrate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textColor="@color/em_white_87"
-                android:textSize="@dimen/call_info_size"
-                android:textStyle="bold"
-                />
-        </TableRow>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/em_white_12"
-            />
-
-        <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/call_info_item_height"
-                android:gravity="center_vertical"
-                android:text="@string/em_call_info_remote_bitrate"
-                android:textColor="@color/em_white_54"
-                android:textSize="@dimen/call_info_size"
-                />
-            <TextView
-                android:id="@+id/text_remote_bitrate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textColor="@color/em_white_87"
-                android:textSize="@dimen/call_info_size"
-                android:textStyle="bold"
-                />
-        </TableRow>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/em_white_12"
-            />
-    </TableLayout>
 </android.support.design.widget.CoordinatorLayout>

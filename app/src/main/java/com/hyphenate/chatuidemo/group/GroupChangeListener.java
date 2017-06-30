@@ -2,6 +2,7 @@ package com.hyphenate.chatuidemo.group;
 
 import com.hyphenate.EMGroupChangeListener;
 
+import com.hyphenate.chat.EMMucSharedFile;
 import java.util.List;
 
 /**
@@ -159,5 +160,17 @@ public abstract class GroupChangeListener implements EMGroupChangeListener {
      * @param member the member who exited the group
      */
     @Override public void onMemberExited(final String groupId, final String member) {
+    }
+
+    @Override public void onAnnouncementChanged(String groupId, String announcement) {
+
+    }
+
+    @Override public void onSharedFileAdded(String groupId, EMMucSharedFile sharedFile) {
+
+    }
+
+    @Override public void onSharedFileDeleted(String groupId, String fileId) {
+
     }
 }

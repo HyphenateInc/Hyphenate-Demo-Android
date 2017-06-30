@@ -99,4 +99,8 @@ public class ChatRoomChangeListener implements EMChatRoomChangeListener {
      */
     @Override public void onOwnerChanged(final String chatRoomId, final String newOwner, final String oldOwner) {
     }
+
+    @Override public void onAnnouncementChanged(String chatRoomId, String announcement) {
+
+    }
 }
