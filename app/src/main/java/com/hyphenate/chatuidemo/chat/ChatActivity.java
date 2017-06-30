@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.ContextMenu;
