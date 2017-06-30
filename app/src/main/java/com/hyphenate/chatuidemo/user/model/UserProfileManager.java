@@ -107,11 +107,14 @@ public class UserProfileManager {
                             // save the contact list to cache
                             if (uList.size() < entityList.size()) {
                                 setContactList(entityList);
-                            }else{
+                                if (callback != null) {
+                                    callback.onError(-1, "sync contact info error");
+                                }
+                            } else {
                                 setContactList(uList);
-                            }
-                            if (callback != null) {
-                                callback.onSuccess();
+                                if (callback != null) {
+                                    callback.onSuccess();
+                                }
                             }
                         }
 
