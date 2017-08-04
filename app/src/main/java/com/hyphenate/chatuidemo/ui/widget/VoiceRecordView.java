@@ -35,7 +35,7 @@ public class VoiceRecordView extends FrameLayout {
     private VoiceRecorder mVoiceRecorder;
 
     protected PowerManager.WakeLock mWakeLock;
-    private Context context;
+    private Context mContext;
 
     private final float maxScale = 1.38f;
     private final float minScale = 1.10f;
@@ -68,7 +68,7 @@ public class VoiceRecordView extends FrameLayout {
     private void init(Context context, AttributeSet attrs) {
         LayoutInflater.from(context).inflate(R.layout.em_widget_voice_record, this);
         ButterKnife.bind(this);
-        this.context = context;
+        this.mContext = context;
 
         mWakeLock = ((PowerManager) context.getSystemService(Context.POWER_SERVICE)).newWakeLock(
                 PowerManager.SCREEN_DIM_WAKE_LOCK, "voice_record_lock");
@@ -120,7 +120,7 @@ public class VoiceRecordView extends FrameLayout {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Toast.makeText(getContext(), R.string.send_failure_please,
+                                Toast.makeText(getContext(), mContext.getString(R.string.record_failed) + e.getMessage(),
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -141,23 +141,23 @@ public class VoiceRecordView extends FrameLayout {
 
     private void startRecording() {
         if (!EaseCommonUtils.isSdcardExist()) {
-            Toast.makeText(context, R.string.record_need_sdcard_support, Toast.LENGTH_SHORT)
+            Toast.makeText(mContext, R.string.record_need_sdcard_support, Toast.LENGTH_SHORT)
                     .show();
             return;
         }
         try {
             mWakeLock.acquire();
             //this.setVisibility(View.VISIBLE);
-            mRecordingHint.setText(context.getString(R.string.record_move_up_to_cancel));
+            mRecordingHint.setText(mContext.getString(R.string.record_move_up_to_cancel));
             mChronometer.setVisibility(View.VISIBLE);
             mChronometer.setBase(SystemClock.elapsedRealtime());
             mChronometer.start();
-            mVoiceRecorder.startRecording(context);
+            mVoiceRecorder.startRecording(mContext);
         } catch (Exception e) {
             e.printStackTrace();
             discardRecording();
             //this.setVisibility(View.INVISIBLE);
-            Toast.makeText(context, R.string.record_recoding_fail, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.record_recoding_fail, Toast.LENGTH_SHORT).show();
             return;
         }
     }
@@ -186,12 +186,12 @@ public class VoiceRecordView extends FrameLayout {
 
     private void showMoveUpToCancelHint() {
         mRecordingHint.setTextColor(getResources().getColor(R.color.voice_recording_hint));
-        mRecordingHint.setText(context.getString(R.string.record_move_up_to_cancel));
+        mRecordingHint.setText(mContext.getString(R.string.record_move_up_to_cancel));
     }
 
     private void showReleaseToCancelHint() {
         mRecordingHint.setTextColor(getResources().getColor(R.color.voice_cancel_hint));
-        mRecordingHint.setText(context.getString(R.string.record_release_to_cancel));
+        mRecordingHint.setText(mContext.getString(R.string.record_release_to_cancel));
     }
 
     private void stopChronometer(){

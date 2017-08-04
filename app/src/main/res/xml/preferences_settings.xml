@@ -61,7 +61,7 @@
             android:title="@string/em_pref_chat_call">
             <!--Group invite switch-->
             <SwitchPreference
-                android:defaultValue="true"
+                android:defaultValue="false"
                 android:key="@string/em_pref_key_accept_group_invite_automatically"
                 android:summary="@string/em_pref_group_invites_summary"
                 android:title="@string/em_pref_group_invites"/>

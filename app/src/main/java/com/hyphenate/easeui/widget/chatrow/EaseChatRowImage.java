@@ -28,7 +28,6 @@ public class EaseChatRowImage extends EaseChatRowFile{
     protected ImageView imageView;
     protected EMImageMessageBody imgBody;
 
-
     protected static final int THUMBNAIL_SIZE = 180;
 
     protected int toScaleMaxSize = 110;
@@ -54,7 +53,6 @@ public class EaseChatRowImage extends EaseChatRowFile{
         imageView = (ImageView) findViewById(R.id.image);
     }
 
-    
     @Override
     protected void onSetUpView() {
         imgBody = (EMImageMessageBody) message.getBody();
@@ -73,50 +71,53 @@ public class EaseChatRowImage extends EaseChatRowFile{
             showImageView();
             handleSendMessage();
         }
-
     }
-    
+
     @Override
     protected void onUpdateView() {
         super.onUpdateView();
     }
-    
+
     @Override
     protected void onBubbleClick() {
         Intent intent = new Intent(context, EaseShowImageActivity.class);
         File file = new File(imgBody.getLocalUrl());
+
+        // if the file already exist on local device, then load it
         if (file.exists()) {
             Uri uri = Uri.fromFile(file);
             intent.putExtra("uri", uri);
-        } else {
-            // The local full size pic does not exist yet.
-            // ShowBigImage needs to download it from the server
-            // first
+        }
+        // otherwise download it from the server
+        else {
             intent.putExtra("secret", imgBody.getSecret());
             intent.putExtra("remotepath", imgBody.getRemoteUrl());
             intent.putExtra("localUrl", imgBody.getLocalUrl());
         }
-        if (message != null && message.direct() == EMMessage.Direct.RECEIVE && !message.isAcked()
-                && message.getChatType() == ChatType.Chat) {
+
+        // send message read ack
+        if (message != null && message.direct() == EMMessage.Direct.RECEIVE &&
+                !message.isAcked() && message.getChatType() == ChatType.Chat) {
             try {
                 EMClient.getInstance().chatManager().ackMessageRead(message.getFrom(), message.getMsgId());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+
         context.startActivity(intent);
     }
-    
+
     /**
      * load image into image view
-     * 
+     *
      */
     private void showImageView() {
         imageView.setImageResource(R.drawable.ease_default_image);
 
         String filePath = imgBody.getLocalUrl();
         String thumbnailPath = EaseImageUtils.getThumbnailImagePath(filePath);
-        if(message.direct() == EMMessage.Direct.RECEIVE){
+        if(message.direct() == EMMessage.Direct.RECEIVE) {
             filePath = imgBody.thumbnailLocalPath();
             thumbnailPath = filePath;
         }
@@ -127,7 +128,9 @@ public class EaseChatRowImage extends EaseChatRowFile{
             scaleImageView(bitmap, imageView);
             // thumbnail image is already loaded, reuse the drawable
             imageView.setImageBitmap(bitmap);
-        } else {
+        }
+        // otherwise load it from file path
+        else {
             final String finalFilePath = filePath;
             final String finalThumbnailPath = thumbnailPath;
             new AsyncTask<Object, Void, Bitmap>() {
@@ -141,20 +144,18 @@ public class EaseChatRowImage extends EaseChatRowFile{
                         return EaseImageUtils.decodeScaleImage(finalFilePath, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
                     }
                     return null;
-
                 }
 
                 protected void onPostExecute(Bitmap bmp) {
                     if (bmp != null) {
                         scaleImageView(bmp, imageView);
-                        //set bitmap to scaled image view
+                        // set bitmap to scaled image view
                         imageView.setImageBitmap(bmp);
                         EaseImageCache.getInstance().put(finalThumbnailPath, bmp);
                     } else {
                         if (message.status() == EMMessage.Status.FAIL) {
                             if (EaseCommonUtils.isNetWorkConnected(context)) {
                                 new Thread(new Runnable() {
-
                                     @Override
                                     public void run() {
                                         EMClient.getInstance().chatManager().downloadThumbnail(message);
@@ -162,20 +163,18 @@ public class EaseChatRowImage extends EaseChatRowFile{
                                 }).start();
                             }
                         }
-
                     }
                 }
             }.execute();
-
         }
     }
 
     /**
      * used before setImageBitmap()
-     * @param bmp
-     * @param imageView
+     * @param bmp        bitmap
+     * @param imageView  image view
      */
-    private void scaleImageView(Bitmap bmp, ImageView imageView){
+    private void scaleImageView(Bitmap bmp, ImageView imageView) {
         int originWidth = imgBody.getWidth();
         int originHeight = imgBody.getHeight();
 
@@ -196,14 +195,14 @@ public class EaseChatRowImage extends EaseChatRowFile{
                 int scaledWidth = (int) (bmpWidth * scale);
                 int scaledHeight = (int) (bmpHeight * scale);
                 setLayoutParams(imageView, lp, scaledWidth, scaledHeight);
-            }else{
+            } else {
                 setLayoutParams(imageView, lp, bmpWidth, bmpHeight);
             }
         }
     }
 
     private void setLayoutParams(ImageView imageView, ViewGroup.LayoutParams lp, int scaledWidth,
-            int scaledHeight) {
+                                 int scaledHeight) {
         if(lp.width != scaledWidth || lp.height != scaledHeight) {
             lp.width = scaledWidth;
             lp.height = scaledHeight;

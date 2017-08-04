@@ -15,6 +15,7 @@ package com.hyphenate.easeui;
 
 public class EaseConstant {
     // call attr key
+    public static final String MESSAGE_ATTR_IS_CALL_PUSH = "is_call_push";
     public static final String MESSAGE_ATTR_IS_VOICE_CALL = "is_voice_call";
     public static final String MESSAGE_ATTR_IS_VIDEO_CALL = "is_video_call";
 

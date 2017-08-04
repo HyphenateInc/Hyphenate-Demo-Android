@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
+import com.hyphenate.chat.EMPushConfigs;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.chat.ChatActivity;
@@ -59,6 +60,8 @@ public class GroupDetailsActivity extends BaseActivity {
 
     private String groupId;
     private EMGroup group;
+    private EMPushConfigs pushConfigs;
+
     private MucMembersVerticalAdapter adapter;
     private ProgressDialog progressDialog;
     ProgressBar progressBar;
@@ -214,6 +217,13 @@ public class GroupDetailsActivity extends BaseActivity {
             adapter = new MucMembersVerticalAdapter(GroupDetailsActivity.this, members, mucRoleJudge);
             recyclerView.setAdapter(adapter);
         }
+        List<String> noPushGroups = EMClient.getInstance().pushManager().getNoPushGroups();
+        if (noPushGroups != null && noPushGroups.contains(groupId)) {
+            notificationSwitch.setChecked(true);
+        }else{
+            notificationSwitch.setChecked(false);
+        }
+
         switch_block_group_message.setChecked(group.isMsgBlocked());
     }
 
@@ -236,7 +246,8 @@ public class GroupDetailsActivity extends BaseActivity {
         }
     }
 
-    @OnClick({ R.id.text_exit_group, R.id.layout_member_list, R.id.layout_push_notification, R.id.iv_invite_member, R.id.switch_block_group_message }) void onclick(View view) {
+    @OnClick({ R.id.text_exit_group, R.id.layout_member_list, R.id.layout_push_notification, R.id.switch_push_notification,
+            R.id.iv_invite_member, R.id.switch_block_group_message }) void onclick(View view) {
         switch (view.getId()) {
             case R.id.iv_invite_member:
 
@@ -256,16 +267,71 @@ public class GroupDetailsActivity extends BaseActivity {
                         .putStringArrayListExtra("members", (ArrayList<String>) members), REQUEST_CODE_MEMBER_REFRESH);
                 break;
 
-            case R.id.layout_push_notification:
-                if (notificationSwitch.isChecked()) {
-                    notificationSwitch.setChecked(false);
-                } else {
-                    notificationSwitch.setChecked(true);
-                }
+            case R.id.switch_push_notification:
+                //if (notificationSwitch.isChecked()) {
+                //    notificationSwitch.setChecked(false);
+                //} else {
+                //    notificationSwitch.setChecked(true);
+                //}
+                toggleBlockPushGroupNotification();
                 break;
             case R.id.switch_block_group_message:
                 toggleBlockGroup();
                 break;
+        }
+    }
+
+    private void toggleBlockPushGroupNotification(){
+        if(notificationSwitch.isChecked()){
+            showDialog(getString(R.string.em_group_block_group_push), getString(R.string.em_waiting));
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        List<String> noPushGroups = new ArrayList<String>();
+                        noPushGroups.add(groupId);
+                        EMClient.getInstance().pushManager().updatePushServiceForGroup(noPushGroups, true);
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                progressDialog.dismiss();
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.em_group_block_group_push) + " failed", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }
+            }).start();
+
+        } else {
+            showDialog(getString(R.string.em_group_unblock_group_push), getString(R.string.em_waiting));
+            new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        List<String> noPushGroups = new ArrayList<String>();
+                        noPushGroups.add(groupId);
+                        EMClient.getInstance().pushManager().updatePushServiceForGroup(noPushGroups, false);
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                progressDialog.dismiss();
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), getResources().getString(R.string.em_group_unblock_group_push) + " failed", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                    }
+                }
+            }).start();
         }
     }
 
@@ -501,6 +567,7 @@ public class GroupDetailsActivity extends BaseActivity {
 
             @Override
             public Object onRequest() throws HyphenateException {
+                EMClient.getInstance().pushManager().getPushConfigsFromServer();
                 group = EMClient.getInstance().groupManager().getGroupFromServer(groupId);
                 return null;
             }
@@ -527,10 +594,10 @@ public class GroupDetailsActivity extends BaseActivity {
     private void showDialog(String title, String msg) {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(GroupDetailsActivity.this);
-            progressDialog.setTitle(title);
-            progressDialog.setMessage(msg);
             progressDialog.setCanceledOnTouchOutside(false);
         }
+        progressDialog.setTitle(title);
+        progressDialog.setMessage(msg);
         progressDialog.show();
     }
 

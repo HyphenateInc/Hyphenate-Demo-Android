@@ -23,6 +23,7 @@ import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.apply.ApplyActivity;
+import com.hyphenate.chatuidemo.call.CallManager;
 import com.hyphenate.chatuidemo.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.chat.ChatActivity;
@@ -163,8 +164,23 @@ public class ContactListFragment extends Fragment {
             }
 
             @Override public void onVoiceCallClick() {
-                startActivity(new Intent(getActivity(), VoiceCallActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, user.getUsername())
-                        .putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false));
+                if (CallManager.getInstance().getCallState() == CallManager.CallState.DISCONNECTED) {
+                    Intent intent = new Intent(getActivity(), VoiceCallActivity.class);
+                    CallManager.getInstance().setChatId(user.getUsername());
+                    CallManager.getInstance().setInComingCall(false);
+                    CallManager.getInstance().setCallType(CallManager.CallType.VOICE);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent();
+                    if (CallManager.getInstance().getCallType() == CallManager.CallType.VIDEO) {
+                        intent.setClass(getActivity(), VideoCallActivity.class);
+                    } else {
+                        intent.setClass(getActivity(), VoiceCallActivity.class);
+                    }
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
                 dialogFragment.dismiss();
             }
 
@@ -174,8 +190,23 @@ public class ContactListFragment extends Fragment {
             }
 
             @Override public void onVideoCallClick() {
-                startActivity(new Intent(getActivity(), VideoCallActivity.class).putExtra(EaseConstant.EXTRA_USER_ID, user.getUsername())
-                        .putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false));
+                if (CallManager.getInstance().getCallState() == CallManager.CallState.DISCONNECTED) {
+                    Intent intent = new Intent(getActivity(), VideoCallActivity.class);
+                    CallManager.getInstance().setChatId(user.getUsername());
+                    CallManager.getInstance().setInComingCall(false);
+                    CallManager.getInstance().setCallType(CallManager.CallType.VIDEO);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent();
+                    if (CallManager.getInstance().getCallType() == CallManager.CallType.VIDEO) {
+                        intent.setClass(getActivity(), VideoCallActivity.class);
+                    } else {
+                        intent.setClass(getActivity(), VoiceCallActivity.class);
+                    }
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
                 dialogFragment.dismiss();
             }
         });

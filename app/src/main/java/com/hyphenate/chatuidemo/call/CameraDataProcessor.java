@@ -5,6 +5,8 @@ import com.hyphenate.chat.EMCallManager;
 
 /**
  * Created by lzan13 on 2016/8/9.
+ *
+ * call camera data callback
  */
 public class CameraDataProcessor implements EMCallManager.EMCameraDataProcessor {
 
@@ -17,7 +19,8 @@ public class CameraDataProcessor implements EMCallManager.EMCameraDataProcessor 
     // data size is width*height*2
     // the first width*height is Y, second part is UV
     // the storage layout detailed please refer 2.x demo CameraHelper.onPreviewFrame
-    @Override public void onProcessData(byte[] data, Camera camera, int width, int height, int i2) {
+    @Override public synchronized void onProcessData(byte[] data, Camera camera, int width,
+            int height, int rotation) {
         int wh = width * height;
         for (int i = 0; i < wh; i++) {
             int d = (data[i] & 0xFF) + yDelta;

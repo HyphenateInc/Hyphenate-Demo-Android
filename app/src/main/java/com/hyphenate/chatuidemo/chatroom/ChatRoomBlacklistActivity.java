@@ -10,9 +10,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.easeui.EaseConstant;
@@ -25,16 +27,16 @@ import java.util.List;
  * Chat room blacklist activity
  */
 public class ChatRoomBlacklistActivity extends BaseActivity {
+    private final int REFRESH_CODE = 0;
 
     private ChatRoomBlacklistActivity activity;
     private DefaultChatRoomChangeListener chatRoomChangeListener;
 
     @BindView(R.id.recycler_chatroom_members) RecyclerView recyclerView;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
 
     private LinearLayoutManager layoutManager;
     private ChatRoomBlacklistAdapter adapter;
-
-    private ProgressDialog progressDialog;
 
     private String currentUser;
     private String chatRoomId;
@@ -99,16 +101,12 @@ public class ChatRoomBlacklistActivity extends BaseActivity {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
         alertDialogBuilder.setItems(menus, new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialog, final int which) {
-                new Thread(new Runnable() {
+                DemoHelper.getInstance().execute(new Runnable() {
                     @Override public void run() {
-                        runOnUiThread(new Runnable() {
-                            @Override public void run() {
-                                showProgressDialog();
-                            }
-                        });
+                        showLoading();
                         try {
                             switch (which) {
-                                case 0:
+                                case REFRESH_CODE:
                                     List<String> blacklistMembers = new ArrayList<String>();
                                     blacklistMembers.add(username);
                                     EMClient.getInstance().chatroomManager().unblockChatRoomMembers(chatRoomId, blacklistMembers);
@@ -116,10 +114,12 @@ public class ChatRoomBlacklistActivity extends BaseActivity {
                             }
                         } catch (HyphenateException e) {
                             e.printStackTrace();
+                        } finally {
+                            hideLoading();
                         }
                         updateChatRoomData();
                     }
-                }).start();
+                });
             }
         });
         alertDialogBuilder.show();
@@ -130,35 +130,19 @@ public class ChatRoomBlacklistActivity extends BaseActivity {
      */
     private void updateChatRoomData() {
         // fetch members from server
-        new Thread(new Runnable() {
+        DemoHelper.getInstance().execute(new Runnable() {
             @Override public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override public void run() {
-                        showProgressDialog();
-                    }
-                });
+                showLoading();
                 try {
                     EMClient.getInstance().chatroomManager().fetchChatRoomBlackList(chatRoomId, 0, 200);
-                    handler.sendMessage(handler.obtainMessage(0));
+                    handler.sendMessage(handler.obtainMessage(REFRESH_CODE));
                 } catch (HyphenateException e) {
                     e.printStackTrace();
+                } finally {
+                    hideLoading();
                 }
             }
-        }).start();
-    }
-
-    /**
-     * show progress dialog
-     */
-    private void showProgressDialog() {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(activity);
-            progressDialog.setMessage("Please waiting...");
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
-        if (!progressDialog.isShowing()) {
-            progressDialog.show();
-        }
+        });
     }
 
     // refresh ui handler
@@ -166,10 +150,7 @@ public class ChatRoomBlacklistActivity extends BaseActivity {
         @Override public void handleMessage(Message msg) {
             //super.handleMessage(msg);
             switch (msg.what) {
-                case 0:
-                    if (progressDialog != null && progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
+                case REFRESH_CODE:
                     if (adapter != null) {
                         adapter.refresh();
                     }
@@ -177,6 +158,22 @@ public class ChatRoomBlacklistActivity extends BaseActivity {
             }
         }
     };
+
+    private void showLoading() {
+        this.runOnUiThread(new Runnable() {
+            @Override public void run() {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void hideLoading() {
+        this.runOnUiThread(new Runnable() {
+            @Override public void run() {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+    }
 
     @Override protected void onDestroy() {
         super.onDestroy();
