@@ -343,6 +343,11 @@ public class ChatRoomDetailsActivity extends BaseActivity {
         destroyChatRoomDialog.show();
     }
 
+    @Override protected void onResume() {
+        super.onResume();
+        refreshUI();
+    }
+
     @Override protected void onDestroy() {
         super.onDestroy();
         if (chatRoomChangeListener != null) {
@@ -395,21 +400,11 @@ public class ChatRoomDetailsActivity extends BaseActivity {
         @Override public void onMemberJoined(String roomId, final String participant) {
             super.onMemberJoined(roomId, participant);
             updateChatRoomData();
-            runOnUiThread(new Runnable() {
-                @Override public void run() {
-                    Snackbar.make(rootView, participant + " joined", Snackbar.LENGTH_SHORT).show();
-                }
-            });
         }
 
         @Override public void onMemberExited(String roomId, String roomName, final String participant) {
             super.onMemberExited(roomId, roomName, participant);
             updateChatRoomData();
-            runOnUiThread(new Runnable() {
-                @Override public void run() {
-                    Snackbar.make(rootView, participant + " exited", Snackbar.LENGTH_SHORT).show();
-                }
-            });
         }
 
         @Override public void onAdminAdded(String chatRoomId, final String admin) {

@@ -37,6 +37,7 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
+import com.hyphenate.chatuidemo.call.CallManager;
 import com.hyphenate.chatuidemo.call.VideoCallActivity;
 import com.hyphenate.chatuidemo.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.chatroom.ChatRoomChangeListener;
@@ -431,18 +432,11 @@ public class ChatActivity extends BaseActivity {
                 Intent intent = new Intent();
                 switch (item.getItemId()) {
                     case R.id.menu_video_call:
-                        intent.setClass(ChatActivity.this, VideoCallActivity.class);
-                        intent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
-                        intent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
-                        startActivity(intent);
+                        startVideoCall();
                         break;
                     case R.id.menu_voice_call:
-                        intent.setClass(ChatActivity.this, VoiceCallActivity.class);
-                        intent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
-                        intent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
-                        startActivity(intent);
+                        startVoiceCall();
                         break;
-
                     case R.id.menu_group_detail:
                         intent.setClass(ChatActivity.this, GroupDetailsActivity.class);
                         intent.putExtra(EaseConstant.EXTRA_GROUP_ID, toChatUsername);
@@ -723,11 +717,23 @@ public class ChatActivity extends BaseActivity {
         if (!EMClient.getInstance().isConnected()) {
             Toast.makeText(this, R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
         } else {
-            Intent voiceCallIntent = new Intent();
-            voiceCallIntent.setClass(ChatActivity.this, VoiceCallActivity.class);
-            voiceCallIntent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
-            voiceCallIntent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
-            startActivity(voiceCallIntent);
+            if (CallManager.getInstance().getCallState() == CallManager.CallState.DISCONNECTED) {
+                Intent intent = new Intent(activityInstance, VoiceCallActivity.class);
+                CallManager.getInstance().setChatId(toChatUsername);
+                CallManager.getInstance().setInComingCall(false);
+                CallManager.getInstance().setCallType(CallManager.CallType.VOICE);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent();
+                if (CallManager.getInstance().getCallType() == CallManager.CallType.VIDEO) {
+                    intent.setClass(activityInstance, VideoCallActivity.class);
+                } else {
+                    intent.setClass(activityInstance, VoiceCallActivity.class);
+                }
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
         }
         mInputView.hideExtendMenuContainer();
     }
@@ -736,11 +742,23 @@ public class ChatActivity extends BaseActivity {
         if (!EMClient.getInstance().isConnected()) {
             Toast.makeText(this, R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
         } else {
-            Intent videoCallIntent = new Intent();
-            videoCallIntent.setClass(ChatActivity.this, VideoCallActivity.class);
-            videoCallIntent.putExtra(EaseConstant.EXTRA_USER_ID, toChatUsername);
-            videoCallIntent.putExtra(EaseConstant.EXTRA_IS_INCOMING_CALL, false);
-            startActivity(videoCallIntent);
+            if (CallManager.getInstance().getCallState() == CallManager.CallState.DISCONNECTED) {
+                Intent intent = new Intent(activityInstance, VideoCallActivity.class);
+                CallManager.getInstance().setChatId(toChatUsername);
+                CallManager.getInstance().setInComingCall(false);
+                CallManager.getInstance().setCallType(CallManager.CallType.VIDEO);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent();
+                if (CallManager.getInstance().getCallType() == CallManager.CallType.VIDEO) {
+                    intent.setClass(activityInstance, VideoCallActivity.class);
+                } else {
+                    intent.setClass(activityInstance, VoiceCallActivity.class);
+                }
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
         }
         mInputView.hideExtendMenuContainer();
     }
@@ -906,7 +924,7 @@ public class ChatActivity extends BaseActivity {
             super.onMemberJoined(roomId, participant);
             runOnUiThread(new Runnable() {
                 @Override public void run() {
-                    Snackbar.make(mMessageListView, participant + " joined", Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(activityInstance, participant + " joined", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -915,7 +933,7 @@ public class ChatActivity extends BaseActivity {
             super.onMemberExited(roomId, roomName, participant);
             runOnUiThread(new Runnable() {
                 @Override public void run() {
-                    Snackbar.make(mMessageListView, participant + " exited", Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(activityInstance, participant + " exited", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -929,7 +947,7 @@ public class ChatActivity extends BaseActivity {
             super.onMuteListAdded(chatRoomId, mutes, expireTime);
             runOnUiThread(new Runnable() {
                 @Override public void run() {
-                    Snackbar.make(mMessageListView, mutes.get(0) + " is muted", Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(activityInstance, mutes.get(0) + " is muted", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -938,7 +956,7 @@ public class ChatActivity extends BaseActivity {
             super.onMuteListRemoved(chatRoomId, mutes);
             runOnUiThread(new Runnable() {
                 @Override public void run() {
-                    Snackbar.make(mMessageListView, mutes.get(0) + " is unmuted", Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(activityInstance, mutes.get(0) + " is unmuted", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -947,7 +965,7 @@ public class ChatActivity extends BaseActivity {
             super.onAdminAdded(chatRoomId, admin);
             runOnUiThread(new Runnable() {
                 @Override public void run() {
-                    Snackbar.make(mMessageListView, admin + "  administrator privileges are added", Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(activityInstance, admin + "  administrator privileges are added", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -956,7 +974,7 @@ public class ChatActivity extends BaseActivity {
             super.onAdminRemoved(chatRoomId, admin);
             runOnUiThread(new Runnable() {
                 @Override public void run() {
-                    Snackbar.make(mMessageListView, admin + " administrator privileges are canceled", Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(activityInstance, admin + " administrator privileges are canceled", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -965,7 +983,7 @@ public class ChatActivity extends BaseActivity {
             super.onOwnerChanged(chatRoomId, newOwner, oldOwner);
             runOnUiThread(new Runnable() {
                 @Override public void run() {
-                    Snackbar.make(mMessageListView, oldOwner + " transferred ownership to " + newOwner, Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(activityInstance, oldOwner + " transferred ownership to " + newOwner, Toast.LENGTH_SHORT).show();
                 }
             });
         }
