@@ -209,7 +209,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="33bb2bc04d2ed7f91da02025c362279e3406ed81"/>
+            android:value="33bb2bc04d2ed7f91da02025c362279e3406ed81" />
 
         <!-- set your google map api key -->
         <meta-data
@@ -221,4 +221,5 @@
             android:value="33bb2bc04d2ed7f91da02025c362279e3406ed81" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
