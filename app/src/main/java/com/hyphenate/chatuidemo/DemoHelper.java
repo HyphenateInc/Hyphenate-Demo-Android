@@ -591,6 +591,10 @@ public class DemoHelper {
             @Override public void onMessageDelivered(List<EMMessage> message) {
             }
 
+            @Override public void onMessageRecalled(List<EMMessage> messages) {
+
+            }
+
             @Override public void onMessageChanged(EMMessage message, Object change) {
 
             }

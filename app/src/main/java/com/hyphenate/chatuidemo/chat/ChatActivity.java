@@ -832,6 +832,10 @@ public class ChatActivity extends BaseActivity {
             mMessageListView.refresh();
         }
 
+        @Override public void onMessageRecalled(List<EMMessage> messages) {
+            // TODO update ui
+        }
+
         @Override public void onMessageChanged(EMMessage emMessage, Object o) {
             mMessageListView.refresh();
         }

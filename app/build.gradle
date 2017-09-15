@@ -62,7 +62,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:9.4.0'
     compile 'com.parse:parse-android:1.13.1'
 
-    compile 'com.hyphenate:hyphenate-sdk:3.3.2'
+    compile 'com.hyphenate:hyphenate-sdk:3.3.4'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
