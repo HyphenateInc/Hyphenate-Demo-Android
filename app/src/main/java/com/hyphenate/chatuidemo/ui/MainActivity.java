@@ -257,6 +257,10 @@ public class MainActivity extends BaseActivity {
         @Override public void onMessageDelivered(List<EMMessage> list) {
         }
 
+        @Override public void onMessageRecalled(List<EMMessage> messages) {
+
+        }
+
         @Override public void onMessageChanged(EMMessage emMessage, Object o) {
         }
     };

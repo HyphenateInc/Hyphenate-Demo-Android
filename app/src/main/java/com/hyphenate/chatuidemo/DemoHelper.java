@@ -563,8 +563,9 @@ public class DemoHelper {
                     if (!hasForegroundActivities()) {
                         if (message.getBooleanAttribute(Constant.MESSAGE_ATTR_IS_CALL_PUSH, false)) {
                             EMClient.getInstance().chatManager().getConversation(message.getFrom()).removeMessage(message.getMsgId());
-                        }else{
-                            getNotifier().onNewMsg(message);
+                        } else {
+                            // FIXME: conflict with group push notification if it's turned off, push still come in when phone is unlocked as the app is woken up by the phone to run in the background
+//                            getNotifier().onNewMsg(message);
                         }
                     }
                 }
@@ -588,6 +589,10 @@ public class DemoHelper {
             }
 
             @Override public void onMessageDelivered(List<EMMessage> message) {
+            }
+
+            @Override public void onMessageRecalled(List<EMMessage> messages) {
+
             }
 
             @Override public void onMessageChanged(EMMessage message, Object change) {

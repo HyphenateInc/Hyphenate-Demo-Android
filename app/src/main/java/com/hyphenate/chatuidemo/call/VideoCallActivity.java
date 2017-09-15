@@ -19,9 +19,9 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.hyphenate.chat.EMCallManager;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMVideoCallHelper;
 import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.exceptions.HyphenateException;
@@ -36,7 +36,7 @@ import java.io.File;
  */
 public class VideoCallActivity extends CallActivity {
 
-    private EMCallManager.EMVideoCallHelper videoCallHelper;
+    private EMVideoCallHelper videoCallHelper;
     // SurfaceView state，-1 DISCONNECTED，0 ACCEPT，1 ACCEPT - local and opposite change
     private int surfaceState = -1;
 

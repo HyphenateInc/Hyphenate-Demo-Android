@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager;
+import com.hyphenate.chat.EMGroupOptions;
 import com.hyphenate.chatuidemo.R;
 import com.hyphenate.chatuidemo.chat.ChatActivity;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
@@ -123,7 +124,7 @@ public class NewGroupActivity extends BaseActivity {
                     new Thread(new Runnable() {
                         @Override public void run() {
 
-                            EMGroupManager.EMGroupOptions options = new EMGroupManager.EMGroupOptions();
+                            EMGroupOptions options = new EMGroupOptions();
                             options.maxUsers = 200;
                             options.inviteNeedConfirm = true;
                             if (groupTypeSwitch.isChecked()) {
