@@ -565,7 +565,7 @@ public class DemoHelper {
                             EMClient.getInstance().chatManager().getConversation(message.getFrom()).removeMessage(message.getMsgId());
                         } else {
                             // FIXME: conflict with group push notification if it's turned off, push still come in when phone is unlocked as the app is woken up by the phone to run in the background
-//                            getNotifier().onNewMsg(message);
+                            getNotifier().onNewMsg(message);
                         }
                     }
                 }
