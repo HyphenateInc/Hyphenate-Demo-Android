@@ -145,8 +145,8 @@ public class DemoHelper {
         options.setAutoAcceptGroupInvitation(preferences.getBoolean(
                 mContext.getString(R.string.em_pref_key_accept_group_invite_automatically), false));
 
-        //set gcm project number
-        options.setGCMNumber("324169311137");
+        //set fcm project number
+        options.setFCMNumber("921300338324");
 
         return options;
     }

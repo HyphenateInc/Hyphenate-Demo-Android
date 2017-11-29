@@ -30,8 +30,8 @@ android {
         applicationId "com.hyphenate.chatuidemo"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 3302
-        versionName '3.2.11'
+        versionCode 3303
+        versionName '3.2.12'
         multiDexEnabled true
     }
     buildTypes {
@@ -57,12 +57,15 @@ dependencies {
     compile 'com.android.support:multidex:1.0.0'
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.google.android.gms:play-services-gcm:9.4.0'
-    compile 'com.google.android.gms:play-services-places:9.4.0'
-    compile 'com.google.android.gms:play-services-maps:9.4.0'
+    // For google play server availability check.
+    compile 'com.google.android.gms:play-services-base:11.4.0'
+    compile 'com.google.android.gms:play-services-places:11.4.0'
+    compile 'com.google.android.gms:play-services-maps:11.4.0'
+    // Firebase
+    compile 'com.google.firebase:firebase-messaging:11.4.0'
     compile 'com.parse:parse-android:1.13.1'
 
-    compile 'com.hyphenate:hyphenate-sdk:3.3.4'
+    compile 'com.hyphenate:hyphenate-sdk:3.3.5'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
