@@ -11,7 +11,7 @@ buildscript {
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-apply plugin: 'com.neenbedankt.android-apt'
+
 
 repositories {
     flatDir {
@@ -51,9 +51,9 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.jakewharton:butterknife:8.4.0'
-    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     // Design support already included v4 and appcompat-v7, So here on the introduction of 'design'
-    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:design:24.0.0'
     compile 'com.android.support:multidex:1.0.0'
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
@@ -69,6 +69,9 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
+    //migration for 'android-apt'
+    compile 'com.google.dagger:dagger:2.0'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
