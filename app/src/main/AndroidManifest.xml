@@ -160,7 +160,7 @@
         <!-- set your API key -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="hyphenatedemo#hyphenatedemo"/>
+            android:value="easemob-demo#chatdemoui"/>
 
         <!-- SDK service -->
         <service

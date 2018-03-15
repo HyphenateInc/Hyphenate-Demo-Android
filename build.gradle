@@ -6,9 +6,8 @@ buildscript {
         maven { url "https://raw.githubusercontent.com/HyphenateInc/Hyphenate-SDK-Android/master/repository" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
         // Crashlytics
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         // Firebase
         classpath 'com.google.gms:google-services:3.1.1'
         // NOTE: Do not place your application dependencies here; they belong
