@@ -8,8 +8,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.Gravity;
@@ -909,6 +909,21 @@ public class ChatActivity extends BaseActivity {
             finish();
         }
 
+        @Override
+        public void onWhiteListAdded(String groupId, List<String> whitelist) {
+
+        }
+
+        @Override
+        public void onWhiteListRemoved(String groupId, List<String> whitelist) {
+
+        }
+
+        @Override
+        public void onAllMemberMuteStateChanged(String groupId, boolean isMuted) {
+
+        }
+
         @Override public void onOwnerChanged(String groupId, String newOwner, String oldOwner) {
             super.onOwnerChanged(groupId, newOwner, oldOwner);
         }
@@ -942,8 +957,9 @@ public class ChatActivity extends BaseActivity {
             });
         }
 
-        @Override public void onRemovedFromChatRoom(String roomId, String roomName, String participant) {
-            super.onRemovedFromChatRoom(roomId, roomName, participant);
+        @Override
+        public void onRemovedFromChatRoom(int reason, String roomId, String roomName, String participant) {
+            super.onRemovedFromChatRoom(reason, roomId, roomName, participant);
             finish();
         }
 

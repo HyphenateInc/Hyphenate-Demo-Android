@@ -11,11 +11,11 @@ import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.NotificationCompat;
+
+import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.hyphenate.chat.EMCallManager;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chatuidemo.Constant;

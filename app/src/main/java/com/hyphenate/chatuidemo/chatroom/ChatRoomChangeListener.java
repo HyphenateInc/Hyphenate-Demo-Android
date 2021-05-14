@@ -37,14 +37,9 @@ public class ChatRoomChangeListener implements EMChatRoomChangeListener {
     @Override public void onMemberExited(final String roomId, final String roomName, final String participant) {
     }
 
-    /**
-     * Callback when a member is dismissed from a chat room
-     *
-     * @param roomId chatroom id
-     * @param roomName the chatroom's subject
-     * @param participant the member is dismissed from a chat room
-     */
-    @Override public void onRemovedFromChatRoom(final String roomId, final String roomName, final String participant) {
+    @Override
+    public void onRemovedFromChatRoom(int reason, String roomId, String roomName, String participant) {
+
     }
 
     /**
@@ -67,6 +62,21 @@ public class ChatRoomChangeListener implements EMChatRoomChangeListener {
      * @return NA
      */
     @Override public void onMuteListRemoved(final String chatRoomId, final List<String> mutes) {
+    }
+
+    @Override
+    public void onWhiteListAdded(String chatRoomId, List<String> whitelist) {
+
+    }
+
+    @Override
+    public void onWhiteListRemoved(String chatRoomId, List<String> whitelist) {
+
+    }
+
+    @Override
+    public void onAllMemberMuteStateChanged(String chatRoomId, boolean isMuted) {
+
     }
 
     /**

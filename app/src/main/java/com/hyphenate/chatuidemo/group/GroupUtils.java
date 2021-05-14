@@ -1,9 +1,9 @@
 package com.hyphenate.chatuidemo.group;
 
 import android.app.Activity;
-import android.support.annotation.UiThread;
-import android.support.annotation.WorkerThread;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCursorResult;

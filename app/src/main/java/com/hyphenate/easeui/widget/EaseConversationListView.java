@@ -3,21 +3,18 @@ package com.hyphenate.easeui.widget;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
-import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chatuidemo.Constant;
 import com.hyphenate.easeui.adapter.EaseConversationListAdapter;
-import com.hyphenate.easeui.model.EaseUser;
-import com.hyphenate.easeui.utils.EaseUserUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 

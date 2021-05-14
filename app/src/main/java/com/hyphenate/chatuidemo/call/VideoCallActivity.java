@@ -9,8 +9,8 @@ import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.LocalBroadcastManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -252,23 +252,23 @@ public class VideoCallActivity extends CallActivity {
     private void onRecordCall() {
         if (recordSwitch.isActivated()) {
             recordSwitch.setActivated(false);
-            String path = videoCallHelper.stopVideoRecord();
+            //String path = videoCallHelper.stopVideoRecord();
             CallManager.getInstance().setOpenRecord(false);
-            File file = new File(path);
-            if (file.exists()) {
-                Toast.makeText(activity, "Record video success! " + path, Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(activity, "Record video failed~~", Toast.LENGTH_LONG).show();
-            }
+//            File file = new File(path);
+//            if (file.exists()) {
+//                Toast.makeText(activity, "Record video success! " + path, Toast.LENGTH_LONG).show();
+//            } else {
+//                Toast.makeText(activity, "Record video failed~~", Toast.LENGTH_LONG).show();
+//            }
         } else {
             recordSwitch.setActivated(true);
-            String dirPath = getExternalFilesDir("").getAbsolutePath() + "/videos";
-            File dir = new File(dirPath);
-            if (!dir.isDirectory()) {
-                dir.mkdirs();
-            }
-            videoCallHelper.startVideoRecord(dirPath);
-            Toast.makeText(activity, "Start record video ~", Toast.LENGTH_LONG).show();
+//            String dirPath = getExternalFilesDir("").getAbsolutePath() + "/videos";
+//            File dir = new File(dirPath);
+//            if (!dir.isDirectory()) {
+//                dir.mkdirs();
+//            }
+//            videoCallHelper.startVideoRecord(dirPath);
+//            Toast.makeText(activity, "Start record video ~", Toast.LENGTH_LONG).show();
             CallManager.getInstance().setOpenRecord(true);
         }
     }
@@ -277,14 +277,14 @@ public class VideoCallActivity extends CallActivity {
      * Screenshot
      */
     private void onScreenShot() {
-        String dirPath = getExternalFilesDir("").getAbsolutePath() + "/videos/";
-        File dir = new File(dirPath);
-        if (!dir.isDirectory()) {
-            dir.mkdirs();
-        }
-        String path = dirPath + "video_" + System.currentTimeMillis() + ".jpg";
-        boolean result = videoCallHelper.takePicture(path);
-        Toast.makeText(activity, "Screenshot success! " + path, Toast.LENGTH_LONG).show();
+//        String dirPath = getExternalFilesDir("").getAbsolutePath() + "/videos/";
+//        File dir = new File(dirPath);
+//        if (!dir.isDirectory()) {
+//            dir.mkdirs();
+//        }
+//        String path = dirPath + "video_" + System.currentTimeMillis() + ".jpg";
+//        boolean result = videoCallHelper.takePicture(path);
+//        Toast.makeText(activity, "Screenshot success! " + path, Toast.LENGTH_LONG).show();
     }
 
     @Override protected void answerCall() {
@@ -476,7 +476,7 @@ public class VideoCallActivity extends CallActivity {
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == OVERLAY_PERMISSION_REQUEST_CODE) {
             if (Build.VERSION.SDK_INT >= 23) {
                 if (!Settings.canDrawOverlays(activity)) {

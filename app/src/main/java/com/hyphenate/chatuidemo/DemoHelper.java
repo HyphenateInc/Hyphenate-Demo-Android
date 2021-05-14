@@ -400,6 +400,21 @@ public class DemoHelper {
             getNotifier().vibrateAndPlayTone(null);
 
         }
+
+        @Override
+        public void onWhiteListAdded(String groupId, List<String> whitelist) {
+
+        }
+
+        @Override
+        public void onWhiteListRemoved(String groupId, List<String> whitelist) {
+
+        }
+
+        @Override
+        public void onAllMemberMuteStateChanged(String groupId, boolean isMuted) {
+
+        }
     }
 
     protected void setEaseUIProviders() {

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_actionbar"
         app:title="@string/em_chatroom_info"
         style="@style/ToolbarNormalTheme"
@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"

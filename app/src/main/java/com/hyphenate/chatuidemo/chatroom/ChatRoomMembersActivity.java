@@ -4,10 +4,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 import butterknife.BindView;
@@ -286,8 +286,9 @@ public class ChatRoomMembersActivity extends BaseActivity {
             finish();
         }
 
-        @Override public void onRemovedFromChatRoom(String roomId, String roomName, String participant) {
-            super.onRemovedFromChatRoom(roomId, roomName, participant);
+        @Override
+        public void onRemovedFromChatRoom(int reason, String roomId, String roomName, String participant) {
+            super.onRemovedFromChatRoom(reason, roomId, roomName, participant);
             finish();
         }
 

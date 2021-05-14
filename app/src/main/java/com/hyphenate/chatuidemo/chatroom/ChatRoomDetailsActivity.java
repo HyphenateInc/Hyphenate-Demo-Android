@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.appcompat.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -392,8 +392,9 @@ public class ChatRoomDetailsActivity extends BaseActivity {
             finish();
         }
 
-        @Override public void onRemovedFromChatRoom(String roomId, String roomName, String participant) {
-            super.onRemovedFromChatRoom(roomId, roomName, participant);
+        @Override
+        public void onRemovedFromChatRoom(int reason, String roomId, String roomName, String participant) {
+            super.onRemovedFromChatRoom(reason, roomId, roomName, participant);
             finish();
         }
 

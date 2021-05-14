@@ -33,6 +33,7 @@
         android:icon="@mipmap/em_logo_uidemo"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
 
         <!--Splash-->

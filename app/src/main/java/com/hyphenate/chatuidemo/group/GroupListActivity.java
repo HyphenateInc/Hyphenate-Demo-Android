@@ -2,11 +2,11 @@ package com.hyphenate.chatuidemo.group;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -150,6 +150,21 @@ public class GroupListActivity extends BaseActivity {
 
         @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
             refresh();
+        }
+
+        @Override
+        public void onWhiteListAdded(String groupId, List<String> whitelist) {
+
+        }
+
+        @Override
+        public void onWhiteListRemoved(String groupId, List<String> whitelist) {
+
+        }
+
+        @Override
+        public void onAllMemberMuteStateChanged(String groupId, boolean isMuted) {
+
         }
     }
 }

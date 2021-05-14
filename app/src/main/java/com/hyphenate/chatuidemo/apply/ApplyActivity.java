@@ -2,8 +2,8 @@ package com.hyphenate.chatuidemo.apply;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,6 +16,8 @@ import com.hyphenate.chatuidemo.group.GroupChangeListener;
 import com.hyphenate.chatuidemo.ui.BaseActivity;
 import com.hyphenate.chatuidemo.user.ContactsChangeListener;
 import com.hyphenate.exceptions.HyphenateException;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -329,6 +331,33 @@ public class ApplyActivity extends BaseActivity {
         }
 
         @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override
+        public void onWhiteListAdded(String groupId, List<String> whitelist) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override
+        public void onWhiteListRemoved(String groupId, List<String> whitelist) {
+            runOnUiThread(new Runnable() {
+                @Override public void run() {
+                    refresh();
+                }
+            });
+        }
+
+        @Override
+        public void onAllMemberMuteStateChanged(String groupId, boolean isMuted) {
             runOnUiThread(new Runnable() {
                 @Override public void run() {
                     refresh();

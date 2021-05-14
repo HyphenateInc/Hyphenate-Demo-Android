@@ -1,9 +1,9 @@
 package com.hyphenate.easeui.adapter;
 
 import android.content.Context;
-import android.support.v7.util.SortedList;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.util.SortedListAdapterCallback;
+import androidx.recyclerview.widget.SortedList;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SortedListAdapterCallback;
 import android.view.LayoutInflater;
 
 import java.util.ArrayList;

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_actionbar"
         android:layout_gravity="right"
         android:gravity="right"
@@ -17,8 +17,8 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             />
-    </android.support.v7.widget.Toolbar>
-    <android.support.v7.widget.RecyclerView
+    </androidx.appcompat.widget.Toolbar>
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_chatroom_members"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

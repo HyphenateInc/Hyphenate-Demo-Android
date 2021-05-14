@@ -3,7 +3,7 @@ package com.hyphenate.easeui.adapter;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +27,6 @@ import com.hyphenate.easeui.widget.EaseListItemClickListener;
 import com.hyphenate.util.DateUtils;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 
 import butterknife.BindView;
