@@ -65,21 +65,6 @@
             android:name=".sign.SignUpActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
-        <!--Video call activity-->
-        <activity
-            android:name=".call.VideoCallActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
-        <!--Voice call activity-->
-        <activity
-            android:name=".call.VoiceCallActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
-
 
         <activity
             android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"

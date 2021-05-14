@@ -37,9 +37,6 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chatuidemo.DemoHelper;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.call.CallManager;
-import com.hyphenate.chatuidemo.call.VideoCallActivity;
-import com.hyphenate.chatuidemo.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.chatroom.ChatRoomChangeListener;
 import com.hyphenate.chatuidemo.chatroom.ChatRoomDetailsActivity;
 import com.hyphenate.chatuidemo.group.GroupChangeListener;
@@ -432,10 +429,10 @@ public class ChatActivity extends BaseActivity {
                 Intent intent = new Intent();
                 switch (item.getItemId()) {
                     case R.id.menu_video_call:
-                        startVideoCall();
+                        //startVideoCall();
                         break;
                     case R.id.menu_voice_call:
-                        startVoiceCall();
+                        //startVoiceCall();
                         break;
                     case R.id.menu_group_detail:
                         intent.setClass(ChatActivity.this, GroupDetailsActivity.class);
@@ -702,65 +699,15 @@ public class ChatActivity extends BaseActivity {
                     selectFileFromLocal();
                     break;
                 case ITEM_VOICE_CALL:
-                    startVoiceCall();
+                    //startVoiceCall();
                     break;
                 case ITEM_VIDEO_CALL:
-                    startVideoCall();
+                    //startVideoCall();
                     break;
                 default:
                     break;
             }
         }
-    }
-
-    private void startVoiceCall() {
-        if (!EMClient.getInstance().isConnected()) {
-            Toast.makeText(this, R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
-        } else {
-            if (CallManager.getInstance().getCallState() == CallManager.CallState.DISCONNECTED) {
-                Intent intent = new Intent(activityInstance, VoiceCallActivity.class);
-                CallManager.getInstance().setChatId(toChatUsername);
-                CallManager.getInstance().setInComingCall(false);
-                CallManager.getInstance().setCallType(CallManager.CallType.VOICE);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent();
-                if (CallManager.getInstance().getCallType() == CallManager.CallType.VIDEO) {
-                    intent.setClass(activityInstance, VideoCallActivity.class);
-                } else {
-                    intent.setClass(activityInstance, VoiceCallActivity.class);
-                }
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
-        }
-        mInputView.hideExtendMenuContainer();
-    }
-
-    private void startVideoCall() {
-        if (!EMClient.getInstance().isConnected()) {
-            Toast.makeText(this, R.string.not_connect_to_server, Toast.LENGTH_SHORT).show();
-        } else {
-            if (CallManager.getInstance().getCallState() == CallManager.CallState.DISCONNECTED) {
-                Intent intent = new Intent(activityInstance, VideoCallActivity.class);
-                CallManager.getInstance().setChatId(toChatUsername);
-                CallManager.getInstance().setInComingCall(false);
-                CallManager.getInstance().setCallType(CallManager.CallType.VIDEO);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent();
-                if (CallManager.getInstance().getCallType() == CallManager.CallType.VIDEO) {
-                    intent.setClass(activityInstance, VideoCallActivity.class);
-                } else {
-                    intent.setClass(activityInstance, VoiceCallActivity.class);
-                }
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
-        }
-        mInputView.hideExtendMenuContainer();
     }
 
     /**

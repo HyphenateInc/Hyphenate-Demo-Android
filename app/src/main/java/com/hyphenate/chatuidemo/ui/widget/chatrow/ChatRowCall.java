@@ -5,12 +5,11 @@ import android.content.Intent;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chatuidemo.R;
-import com.hyphenate.chatuidemo.call.CallManager;
-import com.hyphenate.chatuidemo.call.VideoCallActivity;
-import com.hyphenate.chatuidemo.call.VoiceCallActivity;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.widget.chatrow.EaseChatRow;
 
@@ -66,28 +65,6 @@ public class ChatRowCall extends EaseChatRow {
         } else {
             toChatUsername = message.getTo();
         }
-        if (CallManager.getInstance().getCallState() == CallManager.CallState.DISCONNECTED) {
-            Intent intent = new Intent();
-            if (message.getBooleanAttribute(EaseConstant.MESSAGE_ATTR_IS_VIDEO_CALL, false)) {
-                intent.setClass(context, VideoCallActivity.class);
-                CallManager.getInstance().setCallType(CallManager.CallType.VIDEO);
-            } else {
-                intent.setClass(context, VoiceCallActivity.class);
-                CallManager.getInstance().setCallType(CallManager.CallType.VOICE);
-            }
-            CallManager.getInstance().setChatId(toChatUsername);
-            CallManager.getInstance().setInComingCall(false);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        } else {
-            Intent intent = new Intent();
-            if (CallManager.getInstance().getCallType() == CallManager.CallType.VIDEO) {
-                intent.setClass(context, VideoCallActivity.class);
-            } else {
-                intent.setClass(context, VoiceCallActivity.class);
-            }
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        }
+        Toast.makeText(getContext(), "点击了ChatRowCall", Toast.LENGTH_SHORT).show();
     }
 }

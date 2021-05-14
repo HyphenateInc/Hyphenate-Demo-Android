@@ -19,10 +19,6 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMMessage.ChatType;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.chat.EMTextMessageBody;
-import com.hyphenate.chatuidemo.call.CallManager;
-import com.hyphenate.chatuidemo.call.CallReceiver;
-import com.hyphenate.chatuidemo.call.VideoCallActivity;
-import com.hyphenate.chatuidemo.call.VoiceCallActivity;
 import com.hyphenate.chatuidemo.chat.ChatActivity;
 import com.hyphenate.chatuidemo.chat.MessageNotifier;
 import com.hyphenate.chatuidemo.group.GroupChangeListener;
@@ -55,9 +51,6 @@ public class DemoHelper {
 
     // context
     private Context mContext;
-
-    // Call broadcast receiver
-    private CallReceiver mCallReceiver = null;
 
     // Contacts listener
     private ContactsChangeListener mContactListener = null;
@@ -105,8 +98,6 @@ public class DemoHelper {
             EMLog.d(TAG, "------- init hyphenate start --------------");
             //init hyphenate sdk with options
             EMClient.getInstance().init(context, initOptions());
-            // init call options
-            initCallOptions();
             // set debug mode open:true, close:false
             EMClient.getInstance().setDebugMode(true);
             //init EaseUI if you want to use it
@@ -119,9 +110,6 @@ public class DemoHelper {
             //set events listeners
             setGlobalListener();
             setEaseUIProviders();
-
-            // init call
-            CallManager.getInstance().init(context);
 
             EMLog.d(TAG, "------- init hyphenate end --------------");
         }
@@ -152,25 +140,9 @@ public class DemoHelper {
     }
 
     /**
-     * init call options
-     */
-    private void initCallOptions() {
-        // set video call bitrate, default(150)
-        EMClient.getInstance().callManager().getCallOptions().setMaxVideoKbps(800);
-
-        // set video call resolution, default(320, 240)
-        EMClient.getInstance().callManager().getCallOptions().setVideoResolution(640, 480);
-
-        // send push notification when user offline
-        EMClient.getInstance().callManager().getCallOptions().setIsSendPushIfOffline(true);
-    }
-
-    /**
      * init global listener
      */
     private void setGlobalListener() {
-        // set call listener
-        setCallReceiverListener();
         // set connection listener
         setConnectionListener();
 
@@ -463,24 +435,17 @@ public class DemoHelper {
                     @Override public Intent getLaunchIntent(EMMessage message) {
                         // you can set what activity you want display when user click the notification
                         Intent intent = new Intent(mContext, ChatActivity.class);
-                        // open calling activity if there is call
-                        if (isVideoCalling) {
-                            intent = new Intent(mContext, VideoCallActivity.class);
-                        } else if (isVoiceCalling) {
-                            intent = new Intent(mContext, VoiceCallActivity.class);
-                        } else {
-                            ChatType chatType = message.getChatType();
-                            if (chatType == ChatType.Chat) { // single chat message
-                                intent.putExtra("userId", message.getFrom());
-                                intent.putExtra("chatType", Constant.CHATTYPE_SINGLE);
-                            } else { // group chat message
-                                // message.getTo() is the group id
-                                intent.putExtra("userId", message.getTo());
-                                if (chatType == ChatType.GroupChat) {
-                                    intent.putExtra("chatType", Constant.CHATTYPE_GROUP);
-                                } else {
-                                    intent.putExtra("chatType", Constant.CHATTYPE_CHATROOM);
-                                }
+                        ChatType chatType = message.getChatType();
+                        if (chatType == ChatType.Chat) { // single chat message
+                            intent.putExtra("userId", message.getFrom());
+                            intent.putExtra("chatType", Constant.CHATTYPE_SINGLE);
+                        } else { // group chat message
+                            // message.getTo() is the group id
+                            intent.putExtra("userId", message.getTo());
+                            if (chatType == ChatType.GroupChat) {
+                                intent.putExtra("chatType", Constant.CHATTYPE_GROUP);
+                            } else {
+                                intent.putExtra("chatType", Constant.CHATTYPE_CHATROOM);
                             }
                         }
                         return intent;
@@ -519,20 +484,6 @@ public class DemoHelper {
             user = new UserEntity(username);
         }
         return user;
-    }
-
-    /**
-     * Set call broadcast listener
-     */
-    private void setCallReceiverListener() {
-        // Set the call broadcast listener to filter the action
-        IntentFilter callFilter = new IntentFilter(
-                EMClient.getInstance().callManager().getIncomingCallBroadcastAction());
-        if (mCallReceiver == null) {
-            mCallReceiver = new CallReceiver();
-        }
-        // Register the call receiver
-        mContext.registerReceiver(mCallReceiver, callFilter);
     }
 
     /**
