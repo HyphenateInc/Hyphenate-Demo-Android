@@ -43,6 +43,9 @@ ext{
     if(!project.hasProperty('isTravis')) {
         isTravis = false
     }
+    if(!project.hasProperty('stagingRepositoryId')){
+        stagingRepositoryId = 'iohyphenate-1000'
+    }
 }
 
 task clean(type: Delete) {

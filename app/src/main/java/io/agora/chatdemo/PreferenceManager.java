@@ -263,4 +263,13 @@ public class PreferenceManager {
 		editor.remove(SHARED_KEY_CURRENTUSER_AVATAR);
 		editor.apply();
 	}
+
+	public void putString(String key, String value) {
+		editor.putString(key, value);
+		editor.commit();
+	}
+
+	public String getString(String key) {
+		return mSharedPreferences.getString(key, "");
+	}
 }

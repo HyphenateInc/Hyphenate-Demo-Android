@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.ContextMenu;
@@ -49,6 +50,8 @@ import io.agora.chatdemo.ui.widget.chatrow.ChatRowCall;
 import io.agora.chatdemo.user.model.UserEntity;
 import io.agora.easeui.EaseConstant;
 import io.agora.easeui.utils.EaseCommonUtils;
+import io.agora.easeui.utils.EaseCompat;
+import io.agora.easeui.utils.EaseFileUtils;
 import io.agora.easeui.utils.Utils;
 import io.agora.easeui.widget.EaseChatExtendMenu;
 import io.agora.easeui.widget.EaseMessageListView;
@@ -62,6 +65,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.agora.util.VersionUtils;
 
 import static io.agora.easeui.EaseConstant.CHATTYPE_CHATROOM;
 import static io.agora.easeui.EaseConstant.CHATTYPE_GROUP;
@@ -471,6 +475,11 @@ public class ChatActivity extends BaseActivity {
         sendMessage(message);
     }
 
+    protected void sendImageMessage(Uri imagePath) {
+        ChatMessage message = ChatMessage.createImageSendMessage(imagePath, false, toChatUsername);
+        sendMessage(message);
+    }
+
     protected void sendLocationMessage(double latitude, double longitude, String locationAddress) {
         ChatMessage message = ChatMessage.createLocationSendMessage(latitude, longitude, locationAddress, toChatUsername);
         sendMessage(message);
@@ -482,6 +491,11 @@ public class ChatActivity extends BaseActivity {
     }
 
     protected void sendFileMessage(String filePath) {
+        ChatMessage message = ChatMessage.createFileSendMessage(filePath, toChatUsername);
+        sendMessage(message);
+    }
+
+    protected void sendFileMessage(Uri filePath) {
         ChatMessage message = ChatMessage.createFileSendMessage(filePath, toChatUsername);
         sendMessage(message);
     }
@@ -592,7 +606,7 @@ public class ChatActivity extends BaseActivity {
                 ChatClient.getInstance().getCurrentUser() + System.currentTimeMillis() + ".jpg");
         mCameraFile.getParentFile().mkdirs();
         startActivityForResult(
-                new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mCameraFile)),
+                new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, EaseCompat.getUriForFile(this, mCameraFile)),
                 REQUEST_CODE_CAMERA);
     }
 
@@ -600,29 +614,27 @@ public class ChatActivity extends BaseActivity {
      * select local image
      */
     protected void selectPicFromLocal() {
-        Intent intent;
-        if (Build.VERSION.SDK_INT < 19) {
-            intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("image/*");
-        } else {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        }
-        startActivityForResult(intent, REQUEST_CODE_LOCAL);
+        EaseCompat.openImage(this, REQUEST_CODE_LOCAL);
     }
 
     /**
      * select a file
      */
     protected void selectFileFromLocal() {
-        Intent intent = null;
-        if (Build.VERSION.SDK_INT < 19) {
-            intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("*/*");
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-        } else {
-            //after version 19, this api is not available, demo here simply handle into the gallery to select the picture
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent intent = new Intent();
+        if(VersionUtils.isTargetQ(this)) {
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+        }else {
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+            }else {
+                intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+            }
         }
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+
         startActivityForResult(intent, REQUEST_CODE_SELECT_FILE);
     }
 
@@ -643,16 +655,9 @@ public class ChatActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_CAMERA) { // capture new image
-                if (mCameraFile != null && mCameraFile.exists()) {
-                    sendImageMessage(mCameraFile.getAbsolutePath());
-                }
+                onActivityResultForCamera(data);
             } else if (requestCode == REQUEST_CODE_LOCAL) { // send local image
-                if (data != null) {
-                    Uri selectedImage = data.getData();
-                    if (selectedImage != null) {
-                        sendPicByUri(selectedImage);
-                    }
-                }
+                onActivityResultForLocalPhotos(data);
             } else if (requestCode == REQUEST_CODE_MAP) { // location
                 final Place place = PlacePicker.getPlace(data, this);
                 double latitude = place.getLatLng().latitude;
@@ -665,11 +670,42 @@ public class ChatActivity extends BaseActivity {
                     Toast.makeText(this, R.string.unable_to_get_location, Toast.LENGTH_SHORT).show();
                 }
             } else if (requestCode == REQUEST_CODE_SELECT_FILE) { //send the file
-                if (data != null) {
-                    Uri uri = data.getData();
-                    if (uri != null) {
-                        sendFileByUri(uri);
-                    }
+                onActivityResultForLocalFiles(data);
+            }
+        }
+    }
+
+    protected void onActivityResultForCamera(Intent data) {
+        if (mCameraFile != null && mCameraFile.exists()) {
+            sendImageMessage(mCameraFile.getAbsolutePath());
+        }
+    }
+
+    protected void onActivityResultForLocalPhotos(@Nullable Intent data) {
+        if (data != null) {
+            Uri selectedImage = data.getData();
+            if (selectedImage != null) {
+                String filePath = EaseFileUtils.getFilePath(this, selectedImage);
+                if(!TextUtils.isEmpty(filePath) && new File(filePath).exists()) {
+                    sendImageMessage(Uri.parse(filePath));
+                }else {
+                    EaseFileUtils.saveUriPermission(this, selectedImage, data);
+                    sendImageMessage(selectedImage);
+                }
+            }
+        }
+    }
+
+    protected void onActivityResultForLocalFiles(@Nullable Intent data) {
+        if (data != null) {
+            Uri uri = data.getData();
+            if (uri != null) {
+                String filePath = EaseFileUtils.getFilePath(this, uri);
+                if(!TextUtils.isEmpty(filePath) && new File(filePath).exists()) {
+                    sendFileMessage(Uri.parse(filePath));
+                }else {
+                    EaseFileUtils.saveUriPermission(this, uri, data);
+                    sendFileMessage(uri);
                 }
             }
         }
