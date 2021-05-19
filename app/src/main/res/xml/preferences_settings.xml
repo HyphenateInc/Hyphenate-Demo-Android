@@ -75,8 +75,8 @@
                 android:title="@string/em_pref_blocked_users">
                 <intent
                     android:action="android.intent.action.MAIN"
-                    android:targetClass="com.hyphenate.chatuidemo.settings.BlackListActivity"
-                    android:targetPackage="com.hyphenate.chatuidemo"/>
+                    android:targetClass="io.agora.chatdemo.settings.BlackListActivity"
+                    android:targetPackage="io.agora.chatdemo"/>
             </PreferenceScreen>
         </PreferenceScreen>
     </PreferenceCategory>
@@ -89,8 +89,8 @@
             android:title="Account">
             <intent
                 android:action="android.intent.action.MAIN"
-                android:targetClass="com.hyphenate.chatuidemo.settings.AccountActivity"
-                android:targetPackage="com.hyphenate.chatuidemo"/>
+                android:targetClass="io.agora.chatdemo.settings.AccountActivity"
+                android:targetPackage="io.agora.chatdemo"/>
         </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

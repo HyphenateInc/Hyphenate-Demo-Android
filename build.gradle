@@ -27,6 +27,24 @@ allprojects {
     }
 }
 
+ext{
+//    PUBLISH_GROUP_ID = 'com.hyphenate'
+//    PUBLISH_ARTIFACT_ID = 'ease-im-kit'
+//    PUBLISH_VERSION = '1.0.0'
+    if(!project.hasProperty('isAarRelease')){
+        isAarRelease = false;
+    }
+    if(!project.hasProperty('isLite')){
+        isLite = false;
+    }
+    if(!project.hasProperty('sdkVersion')){
+        sdkVersion = '3.2.3'
+    }
+    if(!project.hasProperty('isTravis')) {
+        isTravis = false
+    }
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

@@ -11,7 +11,7 @@
         style="@style/ToolbarNormalTheme"
         />
 
-    <com.hyphenate.easeui.widget.RecyclerSwipeView
+    <io.agora.easeui.widget.RecyclerSwipeView
         android:id="@+id/recycler_members"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

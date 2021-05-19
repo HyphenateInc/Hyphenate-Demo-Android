@@ -25,23 +25,55 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
     defaultConfig {
-        applicationId "com.hyphenate.chatuidemo"
+        applicationId "io.agora.chatdemo"
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 3303
         versionName '3.2.12'
         multiDexEnabled true
     }
+
+    //加载资源
+    Properties properties = new Properties()
+    InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream() ;
+    properties.load( inputStream )
+
+    signingConfigs {
+        debug {
+            storeFile file(properties.getProperty('DEBUG_STORE_FILE_PATH', './keystore/sdkdemo.jks'))
+            storePassword properties.getProperty('DEBUG_STORE_PASSWORD', '123456')
+            keyAlias = properties.getProperty('DEBUG_KEY_ALIAS', 'easemob')
+            keyPassword properties.getProperty('DEBUG_KEY_PASSWORD', '123456')
+        }
+        release {
+            storeFile file(properties.getProperty('DEBUG_STORE_FILE_PATH', './keystore/sdkdemo.jks'))
+            storePassword properties.getProperty('DEBUG_STORE_PASSWORD', '123456')
+            keyAlias = properties.getProperty('DEBUG_KEY_ALIAS', 'easemob')
+            keyPassword properties.getProperty('DEBUG_KEY_PASSWORD', '123456')
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
+
     sourceSets {
         main {
-            jniLibs.srcDirs = ['libs']
+            //jniLibs.srcDirs = ['src/main/jniLibs']
+            jni.srcDirs = []
         }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     //use legacy for android 6.0，SDK3.6.8后移除
@@ -72,8 +104,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:11.4.0'
     implementation 'com.parse:parse-android:1.13.1'
 
-//    implementation project(path: ':hyphenatechatsdk')
-    implementation 'io.hyphenate:hyphenate-chat:3.8.1'
+    //implementation project(path: ':hyphenatechatsdk')
+    //implementation 'io.hyphenate:hyphenate-chat:3.8.1'
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }

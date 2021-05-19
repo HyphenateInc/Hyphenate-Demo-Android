@@ -11,7 +11,7 @@
         style="@style/ToolbarNormalTheme"
         />
 
-    <com.hyphenate.easeui.widget.EaseExpandGridView
+    <io.agora.easeui.widget.EaseExpandGridView
         android:id="@+id/grid_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

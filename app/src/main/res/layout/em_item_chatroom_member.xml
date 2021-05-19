@@ -13,7 +13,7 @@
         android:background="?android:attr/selectableItemBackground"
         >
 
-        <com.hyphenate.easeui.widget.EaseImageView
+        <io.agora.easeui.widget.EaseImageView
             android:id="@+id/img_avatar"
             android:layout_width="@dimen/apply_avatar_size"
             android:layout_height="@dimen/apply_avatar_size"

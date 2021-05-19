@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hyphenate.chatuidemo"
+    package="io.agora.chatdemo"
     >
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
@@ -67,18 +67,18 @@
             android:windowSoftInputMode="adjustResize|stateHidden"/>
 
         <activity
-            android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
+            android:name="io.agora.easeui.ui.EaseShowNormalFileActivity"
             android:screenOrientation="portrait"
             />
         <activity
-            android:name="com.hyphenate.easeui.ui.EaseShowImageActivity"
+            android:name="io.agora.easeui.ui.EaseShowImageActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.hyphenate.easeui.ui.EaseShowVideoActivity"
+            android:name="io.agora.easeui.ui.EaseShowVideoActivity"
             android:screenOrientation="portrait"
             />
         <activity
-            android:name="com.hyphenate.easeui.ui.EaseMapActivity"
+            android:name="io.agora.easeui.ui.EaseMapActivity"
             android:screenOrientation="portrait"
             />
         <activity android:name=".group.GroupListActivity"/>
@@ -150,15 +150,15 @@
 
         <!-- SDK service -->
         <service
-            android:name="com.hyphenate.chat.EMChatService"
+            android:name="io.agora.chat.EMChatService"
             android:exported="true"/>
-        <service android:name="com.hyphenate.chat.EMJobService"
+        <service android:name="io.agora.chat.EMJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"
             />
 
         <!-- SDK receiver -->
-        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
+        <receiver android:name="io.agora.chat.EMMonitorReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED"/>
 

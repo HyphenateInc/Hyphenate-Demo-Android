@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 >
-                <com.hyphenate.easeui.widget.EaseImageView
+                <io.agora.easeui.widget.EaseImageView
                     android:id="@+id/img_account_avatar"
                     android:layout_width="128dp"
                     android:layout_height="128dp"

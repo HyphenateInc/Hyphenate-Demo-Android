@@ -14,7 +14,7 @@
       android:orientation="vertical"
       android:layout_gravity="center"
       >
-    <com.hyphenate.easeui.widget.EaseImageView
+    <io.agora.easeui.widget.EaseImageView
         android:id="@+id/img_contact_dialog_avatar"
         android:layout_width="@dimen/contact_dialog_avatar_size"
         android:layout_height="@dimen/contact_dialog_avatar_size"
