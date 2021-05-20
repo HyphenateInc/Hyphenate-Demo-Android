@@ -19,6 +19,7 @@ import io.agora.chatdemo.R;
 import io.agora.easeui.model.EaseImageCache;
 import io.agora.easeui.ui.EaseShowImageActivity;
 import io.agora.easeui.utils.EaseCommonUtils;
+import io.agora.easeui.utils.EaseFileUtils;
 import io.agora.easeui.utils.EaseImageUtils;
 import io.agora.util.DensityUtil;
 import java.io.File;
@@ -81,18 +82,15 @@ public class EaseChatRowImage extends EaseChatRowFile{
     @Override
     protected void onBubbleClick() {
         Intent intent = new Intent(context, EaseShowImageActivity.class);
-        File file = new File(imgBody.getLocalUrl());
 
+        Uri localUri = imgBody.getLocalUri();
         // if the file already exist on local device, then load it
-        if (file.exists()) {
-            Uri uri = Uri.fromFile(file);
-            intent.putExtra("uri", uri);
+        if (EaseFileUtils.isFileExistByUri(context, localUri)) {
+            intent.putExtra("uri", localUri);
         }
         // otherwise download it from the server
         else {
-            intent.putExtra("secret", imgBody.getSecret());
-            intent.putExtra("remotepath", imgBody.getRemoteUrl());
-            intent.putExtra("localUrl", imgBody.getLocalUrl());
+            intent.putExtra("messageId", message.getMsgId());
         }
 
         // send message read ack
@@ -113,60 +111,7 @@ public class EaseChatRowImage extends EaseChatRowFile{
      *
      */
     private void showImageView() {
-        imageView.setImageResource(R.drawable.ease_default_image);
-
-        String filePath = imgBody.getLocalUrl();
-        String thumbnailPath = EaseImageUtils.getThumbnailImagePath(filePath);
-        if(message.direct() == ChatMessage.Direct.RECEIVE) {
-            filePath = imgBody.thumbnailLocalPath();
-            thumbnailPath = filePath;
-        }
-
-        // first check if the thumbnail image already loaded into cache
-        Bitmap bitmap = EaseImageCache.getInstance().get(thumbnailPath);
-        if (bitmap != null) {
-            scaleImageView(bitmap, imageView);
-            // thumbnail image is already loaded, reuse the drawable
-            imageView.setImageBitmap(bitmap);
-        }
-        // otherwise load it from file path
-        else {
-            final String finalFilePath = filePath;
-            final String finalThumbnailPath = thumbnailPath;
-            new AsyncTask<Object, Void, Bitmap>() {
-
-                @Override
-                protected Bitmap doInBackground(Object... args) {
-                    File file = new File(finalThumbnailPath);
-                    if (file.exists()) {
-                        return EaseImageUtils.decodeScaleImage(finalThumbnailPath, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
-                    } else if (new File(finalFilePath).exists()) {
-                        return EaseImageUtils.decodeScaleImage(finalFilePath, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
-                    }
-                    return null;
-                }
-
-                protected void onPostExecute(Bitmap bmp) {
-                    if (bmp != null) {
-                        scaleImageView(bmp, imageView);
-                        // set bitmap to scaled image view
-                        imageView.setImageBitmap(bmp);
-                        EaseImageCache.getInstance().put(finalThumbnailPath, bmp);
-                    } else {
-                        if (message.status() == ChatMessage.Status.FAIL) {
-                            if (EaseCommonUtils.isNetWorkConnected(context)) {
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        ChatClient.getInstance().chatManager().downloadThumbnail(message);
-                                    }
-                                }).start();
-                            }
-                        }
-                    }
-                }
-            }.execute();
-        }
+        EaseImageUtils.showImage(context, imageView, message);
     }
 
     /**

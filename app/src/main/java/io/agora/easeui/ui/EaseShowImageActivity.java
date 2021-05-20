@@ -16,26 +16,23 @@ package io.agora.easeui.ui;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import io.agora.CallBack;
 import io.agora.chat.ChatClient;
+import io.agora.chat.ChatMessage;
+import io.agora.chat.ImageMessageBody;
 import io.agora.chatdemo.R;
-import io.agora.easeui.model.EaseImageCache;
-import io.agora.easeui.utils.EaseLoadLocalBigImgTask;
+import io.agora.easeui.utils.EaseFileUtils;
 import io.agora.easeui.widget.photoview.EasePhotoView;
 import io.agora.easeui.widget.photoview.PhotoViewAttacher;
 import io.agora.util.EMLog;
-import io.agora.util.ImageUtils;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * download and show original photoView
@@ -46,8 +43,6 @@ public class EaseShowImageActivity extends Activity {
 	private ProgressDialog pd;
 	private EasePhotoView photoView;
 	private int default_res;
-	private String localFilePath;
-	private Bitmap bitmap;
 	private boolean isDownloaded;
 	private ProgressBar loadLocalPb;
 
@@ -60,38 +55,16 @@ public class EaseShowImageActivity extends Activity {
 		loadLocalPb = (ProgressBar) findViewById(R.id.pb_load_local);
 		default_res = getIntent().getIntExtra("default_image", R.drawable.ease_default_image);
 		Uri uri = getIntent().getParcelableExtra("uri");
-		String remotepath = getIntent().getExtras().getString("remotepath");
-		localFilePath = getIntent().getExtras().getString("localUrl");
-		String secret = getIntent().getExtras().getString("secret");
-		EMLog.d(TAG, "show big photoView uri:" + uri + " remotepath:" + remotepath);
+		String msgId = getIntent().getExtras().getString("messageId");
+		EMLog.d(TAG, "show big photoView uri:" + uri + " messageId:" + msgId);
 
 		//show the photoView if it exist in local path
-		if (uri != null && new File(uri.getPath()).exists()) {
+		if (EaseFileUtils.isFileExistByUri(this, uri)) {
 			EMLog.d(TAG, "showbigimage file exists. directly show it");
-			DisplayMetrics metrics = new DisplayMetrics();
-			getWindowManager().getDefaultDisplay().getMetrics(metrics);
-			// int screenWidth = metrics.widthPixels;
-			// int screenHeight =metrics.heightPixels;
-			bitmap = EaseImageCache.getInstance().get(uri.getPath());
-			if (bitmap == null) {
-				EaseLoadLocalBigImgTask task = new EaseLoadLocalBigImgTask(this, uri.getPath(),
-						photoView, loadLocalPb, ImageUtils.SCALE_IMAGE_WIDTH,
-						ImageUtils.SCALE_IMAGE_HEIGHT);
-				if (android.os.Build.VERSION.SDK_INT > 10) {
-					task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-				} else {
-					task.execute();
-				}
-			} else {
-				photoView.setImageBitmap(bitmap);
-			}
-		} else if (remotepath != null) { //download photoView from server
+			Glide.with(this).load(uri).into(photoView);
+		} else if (msgId != null) { //download photoView from server
 			EMLog.d(TAG, "download remote photoView");
-			Map<String, String> maps = new HashMap<String, String>();
-			if (!TextUtils.isEmpty(secret)) {
-				maps.put("share-secret", secret);
-			}
-			downloadImage(remotepath, maps);
+			downloadImage(msgId);
 		} else {
 			photoView.setImageResource(default_res);
 		}
@@ -106,44 +79,37 @@ public class EaseShowImageActivity extends Activity {
 	/**
 	 * download photoView
 	 * 
-	 * @param remoteFilePath
+	 * @param msgId
 	 */
 	@SuppressLint("NewApi")
-	private void downloadImage(final String remoteFilePath, final Map<String, String> headers) {
+	private void downloadImage(final String msgId) {
 		String str1 = getResources().getString(R.string.Download_the_pictures);
 		pd = new ProgressDialog(this);
 		pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		pd.setCanceledOnTouchOutside(false);
 		pd.setMessage(str1);
 		pd.show();
-		File temp = new File(localFilePath);
-		final String tempPath = temp.getParent() + "/temp_" + temp.getName();
+		final ChatMessage msg = ChatClient.getInstance().chatManager().getMessage(msgId);
+		if(msg == null) {
+		    EMLog.e(TAG, "msgId: "+msgId +" not find local message!");
+		    return;
+		}
 		final CallBack callback = new CallBack() {
 			public void onSuccess() {
 
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-                        new File(tempPath).renameTo(new File(localFilePath));
-
-                        DisplayMetrics metrics = new DisplayMetrics();
-						getWindowManager().getDefaultDisplay().getMetrics(metrics);
-						int screenWidth = metrics.widthPixels;
-						int screenHeight = metrics.heightPixels;
-
-						bitmap = ImageUtils.decodeScaleImage(localFilePath, screenWidth, screenHeight);
-						if (bitmap == null) {
-							photoView.setImageResource(default_res);
-						} else {
-							photoView.setImageBitmap(bitmap);
-							EaseImageCache.getInstance().put(localFilePath, bitmap);
+						if (!isFinishing() && !isDestroyed()) {
+							if (pd != null) {
+								pd.dismiss();
+							}
 							isDownloaded = true;
-						}
-						if (EaseShowImageActivity.this.isFinishing() || EaseShowImageActivity.this.isDestroyed()) {
-						    return;
-						}
-						if (pd != null) {
-							pd.dismiss();
+							Uri localUrlUri = ((ImageMessageBody) msg.getBody()).getLocalUri();
+							Glide.with(EaseShowImageActivity.this)
+									.load(localUrlUri)
+									.apply(new RequestOptions().error(default_res))
+									.into(photoView);
 						}
 					}
 				});
@@ -151,10 +117,6 @@ public class EaseShowImageActivity extends Activity {
 
 			public void onError(int error, String msg) {
 				EMLog.e(TAG, "offline file transfer error:" + msg);
-				File file = new File(tempPath);
-				if (file.exists()&&file.isFile()) {
-					file.delete();
-				}
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -162,7 +124,9 @@ public class EaseShowImageActivity extends Activity {
 						    return;
 						}
                         photoView.setImageResource(default_res);
-                        pd.dismiss();
+						if (pd != null) {
+							pd.dismiss();
+						}
 					}
 				});
 			}
@@ -182,8 +146,9 @@ public class EaseShowImageActivity extends Activity {
 			}
 		};
 
-	    ChatClient.getInstance().chatManager().downloadFile(remoteFilePath, tempPath, headers, callback);
+		msg.setMessageStatusCallback(callback);
 
+		ChatClient.getInstance().chatManager().downloadAttachment(msg);
 	}
 
 	@Override

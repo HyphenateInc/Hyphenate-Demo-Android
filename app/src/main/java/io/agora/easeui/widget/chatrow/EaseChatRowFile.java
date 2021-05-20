@@ -3,6 +3,7 @@ package io.agora.easeui.widget.chatrow;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
@@ -13,6 +14,8 @@ import io.agora.chat.ChatMessage.ChatType;
 import io.agora.chat.NormalFileMessageBody;
 import io.agora.chatdemo.R;
 import io.agora.easeui.ui.EaseShowNormalFileActivity;
+import io.agora.easeui.utils.EaseCompat;
+import io.agora.easeui.utils.EaseFileUtils;
 import io.agora.exceptions.ChatException;
 import io.agora.util.FileUtils;
 import io.agora.util.TextFormater;
@@ -122,14 +125,13 @@ public class EaseChatRowFile extends EaseChatRow {
 
     @Override
     protected void onBubbleClick() {
-        String filePath = fileMessageBody.getLocalUrl();
-        File file = new File(filePath);
-        if (file != null && file.exists()) {
+        Uri localUri = fileMessageBody.getLocalUri();
+        if (EaseFileUtils.isFileExistByUri(context, localUri)) {
             // open files if it exist
-            FileUtils.openFile(file, (Activity) context);
+            EaseCompat.openFile(context, localUri);
         } else {
             // download the file
-            context.startActivity(new Intent(context, EaseShowNormalFileActivity.class).putExtra("msgbody", message.getBody()));
+            context.startActivity(new Intent(context, EaseShowNormalFileActivity.class).putExtra("msg", message));
         }
         if (message.direct() == ChatMessage.Direct.RECEIVE && !message.isAcked() && message.getChatType() == ChatType.Chat) {
             try {

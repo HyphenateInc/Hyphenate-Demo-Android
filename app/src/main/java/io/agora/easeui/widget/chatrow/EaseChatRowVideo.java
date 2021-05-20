@@ -101,12 +101,9 @@ public class EaseChatRowVideo extends EaseChatRowFile {
 	
 	@Override
 	protected void onBubbleClick() {
-	    VideoMessageBody videoBody = (VideoMessageBody) message.getBody();
         EMLog.d(TAG, "video view is on click");
         Intent intent = new Intent(context, EaseShowVideoActivity.class);
-        intent.putExtra("localpath", videoBody.getLocalUrl());
-        intent.putExtra("secret", videoBody.getSecret());
-        intent.putExtra("remotepath", videoBody.getRemoteUrl());
+        intent.putExtra("msg", message);
         if (message != null && message.direct() == ChatMessage.Direct.RECEIVE && !message.isAcked()
                 && message.getChatType() == ChatType.Chat) {
             try {
