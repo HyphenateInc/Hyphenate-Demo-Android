@@ -1,25 +1,6 @@
-buildscript {
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
-
-    repositories {
-        mavenCentral()
-        maven { url 'https://maven.fabric.io/public' }
-    }
-}
-
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
-
-
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-    maven { url 'https://maven.fabric.io/public' }
-}
-
+// Apply the Crashlytics Gradle plugin
+//apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 29
@@ -104,11 +85,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:11.4.0'
     implementation 'com.parse:parse-android:1.13.1'
 
-    //implementation project(path: ':hyphenatechatsdk')
+    implementation project(path: ':hyphenatechatsdk')
     //implementation 'io.hyphenate:hyphenate-chat:3.8.1'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
-    }
     //migration for 'android-apt'
     implementation 'com.google.dagger:dagger:2.0'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.0'

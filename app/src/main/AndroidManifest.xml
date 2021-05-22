@@ -172,7 +172,8 @@
             android:windowSoftInputMode="adjustPan|stateHidden"/>
 
         <!-- FCM required start -->
-        <service android:name=".fcm.EMFCMMSGService">
+        <service android:name=".fcm.EMFCMMSGService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -184,10 +185,15 @@
             </intent-filter>
         </service>
         <!-- FCM required end -->
+        <!-- [START fcm_default_channel] -->
+<!--        <meta-data-->
+<!--            android:name="com.google.firebase.messaging.default_notification_channel_id"-->
+<!--            android:value="@string/default_notification_channel_id" />-->
+        <!-- [END fcm_default_channel] -->
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="33bb2bc04d2ed7f91da02025c362279e3406ed81" />
+<!--        <meta-data-->
+<!--            android:name="io.fabric.ApiKey"-->
+<!--            android:value="33bb2bc04d2ed7f91da02025c362279e3406ed81" />-->
 
         <!-- set your google map api key -->
         <meta-data

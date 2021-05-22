@@ -28,6 +28,7 @@ import io.agora.chatdemo.user.model.UserProfileManager;
 import io.agora.easeui.EaseUI;
 import io.agora.easeui.model.EaseUser;
 import io.agora.easeui.utils.EaseCommonUtils;
+import io.agora.push.PushConfig;
 import io.agora.util.EMLog;
 
 import java.util.ArrayList;
@@ -132,8 +133,17 @@ public class DemoHelper {
         options.setAutoAcceptGroupInvitation(preferences.getBoolean(
                 mContext.getString(R.string.em_pref_key_accept_group_invite_automatically), false));
 
+        // default use FCM
+        options.setUseFCM(true);
         //set fcm project number
-        options.setFCMNumber("921300338324");
+        PushConfig.Builder builder = new PushConfig.Builder(mContext);
+        builder.enableFCM("142290967082");
+        options.setPushConfig(builder.build());
+
+        //custom settings
+        //options.setRestServer("a1-hsb.easemob.com");
+        //options.setIMServer("106.75.100.247");
+        //options.setImPort(6717);
 
         return options;
     }

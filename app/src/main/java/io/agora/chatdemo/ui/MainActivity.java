@@ -44,8 +44,6 @@ import io.agora.chatdemo.user.ContactsChangeListener;
 import io.agora.util.EMLog;
 import java.util.ArrayList;
 import java.util.List;
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by wei on 2016/9/27.
@@ -70,9 +68,6 @@ public class MainActivity extends BaseActivity {
         //PreferenceManager.setDefaultValues(this, R.xml.preferences_default, false);
 
         super.onCreate(savedInstanceState);
-
-        // Fabric
-        Fabric.with(this, new Crashlytics());
 
         setContentView(R.layout.em_activity_main);
 
