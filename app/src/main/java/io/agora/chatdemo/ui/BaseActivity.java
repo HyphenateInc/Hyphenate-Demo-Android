@@ -7,6 +7,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import io.agora.chatdemo.DemoHelper;
 import io.agora.chatdemo.R;
 
@@ -14,7 +16,7 @@ import io.agora.chatdemo.R;
  * Created by wei on 2016/9/27.
  */
 public class BaseActivity extends AppCompatActivity {
-
+    private FirebaseAnalytics mFirebaseAnalytics;
     private Toolbar mActionBarToolbar;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class BaseActivity extends AppCompatActivity {
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
         }
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     @Override public void setContentView(int layoutResID) {
