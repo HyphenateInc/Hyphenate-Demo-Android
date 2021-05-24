@@ -188,7 +188,7 @@
         <!-- set your google map api key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAzTPKEIuWRgCtcn6NJeHqOPXcbG6YWM-4"/>
+            android:value="AIzaSyBTHEmNXgCXuvbYCz5OfDxR6gZcIFvAvJA"/>
     </application>
 
 </manifest>
