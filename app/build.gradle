@@ -38,10 +38,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            resValue "string", "maps_api_key", (properties.getProperty("MAPS_API_KEY") ?: "")
             signingConfig signingConfigs.release
         }
 
         debug {
+            resValue "string", "maps_api_key", (properties.getProperty("MAPS_API_KEY") ?: "")
             signingConfig signingConfigs.debug
         }
     }
@@ -102,7 +104,7 @@ dependencies {
 
     // maps
     implementation 'com.google.android.gms:play-services-base:17.1.0'
-    implementation 'com.google.android.gms:play-services-places:17.0.0'
+    implementation 'com.google.android.libraries.places:places:2.4.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.parse:parse-android:1.13.1'
 

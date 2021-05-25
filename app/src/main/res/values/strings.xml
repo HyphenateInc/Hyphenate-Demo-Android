@@ -224,6 +224,9 @@
     <string name="be_removing">Be removing</string>
     <string name="removed_from_blacklist_fail">Removed fail</string>
 
+    <!-- map -->
+    <string name="pick_place">Please select a place</string>
+
     <!-- commons-->
     <string name="Logoff_notification">Logoff notification</string>
     <string name="connect_conflict">The same account was logged in other device</string>

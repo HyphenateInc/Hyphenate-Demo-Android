@@ -3,7 +3,6 @@ package io.agora.chatdemo.chat;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -23,11 +21,8 @@ import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+
 import io.agora.Error;
 import io.agora.MessageListener;
 import io.agora.ValueCallBack;
@@ -43,6 +38,7 @@ import io.agora.chatdemo.chatroom.ChatRoomDetailsActivity;
 import io.agora.chatdemo.group.AgoraGroupChangeListener;
 import io.agora.chatdemo.group.GroupDetailsActivity;
 import io.agora.chatdemo.ui.BaseActivity;
+import io.agora.chatdemo.ui.MapsCurrentPlaceActivity;
 import io.agora.chatdemo.ui.widget.ChatInputView;
 import io.agora.chatdemo.ui.widget.VoiceRecordDialog;
 import io.agora.chatdemo.ui.widget.VoiceRecordView;
@@ -573,16 +569,17 @@ public class ChatActivity extends BaseActivity {
     }
 
     protected void selectLoaction() {
-        try {
-            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-            Intent intent = intentBuilder.build(this);
-            // Start the Intent by requesting a result, identified by a request code.
-            startActivityForResult(intent, REQUEST_CODE_MAP);
-        } catch (GooglePlayServicesRepairableException e) {
-            GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), this, 0).show();
-        } catch (GooglePlayServicesNotAvailableException e) {
-            Toast.makeText(this, "Google Play Services is not available.", Toast.LENGTH_LONG).show();
-        }
+        MapsCurrentPlaceActivity.actionStart(this);
+//        try {
+//            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+//            Intent intent = intentBuilder.build(this);
+//            // Start the Intent by requesting a result, identified by a request code.
+//            startActivityForResult(intent, REQUEST_CODE_MAP);
+//        } catch (GooglePlayServicesRepairableException e) {
+//            GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), this, 0).show();
+//        } catch (GooglePlayServicesNotAvailableException e) {
+//            Toast.makeText(this, "Google Play Services is not available.", Toast.LENGTH_LONG).show();
+//        }
     }
 
     @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -593,16 +590,16 @@ public class ChatActivity extends BaseActivity {
             } else if (requestCode == REQUEST_CODE_LOCAL) { // send local image
                 onActivityResultForLocalPhotos(data);
             } else if (requestCode == REQUEST_CODE_MAP) { // location
-                final Place place = PlacePicker.getPlace(data, this);
-                double latitude = place.getLatLng().latitude;
-                double longitude = place.getLatLng().longitude;
-                String locationAddress = (String) place.getAddress();
-
-                if (locationAddress != null && !locationAddress.equals("")) {
-                    sendLocationMessage(latitude, longitude, locationAddress);
-                } else {
-                    Toast.makeText(this, R.string.unable_to_get_location, Toast.LENGTH_SHORT).show();
-                }
+//                final Place place = PlacePicker.getPlace(data, this);
+//                double latitude = place.getLatLng().latitude;
+//                double longitude = place.getLatLng().longitude;
+//                String locationAddress = (String) place.getAddress();
+//
+//                if (locationAddress != null && !locationAddress.equals("")) {
+//                    sendLocationMessage(latitude, longitude, locationAddress);
+//                } else {
+//                    Toast.makeText(this, R.string.unable_to_get_location, Toast.LENGTH_SHORT).show();
+//                }
             } else if (requestCode == REQUEST_CODE_SELECT_FILE) { //send the file
                 onActivityResultForLocalFiles(data);
             }
