@@ -97,13 +97,13 @@ public class ChatActivity extends BaseActivity {
     static final int ITEM_VIDEO_CALL = 6;
 
     protected int[] itemStrings = {
-            R.string.attach_take_pic, R.string.attach_picture, R.string.attach_location, R.string.attach_file
+            R.string.attach_take_pic, R.string.attach_picture, /*R.string.attach_location,*/ R.string.attach_file
     };
     protected int[] itemdrawables = {
-            R.drawable.ease_chat_takepic_selector, R.drawable.ease_chat_image_selector, R.drawable.ease_chat_location_selector,
+            R.drawable.ease_chat_takepic_selector, R.drawable.ease_chat_image_selector, /*R.drawable.ease_chat_location_selector,*/
             R.drawable.em_chat_file_selector
     };
-    protected int[] itemIds = { ITEM_TAKE_PICTURE, ITEM_PICTURE, ITEM_LOCATION, ITEM_FILE };
+    protected int[] itemIds = { ITEM_TAKE_PICTURE, ITEM_PICTURE, /*ITEM_LOCATION,*/ ITEM_FILE };
 
     protected File mCameraFile;
 
@@ -568,16 +568,6 @@ public class ChatActivity extends BaseActivity {
 
     protected void selectLocation() {
         MapsCurrentPlaceActivity.actionStartForResult(this, REQUEST_CODE_MAP);
-//        try {
-//            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-//            Intent intent = intentBuilder.build(this);
-//            // Start the Intent by requesting a result, identified by a request code.
-//            startActivityForResult(intent, REQUEST_CODE_MAP);
-//        } catch (GooglePlayServicesRepairableException e) {
-//            GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), this, 0).show();
-//        } catch (GooglePlayServicesNotAvailableException e) {
-//            Toast.makeText(this, "Google Play Services is not available.", Toast.LENGTH_LONG).show();
-//        }
     }
 
     @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
