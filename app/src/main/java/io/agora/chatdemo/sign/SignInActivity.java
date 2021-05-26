@@ -142,9 +142,6 @@ public class SignInActivity extends BaseActivity {
                     e.printStackTrace();
                 }
 
-                // get current user's info (this should be get from App's server or 3rd party service)
-                DemoHelper.getInstance().getUserManager().asyncFetchCurrentUserInfo();
-
                 mDialog.dismiss();
                 runOnUiThread(new Runnable() {
                     @Override public void run() {

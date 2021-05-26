@@ -87,32 +87,32 @@ public class AccountActivity extends BaseActivity {
     }
 
     @OnClick(R.id.layout_avatar_container) void setAvatar() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.account_title_upload_photo);
-        builder.setItems(new String[] {
-                getString(R.string.account_msg_take_photo),
-                getString(R.string.account_msg_local_upload)
-        }, new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                switch (which) {
-                    case 0:
-                        Toast.makeText(AccountActivity.this, "Not supported at this time",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                    case 1:
-                        Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
-                        pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                "image/*");
-                        startActivityForResult(pickIntent, REQUEST_CODE_PICK);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-        builder.create().show();
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle(R.string.account_title_upload_photo);
+//        builder.setItems(new String[] {
+//                getString(R.string.account_msg_take_photo),
+//                getString(R.string.account_msg_local_upload)
+//        }, new DialogInterface.OnClickListener() {
+//
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//                switch (which) {
+//                    case 0:
+//                        Toast.makeText(AccountActivity.this, "Not supported at this time",
+//                                Toast.LENGTH_SHORT).show();
+//                        break;
+//                    case 1:
+//                        Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
+//                        pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                                "image/*");
+//                        startActivityForResult(pickIntent, REQUEST_CODE_PICK);
+//                        break;
+//                    default:
+//                        break;
+//                }
+//            }
+//        });
+//        builder.create().show();
     }
 
     @OnClick(R.id.layout_nick_container) void setNick() {
@@ -313,9 +313,7 @@ public class AccountActivity extends BaseActivity {
         new Thread(new Runnable() {
 
             @Override public void run() {
-                boolean updatenick = DemoHelper.getInstance()
-                        .getUserManager()
-                        .updateCurrentUserNickName(nickName);
+                boolean updatenick = true;
                 if (AccountActivity.this.isFinishing()) {
                     return;
                 }
@@ -350,8 +348,7 @@ public class AccountActivity extends BaseActivity {
         new Thread(new Runnable() {
 
             @Override public void run() {
-                final String avatarUrl =
-                        DemoHelper.getInstance().getUserManager().uploadUserAvatar(data);
+                final String avatarUrl = "";
                 runOnUiThread(new Runnable() {
                     @Override public void run() {
                         dialog.dismiss();

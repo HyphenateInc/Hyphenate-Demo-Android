@@ -6,7 +6,6 @@ import io.agora.ValueCallBack;
 import io.agora.chat.ChatClient;
 import io.agora.chatdemo.DemoHelper;
 import io.agora.chatdemo.PreferenceManager;
-import io.agora.chatdemo.user.model.parse.ParseManager;
 import io.agora.exceptions.ChatException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +31,6 @@ public class UserProfileManager {
             return;
         }
         mContext = context;
-        ParseManager.getInstance().onInit(context);
         inited = true;
     }
 
@@ -100,31 +98,11 @@ public class UserProfileManager {
                         UserEntity user = new UserEntity(userId);
                         entityList.add(user);
                     }
+                    setContactList(entityList);
+                    if(callback != null) {
+                        callback.onSuccess();
+                    }
 
-                    getContactsInfoFromServer(hyphenateIdList, new ValueCallBack<List<UserEntity>>() {
-
-                        @Override public void onSuccess(List<UserEntity> uList) {
-                            // save the contact list to cache
-                            if (uList.size() < entityList.size()) {
-                                setContactList(entityList);
-                                if (callback != null) {
-                                    callback.onError(-1, "sync contact info error");
-                                }
-                            } else {
-                                setContactList(uList);
-                                if (callback != null) {
-                                    callback.onSuccess();
-                                }
-                            }
-                        }
-
-                        @Override public void onError(int error, String errorMsg) {
-                            setContactList(entityList);
-                            if (callback != null) {
-                                callback.onError(error, errorMsg);
-                            }
-                        }
-                    });
                 } catch (ChatException e) {
                     e.printStackTrace();
                     if (callback != null) {
@@ -133,28 +111,6 @@ public class UserProfileManager {
                 }
             }
         }).start();
-    }
-
-    private void getContactsInfoFromServer(List<String> hyphenateIdList, final ValueCallBack<List<UserEntity>> callback) {
-        ParseManager.getInstance().getContactsInfo(hyphenateIdList, new ValueCallBack<List<UserEntity>>() {
-
-            @Override public void onSuccess(List<UserEntity> value) {
-                // in case that logout already before server returns,we should
-                // return immediately
-                if (!ChatClient.getInstance().isLoggedInBefore()) {
-                    return;
-                }
-                if (callback != null) {
-                    callback.onSuccess(value);
-                }
-            }
-
-            @Override public void onError(int error, String errorMsg) {
-                if (callback != null) {
-                    callback.onError(error, errorMsg);
-                }
-            }
-        });
     }
 
     public synchronized void reset() {
@@ -177,46 +133,6 @@ public class UserProfileManager {
             currentUser.setAvatar(getCurrentUserAvatar());
         }
         return currentUser;
-    }
-
-    /**
-     * async fetch user info from server
-     */
-    public void asyncFetchCurrentUserInfo() {
-        ParseManager.getInstance().asyncGetCurrentUserInfo(new ValueCallBack<UserEntity>() {
-
-            @Override public void onSuccess(UserEntity value) {
-                if (value != null) {
-                    setCurrentUserNick(value.getNickname());
-                    setCurrentUserAvatar(value.getAvatar());
-                }
-            }
-
-            @Override public void onError(int error, String errorMsg) {
-
-            }
-        });
-    }
-
-    public boolean updateCurrentUserNickName(final String nickname) {
-        boolean isSuccess = ParseManager.getInstance().updateParseNickName(nickname);
-        if (isSuccess) {
-            setCurrentUserNick(nickname);
-        }
-        return isSuccess;
-    }
-
-    public String uploadUserAvatar(byte[] data) {
-        String avatarUrl = ParseManager.getInstance().uploadParseAvatar(data);
-        if (avatarUrl != null) {
-            setCurrentUserAvatar(avatarUrl);
-        }
-        return avatarUrl;
-    }
-
-
-    public void asyncGetUserInfo(final String username, final ValueCallBack<UserEntity> callback) {
-        ParseManager.getInstance().asyncGetUserInfo(username, callback);
     }
 
     private void setCurrentUserNick(String nickname) {
