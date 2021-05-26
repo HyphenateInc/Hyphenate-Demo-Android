@@ -167,12 +167,12 @@ public class ChatActivity extends BaseActivity {
         for (int i = 0; i < itemStrings.length; i++) {
             mInputView.registerExtendMenuItem(itemStrings[i], itemdrawables[i], itemIds[i], extendMenuItemClickListener);
         }
-        if (chatType == CHATTYPE_SINGLE) {
-            mInputView.registerExtendMenuItem(R.string.attach_voice_call, R.drawable.em_chat_voice_call_selector, ITEM_VOICE_CALL,
-                    extendMenuItemClickListener);
-            mInputView.registerExtendMenuItem(R.string.attach_video_call, R.drawable.em_chat_video_call_selector, ITEM_VIDEO_CALL,
-                    extendMenuItemClickListener);
-        }
+//        if (chatType == CHATTYPE_SINGLE) {
+//            mInputView.registerExtendMenuItem(R.string.attach_voice_call, R.drawable.em_chat_voice_call_selector, ITEM_VOICE_CALL,
+//                    extendMenuItemClickListener);
+//            mInputView.registerExtendMenuItem(R.string.attach_video_call, R.drawable.em_chat_video_call_selector, ITEM_VIDEO_CALL,
+//                    extendMenuItemClickListener);
+//        }
         mInputView.init();
         mInputView.setViewEventListener(new ChatInputView.ChatInputViewEventListener() {
             @Override public void onSendMessage(CharSequence content) {

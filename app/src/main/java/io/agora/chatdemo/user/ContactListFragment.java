@@ -152,8 +152,11 @@ public class ContactListFragment extends Fragment {
      */
     private void itemClick(final UserEntity user) {
 
+        if(dialogFragment != null && dialogFragment.isVisible()) {
+            dialogFragment.dismiss();
+        }
         dialogFragment = new ShowDialogFragment();
-        dialogFragment.show(getFragmentManager(), "dialog");
+        dialogFragment.show(getChildFragmentManager(), "dialog");
 
         dialogFragment.setOnShowDialogClickListener(new ShowDialogFragment.OnShowDialogClickListener() {
             @Override public String getUserId() {
