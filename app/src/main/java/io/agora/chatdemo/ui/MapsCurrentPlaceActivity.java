@@ -1,5 +1,6 @@
 package io.agora.chatdemo.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -79,9 +81,9 @@ public class MapsCurrentPlaceActivity extends AppCompatActivity
     private List[] likelyPlaceAttributions;
     private LatLng[] likelyPlaceLatLngs;
 
-    public static void actionStart(Context context) {
+    public static void actionStartForResult(Activity context, int requestCode) {
         Intent intent = new Intent(context, MapsCurrentPlaceActivity.class);
-        context.startActivity(intent);
+        context.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -97,6 +99,21 @@ public class MapsCurrentPlaceActivity extends AppCompatActivity
         // Retrieve the content view that renders the map.
         setContentView(R.layout.em_activity_maps);
 
+        findViewById(R.id.btn_confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(lastKnownLocation != null) {
+                    Intent intent = getIntent();
+                    intent.putExtra("lat", lastKnownLocation.getLatitude());
+                    intent.putExtra("lon", lastKnownLocation.getLongitude());
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }else {
+                    Toast.makeText(MapsCurrentPlaceActivity.this, "Not get the location info", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         // Construct a PlacesClient
         Places.initialize(getApplicationContext(), getString(R.string.maps_api_key));
         placesClient = Places.createClient(this);
@@ -106,7 +123,7 @@ public class MapsCurrentPlaceActivity extends AppCompatActivity
 
         // Build the map.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.fragment_map);
         mapFragment.getMapAsync(this);
     }
 

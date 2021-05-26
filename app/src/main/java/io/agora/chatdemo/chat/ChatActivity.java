@@ -21,8 +21,6 @@ import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.libraries.places.widget.AutocompleteActivity;
-
 import io.agora.Error;
 import io.agora.MessageListener;
 import io.agora.ValueCallBack;
@@ -568,8 +566,8 @@ public class ChatActivity extends BaseActivity {
         startActivityForResult(intent, REQUEST_CODE_SELECT_FILE);
     }
 
-    protected void selectLoaction() {
-        MapsCurrentPlaceActivity.actionStart(this);
+    protected void selectLocation() {
+        MapsCurrentPlaceActivity.actionStartForResult(this, REQUEST_CODE_MAP);
 //        try {
 //            PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
 //            Intent intent = intentBuilder.build(this);
@@ -590,19 +588,25 @@ public class ChatActivity extends BaseActivity {
             } else if (requestCode == REQUEST_CODE_LOCAL) { // send local image
                 onActivityResultForLocalPhotos(data);
             } else if (requestCode == REQUEST_CODE_MAP) { // location
-//                final Place place = PlacePicker.getPlace(data, this);
-//                double latitude = place.getLatLng().latitude;
-//                double longitude = place.getLatLng().longitude;
-//                String locationAddress = (String) place.getAddress();
-//
-//                if (locationAddress != null && !locationAddress.equals("")) {
-//                    sendLocationMessage(latitude, longitude, locationAddress);
-//                } else {
-//                    Toast.makeText(this, R.string.unable_to_get_location, Toast.LENGTH_SHORT).show();
-//                }
+                onActivityResultForLocation(data);
             } else if (requestCode == REQUEST_CODE_SELECT_FILE) { //send the file
                 onActivityResultForLocalFiles(data);
             }
+        }
+    }
+
+    private void onActivityResultForLocation(Intent data) {
+        double latitude = data.getDoubleExtra("lat", 0);
+        double longitude = data.getDoubleExtra("lon", 0);
+        String locationAddress = data.getStringExtra("address");
+        if(TextUtils.isEmpty(locationAddress)) {
+            locationAddress = "sample location";
+        }
+
+        if (!TextUtils.isEmpty(locationAddress) && latitude != 0 && longitude != 0) {
+            sendLocationMessage(latitude, longitude, locationAddress);
+        } else {
+            Toast.makeText(this, R.string.unable_to_get_location, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -656,7 +660,7 @@ public class ChatActivity extends BaseActivity {
                     selectPicFromLocal();
                     break;
                 case ITEM_LOCATION:
-                    selectLoaction();
+                    selectLocation();
                     break;
                 //case ITEM_VIDEO:
                 //    Intent intent = new Intent(chatType.this, ImageGridActivity.class);
