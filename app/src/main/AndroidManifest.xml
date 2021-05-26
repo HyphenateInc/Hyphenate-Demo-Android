@@ -54,8 +54,7 @@
             android:exported="true"/>
         <service android:name="io.agora.chat.EMJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"
-            />
+            android:exported="true" />
 
         <!-- SDK receiver -->
         <receiver android:name="io.agora.chat.EMMonitorReceiver">
@@ -112,48 +111,55 @@
             android:name=".sign.SignUpActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
-
+        <!--Show normal file activity-->
         <activity
             android:name="io.agora.easeui.ui.EaseShowNormalFileActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
+        <!--Show big image activity-->
         <activity
             android:name="io.agora.easeui.ui.EaseShowImageActivity"
             android:screenOrientation="portrait"/>
+        <!--Show video activity-->
         <activity
             android:name="io.agora.easeui.ui.EaseShowVideoActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
+        <!--Show location activity-->
         <activity
             android:name="io.agora.easeui.ui.EaseMapActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
+        <!--Group list activity-->
         <activity android:name=".group.GroupListActivity"/>
+        <!--Group detail activity-->
         <activity android:name=".group.GroupDetailsActivity"/>
+        <!--Invite members activity-->
         <activity android:name=".group.InviteMembersActivity"/>
         <activity android:name=".group.MembersListActivity"/>
+        <!--Group members list activity-->
         <activity android:name=".group.GroupMembersListActivity"/>
+        <!--Group admin list activity-->
         <activity android:name=".group.GroupAdminActivity"/>
+        <!--Create group activity-->
         <activity android:name=".group.NewGroupActivity"/>
+        <!--Public groups list activity-->
         <activity android:name=".group.PublicGroupsListActivity"/>
+        <!--Group transfer activity-->
         <activity android:name=".group.GroupTransferOwnerActivity"/>
+        <!--Group operate activity-->
         <activity android:name=".group.GroupBlackListOrMuteActivity"/>
-
         <!--Chat room-->
         <activity android:name=".chatroom.ChatRoomListActivity"/>
+        <!--Chat room details activity-->
         <activity android:name=".chatroom.ChatRoomDetailsActivity"/>
+        <!--Chat room member list activity-->
         <activity android:name=".chatroom.ChatRoomMembersActivity"/>
+        <!--Chat room black list activity-->
         <activity android:name=".chatroom.ChatRoomBlacklistActivity"/>
-
         <!--Chat activity-->
         <activity
             android:name=".chat.ChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            />
-
-
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <!--Account activity-->
         <activity
             android:name=".settings.AccountActivity"
@@ -163,18 +169,17 @@
             android:name=".user.AddContactsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateVisible"/>
-
         <!--Apply for activity-->
         <activity
             android:name=".apply.ApplyActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
-
         <!--Blacklist activity-->
         <activity
             android:name=".settings.BlackListActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <!--Current Place activity-->
         <activity android:name=".ui.MapsCurrentPlaceActivity" />
 
         <!-- FCM required start -->
