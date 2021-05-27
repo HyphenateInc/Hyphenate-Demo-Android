@@ -33,10 +33,12 @@ public class SettingsFragment extends Fragment {
     private void init() {
 
         // Display the fragment as the main content.
-        getActivity().getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, new SettingsPreference())
-                .commit();
+        if(getActivity() != null) {
+            getChildFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, new SettingsPreference())
+                    .commit();
+        }
     }
 
 }

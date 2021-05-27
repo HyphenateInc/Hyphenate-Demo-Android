@@ -25,4 +25,8 @@ public class Constant extends EaseConstant{
     public static final String BROADCAST_ACTION_CONTACTS = "io.agora.action.contacts";
     public static final String BROADCAST_ACTION_GROUP = "io.agora.action.group";
     public static final String BROADCAST_ACTION_APPLY = "io.agora.action.apply";
+
+    // Settings
+    public static final String SETTINGS_NOTIFICATION = "notification";
+    public static final String SETTINGS_CHAT = "chat";
 }

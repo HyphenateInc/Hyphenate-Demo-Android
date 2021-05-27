@@ -181,6 +181,8 @@
             android:windowSoftInputMode="adjustPan|stateHidden"/>
         <!--Current Place activity-->
         <activity android:name=".ui.MapsCurrentPlaceActivity" />
+        <!--Settings details activity-->
+        <activity android:name=".settings.SettingsActivity" />
 
         <!-- FCM required start -->
         <service android:name=".fcm.EMFCMMSGService"
