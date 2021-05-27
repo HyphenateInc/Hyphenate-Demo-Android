@@ -93,12 +93,14 @@
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/account_item_padding"
             android:background="@color/em_black_12"
+            android:visibility="gone"
             />
         <RelativeLayout
             android:id="@+id/layout_nick_container"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:gravity="center_vertical"
+            android:visibility="gone"
             android:paddingLeft="@dimen/account_item_padding"
             android:paddingRight="@dimen/account_item_padding"
 
@@ -158,6 +160,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             >
             <Button
                 android:id="@+id/btn_send"
@@ -174,6 +177,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             >
             <Button
                 android:id="@+id/btn_verify"
