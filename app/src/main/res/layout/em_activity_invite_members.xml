@@ -9,17 +9,11 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
 
-    <com.google.android.material.appbar.CollapsingToolbarLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-      <androidx.appcompat.widget.Toolbar
-          android:id="@+id/toolbar_actionbar"
-          app:navigationIcon="@drawable/em_ic_back"
-          app:title="@string/em_invite_members"
-          style="@style/ToolbarNormalTheme" />
-
-    </com.google.android.material.appbar.CollapsingToolbarLayout>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_actionbar"
+        app:navigationIcon="@drawable/em_ic_back"
+        app:title="@string/em_invite_members"
+        style="@style/ToolbarNormalTheme"/>
 
   </com.google.android.material.appbar.AppBarLayout>
 
