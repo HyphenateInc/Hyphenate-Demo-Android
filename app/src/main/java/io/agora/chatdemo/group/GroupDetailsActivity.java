@@ -57,6 +57,7 @@ import butterknife.OnClick;
 public class GroupDetailsActivity extends BaseActivity {
 
     private final int REQUEST_CODE_MEMBER_REFRESH = 1;
+    private final int REQUEST_CODE_TRANSFER_OWNER = 110;
 
     private String groupId;
     private Group group;
@@ -119,6 +120,7 @@ public class GroupDetailsActivity extends BaseActivity {
                 finish();
             }
         });
+        setToolbarMoreIconCustomColor(toolbar, R.color.white_background);
 
         Toolbar.LayoutParams params = new Toolbar.LayoutParams(Toolbar.LayoutParams.WRAP_CONTENT, Toolbar.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.RIGHT;
@@ -135,7 +137,8 @@ public class GroupDetailsActivity extends BaseActivity {
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.menu_item_transfer_owner:
-                    startActivity(new Intent(GroupDetailsActivity.this, GroupTransferOwnerActivity.class).putExtra("groupId", groupId));
+                    startActivityForResult(new Intent(GroupDetailsActivity.this, GroupTransferOwnerActivity.class).putExtra("groupId", groupId)
+                            , REQUEST_CODE_TRANSFER_OWNER);
                     break;
                 case R.id.menu_item_clear_conversation:
                     ChatClient.getInstance().chatManager().getConversation(groupId).clearAllMessages();
@@ -242,6 +245,8 @@ public class GroupDetailsActivity extends BaseActivity {
                     memberSizeView.setText("(" + members.size() + ")");
                     adapter.notifyDataSetChanged();
                 }
+            }else if(requestCode == REQUEST_CODE_TRANSFER_OWNER) {
+                finish();
             }
         }
     }

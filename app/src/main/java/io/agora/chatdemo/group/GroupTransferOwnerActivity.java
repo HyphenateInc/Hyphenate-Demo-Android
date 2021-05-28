@@ -184,6 +184,7 @@ public class GroupTransferOwnerActivity extends BaseActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        setResult(RESULT_OK);
                                         finish();
                                     }
                                 });

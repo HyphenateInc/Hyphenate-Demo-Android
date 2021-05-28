@@ -1,11 +1,14 @@
 package io.agora.chatdemo.ui;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -60,6 +63,22 @@ public class BaseActivity extends AppCompatActivity {
     @Override protected void onResume() {
         super.onResume();
         DemoHelper.getInstance().getNotifier().reset();
+    }
+
+    /**
+     * set overflow icon's color
+     * @param toolbar
+     * @param colorId
+     */
+    public static void setToolbarMoreIconCustomColor(Toolbar toolbar, int colorId) {
+        if(toolbar == null) {
+            return;
+        }
+        Drawable moreIcon = ContextCompat.getDrawable(toolbar.getContext(), R.drawable.abc_ic_menu_overflow_material);
+        if(moreIcon != null) {
+            moreIcon.setColorFilter(ContextCompat.getColor(toolbar.getContext(), colorId), PorterDuff.Mode.SRC_ATOP);
+            toolbar.setOverflowIcon(moreIcon);
+        }
     }
 
 }
