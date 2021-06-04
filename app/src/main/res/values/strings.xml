@@ -11,7 +11,7 @@
     <string name="em_hint_sign_in">Input your account sign in, Account can not contain \'\@\'!</string>
     <string name="em_hint_sign_up">Enter the account you want to register, the account can make the phone number,
         or any length of the string should be all lowercase letters or numbers,
-        in addition to (.) (_) (-) can not contain other special characters,
+        in addition to (_) (-) can not contain other special characters,
         can not be e-mail Account</string>
 
     <!--call-->
