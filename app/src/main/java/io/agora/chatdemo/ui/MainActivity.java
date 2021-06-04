@@ -1,5 +1,6 @@
 package io.agora.chatdemo.ui;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -345,8 +346,9 @@ public class MainActivity extends BaseActivity {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
 
+        @SuppressLint("WrongConstant")
         public PagerAdapter(FragmentManager fm) {
-            super(fm);
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         public void addFragment(Fragment fragment, String title) {

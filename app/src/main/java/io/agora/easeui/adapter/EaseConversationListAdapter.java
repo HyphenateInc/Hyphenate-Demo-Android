@@ -198,6 +198,8 @@ public class EaseConversationListAdapter extends RecyclerView.Adapter<EaseConver
      */
     protected class MyHandler extends Handler {
         private void refresh() {
+            conversationFilterList.clear();
+            conversationFilterList.addAll(conversationList);
             notifyDataSetChanged();
         }
 

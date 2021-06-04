@@ -2,16 +2,16 @@ package io.agora.chatdemo.settings;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import io.agora.chatdemo.R;
+import io.agora.chatdemo.ui.BaseFragment;
 
 /**
  * Created by lzan13 on 2016/10/11.
  */
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends BaseFragment {
 
     public SettingsFragment() {
         // Required empty public constructor

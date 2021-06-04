@@ -19,6 +19,7 @@ import io.agora.chat.Conversation;
 import io.agora.chatdemo.Constant;
 import io.agora.chatdemo.R;
 import io.agora.chatdemo.apply.ApplyActivity;
+import io.agora.chatdemo.ui.BaseFragment;
 import io.agora.chatdemo.ui.MainActivity;
 import io.agora.easeui.EaseConstant;
 import io.agora.easeui.widget.EaseConversationListView;
@@ -37,7 +38,7 @@ import static io.agora.easeui.EaseConstant.CHATTYPE_GROUP;
 /**
  * A fragment which shows mConversation list
  */
-public class ConversationListFragment extends Fragment {
+public class ConversationListFragment extends BaseFragment {
 
     private Unbinder mUnbinder;
     private int mItemLongClickPos;
@@ -155,6 +156,13 @@ public class ConversationListFragment extends Fragment {
         super.onResume();
         //refresh list
         mConversationListView.refresh();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        filter(null);
+        hideKeyboard();
     }
 
     public void refresh() {

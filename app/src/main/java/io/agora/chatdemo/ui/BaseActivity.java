@@ -1,9 +1,13 @@
 package io.agora.chatdemo.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -78,6 +82,18 @@ public class BaseActivity extends AppCompatActivity {
         if(moreIcon != null) {
             moreIcon.setColorFilter(ContextCompat.getColor(toolbar.getContext(), colorId), PorterDuff.Mode.SRC_ATOP);
             toolbar.setOverflowIcon(moreIcon);
+        }
+    }
+
+    /**
+     * hide keyboard
+     */
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm!=null&&getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
+            if (getCurrentFocus() != null){
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
         }
     }
 

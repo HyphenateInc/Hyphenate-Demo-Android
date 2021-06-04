@@ -26,6 +26,7 @@ import io.agora.chatdemo.apply.ApplyActivity;
 import io.agora.chatdemo.chat.ChatActivity;
 import io.agora.chatdemo.chatroom.ChatRoomListActivity;
 import io.agora.chatdemo.group.GroupListActivity;
+import io.agora.chatdemo.ui.BaseFragment;
 import io.agora.chatdemo.user.model.UserEntity;
 import io.agora.chatdemo.user.model.UserProfileManager;
 import io.agora.easeui.EaseConstant;
@@ -47,7 +48,7 @@ import butterknife.OnClick;
  * Created by benson on 2016/10/8.
  */
 
-public class ContactListFragment extends Fragment {
+public class ContactListFragment extends BaseFragment {
 
     private static String TAG = ContactListFragment.class.getSimpleName();
 
@@ -347,8 +348,9 @@ public class ContactListFragment extends Fragment {
         refresh();
     }
 
-    @Override public void onStop() {
-        super.onStop();
+    @Override public void onPause() {
+        super.onPause();
+        hideKeyboard();
     }
 
     @OnClick({ R.id.layout_group_entry, R.id.layout_chatroom_entry, R.id.layout_apply_entry }) void onclick(View v) {
