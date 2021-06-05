@@ -10,7 +10,7 @@ import android.text.TextUtils;
 import java.io.File;
 
 import io.agora.chatdemo.PreferenceManager;
-import io.agora.util.EMFileHelper;
+import io.agora.util.FileHelper;
 import io.agora.util.EMLog;
 
 public class EaseFileUtils {
@@ -21,7 +21,7 @@ public class EaseFileUtils {
     }
 
     public static boolean isFileExistByUri(Context context, Uri fileUri) {
-        return EMFileHelper.getInstance().isFileExist(fileUri);
+        return FileHelper.getInstance().isFileExist(fileUri);
     }
 
     /**
@@ -54,7 +54,7 @@ public class EaseFileUtils {
      * @return
      */
     public static String getFileNameByUri(Context context, Uri fileUri) {
-        return EMFileHelper.getInstance().getFilename(fileUri);
+        return FileHelper.getInstance().getFilename(fileUri);
     }
 
     /**
@@ -67,7 +67,7 @@ public class EaseFileUtils {
      * @author paulburke
      */
     public static String getFilePath(final Context context, final Uri uri) {
-        return EMFileHelper.getInstance().getFilePath(uri);
+        return FileHelper.getInstance().getFilePath(uri);
     }
 
     /**
