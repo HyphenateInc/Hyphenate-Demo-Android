@@ -53,6 +53,7 @@
                     />
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_account"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -74,11 +75,13 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/sign_text_white"
                     android:textColorHint="@color/sign_text_hint"
-                    >
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/white_background">
 
                     <EditText
                         android:id="@+id/edt_password"

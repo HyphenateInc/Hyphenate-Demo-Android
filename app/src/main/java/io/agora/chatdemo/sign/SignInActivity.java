@@ -4,10 +4,14 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import io.agora.CallBack;
 import io.agora.Error;
@@ -32,6 +36,7 @@ public class SignInActivity extends BaseActivity {
     private BaseActivity mActivity;
 
     protected static final String TAG = SignInActivity.class.getSimpleName();
+    private static final int MAX_LENGTH = 64;
 
     // Loading dialog
     private ProgressDialog mDialog;
@@ -39,6 +44,8 @@ public class SignInActivity extends BaseActivity {
     // Use ButterKnife to get the control
     @BindView(R.id.edt_account) EditText mAccountView;
     @BindView(R.id.edt_password) EditText mPasswordView;
+    @BindView(R.id.til_account) TextInputLayout mTilAccountView;
+    @BindView(R.id.til_password) TextInputLayout mTilPasswordView;
 
     private String mPassword;
     private String mAccount;
@@ -59,6 +66,48 @@ public class SignInActivity extends BaseActivity {
      */
     private void initView() {
         mActivity = this;
+        mTilAccountView.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                byte[] bytes = s.toString().trim().getBytes();
+                if(bytes.length > MAX_LENGTH) {
+                    mTilAccountView.setError(getString(R.string.em_sign_account_out_limit));
+                }else {
+                    mTilAccountView.setError(null);
+                }
+            }
+        });
+        mTilPasswordView.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                byte[] bytes = s.toString().trim().getBytes();
+                if(bytes.length > MAX_LENGTH) {
+                    mTilPasswordView.setError(getString(R.string.em_sign_password_out_limit));
+                }else {
+                    mTilPasswordView.setError(null);
+                }
+            }
+        });
     }
 
     /**

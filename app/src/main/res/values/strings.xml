@@ -57,6 +57,8 @@
     <string name="em_sign_up">Sign up</string>
     <string name="em_sign_up_begin">Account is begin sign up</string>
     <string name="em_sign_in_begin">Account is begin sign in</string>
+    <string name="em_sign_account_out_limit">User name length out of limit, maximum 64 bytes</string>
+    <string name="em_sign_password_out_limit">Password length out of limit, maximum 64 bytes</string>
 
     <!--Error-->
     <string name="em_error_invalid_password">Invalid password</string>

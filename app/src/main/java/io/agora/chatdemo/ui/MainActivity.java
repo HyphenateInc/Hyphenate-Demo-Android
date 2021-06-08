@@ -16,6 +16,8 @@ import androidx.core.view.MenuItemCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -332,7 +334,9 @@ public class MainActivity extends BaseActivity {
     }
 
     public void updateUnreadMsgLabel() {
-        if (ChatClient.getInstance().chatManager().getUnreadMessageCount() > 0) {
+        int messageCount = ChatClient.getInstance().chatManager().getUnreadMessageCount();
+        int unreadApplyMessageCount = getUnreadApplyMessagesCount();
+        if (messageCount - unreadApplyMessageCount > 0) {
             getTabUnreadStatusView(1).setVisibility(View.VISIBLE);
         } else {
             getTabUnreadStatusView(1).setVisibility(View.INVISIBLE);
@@ -372,17 +376,21 @@ public class MainActivity extends BaseActivity {
     private void refreshApply() {
         runOnUiThread(new Runnable() {
             @Override public void run() {
-                Conversation conversation = ChatClient.getInstance()
-                        .chatManager()
-                        .getConversation(Constant.CONVERSATION_NAME_APPLY,
-                                Conversation.ConversationType.Chat, true);
-                if (conversation.getUnreadMsgCount() > 0) {
+                if (getUnreadApplyMessagesCount() > 0) {
                     getTabUnreadStatusView(0).setVisibility(View.VISIBLE);
                 } else {
                     getTabUnreadStatusView(0).setVisibility(View.INVISIBLE);
                 }
             }
         });
+    }
+
+    private int getUnreadApplyMessagesCount() {
+        Conversation conversation = ChatClient.getInstance()
+                .chatManager()
+                .getConversation(Constant.CONVERSATION_NAME_APPLY,
+                        Conversation.ConversationType.Chat, true);
+        return conversation.getUnreadMsgCount();
     }
 
     /**
