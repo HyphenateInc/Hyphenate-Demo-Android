@@ -40,6 +40,8 @@ import io.agora.chat.ChatClient;
 import io.agora.chat.Group;
 import io.agora.chat.PushConfigs;
 import io.agora.chatdemo.DemoHelper;
+import io.agora.chatdemo.bus.BusEvent;
+import io.agora.chatdemo.bus.LiveDataBus;
 import io.agora.chatdemo.R;
 import io.agora.chatdemo.chat.ChatActivity;
 import io.agora.chatdemo.ui.BaseActivity;
@@ -500,7 +502,9 @@ public class GroupDetailsActivity extends BaseActivity {
                     @Override
                     @UiThread
                     public void onSuccess(Object o) {
+                        LiveDataBus.get().with(BusEvent.REFRESH_GROUP).setValue(true);
                         changeDialog.dismiss();
+                        updateGroupFromServer();
                     }
 
                     @Override
@@ -546,7 +550,9 @@ public class GroupDetailsActivity extends BaseActivity {
                     @Override
                     @UiThread
                     public void onSuccess(Object o) {
+                        LiveDataBus.get().with(BusEvent.REFRESH_GROUP_DES).setValue(true);
                         changeDialog.dismiss();
+                        updateGroupFromServer();
                     }
 
                     @Override

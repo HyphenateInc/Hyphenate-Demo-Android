@@ -2,8 +2,12 @@ package io.agora.chatdemo.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,6 +23,8 @@ import io.agora.chat.Conversation;
 import io.agora.chatdemo.Constant;
 import io.agora.chatdemo.R;
 import io.agora.chatdemo.apply.ApplyActivity;
+import io.agora.chatdemo.bus.BusEvent;
+import io.agora.chatdemo.bus.LiveDataBus;
 import io.agora.chatdemo.ui.BaseFragment;
 import io.agora.chatdemo.ui.MainActivity;
 import io.agora.easeui.EaseConstant;
@@ -61,6 +67,19 @@ public class ConversationListFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.em_fragment_conversation_list, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        LiveDataBus.get().with(BusEvent.REFRESH_GROUP, Boolean.class).observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean != null) {
+                    refresh();
+                }
+            }
+        });
     }
 
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {

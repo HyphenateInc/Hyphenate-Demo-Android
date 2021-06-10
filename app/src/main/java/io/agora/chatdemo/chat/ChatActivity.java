@@ -10,6 +10,8 @@ import android.provider.MediaStore;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+
 import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -31,6 +33,8 @@ import io.agora.chat.Group;
 import io.agora.chat.ChatMessage;
 import io.agora.chatdemo.DemoHelper;
 import io.agora.chatdemo.R;
+import io.agora.chatdemo.bus.BusEvent;
+import io.agora.chatdemo.bus.LiveDataBus;
 import io.agora.chatdemo.chatroom.AgoraChatRoomChangeListener;
 import io.agora.chatdemo.chatroom.ChatRoomDetailsActivity;
 import io.agora.chatdemo.group.AgoraGroupChangeListener;
@@ -190,6 +194,15 @@ public class ChatActivity extends BaseActivity {
                     }
                 });
                 dialog.show();
+            }
+        });
+
+        LiveDataBus.get().with(BusEvent.REFRESH_GROUP, Boolean.class).observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if(aBoolean != null) {
+                    setToolbarTitle();
+                }
             }
         });
     }
