@@ -242,8 +242,7 @@ public class MainActivity extends BaseActivity {
                 });
             }
             //refresh ConversationListFragment
-            fragment = ((PagerAdapter) mViewPager.getAdapter()).getItem(1);
-            ((ConversationListFragment) fragment).refresh();
+            refreshConversation();
         }
 
         @Override public void onCmdMessageReceived(List<ChatMessage> list) {
@@ -256,7 +255,7 @@ public class MainActivity extends BaseActivity {
         }
 
         @Override public void onMessageRecalled(List<ChatMessage> messages) {
-
+            refreshConversation();
         }
 
         @Override public void onMessageChanged(ChatMessage emMessage, Object o) {

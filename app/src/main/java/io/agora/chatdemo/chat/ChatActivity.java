@@ -754,7 +754,7 @@ public class ChatActivity extends BaseActivity {
         }
 
         @Override public void onMessageRecalled(List<ChatMessage> messages) {
-            // TODO update ui
+            mMessageListView.refresh();
         }
 
         @Override public void onMessageChanged(ChatMessage emMessage, Object o) {
