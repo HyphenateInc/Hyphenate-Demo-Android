@@ -6,7 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import io.agora.CallBack;
 import io.agora.ConnectionListener;
@@ -70,9 +74,11 @@ public class DemoHelper {
     private List<Activity> activityList = new ArrayList<Activity>();
 
     private MessageNotifier mNotifier = new MessageNotifier();
+    private final Handler handler;
 
     private DemoHelper() {
         this.executor = Executors.newCachedThreadPool();
+        handler = new Handler(Looper.getMainLooper());
     }
 
     public synchronized static DemoHelper getInstance() {
@@ -172,6 +178,15 @@ public class DemoHelper {
         ChatClient.getInstance().groupManager().addGroupChangeListener(mGroupListener);
     }
 
+    private void showToast(String message) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private class DefaultAgoraGroupChangeListener extends AgoraGroupChangeListener {
         @Override public void onInvitationReceived(String s, String s1, String s2, String s3) {
             String msgId = s2 + s + ChatClient.getInstance().getCurrentUser();
@@ -203,6 +218,7 @@ public class DemoHelper {
                 ChatClient.getInstance().chatManager().saveMessage(message);
             }
             getNotifier().vibrateAndPlayTone(null);
+            showToast(" receive invitation to join the group：" + s1);
         }
 
         @Override public void onRequestToJoinReceived(String s, String s1, String s2, String s3) {
@@ -233,6 +249,7 @@ public class DemoHelper {
                 ChatClient.getInstance().chatManager().saveMessage(message);
             }
             getNotifier().vibrateAndPlayTone(null);
+            showToast(s2 + " Apply to join group：" + s1);
         }
 
         @Override public void onRequestToJoinAccepted(String s, String s1, String s2) {
@@ -264,6 +281,7 @@ public class DemoHelper {
                 ChatClient.getInstance().chatManager().saveMessage(message);
             }
             getNotifier().vibrateAndPlayTone(null);
+            showToast(s2 + " Accepted your group apply ");
         }
 
         @Override public void onRequestToJoinDeclined(String s, String s1, String s2, String s3) {
@@ -295,6 +313,7 @@ public class DemoHelper {
                 ChatClient.getInstance().chatManager().saveMessage(message);
             }
             getNotifier().vibrateAndPlayTone(null);
+            showToast(s2 + " Declined your group apply ");
         }
 
         @Override public void onInvitationAccepted(String s, String s1, String s2) {
@@ -326,6 +345,7 @@ public class DemoHelper {
                 ChatClient.getInstance().chatManager().saveMessage(message);
             }
             getNotifier().vibrateAndPlayTone(null);
+            showToast(s2 + " Accepted your group invite ");
         }
 
         @Override public void onInvitationDeclined(String s, String s1, String s2) {
@@ -357,14 +377,17 @@ public class DemoHelper {
                 ChatClient.getInstance().chatManager().saveMessage(message);
             }
             getNotifier().vibrateAndPlayTone(null);
+            showToast(s1 + " Declined your group invite ");
         }
 
         @Override public void onUserRemoved(String s, String s1) {
             getNotifier().vibrateAndPlayTone(null);
+            showToast("You have been removed from the group: "+s1);
         }
 
         @Override public void onGroupDestroyed(String s, String s1) {
             getNotifier().vibrateAndPlayTone(null);
+            showToast("Group "+s1 + " has been disbanded");
         }
 
         @Override public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
@@ -379,23 +402,63 @@ public class DemoHelper {
             ChatClient.getInstance().chatManager().saveMessage(msg);
 
             getNotifier().vibrateAndPlayTone(null);
+            showToast(s1 + " Invite you to join this group ");
+        }
 
+        @Override
+        public void onAdminAdded(String groupId, String administrator) {
+            showToast(administrator + " has been designated as the group admin by group owner");
+        }
+
+        @Override
+        public void onAdminRemoved(String groupId, String administrator) {
+            showToast(administrator + " has been revoked by the group owner");
+        }
+
+        @Override
+        public void onMuteListAdded(String groupId, List<String> mutes, long muteExpire) {
+            String content = getContentFromList(mutes);
+            showToast(content + " been banned by group manager");
+        }
+
+        @Override
+        public void onMuteListRemoved(String groupId, List<String> mutes) {
+            String content = getContentFromList(mutes);
+            showToast(content + " been resumed to speak by group manager");
         }
 
         @Override
         public void onWhiteListAdded(String groupId, List<String> whitelist) {
-
+            String content = getContentFromList(whitelist);
+            showToast(content + " been added to whitelist by group manager");
         }
 
         @Override
         public void onWhiteListRemoved(String groupId, List<String> whitelist) {
-
+            String content = getContentFromList(whitelist);
+            showToast(content + " been removed from whitelist by group manager");
         }
+
 
         @Override
         public void onAllMemberMuteStateChanged(String groupId, boolean isMuted) {
 
         }
+    }
+
+    private String getContentFromList(List<String> members) {
+        StringBuilder sb = new StringBuilder();
+        for (String member : members) {
+            if(!TextUtils.isEmpty(sb.toString().trim())) {
+                sb.append(",");
+            }
+            sb.append(member);
+        }
+        String content = sb.append(" has").toString();
+        if(content.contains(ChatClient.getInstance().getCurrentUser())) {
+            content = "You have";
+        }
+        return content;
     }
 
     protected void setEaseUIProviders() {
