@@ -46,7 +46,7 @@
         <!-- set your API key -->
         <meta-data
             android:name="EASEMOB_APPKEY"
-            android:value="easemob-demo#chatdemoui"/>
+            android:value="1193210624041558#chatdemo"/>
 
         <!-- SDK service -->
         <service
