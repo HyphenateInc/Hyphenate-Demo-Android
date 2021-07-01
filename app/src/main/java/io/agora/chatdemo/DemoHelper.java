@@ -127,6 +127,8 @@ public class DemoHelper {
     private ChatOptions initOptions() {
         // set init sdk options
         ChatOptions options = new ChatOptions();
+        // set appkey
+        options.setAppKey("1193210624041558#chatdemo");
         // change to need confirm contact invitation
         options.setAcceptInvitationAlways(false);
         // set if need read ack

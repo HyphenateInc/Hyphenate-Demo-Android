@@ -50,14 +50,14 @@
 
         <!-- SDK service -->
         <service
-            android:name="io.agora.chat.EMChatService"
+            android:name="io.agora.chat.ChatService"
             android:exported="true"/>
-        <service android:name="io.agora.chat.EMJobService"
+        <service android:name="io.agora.chat.ChatJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true" />
 
         <!-- SDK receiver -->
-        <receiver android:name="io.agora.chat.EMMonitorReceiver">
+        <receiver android:name="io.agora.chat.MonitorReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED"/>
 

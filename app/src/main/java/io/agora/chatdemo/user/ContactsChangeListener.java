@@ -1,6 +1,6 @@
 package io.agora.chatdemo.user;
 
-import io.agora.EMContactListener;
+import io.agora.ContactListener;
 import io.agora.chat.ChatClient;
 import io.agora.chat.ChatMessage;
 import io.agora.chat.TextMessageBody;
@@ -13,7 +13,7 @@ import io.agora.chatdemo.user.model.UserEntity;
  * Contacts change listener
  */
 
-public abstract class ContactsChangeListener implements EMContactListener {
+public abstract class ContactsChangeListener implements ContactListener {
 
     /**
      * Added contacts
