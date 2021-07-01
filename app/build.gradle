@@ -1,71 +1,120 @@
-buildscript {
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
-
-    repositories {
-        mavenCentral()
-        maven { url 'https://maven.fabric.io/public' }
-    }
-}
-
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
-apply plugin: 'com.neenbedankt.android-apt'
-
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-    maven { url 'https://maven.fabric.io/public' }
-}
-
+// Apply the Crashlytics Gradle plugin
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '25.0.2'
-    //use legacy for for android 6.0
-    useLibrary 'org.apache.http.legacy'
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
     defaultConfig {
-        applicationId "com.hyphenate.chatuidemo"
-        minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 3302
-        versionName '3.2.11'
+        applicationId "io.agora.chatdemo"
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 3820
+        versionName '3.8.2'
         multiDexEnabled true
     }
+
+    //加载资源
+    Properties properties = new Properties()
+    InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream() ;
+    properties.load( inputStream )
+
+    signingConfigs {
+        debug {
+            storeFile file(properties.getProperty('DEBUG_STORE_FILE_PATH', './keystore/sdkdemo.jks'))
+            storePassword properties.getProperty('DEBUG_STORE_PASSWORD', '123456')
+            keyAlias = properties.getProperty('DEBUG_KEY_ALIAS', 'easemob')
+            keyPassword properties.getProperty('DEBUG_KEY_PASSWORD', '123456')
+        }
+        release {
+            storeFile file(properties.getProperty('DEBUG_STORE_FILE_PATH', './keystore/sdkdemo.jks'))
+            storePassword properties.getProperty('DEBUG_STORE_PASSWORD', '123456')
+            keyAlias = properties.getProperty('DEBUG_KEY_ALIAS', 'easemob')
+            keyPassword properties.getProperty('DEBUG_KEY_PASSWORD', '123456')
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            resValue "string", "maps_api_key", (properties.getProperty("MAPS_API_KEY") ?: "")
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            resValue "string", "maps_api_key", (properties.getProperty("MAPS_API_KEY") ?: "")
+            signingConfig signingConfigs.debug
         }
     }
+
+    flavorDimensions "min"
+    productFlavors {
+        dev {
+            minSdkVersion 21
+            dimension "min"
+        }
+
+        prod {
+            minSdkVersion 19
+            dimension "min"
+        }
+    }
+
     sourceSets {
         main {
-            jniLibs.srcDirs = ['libs']
+            //jniLibs.srcDirs = ['libs']
+            jni.srcDirs = []
         }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    //use legacy for android 6.0，SDK3.6.8后移除
+    //useLibrary 'org.apache.http.legacy'
+    //自3.6.0开始需要java8的支持
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
-    compile 'com.jakewharton:butterknife:8.4.0'
-    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    testImplementation 'junit:junit:4.13.2'
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
     // Design support already included v4 and appcompat-v7, So here on the introduction of 'design'
-    compile 'com.android.support:design:24.2.1'
-    compile 'com.android.support:multidex:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    // Preference
+    implementation 'androidx.preference:preference:1.1.0'
 
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.google.android.gms:play-services-gcm:9.4.0'
-    compile 'com.google.android.gms:play-services-places:9.4.0'
-    compile 'com.google.android.gms:play-services-maps:9.4.0'
-    compile 'com.parse:parse-android:1.13.1'
 
-    compile 'com.hyphenate:hyphenate-sdk:3.3.2'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
-    }
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    // For google play server availability check.
+    implementation platform('com.google.firebase:firebase-bom:28.0.1')
+    // Add the dependency for the Firebase SDK for Google Analytics
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation 'com.google.firebase:firebase-analytics'
+    // Cloud messaging
+    implementation 'com.google.firebase:firebase-messaging'
+    // crashlytics
+    implementation 'com.google.firebase:firebase-crashlytics'
+
+    // maps
+    implementation 'com.google.android.gms:play-services-base:17.1.0'
+    implementation 'com.google.android.libraries.places:places:2.4.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+    //implementation project(path: ':hyphenatechatsdk')
+    implementation 'io.hyphenate:chat-sdk:3.8.2'
+    //migration for 'android-apt'
+    implementation 'com.google.dagger:dagger:2.0'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

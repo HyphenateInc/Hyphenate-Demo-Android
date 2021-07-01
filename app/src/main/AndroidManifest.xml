@@ -1,39 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hyphenate.chatuidemo"
+    package="io.agora.chatdemo"
     >
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
     <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
 
-    <!-- GCM required, remember replace "com.hyphenate.chatuidemo" to your own package -->
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <!-- IM SDK required start -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <!-- IM SDK required end -->
 
-    <permission
-        android:name="com.hyphenate.chatuidemo.permission.C2D_MESSAGE"
-        android:protectionLevel="signature"/>
-
-    <uses-permission android:name="com.hyphenate.chatuidemo.permission.C2D_MESSAGE"/>
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
 
     <application
         android:name=".DemoApplication"
@@ -41,7 +39,48 @@
         android:icon="@mipmap/em_logo_uidemo"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
+
+        <!-- IM SDK required start-->
+        <!-- set your API key -->
+        <meta-data
+            android:name="EASEMOB_APPKEY"
+            android:value="1193210624041558#chatdemo"/>
+
+        <!-- SDK service -->
+        <service
+            android:name="io.agora.chat.ChatService"
+            android:exported="true"/>
+        <service android:name="io.agora.chat.ChatJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true" />
+
+        <!-- SDK receiver -->
+        <receiver android:name="io.agora.chat.MonitorReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+
+                <data android:scheme="package"/>
+            </intent-filter>
+            <!-- optional filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+            </intent-filter>
+        </receiver>
+        <!-- IM SDK required end-->
+
+        <!-- to Android 7.0, replace io.agora.chatdemo to your package name -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <!--Splash-->
         <activity
@@ -72,63 +111,55 @@
             android:name=".sign.SignUpActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden"/>
-        <!--Video call activity-->
+        <!--Show normal file activity-->
         <activity
-            android:name=".call.VideoCallActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
-        <!--Voice call activity-->
+            android:name="io.agora.easeui.ui.EaseShowNormalFileActivity"
+            android:screenOrientation="portrait" />
+        <!--Show big image activity-->
         <activity
-            android:name=".call.VoiceCallActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
-
-
-        <activity
-            android:name="com.hyphenate.easeui.ui.EaseShowNormalFileActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity
-            android:name="com.hyphenate.easeui.ui.EaseShowImageActivity"
+            android:name="io.agora.easeui.ui.EaseShowImageActivity"
             android:screenOrientation="portrait"/>
+        <!--Show video activity-->
         <activity
-            android:name="com.hyphenate.easeui.ui.EaseShowVideoActivity"
-            android:screenOrientation="portrait"
-            />
+            android:name="io.agora.easeui.ui.EaseShowVideoActivity"
+            android:screenOrientation="portrait" />
+        <!--Show location activity-->
         <activity
-            android:name="com.hyphenate.easeui.ui.EaseMapActivity"
-            android:screenOrientation="portrait"
-            />
+            android:name="io.agora.easeui.ui.EaseMapActivity"
+            android:screenOrientation="portrait" />
+        <!--Group list activity-->
         <activity android:name=".group.GroupListActivity"/>
+        <!--Group detail activity-->
         <activity android:name=".group.GroupDetailsActivity"/>
+        <!--Invite members activity-->
         <activity android:name=".group.InviteMembersActivity"/>
         <activity android:name=".group.MembersListActivity"/>
+        <!--Group members list activity-->
         <activity android:name=".group.GroupMembersListActivity"/>
+        <!--Group admin list activity-->
         <activity android:name=".group.GroupAdminActivity"/>
+        <!--Create group activity-->
         <activity android:name=".group.NewGroupActivity"/>
+        <!--Public groups list activity-->
         <activity android:name=".group.PublicGroupsListActivity"/>
+        <!--Group transfer activity-->
         <activity android:name=".group.GroupTransferOwnerActivity"/>
+        <!--Group operate activity-->
         <activity android:name=".group.GroupBlackListOrMuteActivity"/>
-
         <!--Chat room-->
         <activity android:name=".chatroom.ChatRoomListActivity"/>
+        <!--Chat room details activity-->
         <activity android:name=".chatroom.ChatRoomDetailsActivity"/>
+        <!--Chat room member list activity-->
         <activity android:name=".chatroom.ChatRoomMembersActivity"/>
+        <!--Chat room black list activity-->
         <activity android:name=".chatroom.ChatRoomBlacklistActivity"/>
-
         <!--Chat activity-->
         <activity
             android:name=".chat.ChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            />
-
-
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <!--Account activity-->
         <activity
             android:name=".settings.AccountActivity"
@@ -138,88 +169,42 @@
             android:name=".user.AddContactsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateVisible"/>
-
         <!--Apply for activity-->
         <activity
             android:name=".apply.ApplyActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
-
         <!--Blacklist activity-->
         <activity
             android:name=".settings.BlackListActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <!--Current Place activity-->
+        <activity android:name=".ui.MapsCurrentPlaceActivity" />
+        <!--Settings details activity-->
+        <activity android:name=".settings.SettingsActivity" />
 
-        <!-- gcm start -->
-        <receiver
-            android:name="com.hyphenate.chat.EMGCMBroadcastReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-
-                <category android:name="com.hyphenate.chatuidemo"/>
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="com.hyphenate.chat.EMGCMListenerService"
+        <!-- FCM required start -->
+        <service android:name=".fcm.EMFCMMSGService"
             android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
         </service>
-
-        <receiver
-            android:name=".chat.GCMPushReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.hyphenate.sdk.push"/>
-
-                <category android:name="com.hyphenate.chatuidemo"/>
-            </intent-filter>
-        </receiver>
-        <!-- gcm end -->
-
-        <!-- set your API key -->
-        <meta-data
-            android:name="EASEMOB_APPKEY"
-            android:value="hyphenatedemo#hyphenatedemo"/>
-
-        <!-- SDK service -->
-        <service
-            android:name="com.hyphenate.chat.EMChatService"
-            android:exported="true"/>
-        <service android:name="com.hyphenate.chat.EMJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"
-            />
-
-        <!-- SDK receiver -->
-        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-
-                <data android:scheme="package"/>
-            </intent-filter>
-            <!-- optional filter -->
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.USER_PRESENT"/>
-            </intent-filter>
-        </receiver>
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="33bb2bc04d2ed7f91da02025c362279e3406ed81" />
+        <!-- FCM required end -->
+        <!-- [START fcm_default_channel] -->
+<!--        <meta-data-->
+<!--            android:name="com.google.firebase.messaging.default_notification_channel_id"-->
+<!--            android:value="@string/default_notification_channel_id" />-->
+        <!-- [END fcm_default_channel] -->
 
         <!-- set your google map api key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAzTPKEIuWRgCtcn6NJeHqOPXcbG6YWM-4"/>
-
+            android:value="@string/maps_api_key"/>
         <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="33bb2bc04d2ed7f91da02025c362279e3406ed81" />
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
-    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

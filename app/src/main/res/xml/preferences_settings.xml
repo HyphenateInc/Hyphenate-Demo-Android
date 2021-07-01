@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-
-    >
-
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <!--About-->
     <PreferenceCategory
         android:title="@string/em_pref_about">
@@ -15,82 +13,55 @@
     <!-- Notifications -->
     <PreferenceCategory
         android:title="@string/em_pref_notification">
-        <PreferenceScreen
+        <Preference
             android:summary="@string/em_pref_notification_summary"
             android:title="@string/em_pref_notification">
-            <!--Push notification main switch-->
-            <SwitchPreference
-                android:defaultValue="true"
-                android:key="@string/em_pref_key_notification"
-                android:summary="@string/em_pref_notification_summary"
-                android:title="@string/em_pref_notification"/>
-            <!--Sound switch-->
-            <SwitchPreference
-                android:defaultValue="true"
-                android:dependency="@string/em_pref_key_notification"
-                android:key="@string/em_pref_key_notification_sound"
-                android:layout="?android:attr/preferenceLayoutChild"
-                android:summaryOff="@string/em_pref_off"
-                android:summaryOn="@string/em_pref_on"
-                android:title="@string/em_pref_notification_sound"/>
-            <!--Vibrate switch-->
-            <SwitchPreference
-                android:defaultValue="true"
-                android:dependency="@string/em_pref_key_notification"
-                android:key="@string/em_pref_key_notification_vibrate"
-                android:layout="?android:attr/preferenceLayoutChild"
-                android:summaryOff="@string/em_pref_off"
-                android:summaryOn="@string/em_pref_on"
-                android:title="@string/em_pref_notification_vibration"/>
-            <!--Set push display name-->
-            <EditTextPreference
-                android:dependency="@string/em_pref_key_notification"
-                android:dialogTitle="@string/em_pref_notification_display_name"
-                android:key="@string/em_pref_key_notification_display_name"
-                android:summary=""
-                android:title="@string/em_pref_notification_display_name"/>
-        </PreferenceScreen>
+
+            <intent
+                android:targetClass="io.agora.chatdemo.settings.SettingsActivity"
+                android:targetPackage="io.agora.chatdemo">
+
+                <extra
+                    android:name="type"
+                    android:value="notification" />
+
+            </intent>
+
+        </Preference>            <!--Push notification main switch-->
     </PreferenceCategory>
 
     <!--Chat&Call-->
     <PreferenceCategory
         android:title="@string/em_pref_chat_call">
-        <PreferenceScreen
+        <Preference
             android:key="chat_call_screen"
             android:summary="@string/em_pref_chat_call_summary"
             android:title="@string/em_pref_chat_call">
-            <!--Group invite switch-->
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/em_pref_key_accept_group_invite_automatically"
-                android:summary="@string/em_pref_group_invites_summary"
-                android:title="@string/em_pref_group_invites"/>
-            <!--Adaptive video bitrate-->
-            <SwitchPreference
-                android:defaultValue="true"
-                android:key="@string/em_pref_key_adaptive_video_bitrate"
-                android:title="@string/em_pref_adaptive_video_bitrate"/>
-            <!--Blocked Users-->
-            <PreferenceScreen
-                android:title="@string/em_pref_blocked_users">
-                <intent
-                    android:action="android.intent.action.MAIN"
-                    android:targetClass="com.hyphenate.chatuidemo.settings.BlackListActivity"
-                    android:targetPackage="com.hyphenate.chatuidemo"/>
-            </PreferenceScreen>
-        </PreferenceScreen>
+
+            <intent
+                android:targetClass="io.agora.chatdemo.settings.SettingsActivity"
+                android:targetPackage="io.agora.chatdemo">
+
+                <extra
+                    android:name="type"
+                    android:value="chat" />
+
+            </intent>
+
+        </Preference>
+
     </PreferenceCategory>
 
     <!--Account-->
     <PreferenceCategory
         android:title="Account">
-        <PreferenceScreen
+        <Preference
             android:summary="show account info"
             android:title="Account">
             <intent
                 android:action="android.intent.action.MAIN"
-                android:targetClass="com.hyphenate.chatuidemo.settings.AccountActivity"
-                android:targetPackage="com.hyphenate.chatuidemo"/>
-        </PreferenceScreen>
+                android:targetClass="io.agora.chatdemo.settings.AccountActivity"
+                android:targetPackage="io.agora.chatdemo"/>
+        </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

@@ -26,6 +26,8 @@
     <string name="Did_not_download">Not downloaded</string>
     <string name="downwaiting">Downloading the file, please wait a moment</string>
     <string name="Failed_to_download_file">Failed to download file:</string>
+    <string name="File_expired">File has expired</string>
+    <string name="Video_expired">Video has expired!</string>
     <string name="Download_the_pictures">Download the pictures: 0%</string>
     <string name="Download_the_pictures_new">Download the pictures:</string>
     <string name="cant_find_pictures">"Can't find pictures"</string>

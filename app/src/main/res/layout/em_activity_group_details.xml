@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-  <android.support.v7.widget.Toolbar
+  <androidx.appcompat.widget.Toolbar
       android:id="@+id/toolbar_actionbar"
       app:title="@string/em_group_info"
       style="@style/ToolbarNormalTheme"
@@ -125,7 +125,7 @@
             android:layout_marginRight="16.5dp"
             android:src="@drawable/cell_chevron_right"
             />
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_member"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

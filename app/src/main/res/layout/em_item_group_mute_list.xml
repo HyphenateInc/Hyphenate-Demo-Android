@@ -22,7 +22,7 @@
             android:textSize="@dimen/header_size"
             />
 
-        <com.hyphenate.easeui.widget.EaseImageView
+        <io.agora.easeui.widget.EaseImageView
             android:id="@+id/img_contact_avatar"
             android:layout_width="@dimen/contact_avatar_size"
             android:layout_height="@dimen/contact_avatar_size"
@@ -80,7 +80,7 @@
         android:background="@color/base_line_color"
         />
 
-    <com.hyphenate.easeui.widget.EaseSwipeLayout
+    <io.agora.easeui.widget.EaseSwipeLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -96,6 +96,6 @@
             android:layout_height="60dp"
             android:orientation="horizontal">
         </LinearLayout>
-    </com.hyphenate.easeui.widget.EaseSwipeLayout>
+    </io.agora.easeui.widget.EaseSwipeLayout>
 
 </RelativeLayout>
