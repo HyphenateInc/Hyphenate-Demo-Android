@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Hyphenate Demo</string>
+    <string name="app_name">AgoraChat Demo</string>
 
     <!--hint string-->
     <string name="em_hint_account">Account</string>
