@@ -608,6 +608,7 @@ public class DemoHelper {
                             getNotifier().onNewMsg(message);
                         }
                     }
+                    showToast("receive msg online state: "+message.isOnlineState());
                 }
             }
 
