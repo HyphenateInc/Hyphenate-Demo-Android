@@ -3,12 +3,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
     defaultConfig {
         applicationId "io.agora.chatdemo"
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 3850
         versionName '3.8.5'
         multiDexEnabled true
@@ -111,7 +111,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
     //implementation project(path: ':hyphenatechatsdk')
-    implementation 'io.hyphenate:chat-sdk:3.8.5'
+    implementation 'io.hyphenate:chat-sdk:3.8.7.3'
     //migration for 'android-apt'
     implementation 'com.google.dagger:dagger:2.0'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.0'
