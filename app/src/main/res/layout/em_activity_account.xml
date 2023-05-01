@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 >
-                <com.hyphenate.easeui.widget.EaseImageView
+                <io.agora.easeui.widget.EaseImageView
                     android:id="@+id/img_account_avatar"
                     android:layout_width="128dp"
                     android:layout_height="128dp"
@@ -42,7 +42,7 @@
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/ease_default_avatar"
                     />
-                <android.support.design.widget.FloatingActionButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fab_edit_avatar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -50,6 +50,7 @@
                     android:layout_alignRight="@id/img_account_avatar"
                     android:src="@drawable/em_ic_mode_edit_white_24dp"
                     app:fabSize="mini"
+                    android:visibility="gone"
                     />
             </RelativeLayout>
         </RelativeLayout>
@@ -92,12 +93,14 @@
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/account_item_padding"
             android:background="@color/em_black_12"
+            android:visibility="gone"
             />
         <RelativeLayout
             android:id="@+id/layout_nick_container"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:gravity="center_vertical"
+            android:visibility="gone"
             android:paddingLeft="@dimen/account_item_padding"
             android:paddingRight="@dimen/account_item_padding"
 
@@ -157,6 +160,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             >
             <Button
                 android:id="@+id/btn_send"
@@ -173,6 +177,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             >
             <Button
                 android:id="@+id/btn_verify"
@@ -200,4 +205,4 @@
 
         </RelativeLayout>
     </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

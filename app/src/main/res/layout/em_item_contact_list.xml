@@ -22,7 +22,7 @@
             android:textSize="@dimen/header_size"
             />
 
-        <com.hyphenate.easeui.widget.EaseImageView
+        <io.agora.easeui.widget.EaseImageView
             android:id="@+id/img_contact_avatar"
             android:layout_width="@dimen/contact_avatar_size"
             android:layout_height="@dimen/contact_avatar_size"

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--Push notification main switch-->
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="@string/em_pref_key_notification"
+        android:summary="@string/em_pref_notification_summary"
+        android:title="@string/em_pref_notification"/>
+    <!--Sound switch-->
+    <SwitchPreference
+        android:defaultValue="true"
+        android:dependency="@string/em_pref_key_notification"
+        android:key="@string/em_pref_key_notification_sound"
+        android:layout="?android:attr/preferenceLayoutChild"
+        android:summaryOff="@string/em_pref_off"
+        android:summaryOn="@string/em_pref_on"
+        android:title="@string/em_pref_notification_sound"/>
+    <!--Vibrate switch-->
+    <SwitchPreference
+        android:defaultValue="true"
+        android:dependency="@string/em_pref_key_notification"
+        android:key="@string/em_pref_key_notification_vibrate"
+        android:layout="?android:attr/preferenceLayoutChild"
+        android:summaryOff="@string/em_pref_off"
+        android:summaryOn="@string/em_pref_on"
+        android:title="@string/em_pref_notification_vibration"/>
+    <!--Set push display name-->
+    <EditTextPreference
+        android:dependency="@string/em_pref_key_notification"
+        android:dialogTitle="@string/em_pref_notification_display_name"
+        android:key="@string/em_pref_key_notification_display_name"
+        android:summary=""
+        android:title="@string/em_pref_notification_display_name"/>
+
+</PreferenceScreen>

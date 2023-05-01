@@ -6,12 +6,14 @@
         android:icon="@drawable/em_ic_action_voice_call"
         android:title="@string/chat_voice_call"
         app:showAsAction="always"
+        android:visible="false"
         />
     <item
         android:id="@+id/menu_video_call"
         android:icon="@drawable/em_ic_action_video_call"
         android:title="@string/chat_video_call"
         app:showAsAction="always"
+        android:visible="false"
         />
     <item
         android:id="@+id/menu_group_detail"

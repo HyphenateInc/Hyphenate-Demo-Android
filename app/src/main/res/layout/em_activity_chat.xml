@@ -8,7 +8,7 @@
     android:background="#EFEEEC"
     >
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_actionbar"
         android:layout_alignParentTop="true"
         app:navigationIcon="@drawable/em_ic_back"
@@ -24,14 +24,14 @@
             android:layout_marginTop="2dp"
             android:visibility="invisible"
             />
-        <com.hyphenate.easeui.widget.EaseMessageListView
+        <io.agora.easeui.widget.EaseMessageListView
             android:id="@+id/message_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/input_view"
             android:layout_below="@id/toolbar_actionbar"
             />
-    <com.hyphenate.chatuidemo.ui.widget.ChatInputView
+    <io.agora.chatdemo.ui.widget.ChatInputView
         android:id="@+id/input_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

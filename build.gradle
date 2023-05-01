@@ -2,14 +2,21 @@
 
 buildscript {
     repositories {
+        google()
+        maven {
+            url 'https://maven.aliyun.com/repository/google'
+        }
+        mavenCentral()
         jcenter()
-        maven { url "https://raw.githubusercontent.com/HyphenateInc/Hyphenate-SDK-Android/master/repository" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.5.2'
         // Crashlytics
         // Firebase
-        classpath 'com.google.gms:google-services:3.1.1'
+        classpath 'com.google.gms:google-services:4.3.8'
+        // Add the Crashlytics Gradle plugin (be sure to add version
+        // 2.0.0 or later if you built your app with Android Studio 4.1).
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.3.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -17,9 +24,30 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
+        maven {
+            url 'https://maven.aliyun.com/repository/google'
+        }
+        mavenCentral()
         jcenter()
-        maven { url 'https://maven.google.com' }
-        maven { url "https://raw.githubusercontent.com/HyphenateInc/Hyphenate-SDK-Android/master/repository" }
+    }
+}
+
+ext{
+    if(!project.hasProperty('isAarRelease')){
+        isAarRelease = false;
+    }
+    if(!project.hasProperty('isLite')){
+        isLite = false;
+    }
+    if(!project.hasProperty('sdkVersion')){
+        sdkVersion = '3.2.3'
+    }
+    if(!project.hasProperty('isTravis')) {
+        isTravis = false
+    }
+    if(!project.hasProperty('stagingRepositoryId')){
+        stagingRepositoryId = 'iohyphenate-1000'
     }
 }
 

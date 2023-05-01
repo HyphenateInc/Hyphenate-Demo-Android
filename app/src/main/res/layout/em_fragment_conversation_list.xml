@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.hyphenate.chatuidemo.chat.ConversationListFragment"
+    tools:context=".chat.ConversationListFragment"
     >
 
     <LinearLayout
@@ -29,7 +29,7 @@
 
     </LinearLayout>
 
-    <com.hyphenate.easeui.widget.EaseConversationListView
+    <io.agora.easeui.widget.EaseConversationListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

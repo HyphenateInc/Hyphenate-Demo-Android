@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Hyphenate Demo</string>
+    <string name="app_name">AgoraChat Demo</string>
 
     <!--hint string-->
     <string name="em_hint_account">Account</string>
@@ -11,7 +11,7 @@
     <string name="em_hint_sign_in">Input your account sign in, Account can not contain \'\@\'!</string>
     <string name="em_hint_sign_up">Enter the account you want to register, the account can make the phone number,
         or any length of the string should be all lowercase letters or numbers,
-        in addition to (.) (_) (-) can not contain other special characters,
+        in addition to (_) (-) can not contain other special characters,
         can not be e-mail Account</string>
 
     <!--call-->
@@ -57,6 +57,8 @@
     <string name="em_sign_up">Sign up</string>
     <string name="em_sign_up_begin">Account is begin sign up</string>
     <string name="em_sign_in_begin">Account is begin sign in</string>
+    <string name="em_sign_account_out_limit">User name length out of limit, maximum 64 bytes</string>
+    <string name="em_sign_password_out_limit">Password length out of limit, maximum 64 bytes</string>
 
     <!--Error-->
     <string name="em_error_invalid_password">Invalid password</string>
@@ -223,6 +225,9 @@
     <string name="move_into_blacklist_failure">Move into blacklist failure</string>
     <string name="be_removing">Be removing</string>
     <string name="removed_from_blacklist_fail">Removed fail</string>
+
+    <!-- map -->
+    <string name="pick_place">Please select a place</string>
 
     <!-- commons-->
     <string name="Logoff_notification">Logoff notification</string>
